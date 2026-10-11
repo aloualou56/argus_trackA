@@ -214,6 +214,15 @@ export interface QuizQuestion {
   explain: Text;
 }
 
+/** One thing visitors can watch for (content/citizen_checklist.json). */
+export interface ChecklistItem {
+  id: string;
+  icon: string;
+  /** ARGUS risk categories it relates to. */
+  categories: string[];
+  text: Text;
+}
+
 export interface GameData {
   schema_version: number;
   snapshot: { fetched_at: string[] };
@@ -222,6 +231,7 @@ export interface GameData {
   cards: { currency: string; groups: CardGroup[]; cards: Card[] };
   rule_sensor_map: Record<string, RuleEntry>;
   quiz: { questions: QuizQuestion[]; authored: true; needs_review: boolean };
+  checklist: { items: ChecklistItem[]; report: Text; authored: true; needs_review: boolean };
   basemaps: { default: string; layers: Basemap[]; world: string | null };
   monuments: (Monument | MonumentStub)[];
 }

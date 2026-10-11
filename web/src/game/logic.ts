@@ -3,6 +3,7 @@
 import type {
   Alarm,
   Card,
+  ChecklistItem,
   GameData,
   LatLng,
   Level,
@@ -230,6 +231,15 @@ export function autoPrompts(rows: MixRow[], distances: Map<string, number> = new
   const onlyArgus = rows.find((r) => r.argus > 0 && r.player === 0 && r.card !== many?.card);
   if (onlyArgus) out.push({ kind: "onlyArgus", card: onlyArgus.card, n: onlyArgus.argus });
   return out;
+}
+
+// ---------------------------------------------------------------- citizen checklist
+
+/** Checklist items, the ones about this mission's dangers first; `forMission` marks those. */
+export function checklistFor(items: ChecklistItem[], threats: Scenario[]): { item: ChecklistItem; forMission: boolean }[] {
+  const categories = new Set(threats.map((s) => s.risk_category));
+  const rows = items.map((item) => ({ item, forMission: item.categories.some((c) => categories.has(c)) }));
+  return [...rows.filter((r) => r.forMission), ...rows.filter((r) => !r.forMission)];
 }
 
 // ---------------------------------------------------------------- quiz

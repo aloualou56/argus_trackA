@@ -2,7 +2,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { summaryOf, topCard, type CommunityStore, type Summary } from "../community/store";
 import { Icon } from "../components/Icon";
-import { cardById, featuredAlarm, humanCards, missionScenarios, ruleFor, score, type CoverLevel } from "../game/logic";
+import {
+  cardById,
+  checklistFor,
+  featuredAlarm,
+  humanCards,
+  missionScenarios,
+  ruleFor,
+  score,
+  type CoverLevel,
+} from "../game/logic";
 import { useI18n, type MessageKey } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -28,6 +37,22 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
   const result = score(threats, rule, session.picks, cards);
   const detected = result.alarm?.detected ?? false;
   const [summary, setSummary] = useState<Summary | null>(null);
+  const [shareStatus, setShareStatus] = useState("");
+
+  const share = async () => {
+    const text = t("share.text", { name: pick(mon.display_name), score: result.total });
+    const url = `${window.location.origin}${window.location.pathname}`; // no class code in shared links
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: t("app.title"), text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setShareStatus(t("share.copied"));
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") setShareStatus(t("share.failed"));
+    }
+  };
   const submitted = useRef(false);
 
   useEffect(() => {
@@ -119,6 +144,31 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
         </ul>
       </section>
 
+      <section className="panel citizen printable" aria-labelledby="citizen-title">
+        <h2 id="citizen-title">
+          <Icon name="observer" />
+          {t("citizen.title")}
+        </h2>
+        <p>{t("citizen.intro")}</p>
+        <ul className="checklist" data-needs-review={data.checklist.needs_review}>
+          {checklistFor(data.checklist.items, threats).map(({ item, forMission }) => (
+            <li key={item.id}>
+              <Icon name={item.icon} size={22} />
+              <span>
+                {pick(item.text)}
+                {forMission && <span className="tag">{t("citizen.mission")}</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="citizen-report">
+          <strong>{pick(data.checklist.report)}</strong>
+        </p>
+        <button type="button" className="btn btn-quiet no-print" onClick={() => window.print()}>
+          {t("citizen.print")}
+        </button>
+      </section>
+
       <section className="panel community" aria-labelledby="community-title">
         <h2 id="community-title">{classCode ? t("score.communityClass", { code: classCode }) : t("score.community")}</h2>
         {summary && summary.games > 1 && top ? (
@@ -137,6 +187,15 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
         )}
         <p className="small">{t(shared ? "score.communityShared" : "score.communityLocal")}</p>
       </section>
+
+      <div className="share">
+        <button type="button" className="btn btn-secondary" onClick={share}>
+          {t("share.button")}
+        </button>
+        <p className="small" role="status">
+          {shareStatus}
+        </p>
+      </div>
 
       <section className="panel quiz-invite" aria-labelledby="quiz-invite-title">
         <h2 id="quiz-invite-title">{t("quiz.inviteTitle")}</h2>

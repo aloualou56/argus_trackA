@@ -129,6 +129,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "rule_map": load_json(content_dir / "rule_sensor_map.json"),
         "threat_map": load_json(content_dir / "threat_sensor_map.json"),
         "quiz": load_json(content_dir / "quiz.json"),
+        "checklist": load_json(content_dir / "citizen_checklist.json"),
         "map": load_json(content_dir / "map.json"),
         "monuments": monuments,
     }
@@ -763,6 +764,16 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         if len(q["options"]) < 2 or not 0 <= q["correct"] < len(q["options"]):
             problems.append(f"content/quiz.json {q['id']}: needs options and a valid 'correct' index")
 
+    checklist = content.raw["checklist"]
+    for item in checklist["items"]:
+        if not item["text"].get("en") or not item["text"].get("el"):
+            problems.append(f"content/citizen_checklist.json {item['id']}: missing a language")
+        for cat in item["categories"]:
+            if cat not in content.threat_categories:
+                problems.append(f"content/citizen_checklist.json {item['id']}: unknown risk category '{cat}'")
+    if not checklist["report"].get("en") or not checklist["report"].get("el"):
+        problems.append("content/citizen_checklist.json: report text missing a language")
+
     layer_ids = [layer["id"] for layer in content.basemaps.get("layers", [])]
     if content.basemaps.get("default") not in layer_ids:
         problems.append("content/map.json: 'default' is not one of the layers")
@@ -858,6 +869,8 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
         "rule_sensor_map": public_rule_map(content),
         "quiz": {"questions": content.raw["quiz"]["questions"], "authored": True,
                  "needs_review": bool(content.raw["quiz"].get("needs_review"))},
+        "checklist": {"items": content.raw["checklist"]["items"], "report": content.raw["checklist"]["report"],
+                      "authored": True, "needs_review": bool(content.raw["checklist"].get("needs_review"))},
         "basemaps": {"default": content.basemaps["default"],
                      "layers": [{k: v for k, v in layer.items() if k != "review_note"}
                                 for layer in content.basemaps["layers"]],
@@ -915,6 +928,8 @@ def collect_review_items(content: Content) -> List[str]:
             if ctx.get("needs_review"):
                 items.append(f"`{pilot}` alarm explanation for `{rule}` and its linked threats {ctx.get('links')}")
         items.append(f"`{pilot}` mission picks per level and budget ({pack.get('budget')} coins)")
+    if content.raw["checklist"].get("needs_review"):
+        items.append("`content/citizen_checklist.json`: what visitors should look out for and how to report it")
     if content.raw["quiz"].get("needs_review"):
         items.append(f"`content/quiz.json`: {len(content.raw['quiz']['questions'])} pre/post quiz questions, answers and explanations")
     return items

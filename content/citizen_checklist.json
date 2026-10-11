@@ -1,0 +1,82 @@
+{
+  "_about": "AUTHORED by the game team. What a visitor can watch for and how to report it safely: the citizen-science step at the end of the game. Each item names the dangers it relates to (ARGUS risk categories) so the game can show it next to the right threats. Needs review by a conservator.",
+  "needs_review": true,
+  "items": [
+    {
+      "id": "cracks",
+      "icon": "crackmeter",
+      "categories": [
+        "physical_forces"
+      ],
+      "text": {
+        "en": "New cracks, or cracks that look wider than last time.",
+        "el": "Νέες ρωγμές ή ρωγμές που μοιάζουν πιο ανοιχτές από την προηγούμενη φορά."
+      }
+    },
+    {
+      "id": "damp",
+      "icon": "humidity",
+      "categories": [
+        "water",
+        "incorrect_relative_humidity",
+        "salts"
+      ],
+      "text": {
+        "en": "Damp patches, or white powder on walls (salt coming out).",
+        "el": "Υγρά σημάδια ή άσπρη σκόνη στους τοίχους (αλάτι που βγαίνει στην επιφάνεια)."
+      }
+    },
+    {
+      "id": "mould",
+      "icon": "observer",
+      "categories": [
+        "pests",
+        "incorrect_relative_humidity"
+      ],
+      "text": {
+        "en": "Mould, green or black stains on walls and paintings.",
+        "el": "Μούχλα, πράσινοι ή μαύροι λεκέδες σε τοίχους και τοιχογραφίες."
+      }
+    },
+    {
+      "id": "plants",
+      "icon": "soil_moisture",
+      "categories": [
+        "plant_growth",
+        "dissociation"
+      ],
+      "text": {
+        "en": "Plants or roots growing between stones.",
+        "el": "Φυτά ή ρίζες που φυτρώνουν ανάμεσα στις πέτρες."
+      }
+    },
+    {
+      "id": "insects",
+      "icon": "acoustic",
+      "categories": [
+        "pests"
+      ],
+      "text": {
+        "en": "Tiny holes and fine dust under old wood: signs of woodworm.",
+        "el": "Μικρές τρύπες και λεπτή σκόνη κάτω από παλιά ξύλα: σημάδια από σαράκι."
+      }
+    },
+    {
+      "id": "damage",
+      "icon": "visitor_counter",
+      "categories": [
+        "criminals",
+        "vandalism",
+        "pollutants"
+      ],
+      "text": {
+        "en": "Graffiti, scratches, litter, or stones that have fallen.",
+        "el": "Γκράφιτι, χαρακιές, σκουπίδια ή πέτρες που έχουν πέσει."
+      }
+    }
+  ],
+  "report": {
+    "en": "If you see something, tell a guard or the site staff. A photo with the date and the exact spot helps a lot. Never touch, climb or remove anything.",
+    "el": "Αν δεις κάτι, πες το σε έναν φύλακα ή στο προσωπικό του χώρου. Μια φωτογραφία με την ημερομηνία και το ακριβές σημείο βοηθάει πολύ. Μην ακουμπάς, μην ανεβαίνεις και μην παίρνεις τίποτα."
+  }
+}

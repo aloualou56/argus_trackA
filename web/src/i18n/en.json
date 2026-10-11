@@ -205,5 +205,13 @@
   "score.communityShared": "Saved anonymously, together with every other player. No names are stored.",
   "quiz.class": "Your class, over {n} games: on average {pre} of {total} right before the game and {post} after.",
   "quiz.everyone": "All players, over {n} games: on average {pre} of {total} right before the game and {post} after.",
-  "quiz.savedShared": "Answers are saved anonymously, together with every other player. No names are stored."
+  "quiz.savedShared": "Answers are saved anonymously, together with every other player. No names are stored.",
+  "citizen.title": "Be an observer too",
+  "citizen.intro": "Sensors do not see everything. When you visit a monument, look out for:",
+  "citizen.mission": "linked to your mission",
+  "citizen.print": "Print this list",
+  "share.button": "Share your result",
+  "share.text": "I was a guardian for a day at {name} and scored {score} out of 100. Want to try?",
+  "share.copied": "The text and the link were copied.",
+  "share.failed": "Could not share. Copy the address from the address bar instead."
 }

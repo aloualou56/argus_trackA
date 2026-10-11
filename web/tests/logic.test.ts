@@ -5,6 +5,7 @@ import {
   autoPrompts,
   canAdd,
   cardById,
+  checklistFor,
   coinsLeft,
   compareMix,
   clusterPoints,
@@ -307,5 +308,16 @@ describe("quiz", () => {
   it("marks right, wrong and unanswered questions", () => {
     const answers = questions.map((q, i) => (i === 0 ? q.correct : i === 1 ? (q.correct + 1) % q.options.length : null));
     expect(markQuiz(questions, answers)).toEqual([true, false, false, false, false]);
+  });
+});
+
+describe("citizen checklist", () => {
+  it("puts the items about this mission's dangers first and marks them", () => {
+    const threats = missionScenarios(ranverso, "extreme"); // water, pests, relative humidity
+    const rows = checklistFor(data.checklist.items, threats);
+    expect(rows).toHaveLength(data.checklist.items.length);
+    const marked = rows.filter((r) => r.forMission).map((r) => r.item.id);
+    expect(marked).toEqual(expect.arrayContaining(["damp", "insects"]));
+    expect(rows.slice(0, marked.length).every((r) => r.forMission)).toBe(true);
   });
 });
