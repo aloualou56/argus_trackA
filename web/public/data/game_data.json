@@ -120,7 +120,8 @@
      "Humidity Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "temperature",
@@ -138,7 +139,8 @@
      "Temperature Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "airflow",
@@ -157,7 +159,8 @@
      "Pir-Airflow Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "air_quality",
@@ -175,7 +178,8 @@
      "Gas Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "light_uv",
@@ -195,7 +199,8 @@
      "Pyranometer Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "rain_gauge",
@@ -213,7 +218,8 @@
      "Rain Gauge Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "soil_moisture",
@@ -232,7 +238,8 @@
      "Water Potential Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "weather_station",
@@ -251,7 +258,8 @@
      "Barometer Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "crackmeter",
@@ -269,7 +277,8 @@
      "Crackmeter Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "tiltmeter",
@@ -287,7 +296,8 @@
      "Tiltmeter Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "vibration",
@@ -306,7 +316,8 @@
      "Accelerometer Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "gnss",
@@ -324,7 +335,8 @@
      "GNSS Sensor"
     ],
     "needs_review": false,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "acoustic",
@@ -342,7 +354,25 @@
      "Acoustic Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
+   },
+   {
+    "id": "observer",
+    "group": "eyes",
+    "cost": 1,
+    "name": {
+     "en": "Human observer",
+     "el": "Άνθρωπος-παρατηρητής"
+    },
+    "tells": {
+     "en": "A guard or volunteer walks around regularly and reports what they see: new cracks, mould, insects, damage.",
+     "el": "Ένας φύλακας ή εθελοντής κάνει τακτικά τον γύρο του μνημείου και αναφέρει ό,τι δει: νέες ρωγμές, μούχλα, έντομα, ζημιές."
+    },
+    "instrument_types": [],
+    "needs_review": true,
+    "on_map": false,
+    "kind": "human"
    },
    {
     "id": "visitor_counter",
@@ -361,7 +391,8 @@
      "Barrier Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "camera",
@@ -379,7 +410,8 @@
      "Multispectral Camera Sensor"
     ],
     "needs_review": true,
-    "on_map": true
+    "on_map": true,
+    "kind": "instrument"
    },
    {
     "id": "satellite",
@@ -397,7 +429,8 @@
      "Earth Observation Layer Instrument"
     ],
     "needs_review": true,
-    "on_map": false
+    "on_map": false,
+    "kind": "instrument"
    }
   ]
  },
@@ -1217,7 +1250,7 @@
       "ranverso.pollutants.visitors"
      ],
      "mission_source": "curated",
-     "featured_alarm": "ranverso:R4b_soil_low:2026-09-15T20:30:00"
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-16T15:30:00"
     },
     {
      "key": "Medium priority",
@@ -1304,7 +1337,7 @@
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).",
     "authored": true
    },
-   "budget": 10,
+   "budget": 8,
    "scenarios": [
     {
      "threat_id": 123,
@@ -1340,6 +1373,9 @@
      "capable_cards": [
       "soil_moisture",
       "humidity"
+     ],
+     "primary_cards": [
+      "soil_moisture"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -1377,8 +1413,13 @@
      },
      "capable_cards": [
       "acoustic",
+      "observer",
       "humidity",
       "temperature"
+     ],
+     "primary_cards": [
+      "acoustic",
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -1415,6 +1456,9 @@
       "needs_review": true
      },
      "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
       "humidity"
      ],
      "capable_cards_source": "scenario",
@@ -1454,6 +1498,9 @@
      "capable_cards": [
       "light_uv"
      ],
+     "primary_cards": [
+      "light_uv"
+     ],
      "capable_cards_source": "category",
      "capable_cards_needs_review": false
     },
@@ -1489,6 +1536,9 @@
       "needs_review": true
      },
      "capable_cards": [
+      "air_quality"
+     ],
+     "primary_cards": [
       "air_quality"
      ],
      "capable_cards_source": "category",
@@ -1530,8 +1580,12 @@
       "humidity",
       "weather_station"
      ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": true
     },
     {
      "threat_id": 115,
@@ -1566,6 +1620,9 @@
      },
      "capable_cards": [
       "rain_gauge",
+      "air_quality"
+     ],
+     "primary_cards": [
       "air_quality"
      ],
      "capable_cards_source": "scenario",
@@ -1604,8 +1661,13 @@
      },
      "capable_cards": [
       "acoustic",
+      "observer",
       "humidity",
       "temperature"
+     ],
+     "primary_cards": [
+      "acoustic",
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -1642,7 +1704,11 @@
       "needs_review": true
      },
      "capable_cards": [
+      "observer",
       "camera"
+     ],
+     "primary_cards": [
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -1682,8 +1748,11 @@
       "weather_station",
       "rain_gauge"
      ],
+     "primary_cards": [
+      "weather_station"
+     ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": true
     },
     {
      "threat_id": 116,
@@ -1717,6 +1786,10 @@
       "needs_review": true
      },
      "capable_cards": [
+      "vibration",
+      "air_quality"
+     ],
+     "primary_cards": [
       "vibration",
       "air_quality"
      ],
@@ -1760,8 +1833,13 @@
       "satellite",
       "soil_moisture"
      ],
+     "primary_cards": [
+      "rain_gauge",
+      "weather_station",
+      "satellite"
+     ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": true
     },
     {
      "threat_id": 102,
@@ -1797,10 +1875,16 @@
      "capable_cards": [
       "vibration",
       "crackmeter",
+      "tiltmeter",
+      "observer"
+     ],
+     "primary_cards": [
+      "vibration",
+      "crackmeter",
       "tiltmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": true
     },
     {
      "threat_id": 103,
@@ -1838,8 +1922,12 @@
       "humidity",
       "weather_station"
      ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": true
     },
     {
      "threat_id": 106,
@@ -1873,6 +1961,9 @@
       "needs_review": true
      },
      "capable_cards": [
+      "weather_station"
+     ],
+     "primary_cards": [
       "weather_station"
      ],
      "capable_cards_source": "scenario",
@@ -1910,6 +2001,9 @@
       "needs_review": true
      },
      "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
       "humidity"
      ],
      "capable_cards_source": "scenario",
@@ -1950,6 +2044,9 @@
       "satellite",
       "weather_station"
      ],
+     "primary_cards": [
+      "satellite"
+     ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
     },
@@ -1985,6 +2082,10 @@
       "needs_review": true
      },
      "capable_cards": [
+      "temperature",
+      "observer"
+     ],
+     "primary_cards": [
       "temperature"
      ],
      "capable_cards_source": "scenario",
@@ -2022,6 +2123,7 @@
       "needs_review": true
      },
      "capable_cards": [],
+     "primary_cards": [],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
     },
@@ -2057,6 +2159,10 @@
       "needs_review": true
      },
      "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
       "temperature",
       "weather_station"
      ],
@@ -2098,6 +2204,10 @@
       "temperature",
       "weather_station"
      ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
      "capable_cards_source": "category",
      "capable_cards_needs_review": false
     },
@@ -2133,6 +2243,10 @@
       "needs_review": true
      },
      "capable_cards": [
+      "visitor_counter",
+      "observer"
+     ],
+     "primary_cards": [
       "visitor_counter"
      ],
      "capable_cards_source": "scenario",
@@ -2171,7 +2285,12 @@
      },
      "capable_cards": [
       "satellite",
+      "observer",
       "camera"
+     ],
+     "primary_cards": [
+      "satellite",
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -2208,8 +2327,12 @@
       "needs_review": true
      },
      "capable_cards": [
+      "observer",
       "visitor_counter",
       "camera"
+     ],
+     "primary_cards": [
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -2247,7 +2370,12 @@
      },
      "capable_cards": [
       "humidity",
+      "observer",
       "camera"
+     ],
+     "primary_cards": [
+      "humidity",
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -2285,7 +2413,12 @@
      },
      "capable_cards": [
       "humidity",
+      "observer",
       "camera"
+     ],
+     "primary_cards": [
+      "humidity",
+      "observer"
      ],
      "capable_cards_source": "scenario",
      "capable_cards_needs_review": true
@@ -3037,6 +3170,13 @@
     }
    },
    "discussion_prompts": [
+    {
+     "en": "One ARGUS soil-moisture sensor here showed almost the same value for three weeks (31 August to 21 September 2026) and kept raising a 'ground too dry' alarm. Was the ground really that dry, or was the sensor stuck? How could you check?",
+     "el": "Ένας αισθητήρας υγρασίας εδάφους του ARGUS εδώ έδειχνε σχεδόν την ίδια τιμή για τρεις εβδομάδες (31 Αυγούστου έως 21 Σεπτεμβρίου 2026) και σήμαινε συνέχεια συναγερμό «πολύ ξερό έδαφος». Ήταν πράγματι τόσο ξερό το έδαφος ή είχε κολλήσει ο αισθητήρας; Πώς θα το έλεγχες;",
+     "needs_review": true,
+     "review_note": "From the R4b_soil_low alarms (values 2.457 to 2.476 against a limit of 5, sensor A8610A333526680F). A stuck sensor is our reading, not confirmed by ARGUS, so the prompt asks rather than states. It replaces replaying this alarm in the Low level.",
+     "authored": true
+    },
     {
      "en": "Several ARGUS sensors sit next to the left altar inside the church. Why might experts watch that spot so closely?",
      "el": "Αρκετοί αισθητήρες του ARGUS βρίσκονται δίπλα στην αριστερή Αγία Τράπεζα μέσα στην εκκλησία. Γιατί άραγε οι ειδικοί προσέχουν τόσο αυτό το σημείο;",

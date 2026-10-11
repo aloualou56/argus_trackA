@@ -216,3 +216,33 @@ class PureHelpers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ContentRules(unittest.TestCase):
+    """Checks on content/ that need no snapshot."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.content = b.Content(b.load_content(b.CONTENT_DIR))
+
+    def test_threat_map_primary_cards(self):
+        card_ids = set(self.content.card_ids)
+        for section in (self.content.threat_categories, self.content.threat_scenarios):
+            for key, entry in section.items():
+                self.assertTrue(set(entry["primary"]) <= set(entry["cards"]) <= card_ids, key)
+                self.assertEqual(bool(entry["primary"]), bool(entry["cards"]), key)
+
+    def test_human_cards_never_detect_alarms(self):
+        human = {c["id"] for c in self.content.cards if c.get("kind") == "human"}
+        self.assertEqual(human, {"observer"})
+        for key, entry in self.content.rules.items():
+            for group in entry["detect_with"]:
+                self.assertFalse(set(group) & human, key)
+
+    def test_flat_signal_alarms_are_never_replayed(self):
+        flat = {"id": "flat", "rule": "R4b_soil_low", "roles": ["first", "peak", "last"],
+                "quality_flags": ["flat_signal"], "times_threshold": 2.0}
+        rain = {"id": "rain", "rule": "R2_rain_7d", "roles": ["peak"], "quality_flags": [], "times_threshold": 4.8}
+        self.assertEqual(b.resolve_featured([flat, rain], {"rule": "R4b_soil_low", "pick": "peak"}), "rain")
+        self.assertIsNone(b.resolve_featured([flat], {"rule": "R4b_soil_low", "pick": "peak"}))
+        self.assertEqual(b.resolve_featured([flat, rain], {"rule": "R2_rain_7d", "pick": "peak"}), "rain")

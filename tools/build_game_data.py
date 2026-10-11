@@ -260,14 +260,15 @@ class Content:
     def rule(self, pilot: str, rule: str) -> Optional[Dict[str, Any]]:
         return self.rules.get(f"{pilot}:{rule}")
 
-    def capable_cards(self, scenario_key: str, category: str) -> Tuple[List[str], bool, str]:
+    def capable_cards(self, scenario_key: str, category: str) -> Tuple[List[str], List[str], bool, str]:
+        """(all cards that help, the primary ones that watch the threat directly, needs_review, source)."""
         if scenario_key in self.threat_scenarios:
             entry = self.threat_scenarios[scenario_key]
-            return list(entry["cards"]), bool(entry.get("needs_review")), "scenario"
+            return list(entry["cards"]), list(entry["primary"]), bool(entry.get("needs_review")), "scenario"
         if category in self.threat_categories:
             entry = self.threat_categories[category]
-            return list(entry["cards"]), bool(entry.get("needs_review")), "category"
-        return [], True, "missing"
+            return list(entry["cards"]), list(entry["primary"]), bool(entry.get("needs_review")), "category"
+        return [], [], True, "missing"
 
 
 # --------------------------------------------------------------------------- builders
@@ -279,7 +280,7 @@ def build_scenarios(snap: Snapshot, content: Content, pilot: str, pack: Optional
         if m.get("pilot_key") != pilot:
             continue
         key = m["scenario_key"]
-        cards, cards_review, cards_source = content.capable_cards(key, m["risk_category"])
+        cards, primary, cards_review, cards_source = content.capable_cards(key, m["risk_category"])
         text = plain.get(key)
         out.append({
             "threat_id": t["id"],
@@ -299,6 +300,7 @@ def build_scenarios(snap: Snapshot, content: Content, pilot: str, pack: Optional
                 "needs_review": True,
             },
             "capable_cards": cards,
+            "primary_cards": primary,
             "capable_cards_source": cards_source,
             "capable_cards_needs_review": cards_review,
         })
@@ -576,6 +578,9 @@ def pick_mission_auto(scenarios: List[Dict[str, Any]], level_key: str) -> List[s
 
 
 def resolve_featured(alarms: List[Dict[str, Any]], spec: Optional[Dict[str, Any]]) -> Optional[str]:
+    """The alarm a level replays. Alarms from a flat (probably stuck) sensor are never replayed:
+    the score rewards detecting the replayed alarm, so it must be a believable one."""
+    alarms = [a for a in alarms if "flat_signal" not in a["quality_flags"]]
     if not alarms:
         return None
     if spec:
@@ -677,11 +682,26 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         a = m.get("alarm") or {}
         if a.get("rule") and content.rule(a.get("site"), a["rule"]) is None:
             problems.append(f"alarm rule {a.get('site')}:{a['rule']} missing from rule map")
+    human = {c["id"] for c in content.cards if c.get("kind", "instrument") == "human"}
+    for card in content.cards:
+        if card.get("kind", "instrument") not in ("instrument", "human"):
+            problems.append(f"card {card['id']}: unknown kind '{card.get('kind')}'")
+        if card["id"] in human and (card["instrument_types"] or card.get("on_map", True)):
+            problems.append(f"card {card['id']}: a human card has no ARGUS instrument types and no map pin")
+    for key, entry in content.rules.items():
+        for group in entry.get("detect_with") or []:
+            if set(group) & human:
+                problems.append(f"rule map {key}: people cannot detect an AD-RT alarm ({sorted(set(group) & human)})")
     for section in (content.threat_categories, content.threat_scenarios):
         for key, entry in section.items():
             for card in entry["cards"]:
                 if card not in card_ids:
                     problems.append(f"threat map {key}: unknown card '{card}'")
+            primary = entry.get("primary")
+            if primary is None:
+                problems.append(f"threat map {key}: no 'primary' list")
+            elif not set(primary) <= set(entry["cards"]) or bool(primary) != bool(entry["cards"]):
+                problems.append(f"threat map {key}: 'primary' must be a non-empty subset of 'cards'")
     categories = {m["risk_category"] for _, m in snap.scenarios}
     for cat in sorted(categories - set(content.threat_categories)):
         problems.append(f"risk_category '{cat}' missing from threat map categories")
@@ -719,6 +739,12 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
             for key in level["mission"]:
                 if key not in keys:
                     problems.append(f"{mon['pilot_key']} {level['key']}: unknown mission scenario '{key}'")
+            spec = (content.monuments[mon["pilot_key"]].get("featured_alarm") or {})
+            spec = spec.get(level["key"]) or spec.get("default")
+            chosen = next((a for a in mon["alarms"] if a["id"] == level["featured_alarm"]), None)
+            if spec and (chosen is None or chosen["rule"] != spec.get("rule")):
+                problems.append(f"{mon['pilot_key']} {level['key']}: featured_alarm {spec} matches no replayable alarm "
+                                "(alarms from a flat signal are never replayed)")
         for alarm in mon["alarms"]:
             if not alarm["context"]:
                 problems.append(f"{mon['pilot_key']}: no alarm_context for rule {alarm['rule']}")
@@ -733,7 +759,7 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
 def public_cards(content: Content) -> Dict[str, Any]:
     raw = content.raw["cards"]
     cards = [dict({k: c[k] for k in ("id", "group", "cost", "name", "tells", "instrument_types", "needs_review")},
-                  on_map=c.get("on_map", True))
+                  on_map=c.get("on_map", True), kind=c.get("kind", "instrument"))
              for c in raw["cards"]]
     return {"currency": raw["currency"], "groups": raw["groups"], "cards": cards}
 
@@ -812,10 +838,12 @@ def collect_review_items(content: Content) -> List[str]:
             items.append(f"Base map `{layer['id']}`: {layer.get('review_note', 'check licence')}")
     for key, entry in sorted(content.threat_categories.items()):
         if entry.get("needs_review"):
-            items.append(f"Threat category `{key}` -> {entry['cards']}" + (f": {entry['note']}" if entry.get("note") else ""))
+            items.append(f"Threat category `{key}` -> {entry['cards']}, primary {entry['primary']}"
+                         + (f": {entry['note']}" if entry.get("note") else ""))
     for key, entry in sorted(content.threat_scenarios.items()):
         if entry.get("needs_review"):
-            items.append(f"Scenario `{key}` -> {entry['cards']}" + (f": {entry['note']}" if entry.get("note") else ""))
+            items.append(f"Scenario `{key}` -> {entry['cards']}, primary {entry['primary']}"
+                         + (f": {entry['note']}" if entry.get("note") else ""))
     for pilot, pack in sorted(content.monuments.items()):
         if pack.get("draft"):
             items.append(f"`content/monuments/{pilot}.json` (draft): monument name and place in Greek and English")
@@ -895,9 +923,10 @@ def render_notes(snap: Snapshot, content: Content, stats: List[Dict[str, Any]]) 
         w("")
         w("### Scenarios")
         w("")
-        w(md_table(["threat id", "scenario key", "category", "MR", "label", "capable cards"],
+        w(md_table(["threat id", "scenario key", "category", "MR", "label", "capable cards (* = primary)"],
                    [[s["threat_id"], s["scenario_key"], s["risk_category"], s["abc"]["mr"], s["priority_label"],
-                     ", ".join(s["capable_cards"]) or "(none)"] for s in st["scenarios"]]))
+                     ", ".join(c + ("*" if c in s["primary_cards"] else "") for c in s["capable_cards"]) or "(none)"]
+                    for s in st["scenarios"]]))
         w("")
         w("### Levels")
         w("")
@@ -1001,9 +1030,14 @@ DESIGN_ASSUMPTIONS = [
     "An exact 0 for humidity or soil moisture is treated as a sensor dropout.",
     "Alarm episodes: alarms of one rule less than 48 hours apart form one episode; the game features the first, "
     "the strongest (largest multiple of the threshold) and the last alarm of each episode, at most 10.",
-    "Score: 25 points per mission threat covered by at least one capable card (75) plus up to 25 for budget "
-    "efficiency (share of coins spent on cards that cover a mission threat or the replayed alarm). The historical "
-    "alarm is shown but not scored.",
+    "Score (web/src/game/logic.ts): per mission threat 20 points with a primary card, 8 with only supporting "
+    "cards (60); 25 if the network detects the replayed real alarm; up to 15 for the share of coins spent on cards "
+    "that help with a mission threat or the alarm. The total is scaled to 100 when a part does not apply (no "
+    "replayable alarm, or a threat no card can warn about).",
+    "Replayed alarms never come from a flat signal (a probably stuck sensor); the build refuses such a pick.",
+    "The human-observer card stands for regular visual inspection by people. It helps with threats people can see "
+    "(pests, mould, vandalism, new cracks) but never detects an AD-RT alarm, and it is left out of the ARGUS "
+    "comparison because ARGUS lists instruments only.",
     "Detection: the player's network detects an alarm if, for every group in the rule's detect_with, it has at "
     "least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level "
     "without a usable alarm (e.g. DL-only sites) skips the replay with a short message.",

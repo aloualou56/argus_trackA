@@ -26,6 +26,9 @@ const PATHS: Record<string, string> = {
     '<path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/>',
   satellite:
     '<rect x="10" y="6" width="5" height="5" rx="1" transform="rotate(45 12.5 8.5)"/><path d="M8.2 6.4 5 3.2 2.5 5.7l3.2 3.2zM16.8 10.6l3.2 3.2-2.5 2.5-3.2-3.2z"/><path d="M11 12l-2 2"/><path d="M4 15a5 5 0 0 0 5 5M4 19a1 1 0 0 0 1 1"/>',
+  observer:
+    '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  half: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/>',
   other: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17.5v.01"/>',
   coin: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',

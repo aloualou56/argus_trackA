@@ -12,7 +12,7 @@
     "needs_review": true,
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme)."
   },
-  "budget": 10,
+  "budget": 8,
   "missions": {
     "_about": "Three scenario keys per priority level. Ranverso has only 2 Extreme scenarios, so the Extreme mission borrows the strongest High one. Ranverso has no Catastrophic scenarios.",
     "Extreme priority": ["ranverso.water.groundwater", "ranverso.pests.woodworms", "ranverso.incorrect-rh.prolonged-wet-periods"],
@@ -21,9 +21,9 @@
     "Low priority": ["ranverso.physical-forces.earthquake", "ranverso.incorrect-rh.prolonged-dry-periods", "ranverso.pollutants.visitors"]
   },
   "featured_alarm": {
-    "_about": "Which real alarm to replay per level. 'pick' is one of first|peak|last within the rule's alarm episode. Resolved to a concrete alarm by the build script.",
+    "_about": "Which real alarm to replay per level. 'pick' is one of first|peak|last within the rule's alarm episode. Resolved to a concrete alarm by the build script. Alarms from a flat (probably stuck) sensor are never replayed: the build refuses them, so the R4b_soil_low episode is a discussion prompt instead. The only other usable Ranverso rule is R2_rain_7d, so the Low level replays the last alarm of that episode (16 Sep) and the other levels its peak (10 Sep).",
     "default": { "rule": "R2_rain_7d", "pick": "peak" },
-    "Low priority": { "rule": "R4b_soil_low", "pick": "peak" }
+    "Low priority": { "rule": "R2_rain_7d", "pick": "last" }
   },
   "alarm_context": {
     "R2_rain_7d": {
@@ -44,6 +44,12 @@
     }
   },
   "discussion_prompts": [
+    {
+      "en": "One ARGUS soil-moisture sensor here showed almost the same value for three weeks (31 August to 21 September 2026) and kept raising a 'ground too dry' alarm. Was the ground really that dry, or was the sensor stuck? How could you check?",
+      "el": "Ένας αισθητήρας υγρασίας εδάφους του ARGUS εδώ έδειχνε σχεδόν την ίδια τιμή για τρεις εβδομάδες (31 Αυγούστου έως 21 Σεπτεμβρίου 2026) και σήμαινε συνέχεια συναγερμό «πολύ ξερό έδαφος». Ήταν πράγματι τόσο ξερό το έδαφος ή είχε κολλήσει ο αισθητήρας; Πώς θα το έλεγχες;",
+      "needs_review": true,
+      "review_note": "From the R4b_soil_low alarms (values 2.457 to 2.476 against a limit of 5, sensor A8610A333526680F). A stuck sensor is our reading, not confirmed by ARGUS, so the prompt asks rather than states. It replaces replaying this alarm in the Low level."
+    },
     {
       "en": "Several ARGUS sensors sit next to the left altar inside the church. Why might experts watch that spot so closely?",
       "el": "Αρκετοί αισθητήρες του ARGUS βρίσκονται δίπλα στην αριστερή Αγία Τράπεζα μέσα στην εκκλησία. Γιατί άραγε οι ειδικοί προσέχουν τόσο αυτό το σημείο;",

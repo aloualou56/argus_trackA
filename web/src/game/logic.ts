@@ -15,8 +15,11 @@ import type {
   Scenario,
 } from "./types";
 
-export const COVERAGE_POINTS_PER_THREAT = 25;
-export const EFFICIENCY_POINTS = 25;
+// Points per part of the score. The total is scaled to 100 over the parts that apply.
+export const THREAT_POINTS = 20; // a mission threat watched by a primary card
+export const PARTIAL_THREAT_POINTS = 8; // only supporting cards: they help, but do not watch the threat directly
+export const ALARM_POINTS = 25; // the network would have caught the replayed real alarm
+export const EFFICIENCY_POINTS = 15; // share of coins spent on cards that help
 
 export function isPlayable(m: GameData["monuments"][number]): m is Monument {
   return m.playable;
@@ -24,6 +27,11 @@ export function isPlayable(m: GameData["monuments"][number]): m is Monument {
 
 export function cardById(data: GameData): Map<string, Card> {
   return new Map(data.cards.cards.map((c) => [c.id, c]));
+}
+
+/** Cards that stand for people (the observer), not instruments. */
+export function humanCards(data: GameData): Set<string> {
+  return new Set(data.cards.cards.filter((c) => c.kind === "human").map((c) => c.id));
 }
 
 export function level(mon: Monument, levelId: LevelId): Level {
@@ -80,17 +88,22 @@ export function totalSensors(picks: Picks): number {
 
 // ---------------------------------------------------------------- coverage and detection
 
+/** full: a primary card watches the threat; partial: only supporting cards; none: nothing helps. */
+export type CoverLevel = "full" | "partial" | "none";
+
 export interface Coverage {
   scenario: Scenario;
-  covered: boolean;
-  /** Player's cards that can warn about this threat. */
+  level: CoverLevel;
+  /** Player's cards that help with this threat (primary first). */
   by: string[];
 }
 
 export function coverage(scenario: Scenario, picks: Picks): Coverage {
   const mine = owned(picks);
-  const by = scenario.capable_cards.filter((c) => mine.has(c));
-  return { scenario, covered: by.length > 0, by };
+  const primary = scenario.primary_cards.filter((c) => mine.has(c));
+  const support = scenario.capable_cards.filter((c) => mine.has(c) && !primary.includes(c));
+  const level: CoverLevel = primary.length ? "full" : support.length ? "partial" : "none";
+  return { scenario, level, by: [...primary, ...support] };
 }
 
 export interface Detection {
@@ -122,13 +135,22 @@ export function argusCards(alarm: Alarm): string[] {
 
 export type Verdict = "excellent" | "good" | "learning" | "start";
 
+export interface Part {
+  points: number;
+  max: number;
+}
+
 export interface Score {
   coverage: Coverage[];
-  covered: number;
-  coveragePoints: number;
+  full: number;
+  partial: number;
+  threats: Part;
+  /** null when the level has no replayable alarm: that part then does not count. */
+  alarm: (Part & { detected: boolean }) | null;
+  efficiency: Part;
   spentCoins: number;
   usefulCoins: number;
-  efficiencyPoints: number;
+  /** Out of 100, scaled over the parts that apply. */
   total: number;
   verdict: Verdict;
 }
@@ -142,17 +164,30 @@ export function usefulCards(threats: Scenario[], rule: RuleEntry | null): Set<st
 
 export function score(threats: Scenario[], rule: RuleEntry | null, picks: Picks, cards: Map<string, Card>): Score {
   const cov = threats.map((s) => coverage(s, picks));
-  const covered = cov.filter((c) => c.covered).length;
-  const coveragePoints = covered * COVERAGE_POINTS_PER_THREAT;
+  const full = cov.filter((c) => c.level === "full").length;
+  const partial = cov.filter((c) => c.level === "partial").length;
+  // A threat no card can warn about (needs people or lab tests) is taught, not scored.
+  const scorable = threats.filter((s) => s.capable_cards.length > 0).length;
+  const threatPart: Part = { points: full * THREAT_POINTS + partial * PARTIAL_THREAT_POINTS, max: scorable * THREAT_POINTS };
+  const detected = rule ? detects(rule, picks).detected : false;
+  const alarm = rule ? { points: detected ? ALARM_POINTS : 0, max: ALARM_POINTS, detected } : null;
+
   const useful = usefulCards(threats, rule);
   const spentCoins = spent(picks, cards);
   const usefulCoins = Object.entries(picks)
     .filter(([id]) => useful.has(id))
     .reduce((sum, [id, n]) => sum + (cards.get(id)?.cost ?? 0) * n, 0);
-  const efficiencyPoints = spentCoins ? Math.round((EFFICIENCY_POINTS * usefulCoins) / spentCoins) : 0;
-  const total = coveragePoints + efficiencyPoints;
+  const efficiency: Part = {
+    points: spentCoins ? Math.round((EFFICIENCY_POINTS * usefulCoins) / spentCoins) : 0,
+    max: EFFICIENCY_POINTS,
+  };
+
+  const parts = [threatPart, efficiency, ...(alarm ? [alarm] : [])];
+  const earned = parts.reduce((sum, p) => sum + p.points, 0);
+  const max = parts.reduce((sum, p) => sum + p.max, 0);
+  const total = max ? Math.round((100 * earned) / max) : 0;
   const verdict: Verdict = total >= 85 ? "excellent" : total >= 60 ? "good" : total >= 30 ? "learning" : "start";
-  return { coverage: cov, covered, coveragePoints, spentCoins, usefulCoins, efficiencyPoints, total, verdict };
+  return { coverage: cov, full, partial, threats: threatPart, alarm, efficiency, spentCoins, usefulCoins, total, verdict };
 }
 
 // ---------------------------------------------------------------- reveal
@@ -163,10 +198,11 @@ export interface MixRow {
   argus: number;
 }
 
-/** Player's network next to the real ARGUS network, one row per card used by either. */
-export function compareMix(mon: Monument, picks: Picks): MixRow[] {
+/** Player's network next to the real ARGUS network, one row per card used by either.
+ *  Human cards are left out: ARGUS lists instruments only, so "ARGUS: 0 observers" would mislead. */
+export function compareMix(mon: Monument, picks: Picks, human: Set<string> = new Set()): MixRow[] {
   const argus = new Map(mon.installed.by_card.map((r) => [r.card, r.count]));
-  const ids = new Set([...argus.keys(), ...owned(picks)]);
+  const ids = new Set([...argus.keys(), ...owned(picks)].filter((c) => !human.has(c)));
   return [...ids]
     .map((card) => ({ card, player: picks[card] ?? 0, argus: argus.get(card) ?? 0 }))
     .sort((a, b) => b.argus - a.argus || b.player - a.player || a.card.localeCompare(b.card));

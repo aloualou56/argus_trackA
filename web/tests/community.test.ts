@@ -35,6 +35,12 @@ describe("community store", () => {
     expect(topCard(s)).toEqual({ card: "humidity", share: 2 / 3 });
   });
 
+  it("can skip cards with no ARGUS count, such as the human observer", () => {
+    const s = summarize([play({ observer: 1, humidity: 1 }), play({ observer: 1 })]);
+    expect(topCard(s)).toEqual({ card: "observer", share: 1 });
+    expect(topCard(s, new Set(["observer"]))).toEqual({ card: "humidity", share: 0.5 });
+  });
+
   it("filters by monument, level and class code", async () => {
     const store = new LocalCommunityStore(new MemoryStorage() as unknown as Storage);
     await store.submit(play({ humidity: 1 }));

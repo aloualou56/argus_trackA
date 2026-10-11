@@ -1,5 +1,5 @@
 {
-  "_about": "AUTHORED by the game team, not ARGUS data. Card names, sentences, groups and coin costs are game-design assumptions for human review. Costs are game coins, not real prices. 'instrument_types' links each card to ARGUS instrument-type names (instrument-types.json) so the reveal can group the real network by card. 'on_map': false means the card covers the whole area and gets no pin on the map (default true).",
+  "_about": "AUTHORED by the game team, not ARGUS data. Card names, sentences, groups and coin costs are game-design assumptions for human review. Costs are game coins, not real prices. 'instrument_types' links each card to ARGUS instrument-type names (instrument-types.json) so the reveal can group the real network by card. 'on_map': false means the card covers the whole area and gets no pin on the map (default true). 'kind': 'human' marks a card that stands for people, not an instrument: it has no ARGUS instrument types, is left out of the reveal comparison and never detects AD-RT alarms (default 'instrument').",
   "currency": "coins",
   "groups": [
     { "id": "air", "name": { "en": "Air and light", "el": "Αέρας και φως" } },
@@ -103,6 +103,14 @@
       "tells": { "en": "Listens for tiny sounds inside walls and wood, like cracking.", "el": "Ακούει μικροσκοπικούς ήχους μέσα σε τοίχους και ξύλα, όπως ένα τρίξιμο." },
       "needs_review": true,
       "review_note": "ARGUS lists it as 'Acoustic Emission'. Confirm the plain description with the Ranverso team."
+    },
+    {
+      "id": "observer", "group": "eyes", "cost": 1, "on_map": false, "kind": "human",
+      "instrument_types": [],
+      "name": { "en": "Human observer", "el": "Άνθρωπος-παρατηρητής" },
+      "tells": { "en": "A guard or volunteer walks around regularly and reports what they see: new cracks, mould, insects, damage.", "el": "Ένας φύλακας ή εθελοντής κάνει τακτικά τον γύρο του μνημείου και αναφέρει ό,τι δει: νέες ρωγμές, μούχλα, έντομα, ζημιές." },
+      "needs_review": true,
+      "review_note": "Not an ARGUS instrument: stands for regular visual inspection by guards, staff or trained volunteers (citizen science). Cost and the threats it helps with are game-design choices. It never counts for AD-RT alarm detection, because people do not measure day and night."
     },
     {
       "id": "visitor_counter", "group": "eyes", "cost": 2,

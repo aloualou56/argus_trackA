@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { ScreenProps } from "../App";
 import { Icon } from "../components/Icon";
-import { argusCards, cardById, detects, featuredAlarm, missionScenarios, ruleFor } from "../game/logic";
+import { argusCards, cardById, detects, featuredAlarm, humanCards, missionScenarios, owned, ruleFor } from "../game/logic";
 import { useI18n } from "../i18n";
 
 export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
@@ -36,6 +36,8 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
   const detection = detects(rule, session.picks);
   const missing = list(detection.missing.map((group) => names(group, "disjunction")));
   const caughtBy = argusCards(alarm);
+  const human = humanCards(data);
+  const pickedHuman = [...owned(session.picks)].some((c) => human.has(c));
   const scale = Math.max(alarm.value, alarm.threshold) * 1.15;
   const missionKeys = new Set(missionScenarios(mon, session.level).map((s) => s.scenario_key));
   const linked = (alarm.context?.links ?? [])
@@ -84,6 +86,8 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
           </strong>
         </p>
         {caughtBy.length > 0 && <p>{t("event.argusCaught", { names: names(caughtBy) })}</p>}
+        {pickedHuman && <p>{t("event.human")}</p>}
+        <p className="small">{t("event.counts")}</p>
         {alarm.instruments.some((i) => i.lat !== null) && <p className="small">{t("event.mapNote")}</p>}
       </section>
 

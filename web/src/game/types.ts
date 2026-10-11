@@ -25,6 +25,8 @@ export interface Card {
   needs_review: boolean;
   /** false: covers the whole area (satellite), so it gets no pin on the map. */
   on_map: boolean;
+  /** "human": people, not an instrument (observer). Never in the ARGUS comparison, never detects an alarm. */
+  kind: "instrument" | "human";
 }
 
 export interface CardGroup {
@@ -52,7 +54,10 @@ export interface Scenario {
   level: LevelId;
   source: { document?: string; section?: string };
   plain: { title: Text; text: Text; authored: true; needs_review: boolean };
+  /** Every card that helps with this threat. */
   capable_cards: string[];
+  /** The subset that watches the threat directly; the others only support. */
+  primary_cards: string[];
   capable_cards_source: "scenario" | "category" | "missing";
   capable_cards_needs_review: boolean;
 }

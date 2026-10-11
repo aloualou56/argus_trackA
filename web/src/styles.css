@@ -17,6 +17,8 @@
   --yes-bg: #e6f0f8;
   --no: #8a3700;
   --no-bg: #fbede3;
+  --partial: #5c4a00; /* dark ochre: 7.5:1 on its background; shape (double border, half icon) carries the meaning too */
+  --partial-bg: #f6efd2;
   --you: #0072b2; /* Okabe-Ito blue */
   --argus: #d55e00; /* Okabe-Ito vermillion */
   --argus-pin: #a84300; /* darker vermillion: white numbers on it reach 5.5:1 */
@@ -805,6 +807,9 @@ main {
 .learn.is-no {
   border-left: 6px dashed var(--no);
 }
+.learn.is-partial {
+  border-left: 6px double var(--partial);
+}
 .learn p:last-child {
   margin-bottom: 0;
 }
@@ -824,6 +829,19 @@ main {
 .is-no .status-tag {
   background: var(--no-bg);
   color: var(--no);
+}
+.is-partial .status-tag {
+  background: var(--partial-bg);
+  color: var(--partial);
+}
+.breakdown-label {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+.breakdown-label svg {
+  flex: none;
+  margin-top: 0.15rem;
 }
 
 /* ------------------------------------------------------------------ board: map + panel */

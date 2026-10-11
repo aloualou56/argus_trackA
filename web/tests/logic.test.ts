@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
@@ -14,6 +15,7 @@ import {
   placeNear,
   detects,
   featuredAlarm,
+  humanCards,
   isPlayable,
   missionScenarios,
   ruleFor,
@@ -42,13 +44,55 @@ describe("data pack", () => {
     expect(() => missionScenarios(ranverso, "catastrophic")).toThrow();
   });
 
-  it("every mission threat can be covered within the budget", () => {
+  it("a full score fits the budget, but buying every helpful card does not", () => {
     for (const lv of ranverso.levels.filter((l) => l.available)) {
-      const cheapest = missionScenarios(ranverso, lv.id).map((s) =>
-        Math.min(...s.capable_cards.map((c) => cards.get(c)!.cost)),
-      );
-      expect(cheapest.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(ranverso.budget);
+      const threats = missionScenarios(ranverso, lv.id);
+      const rule = ruleFor(data, ranverso, featuredAlarm(ranverso, lv.id)!)!;
+      // Upper bound for a perfect network: the cheapest primary card per threat plus the cheapest alarm card.
+      const cheapest = (ids: string[]) => Math.min(...ids.map((c) => cards.get(c)!.cost));
+      const perfect = threats.reduce((sum, s) => sum + cheapest(s.primary_cards), 0) + cheapest(rule.detect_with[0]);
+      expect(perfect, lv.id).toBeLessThanOrEqual(ranverso.budget);
+      const everything = new Set([...threats.flatMap((s) => s.capable_cards), ...rule.detect_with.flat()]);
+      expect([...everything].reduce((sum, c) => sum + cards.get(c)!.cost, 0), lv.id).toBeGreaterThan(ranverso.budget);
     }
+  });
+
+  it("every threat that a card can help with has at least one primary card", () => {
+    for (const s of ranverso.scenarios) {
+      expect(s.primary_cards.every((c) => s.capable_cards.includes(c)), s.scenario_key).toBe(true);
+      expect(s.primary_cards.length > 0, s.scenario_key).toBe(s.capable_cards.length > 0);
+    }
+  });
+
+  it("never replays an alarm from a flat (probably stuck) sensor", () => {
+    for (const lv of ranverso.levels.filter((l) => l.available)) {
+      expect(featuredAlarm(ranverso, lv.id)!.quality_flags, lv.id).not.toContain("flat_signal");
+    }
+  });
+});
+
+describe("human observer", () => {
+  const observer = cards.get("observer")!;
+
+  it("is a human card without ARGUS instruments or a map pin", () => {
+    expect(observer.kind).toBe("human");
+    expect(observer.instrument_types).toEqual([]);
+    expect(observer.on_map).toBe(false);
+    expect(humanCards(data)).toEqual(new Set(["observer"]));
+  });
+
+  it("never detects an AD-RT alarm", () => {
+    for (const rule of Object.values(data.rule_sensor_map)) expect(detects(rule, { observer: 5 }).detected).toBe(false);
+  });
+
+  it("watches woodworm directly", () => {
+    const woodworm = missionScenarios(ranverso, "extreme").find((s) => s.scenario_key === "ranverso.pests.woodworms")!;
+    expect(coverage(woodworm, { observer: 1 })).toMatchObject({ level: "full", by: ["observer"] });
+  });
+
+  it("is left out of the comparison with ARGUS", () => {
+    const rows = compareMix(ranverso, { observer: 1, humidity: 1 }, humanCards(data));
+    expect(rows.some((r) => r.card === "observer")).toBe(false);
   });
 });
 
@@ -90,14 +134,32 @@ describe("detection", () => {
 });
 
 describe("score", () => {
+  // Extreme: groundwater (primary soil moisture), woodworm (primary acoustic or observer),
+  // long damp periods (primary humidity); replayed alarm: 7-day rain (rain gauge or weather station).
   const threats = missionScenarios(ranverso, "extreme");
   const rule = ruleFor(data, ranverso, featuredAlarm(ranverso, "extreme")!);
+  const perfect = { soil_moisture: 1, observer: 1, humidity: 1, rain_gauge: 1 };
 
-  it("gives full marks for covering all threats with only useful cards", () => {
-    const s = score(threats, rule, { humidity: 1, soil_moisture: 1 }, cards);
-    expect(s.covered).toBe(3);
+  it("gives full marks for watching every threat directly and catching the alarm", () => {
+    const s = score(threats, rule, perfect, cards);
+    expect([s.full, s.partial]).toEqual([3, 0]);
+    expect(s.alarm).toEqual({ points: 25, max: 25, detected: true });
     expect(s.total).toBe(100);
     expect(s.verdict).toBe("excellent");
+  });
+
+  it("no longer gives full marks to one cheap sensor that only supports most threats", () => {
+    const s = score(threats, rule, { humidity: 1 }, cards);
+    expect([s.full, s.partial]).toEqual([1, 2]);
+    expect(s.alarm?.detected).toBe(false);
+    expect(s.total).toBeLessThan(60);
+  });
+
+  it("costs points when the network misses the real alarm", () => {
+    const { rain_gauge: _, ...noRain } = perfect;
+    const s = score(threats, rule, noRain, cards);
+    expect(s.alarm?.points).toBe(0);
+    expect(s.total).toBe(75);
   });
 
   it("counts coins spent on the replayed alarm's sensor as useful", () => {
@@ -106,10 +168,16 @@ describe("score", () => {
   });
 
   it("lowers efficiency for sensors that help with none of the dangers", () => {
-    const s = score(threats, rule, { humidity: 1, crackmeter: 2 }, cards);
-    expect(s.covered).toBe(3);
-    expect(s.efficiencyPoints).toBeLessThan(25);
+    const s = score(threats, rule, { ...perfect, crackmeter: 2 }, cards);
+    expect(s.full).toBe(3);
+    expect(s.efficiency.points).toBeLessThan(15);
     expect(s.total).toBeLessThan(100);
+  });
+
+  it("scales to 100 over the parts that apply when there is no alarm to replay", () => {
+    const s = score(threats, null, { soil_moisture: 1, observer: 1, humidity: 1 }, cards);
+    expect(s.alarm).toBeNull();
+    expect(s.total).toBe(100);
   });
 
   it("scores zero for an empty network", () => {
@@ -118,12 +186,14 @@ describe("score", () => {
     expect(s.verdict).toBe("start");
   });
 
-  it("reports which of the player's cards cover a threat", () => {
+  it("reports full, partial or no cover, primary cards first", () => {
     const groundwater = threats[0];
-    expect(coverage(groundwater, { soil_moisture: 1, crackmeter: 1 })).toMatchObject({
-      covered: true,
-      by: ["soil_moisture"],
+    expect(coverage(groundwater, { humidity: 1, soil_moisture: 1, crackmeter: 1 })).toMatchObject({
+      level: "full",
+      by: ["soil_moisture", "humidity"],
     });
+    expect(coverage(groundwater, { humidity: 1 }).level).toBe("partial");
+    expect(coverage(groundwater, { crackmeter: 1 })).toMatchObject({ level: "none", by: [] });
   });
 });
 

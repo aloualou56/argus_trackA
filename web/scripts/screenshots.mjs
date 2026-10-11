@@ -5,7 +5,8 @@
 //   npm run build && npm run screenshots
 //
 // Uses the Edge or Chrome already installed (playwright-core downloads no browser).
-// Set BROWSER_CHANNEL=chrome to use Chrome instead of Edge.
+// Set BROWSER_CHANNEL=chrome to use Chrome instead of Edge, or BROWSER_PATH=/path/to/chromium for any
+// other Chromium. SCREENSHOT_DIR saves the pictures somewhere else than docs/screenshots.
 import AxeBuilder from "@axe-core/playwright";
 import { spawn } from "node:child_process";
 import { mkdirSync, readFileSync } from "node:fs";
@@ -15,7 +16,7 @@ import { chromium } from "playwright-core";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const web = join(here, "..");
-const outDir = join(web, "..", "docs", "screenshots");
+const outDir = process.env.SCREENSHOT_DIR || join(web, "..", "docs", "screenshots");
 const PORT = Number(process.env.SCREENSHOT_PORT) || 4180;
 const URL_BASE = `http://localhost:${PORT}/`;
 
@@ -148,18 +149,19 @@ async function play(browser, lang, vpName) {
   await add("crackmeter").click();
   const live = await page.locator("[aria-live=polite]").innerText();
   if (!live.includes(cardName(lang, "crackmeter"))) note(`${prefix}: live region did not announce the change (${live})`);
-  const coinsText = fill(t["mission.coinsLeft"], { left: 10 - 2 * 1 - 2 - 2, budget: 10 });
+  const coinsText = fill(t["mission.coinsLeft"], { left: ranverso.budget - 2 * 1 - 2 - 2, budget: ranverso.budget });
   if (!(await page.locator("#main").getByText(coinsText).isVisible())) note(`${prefix}: expected "${coinsText}"`);
 
-  // Overspending is blocked and announced.
-  await add("camera").click();
+  // Overspending is blocked and announced (the camera costs more than the coins left).
   await add("camera").click({ force: true });
   const afterCamera = await page.locator("[aria-live=polite]").innerText();
   if (!afterCamera.includes(fill(t["mission.notEnough"], { name: cardName(lang, "camera") }))) {
     note(`${prefix}: overspending was not announced (${afterCamera})`);
   }
-  // humidity x2, soil x1, crack x1, camera x1: five pins
-  await checkMap(page, `${prefix} mission`, ".pin-you", 5);
+  // The human observer joins the network but gets no pin.
+  await add("observer").click();
+  // humidity x2, soil x1, crack x1: four pins
+  await checkMap(page, `${prefix} mission`, ".pin-you", 4);
   if (!(await page.locator(".crosshair").count())) note(`${prefix}: no crosshair on the mission map`);
   await checkPage(page, `${prefix} mission`);
   await shot(page, `${prefix}-3-mission`);
@@ -171,12 +173,17 @@ async function play(browser, lang, vpName) {
   const shown = await page.$$eval(".pin-argus", (pins) => pins.reduce((n, p) => n + (Number(p.textContent) || 1), 0));
   const placed = ranverso.installed.points.reduce((n, p) => n + p.instruments.length, 0);
   if (shown !== placed) note(`${prefix} reveal: ARGUS markers show ${shown} instruments, expected ${placed}`);
+  if (!(await page.getByText(fill(t["reveal.human"], { name: cardName(lang, "observer") })).isVisible())) {
+    note(`${prefix} reveal: no note about the human observer`);
+  }
+  if (await page.locator(".mix").getByText(cardName(lang, "observer")).count()) note(`${prefix} reveal: observer in the ARGUS table`);
   await checkPage(page, `${prefix} reveal`);
   await shot(page, `${prefix}-4-reveal`);
 
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} event`);
+  if (!(await page.getByText(t["event.human"]).isVisible())) note(`${prefix} event: no note on what people cannot catch`);
   await checkMap(page, `${prefix} event`, ".alarm-ring", 1);
   await checkPage(page, `${prefix} event`);
   await shot(page, `${prefix}-5-event`);
@@ -184,6 +191,10 @@ async function play(browser, lang, vpName) {
   await page.getByRole("button", { name: t["event.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} score`);
+  // No rain gauge or weather station: the replayed rain alarm is missed and that shows in the score.
+  if (!(await page.getByText(t["score.alarmNo"]).isVisible())) note(`${prefix} score: missed alarm not shown`);
+  // Soil probe, observer and humidity watch groundwater, woodworm and damp periods directly.
+  if ((await page.locator(".learn.is-yes").count()) !== 3) note(`${prefix} score: expected 3 fully covered dangers`);
   await checkPage(page, `${prefix} score`);
   await shot(page, `${prefix}-6-score`);
 
@@ -195,7 +206,8 @@ async function play(browser, lang, vpName) {
   await context.close();
 }
 
-// Low level replays a "below the limit" alarm (soil moisture) with a flat-signal note.
+// Low level replays the last alarm of the rain episode. The soil-moisture alarms from a flat signal
+// (probably a stuck sensor) are never replayed; they come back as a discussion question in the reveal.
 async function playLowLevel(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -208,13 +220,15 @@ ${prefix}`);
   await page.getByRole("radio", { name: new RegExp(t["level.low"]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
   await page.getByRole("button", { name: t["story.continue"] }).click();
-  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "soil_moisture") }), exact: true }).click();
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  const stuck = ranverso.discussion_prompts.find((p) => p.en.includes("stuck"))[lang];
+  if (!(await page.getByText(stuck).isVisible())) note(`${prefix}: stuck-sensor question missing from the reveal`);
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
-  if (!(await page.getByText(t["event.flatNote"]).isVisible())) note(`${prefix}: flat-signal note missing`);
-  if (!(await page.getByText(fill(t["event.yes"], { names: cardName(lang, "soil_moisture") })).isVisible())) {
-    note(`${prefix}: soil-moisture probe should detect the soil alarm`);
+  if (await page.getByText(t["event.flatNote"]).count()) note(`${prefix}: a flat-signal alarm was replayed`);
+  if (!(await page.getByText(fill(t["event.yes"], { names: cardName(lang, "rain_gauge") })).isVisible())) {
+    note(`${prefix}: the rain gauge should detect the rain alarm`);
   }
   await checkPage(page, `${prefix} event`);
   await shot(page, `${prefix}-5-event`);
@@ -261,7 +275,10 @@ ${prefix}`);
 
 mkdirSync(outDir, { recursive: true });
 const server = await startServer();
-const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "msedge", headless: true });
+const browser = await chromium.launch({
+  ...(process.env.BROWSER_PATH ? { executablePath: process.env.BROWSER_PATH } : { channel: process.env.BROWSER_CHANNEL || "msedge" }),
+  headless: true,
+});
 try {
   for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   for (const lang of ["el", "en"]) await playLowLevel(browser, lang);

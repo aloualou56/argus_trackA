@@ -44,8 +44,11 @@ export function summarize(records: PlayRecord[]): Summary {
   };
 }
 
-export function topCard(summary: Summary): { card: string; share: number } | null {
-  const entries = Object.entries(summary.cardShare).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+/** Most chosen card, skipping `exclude` (e.g. the human observer, which has no ARGUS count to compare). */
+export function topCard(summary: Summary, exclude: Set<string> = new Set()): { card: string; share: number } | null {
+  const entries = Object.entries(summary.cardShare)
+    .filter(([card]) => !exclude.has(card))
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   return entries.length ? { card: entries[0][0], share: entries[0][1] } : null;
 }
 
