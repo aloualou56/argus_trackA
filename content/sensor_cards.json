@@ -1,0 +1,136 @@
+{
+  "_about": "AUTHORED by the game team, not ARGUS data. Card names, sentences, groups and coin costs are game-design assumptions for human review. Costs are game coins, not real prices. 'instrument_types' links each card to ARGUS instrument-type names (instrument-types.json) so the reveal can group the real network by card.",
+  "currency": "coins",
+  "groups": [
+    { "id": "air", "name": { "en": "Air and light", "el": "Αέρας και φως" } },
+    { "id": "water", "name": { "en": "Water and weather", "el": "Νερό και καιρός" } },
+    { "id": "structure", "name": { "en": "Walls and ground", "el": "Τοίχοι και έδαφος" } },
+    { "id": "eyes", "name": { "en": "Eyes and counters", "el": "Μάτια και μετρητές" } }
+  ],
+  "cards": [
+    {
+      "id": "humidity", "group": "air", "cost": 1,
+      "instrument_types": ["Humidity Sensor"],
+      "name": { "en": "Humidity sensor", "el": "Αισθητήρας υγρασίας" },
+      "tells": { "en": "Tells us how damp the air is.", "el": "Μας λέει πόση υγρασία έχει ο αέρας." },
+      "needs_review": false
+    },
+    {
+      "id": "temperature", "group": "air", "cost": 1,
+      "instrument_types": ["Temperature Sensor"],
+      "name": { "en": "Thermometer", "el": "Θερμόμετρο" },
+      "tells": { "en": "Tells us how warm or cold it is.", "el": "Μας λέει πόσο ζεστό ή κρύο κάνει." },
+      "needs_review": false
+    },
+    {
+      "id": "airflow", "group": "air", "cost": 2,
+      "instrument_types": ["Air Flow Sensor", "Pir-Airflow Sensor"],
+      "name": { "en": "Air-flow sensor", "el": "Αισθητήρας ροής αέρα" },
+      "tells": { "en": "Tells us if air moves around or stays trapped inside.", "el": "Μας λέει αν ο αέρας κυκλοφορεί ή μένει κλεισμένος μέσα." },
+      "needs_review": true,
+      "review_note": "Pir-Airflow Sensor (Baltanas) grouped here by name only; confirm what it measures."
+    },
+    {
+      "id": "air_quality", "group": "air", "cost": 2,
+      "instrument_types": ["Gas Sensor"],
+      "name": { "en": "Air-quality sensor", "el": "Αισθητήρας ποιότητας αέρα" },
+      "tells": { "en": "Tells us if there are polluting gases in the air.", "el": "Μας λέει αν υπάρχουν ρυπογόνα αέρια στον αέρα." },
+      "needs_review": false
+    },
+    {
+      "id": "light_uv", "group": "air", "cost": 2,
+      "instrument_types": ["Lux Meter Sensor", "UV Meter Sensor", "Pyranometer Sensor"],
+      "name": { "en": "Light and UV meter", "el": "Μετρητής φωτός και UV" },
+      "tells": { "en": "Tells us how much sunlight and UV reach the walls and paintings.", "el": "Μας λέει πόσο φως και πόση υπεριώδης ακτινοβολία φτάνουν στους τοίχους και στις τοιχογραφίες." },
+      "needs_review": true,
+      "review_note": "Merges three ARGUS types (lux meter, UV meter, pyranometer) into one card for simplicity."
+    },
+    {
+      "id": "rain_gauge", "group": "water", "cost": 1,
+      "instrument_types": ["Rain Gauge Sensor"],
+      "name": { "en": "Rain gauge", "el": "Βροχόμετρο" },
+      "tells": { "en": "Tells us how much rain has fallen.", "el": "Μας λέει πόση βροχή έπεσε." },
+      "needs_review": false
+    },
+    {
+      "id": "soil_moisture", "group": "water", "cost": 2,
+      "instrument_types": ["Soil Moisture Sensor", "Water Potential Sensor"],
+      "name": { "en": "Soil moisture probe", "el": "Αισθητήρας υγρασίας εδάφους" },
+      "tells": { "en": "Tells us how wet the ground is.", "el": "Μας λέει πόσο υγρό είναι το έδαφος." },
+      "needs_review": true,
+      "review_note": "Water Potential Sensor (Baltanas) grouped here; it measures soil water tension rather than water content."
+    },
+    {
+      "id": "weather_station", "group": "water", "cost": 3,
+      "instrument_types": ["Weather Station Sensor", "Barometer Sensor"],
+      "name": { "en": "Weather station", "el": "Μετεωρολογικός σταθμός" },
+      "tells": { "en": "Tells us about wind, rain, heat and air pressure outside.", "el": "Μας λέει για τον άνεμο, τη βροχή, τη ζέστη και την πίεση του αέρα έξω." },
+      "needs_review": true,
+      "review_note": "Assumes every ARGUS weather station includes wind, rain, temperature and pressure. Barometer Sensor grouped here."
+    },
+    {
+      "id": "crackmeter", "group": "structure", "cost": 2,
+      "instrument_types": ["Crackmeter Sensor"],
+      "name": { "en": "Crack meter", "el": "Ρωγμόμετρο" },
+      "tells": { "en": "Tells us if a crack is opening.", "el": "Μας λέει αν μια ρωγμή ανοίγει." },
+      "needs_review": false
+    },
+    {
+      "id": "tiltmeter", "group": "structure", "cost": 2,
+      "instrument_types": ["Tiltmeter Sensor"],
+      "name": { "en": "Tilt meter", "el": "Κλισιόμετρο" },
+      "tells": { "en": "Tells us if a wall is starting to lean.", "el": "Μας λέει αν ένας τοίχος αρχίζει να γέρνει." },
+      "needs_review": false
+    },
+    {
+      "id": "vibration", "group": "structure", "cost": 2,
+      "instrument_types": ["Vibration Sensor", "Accelerometer Sensor"],
+      "name": { "en": "Vibration sensor", "el": "Αισθητήρας δονήσεων" },
+      "tells": { "en": "Tells us if the building shakes, from traffic or an earthquake.", "el": "Μας λέει αν το κτίριο τρέμει, από την κίνηση των οχημάτων ή από σεισμό." },
+      "needs_review": false
+    },
+    {
+      "id": "gnss", "group": "structure", "cost": 3,
+      "instrument_types": ["GNSS Sensor"],
+      "name": { "en": "Satellite position marker (GNSS)", "el": "Δέκτης δορυφορικού εντοπισμού (GNSS)" },
+      "tells": { "en": "Tells us if the ground or the building is slowly moving.", "el": "Μας λέει αν το έδαφος ή το κτίριο μετακινείται σιγά σιγά." },
+      "needs_review": false
+    },
+    {
+      "id": "acoustic", "group": "structure", "cost": 3,
+      "instrument_types": ["Acoustic Sensor"],
+      "name": { "en": "Listening sensor", "el": "Ακουστικός αισθητήρας" },
+      "tells": { "en": "Listens for tiny sounds inside walls and wood, like cracking.", "el": "Ακούει μικροσκοπικούς ήχους μέσα σε τοίχους και ξύλα, όπως ένα τρίξιμο." },
+      "needs_review": true,
+      "review_note": "ARGUS lists it as 'Acoustic Emission'. Confirm the plain description with the Ranverso team."
+    },
+    {
+      "id": "visitor_counter", "group": "eyes", "cost": 2,
+      "instrument_types": ["People Counter Sensor", "Barrier Sensor"],
+      "name": { "en": "Visitor counter", "el": "Μετρητής επισκεπτών" },
+      "tells": { "en": "Tells us how many people come in.", "el": "Μας λέει πόσοι άνθρωποι μπαίνουν." },
+      "needs_review": true,
+      "review_note": "Barrier Sensor (Baltanas, 'Barrier Event') grouped here by guess; confirm."
+    },
+    {
+      "id": "camera", "group": "eyes", "cost": 4,
+      "instrument_types": ["Multispectral Camera Sensor"],
+      "name": { "en": "Special camera", "el": "Ειδική κάμερα" },
+      "tells": { "en": "Takes special photos that show damp and damage our eyes cannot see.", "el": "Τραβάει ειδικές φωτογραφίες που δείχνουν υγρασία και φθορές που δεν βλέπει το μάτι μας." },
+      "needs_review": true,
+      "review_note": "Multispectral camera; confirm what ARGUS uses it for at Ranverso."
+    },
+    {
+      "id": "satellite", "group": "eyes", "cost": 3,
+      "instrument_types": ["Earth Observation Layer Instrument"],
+      "name": { "en": "Satellite images", "el": "Δορυφορικές εικόνες" },
+      "tells": { "en": "Watches the area from space for floods, fires and changes on the ground.", "el": "Παρακολουθεί την περιοχή από το διάστημα για πλημμύρες, φωτιές και αλλαγές στο έδαφος." },
+      "needs_review": true,
+      "review_note": "ARGUS lists this as a virtual 'Earth Observation Layer Instrument', not a physical sensor on site."
+    }
+  ],
+  "unmapped_instrument_types": {
+    "_about": "ARGUS instrument types we could not map to a card. They appear in the reveal as 'other instrument' with the ARGUS name.",
+    "types": ["Composite sensor 1 Sensor", "Composite sensor 2 Sensor"]
+  }
+}

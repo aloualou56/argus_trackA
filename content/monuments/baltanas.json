@@ -1,0 +1,7 @@
+{
+  "_about": "DRAFT pack: names only. See delos.json. Needs review.",
+  "pilot_key": "baltanas",
+  "draft": true,
+  "display_name": { "en": "The cellar town of Baltanás", "el": "Τα υπόγεια κελάρια της Μπαλτανάς" },
+  "place": { "en": "Palencia, Spain", "el": "Παλένθια, Ισπανία" }
+}

@@ -1,0 +1,7 @@
+{
+  "_about": "DRAFT pack: names only. See delos.json. Needs review.",
+  "pilot_key": "schenkenberg",
+  "draft": true,
+  "display_name": { "en": "Schenkenberg Castle", "el": "Κάστρο Σένκενμπεργκ" },
+  "place": { "en": "Aargau, Switzerland", "el": "Αργκάου, Ελβετία" }
+}

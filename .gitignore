@@ -1,0 +1,17 @@
+# ARGUS API snapshot: 43 MB, challenge data, read-only input. Keep it out of git and share it
+# the way the challenge allows. The game only needs web/public/data/game_data.json (committed).
+snapshot/
+snapshot.zip
+
+# Never commit API scripts or credentials.
+test_api.py
+.env
+*.token
+
+# Python
+__pycache__/
+*.pyc
+
+# Web
+node_modules/
+web/dist/

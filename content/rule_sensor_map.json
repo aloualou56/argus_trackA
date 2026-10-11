@@ -1,0 +1,203 @@
+{
+  "_about": "AUTHORED by the game team from the AD-RT policy names and descriptions (policies.json, policy_type_id 2). Not an ARGUS document. Keys are 'pilot:rule' because rule names are reused with different meanings across pilots. 'detect_with' is a list of groups: the player's network detects the alarm if, for EVERY group, it has at least one card from that group. Units are NOT given in the ARGUS alarm data; 'unit' is our assumption unless 'unit_confirmed' is true. Entries with needs_review=true are uncertain.",
+  "rules": {
+    "delos:R1a_rain_1h": {
+      "detect_with": [["rain_gauge", "weather_station"]],
+      "measures": { "en": "rain in one hour", "el": "βροχή σε μία ώρα" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": false
+    },
+    "delos:R1b_rain_3h": {
+      "detect_with": [["rain_gauge", "weather_station"]],
+      "measures": { "en": "rain in three hours", "el": "βροχή σε τρεις ώρες" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": false
+    },
+    "delos:R2_wind": {
+      "detect_with": [["weather_station"]],
+      "measures": { "en": "wind speed", "el": "ταχύτητα ανέμου" },
+      "unit": "m/s", "unit_confirmed": false, "needs_review": true,
+      "note": "Wind unit assumed (m/s); threshold 12."
+    },
+    "delos:R3_hum_cross": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "how often air humidity crossed the safe level", "el": "πόσο συχνά η υγρασία του αέρα πέρασε το ασφαλές όριο" },
+      "unit": null, "unit_confirmed": false, "needs_review": false
+    },
+    "baltanas:R1_ppv": {
+      "detect_with": [["vibration"]],
+      "measures": { "en": "strength of vibrations (peak particle velocity)", "el": "ένταση των δονήσεων (μέγιστη ταχύτητα σωματιδίων)" },
+      "unit": "mm/s", "unit_confirmed": false, "needs_review": true,
+      "note": "PPV unit assumed (mm/s); threshold 0.25."
+    },
+    "baltanas:R2_hum_daily_range": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "how much air humidity changed in one day", "el": "πόσο άλλαξε η υγρασία του αέρα μέσα σε μία μέρα" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "baltanas:R3_gnss_change": {
+      "detect_with": [["gnss"]],
+      "measures": { "en": "how much the ground moved in one day", "el": "πόσο μετακινήθηκε το έδαφος μέσα σε μία μέρα" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": true,
+      "note": "GNSS daily change unit assumed (mm); threshold 3."
+    },
+    "baltanas:R4a_soil_high": {
+      "detect_with": [["soil_moisture"]],
+      "measures": { "en": "how wet the ground is", "el": "πόσο υγρό είναι το έδαφος" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "baltanas:R4b_soil_range": {
+      "detect_with": [["soil_moisture"]],
+      "measures": { "en": "how much ground wetness changed in one day", "el": "πόσο άλλαξε η υγρασία του εδάφους μέσα σε μία μέρα" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "baltanas:R5a_airflow_const": {
+      "detect_with": [["airflow"]],
+      "measures": { "en": "air that stays still for too long", "el": "αέρας που μένει ακίνητος για πολύ ώρα" },
+      "unit": null, "unit_confirmed": false, "needs_review": true,
+      "note": "'Abnormally constant' airflow may also be a sensor fault; check meaning with Baltanas team."
+    },
+    "baltanas:R5b_airflow_range": {
+      "detect_with": [["airflow"]],
+      "measures": { "en": "how much air movement changed in one day", "el": "πόσο άλλαξε η κίνηση του αέρα μέσα σε μία μέρα" },
+      "unit": null, "unit_confirmed": false, "needs_review": false
+    },
+    "baltanas:R6_rain_1h": {
+      "detect_with": [["rain_gauge", "weather_station"]],
+      "measures": { "en": "rain in one hour", "el": "βροχή σε μία ώρα" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R1a_crack_step": {
+      "detect_with": [["crackmeter"]],
+      "measures": { "en": "a sudden jump in crack width", "el": "ένα απότομο άνοιγμα της ρωγμής" },
+      "unit": null, "unit_confirmed": true, "needs_review": false,
+      "note": "Policy says the value is normalised, so no physical unit."
+    },
+    "lucretili:R1b_crack_offset": {
+      "detect_with": [["crackmeter"]],
+      "measures": { "en": "how far a crack has moved from normal", "el": "πόσο έχει απομακρυνθεί η ρωγμή από το κανονικό" },
+      "unit": null, "unit_confirmed": true, "needs_review": false
+    },
+    "lucretili:R2a_tilt_step": {
+      "detect_with": [["tiltmeter"]],
+      "measures": { "en": "a sudden change in how a wall leans", "el": "μια απότομη αλλαγή στην κλίση ενός τοίχου" },
+      "unit": null, "unit_confirmed": true, "needs_review": false
+    },
+    "lucretili:R2b_tilt_offset": {
+      "detect_with": [["tiltmeter"]],
+      "measures": { "en": "how far a wall's lean has moved from normal", "el": "πόσο έχει αλλάξει η κλίση ενός τοίχου από το κανονικό" },
+      "unit": null, "unit_confirmed": true, "needs_review": false
+    },
+    "lucretili:R3_vib_zscore": {
+      "detect_with": [["vibration"]],
+      "measures": { "en": "unusually strong shaking", "el": "ασυνήθιστα δυνατό τράνταγμα" },
+      "unit": null, "unit_confirmed": true, "needs_review": false
+    },
+    "lucretili:R4a_hum_spike_6h": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "average air humidity over 6 hours", "el": "μέση υγρασία του αέρα σε 6 ώρες" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R4b_hum_persist_7d": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "air humidity staying high for 7 days", "el": "υγρασία του αέρα που μένει ψηλά για 7 μέρες" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R4c_hum_rapid_1h": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "how fast air humidity changed in one hour", "el": "πόσο γρήγορα άλλαξε η υγρασία του αέρα σε μία ώρα" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R5_visitors": {
+      "detect_with": [["visitor_counter"]],
+      "measures": { "en": "number of visitors", "el": "αριθμός επισκεπτών" },
+      "unit": null, "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R6a_rain": {
+      "detect_with": [["rain_gauge", "weather_station"]],
+      "measures": { "en": "rain in a short time", "el": "βροχή σε λίγη ώρα" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R6b_rain_cum7d": {
+      "detect_with": [["rain_gauge", "weather_station"]],
+      "measures": { "en": "rain over the last 7 days", "el": "βροχή των τελευταίων 7 ημερών" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R7_wind": {
+      "detect_with": [["weather_station"]],
+      "measures": { "en": "strong wind gusts", "el": "δυνατές ριπές ανέμου" },
+      "unit": null, "unit_confirmed": true, "needs_review": false,
+      "note": "Policy measures a peak ratio, so no physical unit."
+    },
+    "lucretili:R8_baro": {
+      "detect_with": [["weather_station"]],
+      "measures": { "en": "how much air pressure changed", "el": "πόσο άλλαξε η πίεση του αέρα" },
+      "unit": null, "unit_confirmed": false, "needs_review": true,
+      "note": "Barometric range threshold is 300 with no unit; Lucretili has no separate barometer, so we assume the weather station."
+    },
+    "lucretili:R9a_temp_lt": {
+      "detect_with": [["temperature", "weather_station"]],
+      "measures": { "en": "difference between the day's highest and lowest temperature", "el": "διαφορά ανάμεσα στη μέγιστη και την ελάχιστη θερμοκρασία της μέρας" },
+      "unit": "°C", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R9b_temp_st": {
+      "detect_with": [["temperature", "weather_station"]],
+      "measures": { "en": "how fast temperature changed in one hour", "el": "πόσο γρήγορα άλλαξε η θερμοκρασία σε μία ώρα" },
+      "unit": "°C", "unit_confirmed": false, "needs_review": false
+    },
+    "lucretili:R10_solar_zscore": {
+      "detect_with": [["light_uv"]],
+      "measures": { "en": "unusual sunlight readings", "el": "ασυνήθιστες μετρήσεις ηλιακού φωτός" },
+      "unit": null, "unit_confirmed": true, "needs_review": true,
+      "note": "CONFLICT: rule name says 'solar' but the policy name/description say 'GNSS z-score'. Lucretili has a pyranometer and no GNSS sensor, so we mapped it to light_uv. Ask ARGUS."
+    },
+    "ranverso:R1_hum_inside": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "air humidity inside the church", "el": "υγρασία του αέρα μέσα στην εκκλησία" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false,
+      "note": "All Ranverso values in the sample are above 100, so these alarms are excluded from the game."
+    },
+    "ranverso:R2_rain_7d": {
+      "detect_with": [["rain_gauge", "weather_station"]],
+      "measures": { "en": "rain over the last 7 days", "el": "βροχή των τελευταίων 7 ημερών" },
+      "unit": "mm", "unit_confirmed": false, "needs_review": true,
+      "note": "Threshold key is 'R2_rain_7d_diff'; we read it as 7-day rainfall in mm. Counting the weather station as a rain detector is our assumption."
+    },
+    "ranverso:R3_temp_nodiff": {
+      "detect_with": [["temperature", "weather_station"], ["soil_moisture"]],
+      "measures": { "en": "whether ground temperature follows air temperature", "el": "αν η θερμοκρασία του εδάφους ακολουθεί τη θερμοκρασία του αέρα" },
+      "unit": "°C", "unit_confirmed": false, "needs_review": true,
+      "note": "Policy calls this a 'sensor consistency' threat (a check on the sensors). Assumes the soil probe also measures soil temperature."
+    },
+    "ranverso:R4a_soil_high": {
+      "detect_with": [["soil_moisture"]],
+      "measures": { "en": "how wet the ground is", "el": "πόσο υγρό είναι το έδαφος" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "ranverso:R4b_soil_low": {
+      "detect_with": [["soil_moisture"]],
+      "measures": { "en": "how wet the ground is", "el": "πόσο υγρό είναι το έδαφος" },
+      "unit": "%", "unit_confirmed": false, "needs_review": false
+    },
+    "schenkenberg:R1_temp_hum": {
+      "detect_with": [["temperature", "weather_station"], ["humidity", "weather_station"]],
+      "measures": { "en": "frost and damp at the same time", "el": "παγετός και υγρασία ταυτόχρονα" },
+      "unit": null, "unit_confirmed": false, "needs_review": false,
+      "note": "Needs BOTH temperature and humidity."
+    },
+    "schenkenberg:R2_crack_step": {
+      "detect_with": [["crackmeter"]],
+      "measures": { "en": "a sudden jump in crack width", "el": "ένα απότομο άνοιγμα της ρωγμής" },
+      "unit": null, "unit_confirmed": true, "needs_review": false
+    },
+    "schenkenberg:R3_vib_zscore": {
+      "detect_with": [["vibration"]],
+      "measures": { "en": "unusually strong shaking", "el": "ασυνήθιστα δυνατό τράνταγμα" },
+      "unit": null, "unit_confirmed": true, "needs_review": false
+    },
+    "schenkenberg:R4_pga": {
+      "detect_with": [["vibration"]],
+      "measures": { "en": "sudden ground shaking (like an earthquake)", "el": "απότομο τράνταγμα του εδάφους (όπως σε σεισμό)" },
+      "unit": null, "unit_confirmed": true, "needs_review": false,
+      "note": "PGA z-score; ARGUS accelerometers are grouped in the vibration card."
+    }
+  }
+}

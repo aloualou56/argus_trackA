@@ -1,0 +1,200 @@
+// Plays the whole Ranverso slice in a real browser, in Greek and English, on a phone and a
+// desktop viewport. Saves screenshots to docs/screenshots and fails on accessibility
+// problems found by axe (WCAG 2.1 A/AA), console errors, horizontal scroll or lost focus.
+//
+//   npm run build && npm run screenshots
+//
+// Uses the Edge or Chrome already installed (playwright-core downloads no browser).
+// Set BROWSER_CHANNEL=chrome to use Chrome instead of Edge.
+import AxeBuilder from "@axe-core/playwright";
+import { spawn } from "node:child_process";
+import { mkdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { chromium } from "playwright-core";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const web = join(here, "..");
+const outDir = join(web, "..", "docs", "screenshots");
+const PORT = 4173;
+const URL_BASE = `http://localhost:${PORT}/`;
+
+const dict = {
+  el: JSON.parse(readFileSync(join(web, "src/i18n/el.json"), "utf8")),
+  en: JSON.parse(readFileSync(join(web, "src/i18n/en.json"), "utf8")),
+};
+const data = JSON.parse(readFileSync(join(web, "public/data/game_data.json"), "utf8"));
+const cardName = (lang, id) => data.cards.cards.find((c) => c.id === id).name[lang];
+const fill = (s, vars) => s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
+
+const VIEWPORTS = {
+  phone: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
+  desktop: { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 },
+};
+
+const problems = [];
+const note = (msg) => {
+  problems.push(msg);
+  console.log(`  PROBLEM: ${msg}`);
+};
+
+function startServer() {
+  const server = spawn(process.execPath, [join(web, "node_modules/vite/bin/vite.js"), "preview", "--port", String(PORT), "--strictPort"], {
+    cwd: web,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("vite preview did not start")), 20000);
+    server.stdout.on("data", (chunk) => {
+      if (String(chunk).includes(String(PORT))) {
+        clearTimeout(timer);
+        resolve(server);
+      }
+    });
+    server.on("exit", (code) => reject(new Error(`vite preview exited (${code}). Run npm run build first.`)));
+  });
+}
+
+async function checkPage(page, label) {
+  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  for (const v of axe.violations) {
+    note(`${label}: axe ${v.id} (${v.impact}) on ${v.nodes.length} node(s): ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(" | ")}`);
+  }
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  if (overflow > 0) note(`${label}: horizontal overflow of ${overflow}px`);
+}
+
+async function expectFocusOnHeading(page, label) {
+  const tag = await page.evaluate(() => document.activeElement?.tagName);
+  if (tag !== "H1") note(`${label}: focus is on ${tag}, expected the H1 after a screen change`);
+}
+
+async function shot(page, name) {
+  await page.screenshot({ path: join(outDir, `${name}.png`), fullPage: true });
+  console.log(`  saved ${name}.png`);
+}
+
+async function play(browser, lang, vpName) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS[vpName], locale: lang === "el" ? "el-GR" : "en-GB", reducedMotion: "reduce" });
+  await context.addInitScript((l) => {
+    try {
+      localStorage.setItem("guardian.lang", l);
+    } catch {}
+  }, lang);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  page.on("pageerror", (e) => errors.push(String(e)));
+  const prefix = `${lang}-${vpName}`;
+  console.log(`\n${prefix}`);
+
+  await page.goto(URL_BASE);
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  if ((await page.getAttribute("html", "lang")) !== lang) note(`${prefix}: <html lang> is not ${lang}`);
+  await checkPage(page, `${prefix} home`);
+  await shot(page, `${prefix}-1-home`);
+
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await page.getByRole("heading", { level: 1, name: data.monuments.find((m) => m.pilot_key === "ranverso").display_name[lang] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} story`);
+  await checkPage(page, `${prefix} story`);
+  await shot(page, `${prefix}-2-story`);
+
+  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} mission`);
+
+  // "Done" with no sensors must explain itself instead of moving on. It is aria-disabled
+  // (still focusable and clickable for assistive tech), so Playwright needs force.
+  await page.getByRole("button", { name: t["mission.done"] }).click({ force: true });
+  if (!(await page.locator("#main").getByText(t["mission.needOne"]).isVisible())) note(`${prefix}: no hint when finishing with zero sensors`);
+
+  // Keyboard only: focus the "add humidity" button and press Space twice, then Enter once on soil.
+  const add = (id) => page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, id) }), exact: true });
+  await add("humidity").focus();
+  await page.keyboard.press("Space");
+  await page.keyboard.press("Space");
+  await add("soil_moisture").focus();
+  await page.keyboard.press("Enter");
+  await add("crackmeter").click();
+  const live = await page.locator("[aria-live=polite]").innerText();
+  if (!live.includes(cardName(lang, "crackmeter"))) note(`${prefix}: live region did not announce the change (${live})`);
+  const coinsText = fill(t["mission.coinsLeft"], { left: 10 - 2 * 1 - 2 - 2, budget: 10 });
+  if (!(await page.locator("#main").getByText(coinsText).isVisible())) note(`${prefix}: expected "${coinsText}"`);
+
+  // Overspending is blocked and announced.
+  await add("camera").click();
+  await add("camera").click({ force: true });
+  const afterCamera = await page.locator("[aria-live=polite]").innerText();
+  if (!afterCamera.includes(fill(t["mission.notEnough"], { name: cardName(lang, "camera") }))) {
+    note(`${prefix}: overspending was not announced (${afterCamera})`);
+  }
+  await checkPage(page, `${prefix} mission`);
+  await shot(page, `${prefix}-3-mission`);
+
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} reveal`);
+  await checkPage(page, `${prefix} reveal`);
+  await shot(page, `${prefix}-4-reveal`);
+
+  await page.getByRole("button", { name: t["reveal.continue"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} event`);
+  await checkPage(page, `${prefix} event`);
+  await shot(page, `${prefix}-5-event`);
+
+  await page.getByRole("button", { name: t["event.continue"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} score`);
+  await checkPage(page, `${prefix} score`);
+  await shot(page, `${prefix}-6-score`);
+
+  // Narrowest common phone width: nothing may scroll sideways.
+  await page.setViewportSize({ width: 320, height: 700 });
+  await checkPage(page, `${prefix} score at 320px`);
+
+  if (errors.length) note(`${prefix}: console errors: ${errors.join(" | ")}`);
+  await context.close();
+}
+
+// Low level replays a "below the limit" alarm (soil moisture) with a flat-signal note.
+async function playLowLevel(browser, lang) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const prefix = `${lang}-phone-low`;
+  console.log(`
+${prefix}`);
+  await page.goto(URL_BASE);
+  await page.getByRole("radio", { name: new RegExp(t["level.low"]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "soil_moisture") }), exact: true }).click();
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("button", { name: t["reveal.continue"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
+  if (!(await page.getByText(t["event.flatNote"]).isVisible())) note(`${prefix}: flat-signal note missing`);
+  if (!(await page.getByText(fill(t["event.yes"], { names: cardName(lang, "soil_moisture") })).isVisible())) {
+    note(`${prefix}: soil-moisture probe should detect the soil alarm`);
+  }
+  await checkPage(page, `${prefix} event`);
+  await shot(page, `${prefix}-5-event`);
+  await context.close();
+}
+
+mkdirSync(outDir, { recursive: true });
+const server = await startServer();
+const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "msedge", headless: true });
+try {
+  for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
+  for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
+} finally {
+  await browser.close();
+  server.kill();
+}
+
+console.log(problems.length ? `\n${problems.length} problem(s) found.` : "\nNo problems found.");
+process.exit(problems.length ? 1 : 0);

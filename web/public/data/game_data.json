@@ -1,0 +1,2757 @@
+{
+ "schema_version": 1,
+ "generated_by": "tools/build_game_data.py",
+ "snapshot": {
+  "fetched_at": [
+   "2026-10-11T21:32:59+03:00"
+  ],
+  "files": {
+   "assets": {
+    "count": 5,
+    "complete": true
+   },
+   "asset-states": {
+    "count": 47,
+    "complete": true
+   },
+   "threats": {
+    "count": 156,
+    "complete": true
+   },
+   "events": {
+    "count": 750,
+    "complete": false
+   },
+   "policies": {
+    "count": 181,
+    "complete": true
+   },
+   "installed-instruments": {
+    "count": 123,
+    "complete": true
+   },
+   "installed-devices": {
+    "count": 117,
+    "complete": true
+   },
+   "instruments": {
+    "count": 117,
+    "complete": true
+   },
+   "instrument-types": {
+    "count": 40,
+    "complete": true
+   }
+  }
+ },
+ "provenance": {
+  "argus": "Fields copied from the ARGUS snapshot: scenarios (ids, keys, categories, ABC values, labels, sources), installed instruments, AD-RT alarms (ids, timestamps, values, thresholds, policies).",
+  "authored": "Fields marked authored=true and everything under 'cards' and 'rule_sensor_map' come from content/*.json, written by the game team, and need human review."
+ },
+ "level_order": [
+  {
+   "key": "Low priority",
+   "id": "low"
+  },
+  {
+   "key": "Medium priority",
+   "id": "medium"
+  },
+  {
+   "key": "High priority",
+   "id": "high"
+  },
+  {
+   "key": "Extreme priority",
+   "id": "extreme"
+  },
+  {
+   "key": "Catastrophic priority",
+   "id": "catastrophic"
+  }
+ ],
+ "mission_size": 3,
+ "cards": {
+  "currency": "coins",
+  "groups": [
+   {
+    "id": "air",
+    "name": {
+     "en": "Air and light",
+     "el": "Αέρας και φως"
+    }
+   },
+   {
+    "id": "water",
+    "name": {
+     "en": "Water and weather",
+     "el": "Νερό και καιρός"
+    }
+   },
+   {
+    "id": "structure",
+    "name": {
+     "en": "Walls and ground",
+     "el": "Τοίχοι και έδαφος"
+    }
+   },
+   {
+    "id": "eyes",
+    "name": {
+     "en": "Eyes and counters",
+     "el": "Μάτια και μετρητές"
+    }
+   }
+  ],
+  "cards": [
+   {
+    "id": "humidity",
+    "group": "air",
+    "cost": 1,
+    "name": {
+     "en": "Humidity sensor",
+     "el": "Αισθητήρας υγρασίας"
+    },
+    "tells": {
+     "en": "Tells us how damp the air is.",
+     "el": "Μας λέει πόση υγρασία έχει ο αέρας."
+    },
+    "instrument_types": [
+     "Humidity Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "temperature",
+    "group": "air",
+    "cost": 1,
+    "name": {
+     "en": "Thermometer",
+     "el": "Θερμόμετρο"
+    },
+    "tells": {
+     "en": "Tells us how warm or cold it is.",
+     "el": "Μας λέει πόσο ζεστό ή κρύο κάνει."
+    },
+    "instrument_types": [
+     "Temperature Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "airflow",
+    "group": "air",
+    "cost": 2,
+    "name": {
+     "en": "Air-flow sensor",
+     "el": "Αισθητήρας ροής αέρα"
+    },
+    "tells": {
+     "en": "Tells us if air moves around or stays trapped inside.",
+     "el": "Μας λέει αν ο αέρας κυκλοφορεί ή μένει κλεισμένος μέσα."
+    },
+    "instrument_types": [
+     "Air Flow Sensor",
+     "Pir-Airflow Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "air_quality",
+    "group": "air",
+    "cost": 2,
+    "name": {
+     "en": "Air-quality sensor",
+     "el": "Αισθητήρας ποιότητας αέρα"
+    },
+    "tells": {
+     "en": "Tells us if there are polluting gases in the air.",
+     "el": "Μας λέει αν υπάρχουν ρυπογόνα αέρια στον αέρα."
+    },
+    "instrument_types": [
+     "Gas Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "light_uv",
+    "group": "air",
+    "cost": 2,
+    "name": {
+     "en": "Light and UV meter",
+     "el": "Μετρητής φωτός και UV"
+    },
+    "tells": {
+     "en": "Tells us how much sunlight and UV reach the walls and paintings.",
+     "el": "Μας λέει πόσο φως και πόση υπεριώδης ακτινοβολία φτάνουν στους τοίχους και στις τοιχογραφίες."
+    },
+    "instrument_types": [
+     "Lux Meter Sensor",
+     "UV Meter Sensor",
+     "Pyranometer Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "rain_gauge",
+    "group": "water",
+    "cost": 1,
+    "name": {
+     "en": "Rain gauge",
+     "el": "Βροχόμετρο"
+    },
+    "tells": {
+     "en": "Tells us how much rain has fallen.",
+     "el": "Μας λέει πόση βροχή έπεσε."
+    },
+    "instrument_types": [
+     "Rain Gauge Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "soil_moisture",
+    "group": "water",
+    "cost": 2,
+    "name": {
+     "en": "Soil moisture probe",
+     "el": "Αισθητήρας υγρασίας εδάφους"
+    },
+    "tells": {
+     "en": "Tells us how wet the ground is.",
+     "el": "Μας λέει πόσο υγρό είναι το έδαφος."
+    },
+    "instrument_types": [
+     "Soil Moisture Sensor",
+     "Water Potential Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "weather_station",
+    "group": "water",
+    "cost": 3,
+    "name": {
+     "en": "Weather station",
+     "el": "Μετεωρολογικός σταθμός"
+    },
+    "tells": {
+     "en": "Tells us about wind, rain, heat and air pressure outside.",
+     "el": "Μας λέει για τον άνεμο, τη βροχή, τη ζέστη και την πίεση του αέρα έξω."
+    },
+    "instrument_types": [
+     "Weather Station Sensor",
+     "Barometer Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "crackmeter",
+    "group": "structure",
+    "cost": 2,
+    "name": {
+     "en": "Crack meter",
+     "el": "Ρωγμόμετρο"
+    },
+    "tells": {
+     "en": "Tells us if a crack is opening.",
+     "el": "Μας λέει αν μια ρωγμή ανοίγει."
+    },
+    "instrument_types": [
+     "Crackmeter Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "tiltmeter",
+    "group": "structure",
+    "cost": 2,
+    "name": {
+     "en": "Tilt meter",
+     "el": "Κλισιόμετρο"
+    },
+    "tells": {
+     "en": "Tells us if a wall is starting to lean.",
+     "el": "Μας λέει αν ένας τοίχος αρχίζει να γέρνει."
+    },
+    "instrument_types": [
+     "Tiltmeter Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "vibration",
+    "group": "structure",
+    "cost": 2,
+    "name": {
+     "en": "Vibration sensor",
+     "el": "Αισθητήρας δονήσεων"
+    },
+    "tells": {
+     "en": "Tells us if the building shakes, from traffic or an earthquake.",
+     "el": "Μας λέει αν το κτίριο τρέμει, από την κίνηση των οχημάτων ή από σεισμό."
+    },
+    "instrument_types": [
+     "Vibration Sensor",
+     "Accelerometer Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "gnss",
+    "group": "structure",
+    "cost": 3,
+    "name": {
+     "en": "Satellite position marker (GNSS)",
+     "el": "Δέκτης δορυφορικού εντοπισμού (GNSS)"
+    },
+    "tells": {
+     "en": "Tells us if the ground or the building is slowly moving.",
+     "el": "Μας λέει αν το έδαφος ή το κτίριο μετακινείται σιγά σιγά."
+    },
+    "instrument_types": [
+     "GNSS Sensor"
+    ],
+    "needs_review": false
+   },
+   {
+    "id": "acoustic",
+    "group": "structure",
+    "cost": 3,
+    "name": {
+     "en": "Listening sensor",
+     "el": "Ακουστικός αισθητήρας"
+    },
+    "tells": {
+     "en": "Listens for tiny sounds inside walls and wood, like cracking.",
+     "el": "Ακούει μικροσκοπικούς ήχους μέσα σε τοίχους και ξύλα, όπως ένα τρίξιμο."
+    },
+    "instrument_types": [
+     "Acoustic Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "visitor_counter",
+    "group": "eyes",
+    "cost": 2,
+    "name": {
+     "en": "Visitor counter",
+     "el": "Μετρητής επισκεπτών"
+    },
+    "tells": {
+     "en": "Tells us how many people come in.",
+     "el": "Μας λέει πόσοι άνθρωποι μπαίνουν."
+    },
+    "instrument_types": [
+     "People Counter Sensor",
+     "Barrier Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "camera",
+    "group": "eyes",
+    "cost": 4,
+    "name": {
+     "en": "Special camera",
+     "el": "Ειδική κάμερα"
+    },
+    "tells": {
+     "en": "Takes special photos that show damp and damage our eyes cannot see.",
+     "el": "Τραβάει ειδικές φωτογραφίες που δείχνουν υγρασία και φθορές που δεν βλέπει το μάτι μας."
+    },
+    "instrument_types": [
+     "Multispectral Camera Sensor"
+    ],
+    "needs_review": true
+   },
+   {
+    "id": "satellite",
+    "group": "eyes",
+    "cost": 3,
+    "name": {
+     "en": "Satellite images",
+     "el": "Δορυφορικές εικόνες"
+    },
+    "tells": {
+     "en": "Watches the area from space for floods, fires and changes on the ground.",
+     "el": "Παρακολουθεί την περιοχή από το διάστημα για πλημμύρες, φωτιές και αλλαγές στο έδαφος."
+    },
+    "instrument_types": [
+     "Earth Observation Layer Instrument"
+    ],
+    "needs_review": true
+   }
+  ]
+ },
+ "rule_sensor_map": {
+  "baltanas:R1_ppv": {
+   "detect_with": [
+    [
+     "vibration"
+    ]
+   ],
+   "measures": {
+    "en": "strength of vibrations (peak particle velocity)",
+    "el": "ένταση των δονήσεων (μέγιστη ταχύτητα σωματιδίων)"
+   },
+   "unit": "mm/s",
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "baltanas:R2_hum_daily_range": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "how much air humidity changed in one day",
+    "el": "πόσο άλλαξε η υγρασία του αέρα μέσα σε μία μέρα"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "baltanas:R3_gnss_change": {
+   "detect_with": [
+    [
+     "gnss"
+    ]
+   ],
+   "measures": {
+    "en": "how much the ground moved in one day",
+    "el": "πόσο μετακινήθηκε το έδαφος μέσα σε μία μέρα"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "baltanas:R4a_soil_high": {
+   "detect_with": [
+    [
+     "soil_moisture"
+    ]
+   ],
+   "measures": {
+    "en": "how wet the ground is",
+    "el": "πόσο υγρό είναι το έδαφος"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "baltanas:R4b_soil_range": {
+   "detect_with": [
+    [
+     "soil_moisture"
+    ]
+   ],
+   "measures": {
+    "en": "how much ground wetness changed in one day",
+    "el": "πόσο άλλαξε η υγρασία του εδάφους μέσα σε μία μέρα"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "baltanas:R5a_airflow_const": {
+   "detect_with": [
+    [
+     "airflow"
+    ]
+   ],
+   "measures": {
+    "en": "air that stays still for too long",
+    "el": "αέρας που μένει ακίνητος για πολύ ώρα"
+   },
+   "unit": null,
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "baltanas:R5b_airflow_range": {
+   "detect_with": [
+    [
+     "airflow"
+    ]
+   ],
+   "measures": {
+    "en": "how much air movement changed in one day",
+    "el": "πόσο άλλαξε η κίνηση του αέρα μέσα σε μία μέρα"
+   },
+   "unit": null,
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "baltanas:R6_rain_1h": {
+   "detect_with": [
+    [
+     "rain_gauge",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "rain in one hour",
+    "el": "βροχή σε μία ώρα"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "delos:R1a_rain_1h": {
+   "detect_with": [
+    [
+     "rain_gauge",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "rain in one hour",
+    "el": "βροχή σε μία ώρα"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "delos:R1b_rain_3h": {
+   "detect_with": [
+    [
+     "rain_gauge",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "rain in three hours",
+    "el": "βροχή σε τρεις ώρες"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "delos:R2_wind": {
+   "detect_with": [
+    [
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "wind speed",
+    "el": "ταχύτητα ανέμου"
+   },
+   "unit": "m/s",
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "delos:R3_hum_cross": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "how often air humidity crossed the safe level",
+    "el": "πόσο συχνά η υγρασία του αέρα πέρασε το ασφαλές όριο"
+   },
+   "unit": null,
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R10_solar_zscore": {
+   "detect_with": [
+    [
+     "light_uv"
+    ]
+   ],
+   "measures": {
+    "en": "unusual sunlight readings",
+    "el": "ασυνήθιστες μετρήσεις ηλιακού φωτός"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": true
+  },
+  "lucretili:R1a_crack_step": {
+   "detect_with": [
+    [
+     "crackmeter"
+    ]
+   ],
+   "measures": {
+    "en": "a sudden jump in crack width",
+    "el": "ένα απότομο άνοιγμα της ρωγμής"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "lucretili:R1b_crack_offset": {
+   "detect_with": [
+    [
+     "crackmeter"
+    ]
+   ],
+   "measures": {
+    "en": "how far a crack has moved from normal",
+    "el": "πόσο έχει απομακρυνθεί η ρωγμή από το κανονικό"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "lucretili:R2a_tilt_step": {
+   "detect_with": [
+    [
+     "tiltmeter"
+    ]
+   ],
+   "measures": {
+    "en": "a sudden change in how a wall leans",
+    "el": "μια απότομη αλλαγή στην κλίση ενός τοίχου"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "lucretili:R2b_tilt_offset": {
+   "detect_with": [
+    [
+     "tiltmeter"
+    ]
+   ],
+   "measures": {
+    "en": "how far a wall's lean has moved from normal",
+    "el": "πόσο έχει αλλάξει η κλίση ενός τοίχου από το κανονικό"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "lucretili:R3_vib_zscore": {
+   "detect_with": [
+    [
+     "vibration"
+    ]
+   ],
+   "measures": {
+    "en": "unusually strong shaking",
+    "el": "ασυνήθιστα δυνατό τράνταγμα"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "lucretili:R4a_hum_spike_6h": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "average air humidity over 6 hours",
+    "el": "μέση υγρασία του αέρα σε 6 ώρες"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R4b_hum_persist_7d": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "air humidity staying high for 7 days",
+    "el": "υγρασία του αέρα που μένει ψηλά για 7 μέρες"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R4c_hum_rapid_1h": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "how fast air humidity changed in one hour",
+    "el": "πόσο γρήγορα άλλαξε η υγρασία του αέρα σε μία ώρα"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R5_visitors": {
+   "detect_with": [
+    [
+     "visitor_counter"
+    ]
+   ],
+   "measures": {
+    "en": "number of visitors",
+    "el": "αριθμός επισκεπτών"
+   },
+   "unit": null,
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R6a_rain": {
+   "detect_with": [
+    [
+     "rain_gauge",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "rain in a short time",
+    "el": "βροχή σε λίγη ώρα"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R6b_rain_cum7d": {
+   "detect_with": [
+    [
+     "rain_gauge",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "rain over the last 7 days",
+    "el": "βροχή των τελευταίων 7 ημερών"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R7_wind": {
+   "detect_with": [
+    [
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "strong wind gusts",
+    "el": "δυνατές ριπές ανέμου"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "lucretili:R8_baro": {
+   "detect_with": [
+    [
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "how much air pressure changed",
+    "el": "πόσο άλλαξε η πίεση του αέρα"
+   },
+   "unit": null,
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "lucretili:R9a_temp_lt": {
+   "detect_with": [
+    [
+     "temperature",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "difference between the day's highest and lowest temperature",
+    "el": "διαφορά ανάμεσα στη μέγιστη και την ελάχιστη θερμοκρασία της μέρας"
+   },
+   "unit": "°C",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "lucretili:R9b_temp_st": {
+   "detect_with": [
+    [
+     "temperature",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "how fast temperature changed in one hour",
+    "el": "πόσο γρήγορα άλλαξε η θερμοκρασία σε μία ώρα"
+   },
+   "unit": "°C",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "ranverso:R1_hum_inside": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "air humidity inside the church",
+    "el": "υγρασία του αέρα μέσα στην εκκλησία"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "ranverso:R2_rain_7d": {
+   "detect_with": [
+    [
+     "rain_gauge",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "rain over the last 7 days",
+    "el": "βροχή των τελευταίων 7 ημερών"
+   },
+   "unit": "mm",
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "ranverso:R3_temp_nodiff": {
+   "detect_with": [
+    [
+     "temperature",
+     "weather_station"
+    ],
+    [
+     "soil_moisture"
+    ]
+   ],
+   "measures": {
+    "en": "whether ground temperature follows air temperature",
+    "el": "αν η θερμοκρασία του εδάφους ακολουθεί τη θερμοκρασία του αέρα"
+   },
+   "unit": "°C",
+   "unit_confirmed": false,
+   "needs_review": true
+  },
+  "ranverso:R4a_soil_high": {
+   "detect_with": [
+    [
+     "soil_moisture"
+    ]
+   ],
+   "measures": {
+    "en": "how wet the ground is",
+    "el": "πόσο υγρό είναι το έδαφος"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "ranverso:R4b_soil_low": {
+   "detect_with": [
+    [
+     "soil_moisture"
+    ]
+   ],
+   "measures": {
+    "en": "how wet the ground is",
+    "el": "πόσο υγρό είναι το έδαφος"
+   },
+   "unit": "%",
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "schenkenberg:R1_temp_hum": {
+   "detect_with": [
+    [
+     "temperature",
+     "weather_station"
+    ],
+    [
+     "humidity",
+     "weather_station"
+    ]
+   ],
+   "measures": {
+    "en": "frost and damp at the same time",
+    "el": "παγετός και υγρασία ταυτόχρονα"
+   },
+   "unit": null,
+   "unit_confirmed": false,
+   "needs_review": false
+  },
+  "schenkenberg:R2_crack_step": {
+   "detect_with": [
+    [
+     "crackmeter"
+    ]
+   ],
+   "measures": {
+    "en": "a sudden jump in crack width",
+    "el": "ένα απότομο άνοιγμα της ρωγμής"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "schenkenberg:R3_vib_zscore": {
+   "detect_with": [
+    [
+     "vibration"
+    ]
+   ],
+   "measures": {
+    "en": "unusually strong shaking",
+    "el": "ασυνήθιστα δυνατό τράνταγμα"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  },
+  "schenkenberg:R4_pga": {
+   "detect_with": [
+    [
+     "vibration"
+    ]
+   ],
+   "measures": {
+    "en": "sudden ground shaking (like an earthquake)",
+    "el": "απότομο τράνταγμα του εδάφους (όπως σε σεισμό)"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": false
+  }
+ },
+ "monuments": [
+  {
+   "pilot_key": "delos",
+   "asset_id": 26,
+   "name": "Delos Island",
+   "country": "Greece",
+   "asset_type": "Heritage Site",
+   "source_url": "https://www.argus-project.eu/pilot-site1-delos-island",
+   "playable": false,
+   "scenario_count": 36,
+   "levels": [
+    {
+     "key": "Low priority",
+     "id": "low",
+     "scenario_count": 14,
+     "available": true
+    },
+    {
+     "key": "Medium priority",
+     "id": "medium",
+     "scenario_count": 8,
+     "available": true
+    },
+    {
+     "key": "High priority",
+     "id": "high",
+     "scenario_count": 7,
+     "available": true
+    },
+    {
+     "key": "Extreme priority",
+     "id": "extreme",
+     "scenario_count": 1,
+     "available": true
+    },
+    {
+     "key": "Catastrophic priority",
+     "id": "catastrophic",
+     "scenario_count": 6,
+     "available": true
+    }
+   ],
+   "installed_summary": {
+    "records": 30,
+    "distinct_instruments": 30,
+    "physical_instruments": 30
+   },
+   "display_name": {
+    "en": "Delos",
+    "el": "Δήλος"
+   },
+   "place": {
+    "en": "Cyclades, Greece",
+    "el": "Κυκλάδες, Ελλάδα"
+   }
+  },
+  {
+   "pilot_key": "baltanas",
+   "asset_id": 27,
+   "name": "Cellar Town of Baltanás",
+   "country": "Spain",
+   "asset_type": "Heritage Site",
+   "source_url": "https://www.argus-project.eu/pilot-site2-cellar-town-baltanas",
+   "playable": false,
+   "scenario_count": 7,
+   "levels": [
+    {
+     "key": "Low priority",
+     "id": "low",
+     "scenario_count": 0,
+     "available": false
+    },
+    {
+     "key": "Medium priority",
+     "id": "medium",
+     "scenario_count": 4,
+     "available": true
+    },
+    {
+     "key": "High priority",
+     "id": "high",
+     "scenario_count": 2,
+     "available": true
+    },
+    {
+     "key": "Extreme priority",
+     "id": "extreme",
+     "scenario_count": 1,
+     "available": true
+    },
+    {
+     "key": "Catastrophic priority",
+     "id": "catastrophic",
+     "scenario_count": 0,
+     "available": false
+    }
+   ],
+   "installed_summary": {
+    "records": 39,
+    "distinct_instruments": 39,
+    "physical_instruments": 39
+   },
+   "display_name": {
+    "en": "The cellar town of Baltanás",
+    "el": "Τα υπόγεια κελάρια της Μπαλτανάς"
+   },
+   "place": {
+    "en": "Palencia, Spain",
+    "el": "Παλένθια, Ισπανία"
+   }
+  },
+  {
+   "pilot_key": "lucretili",
+   "asset_id": 28,
+   "name": "Monti Lucretili",
+   "country": "Italy",
+   "asset_type": "Heritage Site",
+   "source_url": "https://www.argus-project.eu/pilot-site3-monti-lucretili",
+   "playable": false,
+   "scenario_count": 19,
+   "levels": [
+    {
+     "key": "Low priority",
+     "id": "low",
+     "scenario_count": 0,
+     "available": false
+    },
+    {
+     "key": "Medium priority",
+     "id": "medium",
+     "scenario_count": 0,
+     "available": false
+    },
+    {
+     "key": "High priority",
+     "id": "high",
+     "scenario_count": 2,
+     "available": true
+    },
+    {
+     "key": "Extreme priority",
+     "id": "extreme",
+     "scenario_count": 13,
+     "available": true
+    },
+    {
+     "key": "Catastrophic priority",
+     "id": "catastrophic",
+     "scenario_count": 4,
+     "available": true
+    }
+   ],
+   "installed_summary": {
+    "records": 19,
+    "distinct_instruments": 19,
+    "physical_instruments": 19
+   },
+   "display_name": {
+    "en": "Monti Lucretili",
+    "el": "Όρη Λουκρετίλι"
+   },
+   "place": {
+    "en": "Near Rome, Italy",
+    "el": "Κοντά στη Ρώμη, Ιταλία"
+   }
+  },
+  {
+   "pilot_key": "ranverso",
+   "asset_id": 29,
+   "name": "Sant’Antonio di Ranverso Preceptory",
+   "country": "Italy",
+   "asset_type": "Monument",
+   "source_url": "https://www.argus-project.eu/pilot-site4-sant-antonio-di-ranverso",
+   "playable": true,
+   "scenario_count": 26,
+   "levels": [
+    {
+     "key": "Low priority",
+     "id": "low",
+     "scenario_count": 14,
+     "available": true,
+     "mission": [
+      "ranverso.physical-forces.earthquake",
+      "ranverso.incorrect-rh.prolonged-dry-periods",
+      "ranverso.pollutants.visitors"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "ranverso:R4b_soil_low:2026-09-15T20:30:00"
+    },
+    {
+     "key": "Medium priority",
+     "id": "medium",
+     "scenario_count": 7,
+     "available": true,
+     "mission": [
+      "ranverso.water.flooding",
+      "ranverso.incorrect-temperature.freeze-thaw-cycles",
+      "ranverso.pollutants.overloading-road-traffic"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00"
+    },
+    {
+     "key": "High priority",
+     "id": "high",
+     "scenario_count": 3,
+     "available": true,
+     "mission": [
+      "ranverso.incorrect-rh.prolonged-wet-periods",
+      "ranverso.light-uv.solar-radiation-uv",
+      "ranverso.pollutants.air-pollution"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00"
+    },
+    {
+     "key": "Extreme priority",
+     "id": "extreme",
+     "scenario_count": 2,
+     "available": true,
+     "mission": [
+      "ranverso.water.groundwater",
+      "ranverso.pests.woodworms",
+      "ranverso.incorrect-rh.prolonged-wet-periods"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00"
+    },
+    {
+     "key": "Catastrophic priority",
+     "id": "catastrophic",
+     "scenario_count": 0,
+     "available": false
+    }
+   ],
+   "installed_summary": {
+    "records": 26,
+    "distinct_instruments": 20,
+    "physical_instruments": 19
+   },
+   "display_name": {
+    "en": "Sant'Antonio di Ranverso",
+    "el": "Σαντ' Αντόνιο ντι Ρανβέρσο"
+   },
+   "place": {
+    "en": "Near Turin, Italy",
+    "el": "Κοντά στο Τορίνο, Ιταλία"
+   },
+   "story": {
+    "hook_scenario": "ranverso.water.groundwater",
+    "text": {
+     "en": "Sant'Antonio di Ranverso is a medieval monastery near Turin, in Italy, where monks once looked after travellers and sick people. The walls of its church are covered with old paintings. Experts say the biggest danger here comes from below: water in the ground.",
+     "el": "Το Σαντ' Αντόνιο ντι Ρανβέρσο είναι ένα μεσαιωνικό μοναστήρι κοντά στο Τορίνο της Ιταλίας, όπου κάποτε οι μοναχοί φρόντιζαν ταξιδιώτες και αρρώστους. Οι τοίχοι της εκκλησίας του είναι γεμάτοι παλιές τοιχογραφίες. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος εδώ έρχεται από κάτω: το νερό του εδάφους."
+    },
+    "needs_review": true,
+    "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).",
+    "authored": true
+   },
+   "budget": 10,
+   "scenarios": [
+    {
+     "threat_id": 123,
+     "scenario_key": "ranverso.water.groundwater",
+     "risk_category": "water",
+     "description": "groundwater",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 14.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 15: Water"
+     },
+     "plain": {
+      "title": {
+       "en": "Water from the ground",
+       "el": "Νερό από το έδαφος"
+      },
+      "text": {
+       "en": "Water in the ground can climb up into the walls, like water in a sponge. Damp walls harm stone and paintings.",
+       "el": "Το νερό του εδάφους μπορεί να ανέβει μέσα στους τοίχους, όπως σε ένα σφουγγάρι. Οι υγροί τοίχοι φθείρουν την πέτρα και τις τοιχογραφίες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "soil_moisture",
+      "humidity"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 121,
+     "scenario_key": "ranverso.pests.woodworms",
+     "risk_category": "pests",
+     "description": "woodworms",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 3.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 14: Pests"
+     },
+     "plain": {
+      "title": {
+       "en": "Woodworm",
+       "el": "Σαράκι"
+      },
+      "text": {
+       "en": "Tiny insect larvae eat tunnels through old wooden beams and furniture.",
+       "el": "Μικρές προνύμφες εντόμων ανοίγουν τούνελ μέσα στα παλιά ξύλινα δοκάρια και έπιπλα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "acoustic",
+      "humidity",
+      "temperature"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 108,
+     "scenario_key": "ranverso.incorrect-rh.prolonged-wet-periods",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "Prolonged wet periods",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 4.0,
+      "c": 4.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 10: Incorrect RH"
+     },
+     "plain": {
+      "title": {
+       "en": "Long damp periods",
+       "el": "Μεγάλες περίοδοι υγρασίας"
+      },
+      "text": {
+       "en": "When the air stays very damp for weeks, mould can grow and paint can peel.",
+       "el": "Όταν ο αέρας μένει πολύ υγρός για εβδομάδες, μπορεί να αναπτυχθεί μούχλα και να ξεφλουδίσει η μπογιά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 113,
+     "scenario_key": "ranverso.light-uv.solar-radiation-uv",
+     "risk_category": "light_uv",
+     "description": "Solar radiation/ UV",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 3.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 12: Light / UV"
+     },
+     "plain": {
+      "title": {
+       "en": "Strong sunlight",
+       "el": "Δυνατός ήλιος"
+      },
+      "text": {
+       "en": "Sunlight and UV rays slowly fade colours and weaken materials.",
+       "el": "Το φως του ήλιου και η υπεριώδης ακτινοβολία ξεθωριάζουν σιγά σιγά τα χρώματα και αδυνατίζουν τα υλικά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "light_uv"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 114,
+     "scenario_key": "ranverso.pollutants.air-pollution",
+     "risk_category": "pollutants",
+     "description": "air pollution",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 2.0,
+      "c": 5.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 13: Pollutants"
+     },
+     "plain": {
+      "title": {
+       "en": "Air pollution",
+       "el": "Ρύπανση του αέρα"
+      },
+      "text": {
+       "en": "Dirty air from traffic and industry leaves dark crusts and eats into stone.",
+       "el": "Ο βρόμικος αέρας από τα αυτοκίνητα και τα εργοστάσια αφήνει μαύρες κρούστες και διαβρώνει την πέτρα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "air_quality"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 110,
+     "scenario_key": "ranverso.incorrect-temperature.freeze-thaw-cycles",
+     "risk_category": "incorrect_temperature",
+     "description": "freeze-thaw cycles",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 2.0,
+      "c": 4.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 11: Incorrect Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "Freezing and thawing",
+       "el": "Πάγωμα και ξεπάγωμα"
+      },
+      "text": {
+       "en": "Water inside stone freezes, grows bigger and melts again, over and over. This can break the stone.",
+       "el": "Το νερό μέσα στην πέτρα παγώνει, μεγαλώνει σε όγκο και λιώνει ξανά και ξανά. Έτσι η πέτρα μπορεί να σπάσει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "humidity",
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 115,
+     "scenario_key": "ranverso.pollutants.acid-rain",
+     "risk_category": "pollutants",
+     "description": "acid rain",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 2.0,
+      "c": 3.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 13: Pollutants"
+     },
+     "plain": {
+      "title": {
+       "en": "Acid rain",
+       "el": "Όξινη βροχή"
+      },
+      "text": {
+       "en": "Rain mixed with pollution can slowly dissolve stone and mortar.",
+       "el": "Η βροχή που ανακατεύεται με ρύπους μπορεί σιγά σιγά να διαλύσει την πέτρα και το κονίαμα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "air_quality"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 119,
+     "scenario_key": "ranverso.pests.insect-infestation",
+     "risk_category": "pests",
+     "description": "Insect infestation",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 2.0,
+      "c": 4.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 14: Pests"
+     },
+     "plain": {
+      "title": {
+       "en": "Insects",
+       "el": "Έντομα"
+      },
+      "text": {
+       "en": "Insects can nest in the building and damage wood, cloth or paper.",
+       "el": "Τα έντομα μπορούν να φωλιάσουν στο κτίριο και να καταστρέψουν ξύλο, ύφασμα ή χαρτί."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "acoustic",
+      "humidity",
+      "temperature"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 120,
+     "scenario_key": "ranverso.pests.local-fauna",
+     "risk_category": "pests",
+     "description": "local fauna",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 2.0,
+      "c": 4.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 14: Pests"
+     },
+     "plain": {
+      "title": {
+       "en": "Local animals",
+       "el": "Ζώα της περιοχής"
+      },
+      "text": {
+       "en": "Birds, bats or small animals can nest, scratch and leave droppings that harm surfaces.",
+       "el": "Πουλιά, νυχτερίδες ή μικρά ζώα μπορεί να φωλιάσουν, να γρατζουνίσουν και να αφήσουν περιττώματα που φθείρουν τις επιφάνειες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "camera"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 104,
+     "scenario_key": "ranverso.physical-forces.storm",
+     "risk_category": "physical_forces",
+     "description": "storm",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 1.0,
+      "b": 3.0,
+      "c": 4.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 8: Physical forces"
+     },
+     "plain": {
+      "title": {
+       "en": "Storms",
+       "el": "Καταιγίδες"
+      },
+      "text": {
+       "en": "Strong wind and heavy rain can damage the roof and let water in.",
+       "el": "Ο δυνατός άνεμος και η έντονη βροχή μπορούν να χαλάσουν τη στέγη και να μπει νερό μέσα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station",
+      "rain_gauge"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 116,
+     "scenario_key": "ranverso.pollutants.overloading-road-traffic",
+     "risk_category": "pollutants",
+     "description": "Overloading (road traffic)",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 2.0,
+      "c": 2.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 13: Pollutants"
+     },
+     "plain": {
+      "title": {
+       "en": "Heavy road traffic",
+       "el": "Βαριά κίνηση στον δρόμο"
+      },
+      "text": {
+       "en": "Heavy lorries passing nearby shake the building a little every day and fill the air with fumes.",
+       "el": "Τα βαριά φορτηγά που περνούν κοντά κάνουν το κτίριο να τρέμει λίγο κάθε μέρα και γεμίζουν τον αέρα με καυσαέρια."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "vibration",
+      "air_quality"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 122,
+     "scenario_key": "ranverso.water.flooding",
+     "risk_category": "water",
+     "description": "flooding",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 3.0,
+      "c": 3.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 15: Water"
+     },
+     "plain": {
+      "title": {
+       "en": "Flooding",
+       "el": "Πλημμύρα"
+      },
+      "text": {
+       "en": "After heavy rain, water can flood the ground around the building and get inside.",
+       "el": "Μετά από δυνατή βροχή, το νερό μπορεί να πλημμυρίσει το έδαφος γύρω από το κτίριο και να μπει μέσα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "weather_station",
+      "satellite",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 102,
+     "scenario_key": "ranverso.physical-forces.earthquake",
+     "risk_category": "physical_forces",
+     "description": "earthquake",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 1.0,
+      "b": 2.0,
+      "c": 4.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 8: Physical forces"
+     },
+     "plain": {
+      "title": {
+       "en": "Earthquakes",
+       "el": "Σεισμοί"
+      },
+      "text": {
+       "en": "An earthquake can shake the walls and open cracks.",
+       "el": "Ένας σεισμός μπορεί να ταρακουνήσει τους τοίχους και να ανοίξει ρωγμές."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "vibration",
+      "crackmeter",
+      "tiltmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 103,
+     "scenario_key": "ranverso.physical-forces.freeze-thaw-cycles",
+     "risk_category": "incorrect_temperature",
+     "description": "freeze-thaw cycles",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 2.0,
+      "c": 3.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 8: Physical forces"
+     },
+     "plain": {
+      "title": {
+       "en": "Frost damage",
+       "el": "Ζημιές από τον παγετό"
+      },
+      "text": {
+       "en": "Frost can push stones apart when the water inside them freezes.",
+       "el": "Ο παγετός μπορεί να ανοίξει τις πέτρες, όταν παγώνει το νερό μέσα τους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "humidity",
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 106,
+     "scenario_key": "ranverso.physical-forces.wind-erosion",
+     "risk_category": "physical_forces",
+     "description": "wind erosion",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 2.0,
+      "c": 3.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 8: Physical forces"
+     },
+     "plain": {
+      "title": {
+       "en": "Wind wearing stone away",
+       "el": "Διάβρωση από τον άνεμο"
+      },
+      "text": {
+       "en": "Wind carrying dust and sand slowly wears away stone surfaces.",
+       "el": "Ο άνεμος που κουβαλά σκόνη και άμμο τρώει σιγά σιγά τις πέτρινες επιφάνειες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 107,
+     "scenario_key": "ranverso.incorrect-rh.prolonged-dry-periods",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "Prolonged dry periods",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 4.0,
+      "c": 1.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 10: Incorrect RH"
+     },
+     "plain": {
+      "title": {
+       "en": "Long dry periods",
+       "el": "Μεγάλες περίοδοι ξηρασίας"
+      },
+      "text": {
+       "en": "Very dry air can make wood and paint shrink and crack.",
+       "el": "Ο πολύ ξηρός αέρας μπορεί να κάνει το ξύλο και τη μπογιά να συρρικνωθούν και να ραγίσουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 124,
+     "scenario_key": "ranverso.fire.forest-fire",
+     "risk_category": "fire",
+     "description": "forest fire",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 1.0,
+      "b": 3.0,
+      "c": 3.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 16: Fire"
+     },
+     "plain": {
+      "title": {
+       "en": "Wildfire",
+       "el": "Δασική πυρκαγιά"
+      },
+      "text": {
+       "en": "A wildfire in the area could reach the monument or cover it with smoke.",
+       "el": "Μια πυρκαγιά στην περιοχή θα μπορούσε να φτάσει ως το μνημείο ή να το καλύψει με καπνό."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "satellite",
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 125,
+     "scenario_key": "ranverso.fire.building-fire",
+     "risk_category": "fire",
+     "description": "building fire",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 1.0,
+      "b": 4.0,
+      "c": 2.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 16: Fire"
+     },
+     "plain": {
+      "title": {
+       "en": "Fire in the building",
+       "el": "Φωτιά στο κτίριο"
+      },
+      "text": {
+       "en": "A fire inside could destroy wooden parts, paintings and the roof.",
+       "el": "Μια φωτιά μέσα στο κτίριο θα μπορούσε να καταστρέψει ξύλινα μέρη, τοιχογραφίες και τη στέγη."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 109,
+     "scenario_key": "ranverso.incorrect-rh.groundwater-pollution",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "groundwater pollution",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 1.0,
+      "c": 3.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 10: Incorrect RH"
+     },
+     "plain": {
+      "title": {
+       "en": "Polluted groundwater",
+       "el": "Μολυσμένο υπόγειο νερό"
+      },
+      "text": {
+       "en": "Polluted water in the ground can carry harmful salts and chemicals into the walls.",
+       "el": "Το μολυσμένο νερό του εδάφους μπορεί να μεταφέρει βλαβερά άλατα και χημικά μέσα στους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 111,
+     "scenario_key": "ranverso.incorrect-temperature.high-temperature",
+     "risk_category": "incorrect_temperature",
+     "description": "High Temperature",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 1.0,
+      "c": 3.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 11: Incorrect Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "Heat",
+       "el": "Ζέστη"
+      },
+      "text": {
+       "en": "Very hot days can dry out and stress materials.",
+       "el": "Οι πολύ ζεστές μέρες μπορούν να ξεράνουν και να καταπονήσουν τα υλικά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 112,
+     "scenario_key": "ranverso.incorrect-temperature.low-temperature",
+     "risk_category": "incorrect_temperature",
+     "description": "Low Temperature",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 1.0,
+      "c": 3.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 11: Incorrect Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "Cold",
+       "el": "Κρύο"
+      },
+      "text": {
+       "en": "Very cold days can freeze damp walls and make materials brittle.",
+       "el": "Οι πολύ κρύες μέρες μπορούν να παγώσουν τους υγρούς τοίχους και να κάνουν τα υλικά εύθραυστα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 117,
+     "scenario_key": "ranverso.pollutants.visitors",
+     "risk_category": "pollutants",
+     "description": "visitors",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 1.0,
+      "c": 3.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 13: Pollutants"
+     },
+     "plain": {
+      "title": {
+       "en": "Many visitors",
+       "el": "Πολλοί επισκέπτες"
+      },
+      "text": {
+       "en": "Many people bring warmth, damp breath and dust, and some may touch the walls.",
+       "el": "Πολλοί άνθρωποι μαζί φέρνουν ζέστη, υγρασία από την ανάσα τους και σκόνη, και κάποιοι μπορεί να αγγίξουν τους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "visitor_counter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 126,
+     "scenario_key": "ranverso.criminals.illegal-landfill",
+     "risk_category": "criminals",
+     "description": "illegal landfill",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 3.0,
+      "c": 1.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 17: Criminals"
+     },
+     "plain": {
+      "title": {
+       "en": "Illegal dumping",
+       "el": "Παράνομη απόρριψη σκουπιδιών"
+      },
+      "text": {
+       "en": "Rubbish dumped nearby can pollute the ground and attract pests.",
+       "el": "Τα σκουπίδια που πετιούνται παράνομα κοντά μπορούν να μολύνουν το έδαφος και να φέρουν παράσιτα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "satellite",
+      "camera"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 127,
+     "scenario_key": "ranverso.criminals.vandalism-abandonment-lack-of-maintenance",
+     "risk_category": "criminals",
+     "description": "Vandalism (abandonment – lack of maintenance)",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 2.0,
+      "c": 2.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 17: Criminals"
+     },
+     "plain": {
+      "title": {
+       "en": "Vandalism and neglect",
+       "el": "Βανδαλισμοί και εγκατάλειψη"
+      },
+      "text": {
+       "en": "When a place is left alone, people may damage it and small problems are not fixed.",
+       "el": "Όταν ένας τόπος μένει αφύλακτος, κάποιοι μπορεί να τον καταστρέψουν και τα μικρά προβλήματα δεν διορθώνονται."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "visitor_counter",
+      "camera"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 105,
+     "scenario_key": "ranverso.physical-forces.biohazard",
+     "risk_category": "pests",
+     "description": "biohazard",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 1.0,
+      "b": 1.0,
+      "c": 1.0,
+      "mr": 3.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 8: Physical forces"
+     },
+     "plain": {
+      "title": {
+       "en": "Living growth",
+       "el": "Βιολογική φθορά"
+      },
+      "text": {
+       "en": "Mould, moss and other living things can grow on damp surfaces and damage them.",
+       "el": "Μούχλα, βρύα και άλλοι οργανισμοί μπορούν να αναπτυχθούν σε υγρές επιφάνειες και να τις φθείρουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity",
+      "camera"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 118,
+     "scenario_key": "ranverso.pests.biohazard",
+     "risk_category": "pests",
+     "description": "biohazard",
+     "heritage_asset": "Sant’Antonio di Ranverso Abbey complex",
+     "status": "active",
+     "abc": {
+      "a": 1.0,
+      "b": 1.0,
+      "c": 1.0,
+      "mr": 3.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ranverso Threats (1).xlsx",
+      "section": "evaluation row 14: Pests"
+     },
+     "plain": {
+      "title": {
+       "en": "Living growth",
+       "el": "Βιολογική φθορά"
+      },
+      "text": {
+       "en": "Mould, moss and other living things can grow on damp surfaces and damage them.",
+       "el": "Μούχλα, βρύα και άλλοι οργανισμοί μπορούν να αναπτυχθούν σε υγρές επιφάνειες και να τις φθείρουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity",
+      "camera"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    }
+   ],
+   "installed": {
+    "asset_state_ids": [
+     32
+    ],
+    "records": 26,
+    "distinct_instruments": 20,
+    "physical_instruments": 19,
+    "by_card": [
+     {
+      "card": "humidity",
+      "count": 3,
+      "instrument_types": {
+       "Humidity Sensor": 3
+      },
+      "nodes": [
+       "168442",
+       "174188",
+       "177315"
+      ]
+     },
+     {
+      "card": "temperature",
+      "count": 2,
+      "instrument_types": {
+       "Temperature Sensor": 2
+      },
+      "nodes": [
+       "168442",
+       "174188"
+      ]
+     },
+     {
+      "card": "airflow",
+      "count": 2,
+      "instrument_types": {
+       "Air Flow Sensor": 2
+      },
+      "nodes": [
+       "149248",
+       "a8610a3539387205"
+      ]
+     },
+     {
+      "card": "air_quality",
+      "count": 1,
+      "instrument_types": {
+       "Gas Sensor": 1
+      },
+      "nodes": [
+       "a8610a3338359111"
+      ]
+     },
+     {
+      "card": "light_uv",
+      "count": 3,
+      "instrument_types": {
+       "Lux Meter Sensor": 1,
+       "Pyranometer Sensor": 1,
+       "UV Meter Sensor": 1
+      },
+      "nodes": [
+       "149361",
+       "168442",
+       "168442"
+      ]
+     },
+     {
+      "card": "rain_gauge",
+      "count": 1,
+      "instrument_types": {
+       "Rain Gauge Sensor": 1
+      },
+      "nodes": [
+       "177315"
+      ]
+     },
+     {
+      "card": "soil_moisture",
+      "count": 2,
+      "instrument_types": {
+       "Soil Moisture Sensor": 2
+      },
+      "nodes": [
+       "a8610a333526680f",
+       "a8610a34363d6617"
+      ]
+     },
+     {
+      "card": "weather_station",
+      "count": 1,
+      "instrument_types": {
+       "Weather Station Sensor": 1
+      },
+      "nodes": [
+       "2cf7f1c0734001e8"
+      ]
+     },
+     {
+      "card": "tiltmeter",
+      "count": 1,
+      "instrument_types": {
+       "Tiltmeter Sensor": 1
+      },
+      "nodes": [
+       "143276"
+      ]
+     },
+     {
+      "card": "vibration",
+      "count": 1,
+      "instrument_types": {
+       "Vibration Sensor": 1
+      },
+      "nodes": [
+       "170894"
+      ]
+     },
+     {
+      "card": "acoustic",
+      "count": 1,
+      "instrument_types": {
+       "Acoustic Sensor": 1
+      },
+      "nodes": [
+       "raspi-100000007a1083f5"
+      ]
+     },
+     {
+      "card": "camera",
+      "count": 1,
+      "instrument_types": {
+       "Multispectral Camera Sensor": 1
+      },
+      "nodes": [
+       "svy 324160033"
+      ]
+     },
+     {
+      "card": "satellite",
+      "count": 1,
+      "instrument_types": {
+       "Earth Observation Layer Instrument": 1
+      },
+      "nodes": [
+       "ranverso"
+      ]
+     }
+    ],
+    "other": [],
+    "duplicate_records": [
+     {
+      "instrument_id": 21,
+      "installed_instrument_ids": [
+       41,
+       52
+      ],
+      "names": [
+       "Installed Humidity Instrument - 168442",
+       "Installed Instrument Humidity - 168442"
+      ]
+     },
+     {
+      "instrument_id": 22,
+      "installed_instrument_ids": [
+       42,
+       53
+      ],
+      "names": [
+       "Installed Humidity Instrument - 174188",
+       "Installed Instrument Humidity - 174188"
+      ]
+     },
+     {
+      "instrument_id": 23,
+      "installed_instrument_ids": [
+       43,
+       54
+      ],
+      "names": [
+       "Installed Humidity Instrument - 177315",
+       "Installed Instrument Humidity - 177315"
+      ]
+     },
+     {
+      "instrument_id": 24,
+      "installed_instrument_ids": [
+       44,
+       61
+      ],
+      "names": [
+       "Installed Temperature Instrument - 168442",
+       "Installed Instrument Temperature - 168442"
+      ]
+     },
+     {
+      "instrument_id": 25,
+      "installed_instrument_ids": [
+       45,
+       62
+      ],
+      "names": [
+       "Installed Temperature Instrument - 174188",
+       "Installed Instrument Temperature - 174188"
+      ]
+     },
+     {
+      "instrument_id": 27,
+      "installed_instrument_ids": [
+       47,
+       66
+      ],
+      "names": [
+       "Installed Vibration Instrument - 170894",
+       "Installed Instrument Vibration - 170894"
+      ]
+     }
+    ],
+    "flags": [
+     {
+      "installed_instrument_id": 157,
+      "flag": "virtual",
+      "detail": "Virtual Earth Observation layer, not a physical sensor on site."
+     },
+     {
+      "installed_instrument_id": 162,
+      "flag": "verification_required",
+      "detail": "Coordinates marked temporary; device was re-assigned from another site."
+     }
+    ]
+   },
+   "alarms": [
+    {
+     "id": "ranverso:R4b_soil_low:2026-08-31T20:30:00",
+     "event_ids": [
+      128,
+      134
+     ],
+     "timestamp": "2026-08-31T20:30:00",
+     "type": "EK",
+     "rule": "R4b_soil_low",
+     "policy_id": 43,
+     "policy_name": "AD-RT Ranverso policy - soil moisture low",
+     "threat_name": "AD-RT soil moisture threat",
+     "score": 0.8917,
+     "variable": "26680f_moisture",
+     "value": 2.472,
+     "threshold": 5.0,
+     "direction": "below",
+     "times_threshold": 2.02,
+     "instruments": [
+      {
+       "instrument_id": 37,
+       "name": "Installed Instrument Soil Moisture - A8610A333526680F",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture"
+      }
+     ],
+     "quality_flags": [
+      "flat_signal"
+     ],
+     "roles": [
+      "first"
+     ],
+     "episode": {
+      "rule": "R4b_soil_low",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-21T20:30:00",
+      "alarm_count": 25,
+      "flat_signal": true
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.incorrect-rh.prolonged-dry-periods"
+      ],
+      "why": {
+       "en": "The ground stayed drier than the level experts chose, for many days. Experts watch the ground's wetness because water in the ground can move into the walls, so big changes in either direction matter.",
+       "el": "Το έδαφος έμεινε πιο ξερό από το όριο που όρισαν οι ειδικοί, για πολλές μέρες. Οι ειδικοί παρακολουθούν την υγρασία του εδάφους γιατί το νερό του εδάφους μπορεί να περάσει στους τοίχους, οπότε μετράνε οι μεγάλες αλλαγές προς κάθε κατεύθυνση."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "ranverso:R2_rain_7d:2026-09-10T20:30:00",
+     "event_ids": [
+      260
+     ],
+     "timestamp": "2026-09-10T20:30:00",
+     "type": "EK",
+     "rule": "R2_rain_7d",
+     "policy_id": 40,
+     "policy_name": "AD-RT Ranverso policy - rainfall 7d",
+     "threat_name": "AD-RT rainfall threat",
+     "score": 0.9775,
+     "variable": "177315_out_rain",
+     "value": 95.426,
+     "threshold": 20.0,
+     "direction": "above",
+     "times_threshold": 4.77,
+     "instruments": [
+      {
+       "instrument_id": 35,
+       "name": "Installed Instrument Rain Gauge - 177315",
+       "instrument_type": "Rain Gauge Sensor",
+       "card": "rain_gauge"
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak"
+     ],
+     "episode": {
+      "rule": "R2_rain_7d",
+      "start": "2026-09-10T20:30:00",
+      "end": "2026-09-16T15:30:00",
+      "alarm_count": 7,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.water.flooding",
+       "ranverso.incorrect-rh.prolonged-wet-periods",
+       "ranverso.physical-forces.storm"
+      ],
+      "why": {
+       "en": "A lot of rain soaks the ground around the church. Wet ground can push water up into the walls, which is the biggest danger here.",
+       "el": "Η πολλή βροχή μουσκεύει το έδαφος γύρω από την εκκλησία. Το βρεγμένο έδαφος μπορεί να σπρώξει νερό μέσα στους τοίχους, που είναι ο μεγαλύτερος κίνδυνος εδώ."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "ranverso:R4b_soil_low:2026-09-15T20:30:00",
+     "event_ids": [
+      314,
+      359,
+      372
+     ],
+     "timestamp": "2026-09-15T20:30:00",
+     "type": "EK",
+     "rule": "R4b_soil_low",
+     "policy_id": 43,
+     "policy_name": "AD-RT Ranverso policy - soil moisture low",
+     "threat_name": "AD-RT soil moisture threat",
+     "score": 0.8915,
+     "variable": "26680f_moisture",
+     "value": 2.4574,
+     "threshold": 5.0,
+     "direction": "below",
+     "times_threshold": 2.03,
+     "instruments": [
+      {
+       "instrument_id": 37,
+       "name": "Installed Instrument Soil Moisture - A8610A333526680F",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture"
+      }
+     ],
+     "quality_flags": [
+      "duplicate_records_with_different_values",
+      "flat_signal"
+     ],
+     "roles": [
+      "peak"
+     ],
+     "episode": {
+      "rule": "R4b_soil_low",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-21T20:30:00",
+      "alarm_count": 25,
+      "flat_signal": true
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.incorrect-rh.prolonged-dry-periods"
+      ],
+      "why": {
+       "en": "The ground stayed drier than the level experts chose, for many days. Experts watch the ground's wetness because water in the ground can move into the walls, so big changes in either direction matter.",
+       "el": "Το έδαφος έμεινε πιο ξερό από το όριο που όρισαν οι ειδικοί, για πολλές μέρες. Οι ειδικοί παρακολουθούν την υγρασία του εδάφους γιατί το νερό του εδάφους μπορεί να περάσει στους τοίχους, οπότε μετράνε οι μεγάλες αλλαγές προς κάθε κατεύθυνση."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "ranverso:R2_rain_7d:2026-09-16T15:30:00",
+     "event_ids": [
+      415
+     ],
+     "timestamp": "2026-09-16T15:30:00",
+     "type": "EK",
+     "rule": "R2_rain_7d",
+     "policy_id": 40,
+     "policy_name": "AD-RT Ranverso policy - rainfall 7d",
+     "threat_name": "AD-RT rainfall threat",
+     "score": 0.714,
+     "variable": "177315_out_rain",
+     "value": 38.3,
+     "threshold": 20.0,
+     "direction": "above",
+     "times_threshold": 1.91,
+     "instruments": [
+      {
+       "instrument_id": 35,
+       "name": "Installed Instrument Rain Gauge - 177315",
+       "instrument_type": "Rain Gauge Sensor",
+       "card": "rain_gauge"
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_rain_7d",
+      "start": "2026-09-10T20:30:00",
+      "end": "2026-09-16T15:30:00",
+      "alarm_count": 7,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.water.flooding",
+       "ranverso.incorrect-rh.prolonged-wet-periods",
+       "ranverso.physical-forces.storm"
+      ],
+      "why": {
+       "en": "A lot of rain soaks the ground around the church. Wet ground can push water up into the walls, which is the biggest danger here.",
+       "el": "Η πολλή βροχή μουσκεύει το έδαφος γύρω από την εκκλησία. Το βρεγμένο έδαφος μπορεί να σπρώξει νερό μέσα στους τοίχους, που είναι ο μεγαλύτερος κίνδυνος εδώ."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "ranverso:R4b_soil_low:2026-09-21T20:30:00",
+     "event_ids": [
+      645
+     ],
+     "timestamp": "2026-09-21T20:30:00",
+     "type": "EK",
+     "rule": "R4b_soil_low",
+     "policy_id": 43,
+     "policy_name": "AD-RT Ranverso policy - soil moisture low",
+     "threat_name": "AD-RT soil moisture threat",
+     "score": 0.9821,
+     "variable": "26680f_moisture",
+     "value": 2.4677,
+     "threshold": 5.0,
+     "direction": "below",
+     "times_threshold": 2.03,
+     "instruments": [
+      {
+       "instrument_id": 37,
+       "name": "Installed Instrument Soil Moisture - A8610A333526680F",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture"
+      }
+     ],
+     "quality_flags": [
+      "flat_signal"
+     ],
+     "roles": [
+      "last"
+     ],
+     "episode": {
+      "rule": "R4b_soil_low",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-21T20:30:00",
+      "alarm_count": 25,
+      "flat_signal": true
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.incorrect-rh.prolonged-dry-periods"
+      ],
+      "why": {
+       "en": "The ground stayed drier than the level experts chose, for many days. Experts watch the ground's wetness because water in the ground can move into the walls, so big changes in either direction matter.",
+       "el": "Το έδαφος έμεινε πιο ξερό από το όριο που όρισαν οι ειδικοί, για πολλές μέρες. Οι ειδικοί παρακολουθούν την υγρασία του εδάφους γιατί το νερό του εδάφους μπορεί να περάσει στους τοίχους, οπότε μετράνε οι μεγάλες αλλαγές προς κάθε κατεύθυνση."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    }
+   ],
+   "alarm_funnel": {
+    "records": 92,
+    "unique": 73,
+    "usable": 32,
+    "featured": 5,
+    "excluded": {
+     "deep-learning alarm without a rule (not mappable to a sensor)": 12,
+     "implausible humidity value (outside 0 to 100)": 28,
+     "soil_moisture value exactly 0 (probable sensor dropout)": 1
+    },
+    "by_rule": {
+     "(DL, no rule)": 14,
+     "R1_hum_inside": 39,
+     "R2_rain_7d": 7,
+     "R4b_soil_low": 32
+    }
+   },
+   "discussion_prompts": [
+    {
+     "en": "Several ARGUS sensors sit next to the left altar inside the church. Why might experts watch that spot so closely?",
+     "el": "Αρκετοί αισθητήρες του ARGUS βρίσκονται δίπλα στην αριστερή Αγία Τράπεζα μέσα στην εκκλησία. Γιατί άραγε οι ειδικοί προσέχουν τόσο αυτό το σημείο;",
+     "needs_review": true,
+     "review_note": "Based on alarm variable names ('in_left_altar_hum', 'altar_tilt_z'). Check with the Ranverso team; 'Αγία Τράπεζα' for a Catholic side altar may need a better word.",
+     "authored": true
+    },
+    {
+     "en": "ARGUS also uses satellite images here. What can a satellite see that a sensor on a wall cannot?",
+     "el": "Το ARGUS χρησιμοποιεί εδώ και δορυφορικές εικόνες. Τι μπορεί να δει ένας δορυφόρος που δεν μπορεί να δει ένας αισθητήρας στον τοίχο;",
+     "needs_review": false,
+     "authored": true
+    },
+    {
+     "en": "Woodworm is one of the two biggest dangers here, but no sensor can look inside every wooden beam. Who else could help find it?",
+     "el": "Το σαράκι είναι ένας από τους δύο μεγαλύτερους κινδύνους εδώ, αλλά κανένας αισθητήρας δεν μπορεί να κοιτάξει μέσα σε κάθε ξύλινο δοκάρι. Ποιος άλλος θα μπορούσε να βοηθήσει να το βρούμε;",
+     "needs_review": false,
+     "authored": true
+    }
+   ]
+  },
+  {
+   "pilot_key": "schenkenberg",
+   "asset_id": 30,
+   "name": "Schenkenberg Castle",
+   "country": "Switzerland",
+   "asset_type": "Monument",
+   "source_url": "https://www.argus-project.eu/pilot-site5-schenkenberg-castle",
+   "playable": false,
+   "scenario_count": 11,
+   "levels": [
+    {
+     "key": "Low priority",
+     "id": "low",
+     "scenario_count": 2,
+     "available": true
+    },
+    {
+     "key": "Medium priority",
+     "id": "medium",
+     "scenario_count": 1,
+     "available": true
+    },
+    {
+     "key": "High priority",
+     "id": "high",
+     "scenario_count": 2,
+     "available": true
+    },
+    {
+     "key": "Extreme priority",
+     "id": "extreme",
+     "scenario_count": 6,
+     "available": true
+    },
+    {
+     "key": "Catastrophic priority",
+     "id": "catastrophic",
+     "scenario_count": 0,
+     "available": false
+    }
+   ],
+   "installed_summary": {
+    "records": 9,
+    "distinct_instruments": 9,
+    "physical_instruments": 9
+   },
+   "display_name": {
+    "en": "Schenkenberg Castle",
+    "el": "Κάστρο Σένκενμπεργκ"
+   },
+   "place": {
+    "en": "Aargau, Switzerland",
+    "el": "Αργκάου, Ελβετία"
+   }
+  }
+ ]
+}

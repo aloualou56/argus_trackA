@@ -1,0 +1,31 @@
+{
+  "name": "guardian-for-a-day",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Guardian for a Day: a plain-language heritage-monitoring game built on ARGUS data (ARGUS Open Innovation Challenge 2026, Track A).",
+  "type": "module",
+  "scripts": {
+    "dev": "node node_modules/vite/bin/vite.js",
+    "build": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/vite/bin/vite.js build",
+    "preview": "node node_modules/vite/bin/vite.js preview --port 4173 --strictPort",
+    "test": "node node_modules/vitest/vitest.mjs run",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "data": "python3 -I ../tools/build_game_data.py",
+    "screenshots": "node scripts/screenshots.mjs"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.1",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "playwright-core": "1.49.1",
+    "typescript": "5.6.3",
+    "vite": "5.4.21",
+    "vitest": "2.1.9"
+  },
+  "//scripts": "Scripts call node directly instead of node_modules/.bin shims, because the Windows .cmd shims break when the project path contains an ampersand."
+}

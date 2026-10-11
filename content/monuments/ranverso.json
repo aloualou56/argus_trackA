@@ -1,0 +1,171 @@
+{
+  "_about": "AUTHORED by the game team for Sant'Antonio di Ranverso. Story text, plain-language threat texts, mission picks, budget, alarm explanations and discussion prompts are ours, not ARGUS data, and all need human review (history facts, Greek wording, science). Scenario keys, priority labels and alarms come from the ARGUS snapshot via tools/build_game_data.py.",
+  "pilot_key": "ranverso",
+  "display_name": { "en": "Sant'Antonio di Ranverso", "el": "Σαντ' Αντόνιο ντι Ρανβέρσο" },
+  "place": { "en": "Near Turin, Italy", "el": "Κοντά στο Τορίνο, Ιταλία" },
+  "story": {
+    "hook_scenario": "ranverso.water.groundwater",
+    "text": {
+      "en": "Sant'Antonio di Ranverso is a medieval monastery near Turin, in Italy, where monks once looked after travellers and sick people. The walls of its church are covered with old paintings. Experts say the biggest danger here comes from below: water in the ground.",
+      "el": "Το Σαντ' Αντόνιο ντι Ρανβέρσο είναι ένα μεσαιωνικό μοναστήρι κοντά στο Τορίνο της Ιταλίας, όπου κάποτε οι μοναχοί φρόντιζαν ταξιδιώτες και αρρώστους. Οι τοίχοι της εκκλησίας του είναι γεμάτοι παλιές τοιχογραφίες. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος εδώ έρχεται από κάτω: το νερό του εδάφους."
+    },
+    "needs_review": true,
+    "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme)."
+  },
+  "budget": 10,
+  "missions": {
+    "_about": "Three scenario keys per priority level. Ranverso has only 2 Extreme scenarios, so the Extreme mission borrows the strongest High one. Ranverso has no Catastrophic scenarios.",
+    "Extreme priority": ["ranverso.water.groundwater", "ranverso.pests.woodworms", "ranverso.incorrect-rh.prolonged-wet-periods"],
+    "High priority": ["ranverso.incorrect-rh.prolonged-wet-periods", "ranverso.light-uv.solar-radiation-uv", "ranverso.pollutants.air-pollution"],
+    "Medium priority": ["ranverso.water.flooding", "ranverso.incorrect-temperature.freeze-thaw-cycles", "ranverso.pollutants.overloading-road-traffic"],
+    "Low priority": ["ranverso.physical-forces.earthquake", "ranverso.incorrect-rh.prolonged-dry-periods", "ranverso.pollutants.visitors"]
+  },
+  "featured_alarm": {
+    "_about": "Which real alarm to replay per level. 'pick' is one of first|peak|last within the rule's alarm episode. Resolved to a concrete alarm by the build script.",
+    "default": { "rule": "R2_rain_7d", "pick": "peak" },
+    "Low priority": { "rule": "R4b_soil_low", "pick": "peak" }
+  },
+  "alarm_context": {
+    "R2_rain_7d": {
+      "links": ["ranverso.water.groundwater", "ranverso.water.flooding", "ranverso.incorrect-rh.prolonged-wet-periods", "ranverso.physical-forces.storm"],
+      "why": {
+        "en": "A lot of rain soaks the ground around the church. Wet ground can push water up into the walls, which is the biggest danger here.",
+        "el": "Η πολλή βροχή μουσκεύει το έδαφος γύρω από την εκκλησία. Το βρεγμένο έδαφος μπορεί να σπρώξει νερό μέσα στους τοίχους, που είναι ο μεγαλύτερος κίνδυνος εδώ."
+      },
+      "needs_review": true
+    },
+    "R4b_soil_low": {
+      "links": ["ranverso.water.groundwater", "ranverso.incorrect-rh.prolonged-dry-periods"],
+      "why": {
+        "en": "The ground stayed drier than the level experts chose, for many days. Experts watch the ground's wetness because water in the ground can move into the walls, so big changes in either direction matter.",
+        "el": "Το έδαφος έμεινε πιο ξερό από το όριο που όρισαν οι ειδικοί, για πολλές μέρες. Οι ειδικοί παρακολουθούν την υγρασία του εδάφους γιατί το νερό του εδάφους μπορεί να περάσει στους τοίχους, οπότε μετράνε οι μεγάλες αλλαγές προς κάθε κατεύθυνση."
+      },
+      "needs_review": true
+    }
+  },
+  "discussion_prompts": [
+    {
+      "en": "Several ARGUS sensors sit next to the left altar inside the church. Why might experts watch that spot so closely?",
+      "el": "Αρκετοί αισθητήρες του ARGUS βρίσκονται δίπλα στην αριστερή Αγία Τράπεζα μέσα στην εκκλησία. Γιατί άραγε οι ειδικοί προσέχουν τόσο αυτό το σημείο;",
+      "needs_review": true,
+      "review_note": "Based on alarm variable names ('in_left_altar_hum', 'altar_tilt_z'). Check with the Ranverso team; 'Αγία Τράπεζα' for a Catholic side altar may need a better word."
+    },
+    {
+      "en": "ARGUS also uses satellite images here. What can a satellite see that a sensor on a wall cannot?",
+      "el": "Το ARGUS χρησιμοποιεί εδώ και δορυφορικές εικόνες. Τι μπορεί να δει ένας δορυφόρος που δεν μπορεί να δει ένας αισθητήρας στον τοίχο;",
+      "needs_review": false
+    },
+    {
+      "en": "Woodworm is one of the two biggest dangers here, but no sensor can look inside every wooden beam. Who else could help find it?",
+      "el": "Το σαράκι είναι ένας από τους δύο μεγαλύτερους κινδύνους εδώ, αλλά κανένας αισθητήρας δεν μπορεί να κοιτάξει μέσα σε κάθε ξύλινο δοκάρι. Ποιος άλλος θα μπορούσε να βοηθήσει να το βρούμε;",
+      "needs_review": false
+    }
+  ],
+  "plain_threats": {
+    "_about": "Plain-language PLACEHOLDER texts, one per ARGUS scenario. The ARGUS 'description' is kept separately in game_data.json.",
+    "ranverso.water.groundwater": {
+      "title": { "en": "Water from the ground", "el": "Νερό από το έδαφος" },
+      "text": { "en": "Water in the ground can climb up into the walls, like water in a sponge. Damp walls harm stone and paintings.", "el": "Το νερό του εδάφους μπορεί να ανέβει μέσα στους τοίχους, όπως σε ένα σφουγγάρι. Οι υγροί τοίχοι φθείρουν την πέτρα και τις τοιχογραφίες." }
+    },
+    "ranverso.pests.woodworms": {
+      "title": { "en": "Woodworm", "el": "Σαράκι" },
+      "text": { "en": "Tiny insect larvae eat tunnels through old wooden beams and furniture.", "el": "Μικρές προνύμφες εντόμων ανοίγουν τούνελ μέσα στα παλιά ξύλινα δοκάρια και έπιπλα." }
+    },
+    "ranverso.incorrect-rh.prolonged-wet-periods": {
+      "title": { "en": "Long damp periods", "el": "Μεγάλες περίοδοι υγρασίας" },
+      "text": { "en": "When the air stays very damp for weeks, mould can grow and paint can peel.", "el": "Όταν ο αέρας μένει πολύ υγρός για εβδομάδες, μπορεί να αναπτυχθεί μούχλα και να ξεφλουδίσει η μπογιά." }
+    },
+    "ranverso.light-uv.solar-radiation-uv": {
+      "title": { "en": "Strong sunlight", "el": "Δυνατός ήλιος" },
+      "text": { "en": "Sunlight and UV rays slowly fade colours and weaken materials.", "el": "Το φως του ήλιου και η υπεριώδης ακτινοβολία ξεθωριάζουν σιγά σιγά τα χρώματα και αδυνατίζουν τα υλικά." }
+    },
+    "ranverso.pollutants.air-pollution": {
+      "title": { "en": "Air pollution", "el": "Ρύπανση του αέρα" },
+      "text": { "en": "Dirty air from traffic and industry leaves dark crusts and eats into stone.", "el": "Ο βρόμικος αέρας από τα αυτοκίνητα και τα εργοστάσια αφήνει μαύρες κρούστες και διαβρώνει την πέτρα." }
+    },
+    "ranverso.incorrect-temperature.freeze-thaw-cycles": {
+      "title": { "en": "Freezing and thawing", "el": "Πάγωμα και ξεπάγωμα" },
+      "text": { "en": "Water inside stone freezes, grows bigger and melts again, over and over. This can break the stone.", "el": "Το νερό μέσα στην πέτρα παγώνει, μεγαλώνει σε όγκο και λιώνει ξανά και ξανά. Έτσι η πέτρα μπορεί να σπάσει." }
+    },
+    "ranverso.pollutants.acid-rain": {
+      "title": { "en": "Acid rain", "el": "Όξινη βροχή" },
+      "text": { "en": "Rain mixed with pollution can slowly dissolve stone and mortar.", "el": "Η βροχή που ανακατεύεται με ρύπους μπορεί σιγά σιγά να διαλύσει την πέτρα και το κονίαμα." }
+    },
+    "ranverso.pests.insect-infestation": {
+      "title": { "en": "Insects", "el": "Έντομα" },
+      "text": { "en": "Insects can nest in the building and damage wood, cloth or paper.", "el": "Τα έντομα μπορούν να φωλιάσουν στο κτίριο και να καταστρέψουν ξύλο, ύφασμα ή χαρτί." }
+    },
+    "ranverso.pests.local-fauna": {
+      "title": { "en": "Local animals", "el": "Ζώα της περιοχής" },
+      "text": { "en": "Birds, bats or small animals can nest, scratch and leave droppings that harm surfaces.", "el": "Πουλιά, νυχτερίδες ή μικρά ζώα μπορεί να φωλιάσουν, να γρατζουνίσουν και να αφήσουν περιττώματα που φθείρουν τις επιφάνειες." }
+    },
+    "ranverso.physical-forces.storm": {
+      "title": { "en": "Storms", "el": "Καταιγίδες" },
+      "text": { "en": "Strong wind and heavy rain can damage the roof and let water in.", "el": "Ο δυνατός άνεμος και η έντονη βροχή μπορούν να χαλάσουν τη στέγη και να μπει νερό μέσα." }
+    },
+    "ranverso.pollutants.overloading-road-traffic": {
+      "title": { "en": "Heavy road traffic", "el": "Βαριά κίνηση στον δρόμο" },
+      "text": { "en": "Heavy lorries passing nearby shake the building a little every day and fill the air with fumes.", "el": "Τα βαριά φορτηγά που περνούν κοντά κάνουν το κτίριο να τρέμει λίγο κάθε μέρα και γεμίζουν τον αέρα με καυσαέρια." }
+    },
+    "ranverso.water.flooding": {
+      "title": { "en": "Flooding", "el": "Πλημμύρα" },
+      "text": { "en": "After heavy rain, water can flood the ground around the building and get inside.", "el": "Μετά από δυνατή βροχή, το νερό μπορεί να πλημμυρίσει το έδαφος γύρω από το κτίριο και να μπει μέσα." }
+    },
+    "ranverso.physical-forces.earthquake": {
+      "title": { "en": "Earthquakes", "el": "Σεισμοί" },
+      "text": { "en": "An earthquake can shake the walls and open cracks.", "el": "Ένας σεισμός μπορεί να ταρακουνήσει τους τοίχους και να ανοίξει ρωγμές." }
+    },
+    "ranverso.physical-forces.freeze-thaw-cycles": {
+      "title": { "en": "Frost damage", "el": "Ζημιές από τον παγετό" },
+      "text": { "en": "Frost can push stones apart when the water inside them freezes.", "el": "Ο παγετός μπορεί να ανοίξει τις πέτρες, όταν παγώνει το νερό μέσα τους." }
+    },
+    "ranverso.physical-forces.wind-erosion": {
+      "title": { "en": "Wind wearing stone away", "el": "Διάβρωση από τον άνεμο" },
+      "text": { "en": "Wind carrying dust and sand slowly wears away stone surfaces.", "el": "Ο άνεμος που κουβαλά σκόνη και άμμο τρώει σιγά σιγά τις πέτρινες επιφάνειες." }
+    },
+    "ranverso.incorrect-rh.prolonged-dry-periods": {
+      "title": { "en": "Long dry periods", "el": "Μεγάλες περίοδοι ξηρασίας" },
+      "text": { "en": "Very dry air can make wood and paint shrink and crack.", "el": "Ο πολύ ξηρός αέρας μπορεί να κάνει το ξύλο και τη μπογιά να συρρικνωθούν και να ραγίσουν." }
+    },
+    "ranverso.fire.forest-fire": {
+      "title": { "en": "Wildfire", "el": "Δασική πυρκαγιά" },
+      "text": { "en": "A wildfire in the area could reach the monument or cover it with smoke.", "el": "Μια πυρκαγιά στην περιοχή θα μπορούσε να φτάσει ως το μνημείο ή να το καλύψει με καπνό." }
+    },
+    "ranverso.fire.building-fire": {
+      "title": { "en": "Fire in the building", "el": "Φωτιά στο κτίριο" },
+      "text": { "en": "A fire inside could destroy wooden parts, paintings and the roof.", "el": "Μια φωτιά μέσα στο κτίριο θα μπορούσε να καταστρέψει ξύλινα μέρη, τοιχογραφίες και τη στέγη." }
+    },
+    "ranverso.incorrect-rh.groundwater-pollution": {
+      "title": { "en": "Polluted groundwater", "el": "Μολυσμένο υπόγειο νερό" },
+      "text": { "en": "Polluted water in the ground can carry harmful salts and chemicals into the walls.", "el": "Το μολυσμένο νερό του εδάφους μπορεί να μεταφέρει βλαβερά άλατα και χημικά μέσα στους τοίχους." }
+    },
+    "ranverso.incorrect-temperature.high-temperature": {
+      "title": { "en": "Heat", "el": "Ζέστη" },
+      "text": { "en": "Very hot days can dry out and stress materials.", "el": "Οι πολύ ζεστές μέρες μπορούν να ξεράνουν και να καταπονήσουν τα υλικά." }
+    },
+    "ranverso.incorrect-temperature.low-temperature": {
+      "title": { "en": "Cold", "el": "Κρύο" },
+      "text": { "en": "Very cold days can freeze damp walls and make materials brittle.", "el": "Οι πολύ κρύες μέρες μπορούν να παγώσουν τους υγρούς τοίχους και να κάνουν τα υλικά εύθραυστα." }
+    },
+    "ranverso.pollutants.visitors": {
+      "title": { "en": "Many visitors", "el": "Πολλοί επισκέπτες" },
+      "text": { "en": "Many people bring warmth, damp breath and dust, and some may touch the walls.", "el": "Πολλοί άνθρωποι μαζί φέρνουν ζέστη, υγρασία από την ανάσα τους και σκόνη, και κάποιοι μπορεί να αγγίξουν τους τοίχους." }
+    },
+    "ranverso.criminals.illegal-landfill": {
+      "title": { "en": "Illegal dumping", "el": "Παράνομη απόρριψη σκουπιδιών" },
+      "text": { "en": "Rubbish dumped nearby can pollute the ground and attract pests.", "el": "Τα σκουπίδια που πετιούνται παράνομα κοντά μπορούν να μολύνουν το έδαφος και να φέρουν παράσιτα." }
+    },
+    "ranverso.criminals.vandalism-abandonment-lack-of-maintenance": {
+      "title": { "en": "Vandalism and neglect", "el": "Βανδαλισμοί και εγκατάλειψη" },
+      "text": { "en": "When a place is left alone, people may damage it and small problems are not fixed.", "el": "Όταν ένας τόπος μένει αφύλακτος, κάποιοι μπορεί να τον καταστρέψουν και τα μικρά προβλήματα δεν διορθώνονται." }
+    },
+    "ranverso.physical-forces.biohazard": {
+      "title": { "en": "Living growth", "el": "Βιολογική φθορά" },
+      "text": { "en": "Mould, moss and other living things can grow on damp surfaces and damage them.", "el": "Μούχλα, βρύα και άλλοι οργανισμοί μπορούν να αναπτυχθούν σε υγρές επιφάνειες και να τις φθείρουν." }
+    },
+    "ranverso.pests.biohazard": {
+      "title": { "en": "Living growth", "el": "Βιολογική φθορά" },
+      "text": { "en": "Mould, moss and other living things can grow on damp surfaces and damage them.", "el": "Μούχλα, βρύα και άλλοι οργανισμοί μπορούν να αναπτυχθούν σε υγρές επιφάνειες και να τις φθείρουν." }
+    }
+  }
+}

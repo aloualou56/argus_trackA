@@ -1,0 +1,7 @@
+{
+  "_about": "DRAFT pack: names only, so the home screen can list the monument. Remove \"draft\" and add story, budget, missions, plain_threats, featured_alarm, alarm_context and discussion_prompts (see ranverso.json) to make it playable. Needs review.",
+  "pilot_key": "delos",
+  "draft": true,
+  "display_name": { "en": "Delos", "el": "Δήλος" },
+  "place": { "en": "Cyclades, Greece", "el": "Κυκλάδες, Ελλάδα" }
+}

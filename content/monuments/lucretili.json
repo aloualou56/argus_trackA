@@ -1,0 +1,7 @@
+{
+  "_about": "DRAFT pack: names only. See delos.json. Needs review.",
+  "pilot_key": "lucretili",
+  "draft": true,
+  "display_name": { "en": "Monti Lucretili", "el": "Όρη Λουκρετίλι" },
+  "place": { "en": "Near Rome, Italy", "el": "Κοντά στη Ρώμη, Ιταλία" }
+}
