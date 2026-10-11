@@ -325,6 +325,31 @@ main {
   margin-top: 0;
 }
 
+/* ------------------------------------------------------------------ quiz */
+
+.quiz-question legend {
+  margin-bottom: 0.5rem;
+}
+.quiz-number {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+.quiz-q {
+  display: block;
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.quiz-invite {
+  margin-top: 1.5rem;
+}
+.quiz-invite .btn {
+  width: 100%;
+}
+
 .choice {
   display: flex;
   align-items: center;

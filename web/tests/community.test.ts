@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LocalCommunityStore, summarize, topCard, type PlayRecord } from "../src/community/store";
+import { LocalCommunityStore, summarize, summarizeQuiz, topCard, type PlayRecord, type QuizRecord } from "../src/community/store";
 
 class MemoryStorage {
   data = new Map<string, string>();
@@ -70,5 +70,34 @@ describe("community store", () => {
     await new LocalCommunityStore(storage as unknown as Storage).submit(play({ humidity: 1 }));
     const saved = JSON.parse(storage.getItem("guardian.plays.v1")!)[0];
     expect(Object.keys(saved).sort()).toEqual(["day", "detected", "level", "monument", "picks", "score", "v"]);
+  });
+});
+
+describe("quiz store", () => {
+  const quiz = (pre: boolean[] | null, post: boolean[], classCode?: string): QuizRecord => ({
+    v: 1,
+    monument: "ranverso",
+    pre,
+    post,
+    day: "2026-10-11",
+    ...(classCode ? { classCode } : {}),
+  });
+
+  it("averages before and after over games that have both", () => {
+    const s = summarizeQuiz([
+      quiz([true, false, false], [true, true, false]),
+      quiz([false, false, false], [true, true, true]),
+      quiz(null, [true, false, false]),
+    ]);
+    expect(s).toEqual({ games: 3, withPre: 2, averagePre: 0.5, averagePost: 2.5 });
+  });
+
+  it("keeps quiz records apart from play records and filters by class", async () => {
+    const store = new LocalCommunityStore(new MemoryStorage() as unknown as Storage);
+    await store.submitQuiz(quiz([false], [true], "ABC123"));
+    await store.submitQuiz(quiz([true], [true]));
+    expect((await store.quizSummary("ABC123")).games).toBe(1);
+    expect((await store.quizSummary()).games).toBe(2);
+    expect((await store.summary("ranverso", "extreme")).games).toBe(0);
   });
 });

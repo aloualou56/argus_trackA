@@ -11,6 +11,7 @@ import type {
   Monument,
   Picks,
   Placement,
+  QuizQuestion,
   RuleEntry,
   Scenario,
 } from "./types";
@@ -230,6 +231,15 @@ export function autoPrompts(rows: MixRow[], distances: Map<string, number> = new
   if (onlyArgus) out.push({ kind: "onlyArgus", card: onlyArgus.card, n: onlyArgus.argus });
   return out;
 }
+
+// ---------------------------------------------------------------- quiz
+
+/** Right or wrong per question; an unanswered question counts as wrong. */
+export function markQuiz(questions: QuizQuestion[], answers: (number | null)[]): boolean[] {
+  return questions.map((q, i) => answers[i] === q.correct);
+}
+
+export const countRight = (marks: boolean[]) => marks.filter(Boolean).length;
 
 // ---------------------------------------------------------------- map
 

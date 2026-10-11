@@ -15,6 +15,26 @@ export interface PlayRecord {
   classCode?: string;
 }
 
+/** Pre/post quiz answers of one game: right (true) or wrong per question. */
+export interface QuizRecord {
+  v: 1;
+  monument: string;
+  /** null when the player skipped the quiz before the game. */
+  pre: boolean[] | null;
+  post: boolean[];
+  day: string;
+  classCode?: string;
+}
+
+export interface QuizSummary {
+  games: number;
+  /** Games that also have a quiz before the game. */
+  withPre: number;
+  /** Average right answers, over games with a "before" quiz (both averages use the same games). */
+  averagePre: number;
+  averagePost: number;
+}
+
 export interface Summary {
   games: number;
   /** Share of games (0..1) whose network included each card. */
@@ -27,6 +47,20 @@ export interface CommunityStore {
   readonly kind: "local" | "remote";
   submit(record: PlayRecord): Promise<void>;
   summary(monument: string, level: string, classCode?: string): Promise<Summary>;
+  submitQuiz(record: QuizRecord): Promise<void>;
+  quizSummary(classCode?: string): Promise<QuizSummary>;
+}
+
+export function summarizeQuiz(records: QuizRecord[]): QuizSummary {
+  const right = (marks: boolean[]) => marks.filter(Boolean).length;
+  const paired = records.filter((r): r is QuizRecord & { pre: boolean[] } => Array.isArray(r.pre));
+  const average = (values: number[]) => (values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0);
+  return {
+    games: records.length,
+    withPre: paired.length,
+    averagePre: average(paired.map((r) => right(r.pre))),
+    averagePost: average(paired.map((r) => right(r.post))),
+  };
 }
 
 export function summarize(records: PlayRecord[]): Summary {
@@ -52,45 +86,54 @@ export function topCard(summary: Summary, exclude: Set<string> = new Set()): { c
   return entries.length ? { card: entries[0][0], share: entries[0][1] } : null;
 }
 
-const KEY = "guardian.plays.v1";
+const PLAYS = "guardian.plays.v1";
+const QUIZZES = "guardian.quiz.v1";
 
 export class LocalCommunityStore implements CommunityStore {
   readonly kind = "local" as const;
-  private memory: PlayRecord[] = [];
+  private memory = new Map<string, unknown[]>();
 
   constructor(private storage: Storage | null = safeLocalStorage(), private max = 500) {}
 
-  private read(): PlayRecord[] {
+  private read<T extends { v: 1 }>(key: string): T[] {
     try {
-      const raw = this.storage?.getItem(KEY);
+      const raw = this.storage?.getItem(key);
       const parsed = raw ? JSON.parse(raw) : null;
       if (Array.isArray(parsed)) return parsed.filter((r) => r && r.v === 1);
     } catch {
       // storage blocked or corrupted: fall back to this session's memory
     }
-    return this.memory;
+    return (this.memory.get(key) ?? []) as T[];
   }
 
-  private write(records: PlayRecord[]): void {
-    this.memory = records;
+  private append<T extends { v: 1 }>(key: string, record: T): void {
+    const records = [...this.read<T>(key), record].slice(-this.max);
+    this.memory.set(key, records);
     try {
-      this.storage?.setItem(KEY, JSON.stringify(records));
+      this.storage?.setItem(key, JSON.stringify(records));
     } catch {
       // quota or privacy mode: keep the in-memory copy
     }
   }
 
   async submit(record: PlayRecord): Promise<void> {
-    const records = [...this.read(), record];
-    this.write(records.slice(-this.max));
+    this.append(PLAYS, record);
   }
 
   async summary(monument: string, level: string, classCode?: string): Promise<Summary> {
     return summarize(
-      this.read().filter(
+      this.read<PlayRecord>(PLAYS).filter(
         (r) => r.monument === monument && r.level === level && (classCode === undefined || r.classCode === classCode),
       ),
     );
+  }
+
+  async submitQuiz(record: QuizRecord): Promise<void> {
+    this.append(QUIZZES, record);
+  }
+
+  async quizSummary(classCode?: string): Promise<QuizSummary> {
+    return summarizeQuiz(this.read<QuizRecord>(QUIZZES).filter((r) => classCode === undefined || r.classCode === classCode));
   }
 }
 

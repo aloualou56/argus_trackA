@@ -204,6 +204,16 @@ export interface Monument extends MonumentBase {
   no_alarm_note?: Prompt;
 }
 
+/** Pre/post quiz question (content/quiz.json). */
+export interface QuizQuestion {
+  id: string;
+  question: Text;
+  options: Text[];
+  /** Index into options. */
+  correct: number;
+  explain: Text;
+}
+
 export interface GameData {
   schema_version: number;
   snapshot: { fetched_at: string[] };
@@ -211,6 +221,7 @@ export interface GameData {
   mission_size: number;
   cards: { currency: string; groups: CardGroup[]; cards: Card[] };
   rule_sensor_map: Record<string, RuleEntry>;
+  quiz: { questions: QuizQuestion[]; authored: true; needs_review: boolean };
   basemaps: { default: string; layers: Basemap[]; world: string | null };
   monuments: (Monument | MonumentStub)[];
 }

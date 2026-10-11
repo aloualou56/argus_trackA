@@ -8,6 +8,7 @@ import { useI18n, type MessageKey } from "../i18n";
 interface Props extends ScreenProps {
   community: CommunityStore;
   onReplay: () => void;
+  onQuiz: () => void;
 }
 
 const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: MessageKey }> = {
@@ -18,7 +19,7 @@ const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: 
   unscored: { cls: "learn is-info", icon: "talk", key: "score.noSensorTag" },
 };
 
-export function Score({ data, mon, session, go, community, onReplay }: Props) {
+export function Score({ data, mon, session, go, community, onReplay, onQuiz }: Props) {
   const { t, pick, list, number } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level);
@@ -134,8 +135,17 @@ export function Score({ data, mon, session, go, community, onReplay }: Props) {
         <p className="small">{t("score.communityLocal")}</p>
       </section>
 
+      <section className="panel quiz-invite" aria-labelledby="quiz-invite-title">
+        <h2 id="quiz-invite-title">{t("quiz.inviteTitle")}</h2>
+        <p>{t("quiz.inviteText")}</p>
+        <button type="button" className="btn btn-primary btn-big" onClick={onQuiz}>
+          {t("quiz.open")}
+          <Icon name="arrow" />
+        </button>
+      </section>
+
       <div className="actions actions-split">
-        <button type="button" className="btn btn-primary btn-big" onClick={onReplay}>
+        <button type="button" className="btn btn-secondary btn-big" onClick={onReplay}>
           {t("score.playAgain")}
         </button>
         <button type="button" className="btn btn-secondary btn-big" onClick={() => go("home")}>

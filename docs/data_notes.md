@@ -583,3 +583,4 @@ Authored content flagged `needs_review`:
 - `schenkenberg` alarm explanation for `R2_crack_step` and its linked threats ['schenkenberg.freeze-thaw.masonry', 'schenkenberg.earthquake.475y', 'schenkenberg.plant-growth.untreated-30y']
 - `schenkenberg` alarm explanation for `R3_vib_zscore` and its linked threats ['schenkenberg.wind-storm.walls', 'schenkenberg.earthquake.475y']
 - `schenkenberg` mission picks per level and budget (8 coins)
+- `content/quiz.json`: 5 pre/post quiz questions, answers and explanations

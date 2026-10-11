@@ -10,11 +10,16 @@ import { useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
 import { Home } from "./screens/Home";
 import { Mission } from "./screens/Mission";
+import { Quiz } from "./screens/Quiz";
 import { Reveal } from "./screens/Reveal";
 import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
 
-type Screen = "home" | Step;
+type Screen = "home" | Step | "quizPre" | "quizPost";
+
+const isStep = (screen: Screen): screen is Step => (STEPS as readonly string[]).includes(screen);
+/** What the map shows behind the quiz screens. */
+const mapMode = (screen: Screen): Step => (screen === "quizPre" ? "story" : screen === "quizPost" ? "score" : (screen as Step));
 
 export interface Session {
   pilot: string;
@@ -43,6 +48,8 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
   const [game, setGame] = useState<{ pilot: string; level: LevelId; placements: Placement[] } | null>(null);
   const [homePilot, setHomePilot] = useState<string | null>(null);
+  // The quiz before a game is asked once per visit; its marks are compared with the quiz after each game.
+  const [preQuiz, setPreQuiz] = useState<{ asked: boolean; marks: boolean[] | null }>({ asked: false, marks: null });
   const [message, setMessage] = useState("");
   const community = useMemo(() => new LocalCommunityStore(), []);
   const mapApi = useRef<MapApi | null>(null);
@@ -67,7 +74,9 @@ export default function App() {
 
   // Move focus to the new screen's heading so keyboard and screen-reader users start there.
   useEffect(() => {
-    document.title = screen === "home" ? t("app.title") : `${t(stepKey(screen))} · ${t("app.title")}`;
+    const heading = screen === "quizPre" ? t("quiz.preTitle") : screen === "quizPost" ? t("quiz.postTitle") : null;
+    document.title =
+      screen === "home" ? t("app.title") : `${heading ?? t(stepKey(screen as Step))} · ${t("app.title")}`;
     if (firstScreen.current) {
       firstScreen.current = false;
       return;
@@ -117,15 +126,66 @@ export default function App() {
         initialLevel={game?.pilot === homePilot ? game.level : undefined}
         onStart={(pilot, level) => {
           setGame({ pilot, level, placements: [] });
-          setScreen("story");
+          setScreen(preQuiz.asked ? "story" : "quizPre");
         }}
       />
     );
   } else {
     const props: ScreenProps = { data, mon: playable, session, go, announce };
+    const replay = () => {
+      setPlacements(() => []);
+      setScreen(STEPS[0]);
+    };
     body = (
       <>
-        <Progress current={screen} />
+        {isStep(screen) && <Progress current={screen} />}
+        {screen === "quizPre" && (
+          <Quiz
+            questions={data.quiz.questions}
+            phase="pre"
+            announce={announce}
+            onDone={(marks) => {
+              setPreQuiz({ asked: true, marks });
+              setScreen("story");
+            }}
+            onSkip={() => {
+              setPreQuiz({ asked: true, marks: null });
+              setScreen("story");
+            }}
+          />
+        )}
+        {screen === "quizPost" && (
+          <Quiz
+            questions={data.quiz.questions}
+            phase="post"
+            before={preQuiz.marks}
+            announce={announce}
+            onDone={async (marks) => {
+              try {
+                await community.submitQuiz({
+                  v: 1,
+                  monument: playable.pilot_key,
+                  pre: preQuiz.marks,
+                  post: marks,
+                  day: new Date().toISOString().slice(0, 10),
+                });
+                return await community.quizSummary();
+              } catch {
+                return null;
+              }
+            }}
+            after={
+              <div className="actions actions-split">
+                <button type="button" className="btn btn-primary btn-big" onClick={replay}>
+                  {t("score.playAgain")}
+                </button>
+                <button type="button" className="btn btn-secondary btn-big" onClick={() => go("home")}>
+                  {t("score.otherLevel")}
+                </button>
+              </div>
+            }
+          />
+        )}
         {screen === "story" && <Story {...props} />}
         {screen === "mission" && <Mission {...props} setPlacements={setPlacements} mapApi={mapApi} />}
         {screen === "reveal" && <Reveal {...props} />}
@@ -134,10 +194,8 @@ export default function App() {
           <Score
             {...props}
             community={community}
-            onReplay={() => {
-              setPlacements(() => []);
-              setScreen(STEPS[0]);
-            }}
+            onReplay={replay}
+            onQuiz={() => setScreen("quizPost")}
           />
         )}
       </>
@@ -165,7 +223,7 @@ export default function App() {
         {data && (
           <GameMap
             data={data}
-            mode={inGame ? screen : "overview"}
+            mode={inGame ? mapMode(screen) : "overview"}
             pilot={inGame ? game!.pilot : homePilot}
             placements={inGame ? game!.placements : []}
             alarm={inGame && screen === "event" ? featuredAlarm(playable!, game!.level) : null}

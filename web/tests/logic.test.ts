@@ -17,6 +17,7 @@ import {
   featuredAlarm,
   humanCards,
   isPlayable,
+  markQuiz,
   missionScenarios,
   ruleFor,
   score,
@@ -284,5 +285,27 @@ describe("map", () => {
     expect(ranverso.map).not.toBeNull();
     expect(ranverso.installed.points.length).toBeGreaterThan(0);
     for (const alarm of ranverso.alarms) expect(alarm.instruments.some((i) => i.lat !== null)).toBe(true);
+  });
+});
+
+describe("quiz", () => {
+  const questions = data.quiz.questions;
+
+  it("has five bilingual questions with a valid answer", () => {
+    expect(questions).toHaveLength(5);
+    for (const q of questions) {
+      expect(q.correct).toBeGreaterThanOrEqual(0);
+      expect(q.correct).toBeLessThan(q.options.length);
+      for (const text of [q.question, q.explain, ...q.options]) expect(text.el && text.en).toBeTruthy();
+    }
+  });
+
+  it("does not always put the right answer in the same place", () => {
+    expect(new Set(questions.map((q) => q.correct)).size).toBeGreaterThan(1);
+  });
+
+  it("marks right, wrong and unanswered questions", () => {
+    const answers = questions.map((q, i) => (i === 0 ? q.correct : i === 1 ? (q.correct + 1) % q.options.length : null));
+    expect(markQuiz(questions, answers)).toEqual([true, false, false, false, false]);
   });
 });

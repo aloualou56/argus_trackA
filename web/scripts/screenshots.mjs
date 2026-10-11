@@ -72,6 +72,17 @@ async function expectFocusOnHeading(page, label) {
 
 const ranverso = data.monuments.find((m) => m.pilot_key === "ranverso");
 
+/** The quiz before the game: skipped, or answered with the given choice per question (an index). */
+async function preQuiz(page, t, answer = null) {
+  await page.getByRole("heading", { level: 1, name: t["quiz.preTitle"] }).waitFor();
+  if (answer === null) {
+    await page.getByRole("button", { name: t["quiz.skip"] }).click();
+    return;
+  }
+  for (const q of data.quiz.questions) await page.locator(`#q-${q.id}-${answer(q)}`).check();
+  await page.getByRole("button", { name: t["quiz.submit"] }).click();
+}
+
 /** The map must show real tiles (not the failure notice) and the expected number of markers. */
 async function checkMap(page, label, selector, expected) {
   try {
@@ -120,7 +131,16 @@ async function play(browser, lang, vpName) {
   await checkPage(page, `${prefix} home`);
   await shot(page, `${prefix}-1-home`);
 
+  // Delos is selected first (the first playable monument); this walk-through plays Ranverso.
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["quiz.preTitle"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} quiz`);
+  await page.getByRole("button", { name: t["quiz.submit"] }).click();
+  if (!(await page.locator("#main").getByText(fill(t["quiz.needAll"], { n: 1 })).isVisible())) note(`${prefix}: no hint when the quiz is unanswered`);
+  await checkPage(page, `${prefix} quiz before`);
+  await shot(page, `${prefix}-0-quiz`);
+  await preQuiz(page, t, () => 0);
   await page.getByRole("heading", { level: 1, name: data.monuments.find((m) => m.pilot_key === "ranverso").display_name[lang] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} story`);
   await checkMap(page, `${prefix} story`);
@@ -198,6 +218,21 @@ async function play(browser, lang, vpName) {
   await checkPage(page, `${prefix} score`);
   await shot(page, `${prefix}-6-score`);
 
+  // The same quiz after the game, all right this time: the before/after comparison must show.
+  await page.getByRole("button", { name: t["quiz.open"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["quiz.postTitle"] }).waitFor();
+  for (const q of data.quiz.questions) await page.locator(`#q-${q.id}-${q.correct}`).check();
+  await page.getByRole("button", { name: t["quiz.submit"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["quiz.resultTitle"] }).waitFor();
+  const total = data.quiz.questions.length;
+  const before = data.quiz.questions.filter((q) => q.correct === 0).length;
+  if (!(await page.getByText(fill(t["quiz.compare"], { pre: before, post: total, total })).isVisible())) {
+    note(`${prefix}: quiz before/after comparison missing`);
+  }
+  await expectFocusOnHeading(page, `${prefix} quiz results`);
+  await checkPage(page, `${prefix} quiz results`);
+  await shot(page, `${prefix}-7-quiz`);
+
   // Narrowest common phone width: nothing may scroll sideways.
   await page.setViewportSize({ width: 320, height: 700 });
   await checkPage(page, `${prefix} score at 320px`);
@@ -217,8 +252,10 @@ async function playLowLevel(browser, lang) {
   console.log(`
 ${prefix}`);
   await page.goto(URL_BASE);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
   await page.getByRole("radio", { name: new RegExp(t["level.low"]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
   await page.getByRole("button", { name: t["story.continue"] }).click();
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
@@ -253,6 +290,7 @@ async function playEveryMonument(browser, lang) {
       await page.getByRole("radio", { name: new RegExp(mon.display_name[lang]) }).check();
       await page.getByRole("radio", { name: new RegExp(t[`level.${lv.id}`]) }).check();
       await page.getByRole("button", { name: t["home.start"] }).click();
+      await preQuiz(page, t);
       await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
       await page.getByRole("button", { name: t["story.continue"] }).click();
       // One card that helps with the first mission threat, when there is one.
@@ -307,7 +345,9 @@ ${prefix}`);
   await page.waitForSelector(".bd-land", { timeout: 15000 }).catch(() => note(`${prefix}: no land drawn on the plan`));
   await checkPage(page, `${prefix} home`);
   await shot(page, `${prefix}-1-home`);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
   await page.waitForSelector(".bd-heritage", { timeout: 15000 }).catch(() => note(`${prefix}: church outline missing`));
   await checkPage(page, `${prefix} story`);
   await shot(page, `${prefix}-2-story`);

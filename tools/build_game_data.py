@@ -128,6 +128,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "cards": load_json(content_dir / "sensor_cards.json"),
         "rule_map": load_json(content_dir / "rule_sensor_map.json"),
         "threat_map": load_json(content_dir / "threat_sensor_map.json"),
+        "quiz": load_json(content_dir / "quiz.json"),
         "map": load_json(content_dir / "map.json"),
         "monuments": monuments,
     }
@@ -752,6 +753,16 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
     for name in sorted(all_types - set(content.type_to_card) - content.unmapped_types):
         problems.append(f"instrument type '{name}' is neither on a card nor listed as unmapped")
 
+    quiz = content.raw["quiz"]["questions"]
+    if len({q["id"] for q in quiz}) != len(quiz):
+        problems.append("content/quiz.json: question ids are not unique")
+    for q in quiz:
+        texts = [q["question"], q["explain"], *q["options"]]
+        if any(not t.get("en") or not t.get("el") for t in texts):
+            problems.append(f"content/quiz.json {q['id']}: missing a language")
+        if len(q["options"]) < 2 or not 0 <= q["correct"] < len(q["options"]):
+            problems.append(f"content/quiz.json {q['id']}: needs options and a valid 'correct' index")
+
     layer_ids = [layer["id"] for layer in content.basemaps.get("layers", [])]
     if content.basemaps.get("default") not in layer_ids:
         problems.append("content/map.json: 'default' is not one of the layers")
@@ -845,6 +856,8 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
         "mission_size": MISSION_SIZE,
         "cards": public_cards(content),
         "rule_sensor_map": public_rule_map(content),
+        "quiz": {"questions": content.raw["quiz"]["questions"], "authored": True,
+                 "needs_review": bool(content.raw["quiz"].get("needs_review"))},
         "basemaps": {"default": content.basemaps["default"],
                      "layers": [{k: v for k, v in layer.items() if k != "review_note"}
                                 for layer in content.basemaps["layers"]],
@@ -902,6 +915,8 @@ def collect_review_items(content: Content) -> List[str]:
             if ctx.get("needs_review"):
                 items.append(f"`{pilot}` alarm explanation for `{rule}` and its linked threats {ctx.get('links')}")
         items.append(f"`{pilot}` mission picks per level and budget ({pack.get('budget')} coins)")
+    if content.raw["quiz"].get("needs_review"):
+        items.append(f"`content/quiz.json`: {len(content.raw['quiz']['questions'])} pre/post quiz questions, answers and explanations")
     return items
 
 

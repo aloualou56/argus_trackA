@@ -999,6 +999,142 @@
    "needs_review": false
   }
  },
+ "quiz": {
+  "questions": [
+   {
+    "id": "crackmeter",
+    "question": {
+     "en": "What does a crack meter tell us?",
+     "el": "Τι μας λέει ένα ρωγμόμετρο;"
+    },
+    "options": [
+     {
+      "en": "How damp the air is",
+      "el": "Πόση υγρασία έχει ο αέρας"
+     },
+     {
+      "en": "Whether a crack is opening",
+      "el": "Αν μια ρωγμή ανοίγει"
+     },
+     {
+      "en": "How many people come in",
+      "el": "Πόσοι άνθρωποι μπαίνουν"
+     }
+    ],
+    "correct": 1,
+    "explain": {
+     "en": "A crack meter sits across a crack and measures whether it gets wider.",
+     "el": "Ένα ρωγμόμετρο μπαίνει πάνω σε μια ρωγμή και μετράει αν ανοίγει."
+    }
+   },
+   {
+    "id": "rising-damp",
+    "question": {
+     "en": "Water from the ground is climbing into the walls. Which sensor watches this most directly?",
+     "el": "Το νερό του εδάφους ανεβαίνει στους τοίχους. Ποιος αισθητήρας το παρακολουθεί πιο άμεσα;"
+    },
+    "options": [
+     {
+      "en": "A rain gauge",
+      "el": "Ένα βροχόμετρο"
+     },
+     {
+      "en": "A tilt meter",
+      "el": "Ένα κλισιόμετρο"
+     },
+     {
+      "en": "A soil moisture probe",
+      "el": "Ένας αισθητήρας υγρασίας εδάφους"
+     }
+    ],
+    "correct": 2,
+    "explain": {
+     "en": "The soil probe measures how wet the ground is, where this water comes from. Rain only tells us part of the story.",
+     "el": "Ο αισθητήρας υγρασίας εδάφους μετράει πόσο υγρό είναι το έδαφος, από όπου έρχεται αυτό το νερό. Η βροχή μάς λέει μόνο ένα μέρος της ιστορίας."
+    }
+   },
+   {
+    "id": "alarm",
+    "question": {
+     "en": "When does a monitoring system raise an alarm?",
+     "el": "Πότε σημαίνει συναγερμό ένα σύστημα παρακολούθησης;"
+    },
+    "options": [
+     {
+      "en": "When a measurement goes past a limit or departs from the usual",
+      "el": "Όταν μια μέτρηση ξεπερνά ένα όριο ή ξεφεύγει από το συνηθισμένο"
+     },
+     {
+      "en": "Every time a visitor touches a wall",
+      "el": "Κάθε φορά που ένας επισκέπτης ακουμπά έναν τοίχο"
+     },
+     {
+      "en": "Once a day, whatever happens",
+      "el": "Μία φορά τη μέρα, ό,τι κι αν γίνει"
+     }
+    ],
+    "correct": 0,
+    "explain": {
+     "en": "Experts set limits, or an AI learns what is usual. An alarm means: something needs a closer look.",
+     "el": "Οι ειδικοί βάζουν όρια ή μια τεχνητή νοημοσύνη μαθαίνει τι είναι συνηθισμένο. Ένας συναγερμός σημαίνει: κάτι θέλει πιο προσεκτική ματιά."
+    }
+   },
+   {
+    "id": "observer",
+    "question": {
+     "en": "Why are people still useful when a monument has sensors?",
+     "el": "Γιατί χρειάζονται άνθρωποι, ακόμα κι όταν ένα μνημείο έχει αισθητήρες;"
+    },
+    "options": [
+     {
+      "en": "They measure day and night without a break",
+      "el": "Μετράνε μέρα-νύχτα χωρίς διάλειμμα"
+     },
+     {
+      "en": "They notice things no instrument measures, like mould or graffiti",
+      "el": "Προσέχουν πράγματα που δεν μετρά κανένα όργανο, όπως μούχλα ή γκράφιτι"
+     },
+     {
+      "en": "They make the sensors cheaper",
+      "el": "Κάνουν τους αισθητήρες φθηνότερους"
+     }
+    ],
+    "correct": 1,
+    "explain": {
+     "en": "Instruments measure all the time; people see what instruments cannot. Monitoring needs both.",
+     "el": "Τα όργανα μετράνε συνέχεια· οι άνθρωποι βλέπουν όσα δεν βλέπουν τα όργανα. Η παρακολούθηση χρειάζεται και τα δύο."
+    }
+   },
+   {
+    "id": "stuck-sensor",
+    "question": {
+     "en": "A sensor has shown exactly the same value for three weeks. What would you do first?",
+     "el": "Ένας αισθητήρας δείχνει ακριβώς την ίδια τιμή εδώ και τρεις εβδομάδες. Τι θα έκανες πρώτα;"
+    },
+    "options": [
+     {
+      "en": "Raise an alarm straight away",
+      "el": "Θα σήμαινα αμέσως συναγερμό"
+     },
+     {
+      "en": "Ignore it",
+      "el": "Θα το αγνοούσα"
+     },
+     {
+      "en": "Check that the sensor itself is working",
+      "el": "Θα έλεγχα αν ο ίδιος ο αισθητήρας λειτουργεί"
+     }
+    ],
+    "correct": 2,
+    "explain": {
+     "en": "Sensors can break or get stuck. Checking the data is part of the job.",
+     "el": "Οι αισθητήρες μπορεί να χαλάσουν ή να κολλήσουν. Ο έλεγχος των δεδομένων είναι μέρος της δουλειάς."
+    }
+   }
+  ],
+  "authored": true,
+  "needs_review": true
+ },
  "basemaps": {
   "default": "satellite",
   "layers": [
