@@ -1,6 +1,25 @@
 {
-  "_about": "AUTHORED by the game team from the AD-RT policy names and descriptions (policies.json, policy_type_id 2). Not an ARGUS document. Keys are 'pilot:rule' because rule names are reused with different meanings across pilots. 'detect_with' is a list of groups: the player's network detects the alarm if, for EVERY group, it has at least one card from that group. Units are NOT given in the ARGUS alarm data; 'unit' is our assumption unless 'unit_confirmed' is true. Entries with needs_review=true are uncertain.",
+  "_about": "AUTHORED by the game team from the AD-RT policy names and descriptions (policies.json, policy_type_id 2). Not an ARGUS document. Keys are 'pilot:rule' because rule names are reused with different meanings across pilots. 'detect_with' is a list of groups: the player's network detects the alarm if, for EVERY group, it has at least one card from that group. 'plausible' [low, high] (optional) excludes alarm values outside that range for this rule, on top of the per-quantity ranges in the build script. Units are NOT given in the ARGUS alarm data; 'unit' is our assumption unless 'unit_confirmed' is true. Entries with needs_review=true are uncertain.",
+  "dl_features": {
+    "_about": "AI (deep-learning) alarms have no rule. The build takes the alarm's top feature (largest share in top_feature_contributions); if its share is at least 30% and its name matches a pattern here, the alarm is treated as the pseudo-rule named, which must be in 'rules' for that pilot. Its 'measures' text starts with a preposition ('in the ...'), because the game shows it as 'the AI noticed something unusual in the ...'. Wind-direction features are deliberately not mapped: they are not linked to any danger.",
+    "patterns": [
+      { "match": "_soil_moisture$", "rule": "DL_soil_moisture" },
+      { "match": "_hum\\d*$", "rule": "DL_humidity" }
+    ]
+  },
   "rules": {
+    "delos:DL_soil_moisture": {
+      "detect_with": [["soil_moisture"]],
+      "measures": { "en": "in the moisture of the ground under a mosaic", "el": "στην υγρασία του εδάφους κάτω από ένα ψηφιδωτό" },
+      "unit": null, "unit_confirmed": true, "needs_review": true,
+      "note": "Pseudo-rule for AI alarms whose main signal is a soil-moisture sensor (Delos: sensor 149368, Room 215, Theatrical Masks mosaic). The AI model's own meaning of the anomaly is not documented."
+    },
+    "delos:DL_humidity": {
+      "detect_with": [["humidity"]],
+      "measures": { "en": "in the humidity of a room", "el": "στην υγρασία ενός δωματίου" },
+      "unit": null, "unit_confirmed": true, "needs_review": true,
+      "note": "Pseudo-rule for AI alarms whose main signal is a humidity sensor."
+    },
     "delos:R1a_rain_1h": {
       "detect_with": [["rain_gauge", "weather_station"]],
       "measures": { "en": "rain in one hour", "el": "βροχή σε μία ώρα" },
@@ -136,12 +155,16 @@
     "lucretili:R9a_temp_lt": {
       "detect_with": [["temperature", "weather_station"]],
       "measures": { "en": "difference between the day's highest and lowest temperature", "el": "διαφορά ανάμεσα στη μέγιστη και την ελάχιστη θερμοκρασία της μέρας" },
-      "unit": "°C", "unit_confirmed": false, "needs_review": false
+      "unit": "°C", "unit_confirmed": false, "needs_review": true,
+      "plausible": [0, 30],
+      "note": "A daily temperature range above 30 °C is not physically plausible at this site; the sample has 55 to 60, so we treat those as sensor or processing errors."
     },
     "lucretili:R9b_temp_st": {
       "detect_with": [["temperature", "weather_station"]],
       "measures": { "en": "how fast temperature changed in one hour", "el": "πόσο γρήγορα άλλαξε η θερμοκρασία σε μία ώρα" },
-      "unit": "°C", "unit_confirmed": false, "needs_review": false
+      "unit": "°C", "unit_confirmed": false, "needs_review": true,
+      "plausible": [0, 10],
+      "note": "A change of more than 10 °C in one hour is not plausible in open air; the sample has 13 to 57, so we treat those as sensor or processing errors."
     },
     "lucretili:R10_solar_zscore": {
       "detect_with": [["light_uv"]],

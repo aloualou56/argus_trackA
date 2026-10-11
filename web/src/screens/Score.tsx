@@ -10,10 +10,12 @@ interface Props extends ScreenProps {
   onReplay: () => void;
 }
 
-const STATUS: Record<CoverLevel, { cls: string; icon: string; key: MessageKey }> = {
+const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: MessageKey }> = {
   full: { cls: "learn is-yes", icon: "check", key: "score.covered" },
   partial: { cls: "learn is-partial", icon: "half", key: "score.partial" },
   none: { cls: "learn is-no", icon: "cross", key: "score.notCovered" },
+  // No card can warn about it (e.g. lost skills): taught, never scored, so no "not covered" mark.
+  unscored: { cls: "learn is-info", icon: "talk", key: "score.noSensorTag" },
 };
 
 export function Score({ data, mon, session, go, community, onReplay }: Props) {
@@ -81,7 +83,7 @@ export function Score({ data, mon, session, go, community, onReplay }: Props) {
         <h2 id="learn-title">{t("score.learn")}</h2>
         <ul className="learn-list">
           {result.coverage.map(({ scenario: s, level, by }) => {
-            const status = STATUS[level];
+            const status = STATUS[s.capable_cards.length === 0 ? "unscored" : level];
             // Cards the player did not pick; when nothing watches the threat directly, the primary ones are listed apart.
             const others = s.capable_cards.filter((c) => !by.includes(c) && (level === "full" || !s.primary_cards.includes(c)));
             const review = s.capable_cards_needs_review;

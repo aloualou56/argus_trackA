@@ -99,7 +99,7 @@
   "score.notCovered": "Not covered",
   "score.coveredBy": "Your sensors that help: {names}",
   "score.alsoHelp": "Other sensors that could help: {names}",
-  "score.noSensor": "No sensor can warn us about this. It needs people: guards, visitors, restorers.",
+  "score.noSensor": "No sensor can warn us about this, and neither can one observer. It needs the whole community: people who learn, remember and take care.",
   "score.community": "What other players chose",
   "score.communityLocal": "Saved anonymously, only on this device. No names are stored.",
   "score.communityCount": "Games at this level on this device: {n}",
@@ -143,5 +143,12 @@
   "score.directly": "Watches it directly: {names}",
   "event.counts": "Catching the real alarm counts in your score.",
   "event.human": "People notice things no instrument measures, but they do not measure day and night. Alarms like this one are caught by instruments.",
-  "reveal.human": "You also chose: {name}. The ARGUS list shows instruments only, so people are not in the table. Yet guards, staff and visitors notice things no instrument measures. What could they see here?"
+  "reveal.human": "You also chose: {name}. The ARGUS list shows instruments only, so people are not in the table. Yet guards, staff and visitors notice things no instrument measures. What could they see here?",
+  "event.whatAi": "On {date}, the ARGUS artificial-intelligence system noticed something unusual {measures}.",
+  "event.aiHow": "This system has no fixed limit. It learns how the sensors usually behave and raises an alarm when something departs from the usual.",
+  "event.aiShare": "This sensor explains {pct}% of the alarm, more than any other.",
+  "event.episode": "It was not a one-off: ARGUS raised this alarm {n} times, from {start} to {end}.",
+  "event.sourceAi": "Source: ARGUS artificial-intelligence alarm, event record {ids}.",
+  "event.noneScore": "So this step does not count in your score.",
+  "score.noSensorTag": "Not scored"
 }

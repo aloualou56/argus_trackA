@@ -1,7 +1,217 @@
 {
-  "_about": "DRAFT pack: names only. See delos.json. Needs review.",
+  "_about": "AUTHORED by the game team for Schenkenberg Castle. Story text, plain-language threat texts, mission picks, budget, alarm explanations and discussion prompts are ours, not ARGUS data, and all need human review (history facts, Greek wording, science).",
   "pilot_key": "schenkenberg",
-  "draft": true,
-  "display_name": { "en": "Schenkenberg Castle", "el": "Κάστρο Σένκενμπεργκ" },
-  "place": { "en": "Aargau, Switzerland", "el": "Αργκάου, Ελβετία" }
+  "display_name": {
+    "en": "Schenkenberg Castle",
+    "el": "Κάστρο Σένκενμπεργκ"
+  },
+  "place": {
+    "en": "Aargau, Switzerland",
+    "el": "Αργκάου, Ελβετία"
+  },
+  "story": {
+    "hook_scenario": "schenkenberg.plant-growth.untreated-30y",
+    "text": {
+      "en": "Schenkenberg Castle is the ruin of a medieval castle on a hill in Switzerland. Its walls and towers stand on their own, with no roof, open to the weather. Experts say one of the biggest dangers is something small: plants that grow between the stones.",
+      "el": "Το κάστρο Σένκενμπεργκ είναι τα ερείπια ενός μεσαιωνικού κάστρου πάνω σε έναν λόφο στην Ελβετία. Οι τοίχοι και οι πύργοι του στέκουν μόνοι τους, χωρίς στέγη, εκτεθειμένοι στον καιρό. Οι ειδικοί λένε ότι ένας από τους μεγαλύτερους κινδύνους είναι κάτι μικρό: τα φυτά που φυτρώνουν ανάμεσα στις πέτρες."
+    },
+    "needs_review": true,
+    "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw."
+  },
+  "budget": 8,
+  "missions": {
+    "_about": "Three scenario keys per priority level. Schenkenberg has 2 Low, 1 Medium, 2 High and 6 Extreme scenarios, so missions borrow from neighbouring levels.",
+    "Extreme priority": [
+      "schenkenberg.plant-growth.untreated-30y",
+      "schenkenberg.freeze-thaw.masonry",
+      "schenkenberg.earthquake.475y"
+    ],
+    "High priority": [
+      "schenkenberg.fire.large-100y",
+      "schenkenberg.wind-storm.walls",
+      "schenkenberg.temperature-variation.walls"
+    ],
+    "Medium priority": [
+      "schenkenberg.air-pollution.surfaces",
+      "schenkenberg.plant-growth.treated-annually",
+      "schenkenberg.wind-storm.walls"
+    ],
+    "Low priority": [
+      "schenkenberg.vandalism.graffiti",
+      "schenkenberg.fire.small-30y",
+      "schenkenberg.air-pollution.surfaces"
+    ]
+  },
+  "featured_alarm": {
+    "_about": "Crack alarm of 20 Sep (crackmeter 149796, 0.475 against the current limit of 0.1); the earlier crack alarms used an older limit. The vibration alarm of 16 Sep (accelerometer 152555) for the levels whose missions have no crack threat.",
+    "default": {
+      "rule": "R2_crack_step",
+      "at": "2026-09-20T20:30:00"
+    },
+    "High priority": {
+      "rule": "R3_vib_zscore",
+      "pick": "peak"
+    },
+    "Low priority": {
+      "rule": "R3_vib_zscore",
+      "pick": "peak"
+    }
+  },
+  "alarm_context": {
+    "R2_crack_step": {
+      "links": [
+        "schenkenberg.freeze-thaw.masonry",
+        "schenkenberg.earthquake.475y",
+        "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+        "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+        "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "needs_review": true
+    },
+    "R3_vib_zscore": {
+      "links": [
+        "schenkenberg.wind-storm.walls",
+        "schenkenberg.earthquake.475y"
+      ],
+      "why": {
+        "en": "A wall shook much more than usual. Tall walls standing on their own shake in strong wind and in earthquakes.",
+        "el": "Ένας τοίχος τράνταξε πολύ περισσότερο από το συνηθισμένο. Οι ψηλοί τοίχοι που στέκουν μόνοι τους τρέμουν με τον δυνατό αέρα και με τους σεισμούς."
+      },
+      "needs_review": true
+    }
+  },
+  "discussion_prompts": [
+    {
+      "en": "ARGUS put 4 vibration sensors here but no camera to watch the plants. Why? Who could keep an eye on the plants?",
+      "el": "Το ARGUS έβαλε εδώ 4 αισθητήρες δονήσεων αλλά καμία κάμερα για τα φυτά. Γιατί; Ποιος θα μπορούσε να προσέχει τα φυτά;",
+      "needs_review": true,
+      "review_note": "Counts from the ARGUS installed instruments (4 in the vibration card: vibration and accelerometer sensors; no camera)."
+    },
+    {
+      "en": "Experts scored plants cut back every year, every three years, and never. All three are high risk, but the risk is lower when plants are cleared more often. What does that tell us about regular care?",
+      "el": "Οι ειδικοί βαθμολόγησαν τα φυτά που κόβονται κάθε χρόνο, κάθε τρία χρόνια και ποτέ. Και τα τρία είναι υψηλός κίνδυνος, αλλά ο κίνδυνος μικραίνει όσο πιο συχνά καθαρίζονται. Τι μας λέει αυτό για την τακτική φροντίδα;",
+      "needs_review": true,
+      "review_note": "ABC magnitudes 12.0 (annually), 12.5 (every 3 years), 13.0 (untreated), all Extreme."
+    },
+    {
+      "en": "A crack opened suddenly on 20 September 2026. What would you want to check first if you were the castle's guardian?",
+      "el": "Μια ρωγμή άνοιξε απότομα στις 20 Σεπτεμβρίου 2026. Τι θα ήθελες να ελέγξεις πρώτα αν ήσουν ο φύλακας του κάστρου;",
+      "needs_review": false
+    }
+  ],
+  "plain_threats": {
+    "_about": "Plain-language PLACEHOLDER texts, one per ARGUS scenario. The ARGUS 'description' is kept separately in game_data.json.",
+    "schenkenberg.plant-growth.untreated-30y": {
+      "title": {
+        "en": "Plants nobody cuts back",
+        "el": "Φυτά που κανείς δεν κόβει"
+      },
+      "text": {
+        "en": "If plants are left alone for many years, their roots get into the joints between the stones and push them apart.",
+        "el": "Αν τα φυτά μείνουν ανέγγιχτα για πολλά χρόνια, οι ρίζες τους μπαίνουν στους αρμούς ανάμεσα στις πέτρες και τις σπρώχνουν να ανοίξουν."
+      }
+    },
+    "schenkenberg.freeze-thaw.masonry": {
+      "title": {
+        "en": "Ice in the cracks",
+        "el": "Πάγος στις ρωγμές"
+      },
+      "text": {
+        "en": "Water gets into cracks in the walls, freezes at night and swells. Every winter the cracks grow a little more.",
+        "el": "Το νερό μπαίνει στις ρωγμές των τοίχων, παγώνει τη νύχτα και φουσκώνει. Κάθε χειμώνα οι ρωγμές μεγαλώνουν λίγο ακόμα."
+      }
+    },
+    "schenkenberg.plant-growth.treated-3y": {
+      "title": {
+        "en": "Plants cut back every three years",
+        "el": "Φυτά που κόβονται κάθε τρία χρόνια"
+      },
+      "text": {
+        "en": "Even when plants are cleared every three years, they grow back in between and keep damaging the walls a little.",
+        "el": "Ακόμα κι όταν τα φυτά καθαρίζονται κάθε τρία χρόνια, ξαναφυτρώνουν στο ενδιάμεσο και συνεχίζουν να φθείρουν λίγο τους τοίχους."
+      }
+    },
+    "schenkenberg.plant-growth.treated-annually": {
+      "title": {
+        "en": "Plants cut back every year",
+        "el": "Φυτά που κόβονται κάθε χρόνο"
+      },
+      "text": {
+        "en": "Clearing plants every year keeps their roots small, but it takes steady work.",
+        "el": "Όταν τα φυτά καθαρίζονται κάθε χρόνο, οι ρίζες τους μένουν μικρές, αλλά χρειάζεται σταθερή δουλειά."
+      }
+    },
+    "schenkenberg.temperature-variation.walls": {
+      "title": {
+        "en": "Heat and cold",
+        "el": "Ζέστη και κρύο"
+      },
+      "text": {
+        "en": "Walls and towers with no roof heat up in the sun and cool at night. Over the years, this slowly breaks the stone.",
+        "el": "Οι τοίχοι και οι πύργοι χωρίς στέγη ζεσταίνονται στον ήλιο και κρυώνουν τη νύχτα. Με τα χρόνια, αυτό σπάει σιγά σιγά την πέτρα."
+      }
+    },
+    "schenkenberg.earthquake.475y": {
+      "title": {
+        "en": "A big earthquake",
+        "el": "Ένας μεγάλος σεισμός"
+      },
+      "text": {
+        "en": "A very strong earthquake, the kind expected about once every 475 years, could bring down free-standing walls.",
+        "el": "Ένας πολύ δυνατός σεισμός, από αυτούς που περιμένουμε περίπου μία φορά στα 475 χρόνια, θα μπορούσε να ρίξει τους τοίχους που στέκουν μόνοι τους."
+      }
+    },
+    "schenkenberg.fire.large-100y": {
+      "title": {
+        "en": "A large fire",
+        "el": "Μεγάλη φωτιά"
+      },
+      "text": {
+        "en": "A large fire, the kind expected about once a century, would crack and blacken the stones.",
+        "el": "Μια μεγάλη φωτιά, από αυτές που περιμένουμε περίπου μία φορά στα εκατό χρόνια, θα ράγιζε και θα μαύριζε τις πέτρες."
+      }
+    },
+    "schenkenberg.wind-storm.walls": {
+      "title": {
+        "en": "Storm winds",
+        "el": "Θύελλα"
+      },
+      "text": {
+        "en": "Strong storm winds push hard against tall walls that stand on their own.",
+        "el": "Οι δυνατοί άνεμοι μιας θύελλας σπρώχνουν με δύναμη τους ψηλούς τοίχους που στέκουν μόνοι τους."
+      }
+    },
+    "schenkenberg.air-pollution.surfaces": {
+      "title": {
+        "en": "Pollution on the stones",
+        "el": "Ρύπανση στις πέτρες"
+      },
+      "text": {
+        "en": "Dirty air leaves dark crusts on the walls and slowly eats into the stone between two restorations.",
+        "el": "Ο βρόμικος αέρας αφήνει μαύρες κρούστες στους τοίχους και διαβρώνει σιγά σιγά την πέτρα ανάμεσα σε δύο συντηρήσεις."
+      }
+    },
+    "schenkenberg.vandalism.graffiti": {
+      "title": {
+        "en": "Graffiti and small damage",
+        "el": "Γκράφιτι και μικρές ζημιές"
+      },
+      "text": {
+        "en": "Over many years, graffiti, scratches and stones taken away add up.",
+        "el": "Με τα χρόνια, τα γκράφιτι, οι χαρακιές και οι πέτρες που παίρνει κάποιος μαζί του αθροίζονται."
+      }
+    },
+    "schenkenberg.fire.small-30y": {
+      "title": {
+        "en": "A small fire",
+        "el": "Μικρή φωτιά"
+      },
+      "text": {
+        "en": "A small fire, the kind expected about once every 30 years, can scorch the stone surfaces.",
+        "el": "Μια μικρή φωτιά, από αυτές που περιμένουμε περίπου μία φορά στα 30 χρόνια, μπορεί να καψαλίσει τις πέτρινες επιφάνειες."
+      }
+    }
+  }
 }

@@ -830,6 +830,13 @@ main {
   background: var(--no-bg);
   color: var(--no);
 }
+.learn.is-info {
+  border-left: 6px solid var(--edge);
+}
+.is-info .status-tag {
+  background: var(--surface-2);
+  color: var(--ink);
+}
 .is-partial .status-tag {
   background: var(--partial-bg);
   color: var(--partial);

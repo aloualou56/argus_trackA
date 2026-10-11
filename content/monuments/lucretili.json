@@ -1,7 +1,313 @@
 {
-  "_about": "DRAFT pack: names only. See delos.json. Needs review.",
+  "_about": "AUTHORED by the game team for Monti Lucretili. Story text, plain-language threat texts, mission picks, budget, alarm explanations and discussion prompts are ours, not ARGUS data, and all need human review (history facts, Greek wording, science). Site names come from the ARGUS heritage_asset and instrument names.",
   "pilot_key": "lucretili",
-  "draft": true,
-  "display_name": { "en": "Monti Lucretili", "el": "Όρη Λουκρετίλι" },
-  "place": { "en": "Near Rome, Italy", "el": "Κοντά στη Ρώμη, Ιταλία" }
+  "display_name": {
+    "en": "Monti Lucretili",
+    "el": "Όρη Λουκρετίλι"
+  },
+  "place": {
+    "en": "Near Rome, Italy",
+    "el": "Κοντά στη Ρώμη, Ιταλία"
+  },
+  "story": {
+    "hook_scenario": "lucretili-conventillo.landslide.site",
+    "text": {
+      "en": "Monti Lucretili are hills near Rome. Spread over them are the villa of the Roman poet Horace, Montefalco Castle, the Sant'Angelo al Morra complex carved into the rock with medieval wall paintings, and old dry-stone walls. Experts say the biggest danger here is the ground itself: slopes that slide.",
+      "el": "Τα Όρη Λουκρετίλι είναι λόφοι κοντά στη Ρώμη. Πάνω τους βρίσκονται η έπαυλη του Ρωμαίου ποιητή Οράτιου, το κάστρο Montefalco, το συγκρότημα Sant'Angelo al Morra σκαμμένο στον βράχο με μεσαιωνικές τοιχογραφίες, και παλιές ξερολιθιές. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος εδώ είναι το ίδιο το έδαφος: πλαγιές που γλιστράνε."
+    },
+    "needs_review": true,
+    "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic)."
+  },
+  "budget": 8,
+  "missions": {
+    "_about": "Three scenario keys per priority level. Lucretili has no Low or Medium scenarios. The Catastrophic mission includes the loss of dry-stone-walling knowledge on purpose: no sensor can warn about it, which the score screen teaches (it is not scored).",
+    "Catastrophic priority": [
+      "lucretili-conventillo.landslide.site",
+      "lucretili-montefalco.abandonment.castle",
+      "lucretili-landscape.dissociation.dry-stone-walls"
+    ],
+    "Extreme priority": [
+      "lucretili-conventillo.subsidence.site",
+      "lucretili-conventillo.relative-humidity.mural-paintings",
+      "lucretili-conventillo.uv.mural-paintings"
+    ],
+    "High priority": [
+      "lucretili-villa-orazio.abandonment.structures",
+      "lucretili-villa-orazio.forest-management.structures",
+      "lucretili-montefalco.earthquake.castle"
+    ]
+  },
+  "featured_alarm": {
+    "_about": "The tilt alarm (31 Aug, tiltmeter 152816 at Sant'Angelo al Morra, 0.84 against a limit of 0.7) fits the slope and subsidence missions. The High mission is at Horace's villa, where the weather station raised a wind alarm on 7 Sep.",
+    "default": {
+      "rule": "R2a_tilt_step",
+      "pick": "peak"
+    },
+    "High priority": {
+      "rule": "R7_wind",
+      "pick": "peak"
+    }
+  },
+  "alarm_context": {
+    "R2a_tilt_step": {
+      "links": [
+        "lucretili-conventillo.landslide.site",
+        "lucretili-conventillo.subsidence.site",
+        "lucretili-conventillo.earthquake.site"
+      ],
+      "why": {
+        "en": "A wall of Sant'Angelo al Morra suddenly changed how it leans. On a slope that can slide or sink, a wall that starts to lean is an early warning.",
+        "el": "Ένας τοίχος του Sant'Angelo al Morra άλλαξε απότομα κλίση. Σε μια πλαγιά που μπορεί να γλιστρήσει ή να βουλιάξει, ένας τοίχος που αρχίζει να γέρνει είναι μια πρώτη προειδοποίηση."
+      },
+      "needs_review": true
+    },
+    "R7_wind": {
+      "links": [
+        "lucretili-villa-orazio.forest-management.structures",
+        "lucretili-villa-orazio.abandonment.structures"
+      ],
+      "why": {
+        "en": "Strong gusts hit Horace's villa. Wind can bring down branches and trees that nobody has cut back onto the old walls.",
+        "el": "Δυνατές ριπές ανέμου χτύπησαν την έπαυλη του Οράτιου. Ο αέρας μπορεί να ρίξει πάνω στους παλιούς τοίχους κλαδιά και δέντρα που κανείς δεν έχει κόψει."
+      },
+      "needs_review": true
+    },
+    "R9b_temp_st": {
+      "links": [],
+      "why": {
+        "en": "The temperature changed very fast within one hour. Quick heating and cooling make stone and plaster expand and shrink.",
+        "el": "Η θερμοκρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Το γρήγορο ζέσταμα και κρύωμα κάνει την πέτρα και τον σοβά να διαστέλλονται και να συστέλλονται."
+      },
+      "needs_review": true
+    },
+    "R4c_hum_rapid_1h": {
+      "links": [
+        "lucretili-conventillo.relative-humidity.mural-paintings"
+      ],
+      "why": {
+        "en": "The humidity changed very fast within one hour. Sudden changes in damp are hard on wall paintings.",
+        "el": "Η υγρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Οι απότομες αλλαγές στην υγρασία κουράζουν τις τοιχογραφίες."
+      },
+      "needs_review": true
+    },
+    "R8_baro": {
+      "links": [],
+      "why": {
+        "en": "The air pressure changed a lot, which often comes before a storm.",
+        "el": "Η πίεση του αέρα άλλαξε πολύ, κάτι που συχνά έρχεται πριν από μια καταιγίδα."
+      },
+      "needs_review": true
+    }
+  },
+  "discussion_prompts": [
+    {
+      "en": "The sites here are kilometres apart: Horace's villa, the castle and the rock complex. How would you share a few sensors over such a big area?",
+      "el": "Τα μνημεία εδώ απέχουν χιλιόμετρα μεταξύ τους: η έπαυλη του Οράτιου, το κάστρο και το συγκρότημα στον βράχο. Πώς θα μοίραζες λίγους αισθητήρες σε τόσο μεγάλη περιοχή;",
+      "needs_review": true,
+      "review_note": "ARGUS sensor positions: Sant'Angelo al Morra about 42.024, 12.827 and Horace's villa about 42.066, 12.902, roughly 7 km apart."
+    },
+    {
+      "en": "Many dangers here are about abandonment and forgotten skills. No sensor measures those. What can local people and visitors do?",
+      "el": "Πολλοί κίνδυνοι εδώ έχουν να κάνουν με την εγκατάλειψη και με γνώσεις που ξεχνιούνται. Κανένας αισθητήρας δεν τα μετράει αυτά. Τι μπορούν να κάνουν οι κάτοικοι και οι επισκέπτες;",
+      "needs_review": false
+    },
+    {
+      "en": "Dry-stone walls are built with stones only, no mortar. Do you know anyone who still knows how to build one?",
+      "el": "Οι ξερολιθιές χτίζονται μόνο με πέτρες, χωρίς λάσπη. Ξέρεις κάποιον που ξέρει ακόμα να χτίζει ξερολιθιά;",
+      "needs_review": false
+    }
+  ],
+  "plain_threats": {
+    "_about": "Plain-language PLACEHOLDER texts, one per ARGUS scenario. The ARGUS 'description' and 'heritage_asset' are kept separately in game_data.json.",
+    "lucretili-conventillo.landslide.site": {
+      "title": {
+        "en": "Landslide at Sant'Angelo al Morra",
+        "el": "Κατολίσθηση στο Sant'Angelo al Morra"
+      },
+      "text": {
+        "en": "The slope can slide downhill and drag with it the Sant'Angelo al Morra complex, which is carved into the rock.",
+        "el": "Η πλαγιά μπορεί να γλιστρήσει προς τα κάτω και να παρασύρει το συγκρότημα Sant'Angelo al Morra, που είναι σκαμμένο μέσα στον βράχο."
+      }
+    },
+    "lucretili-landscape.landslide.dry-stone-walls": {
+      "title": {
+        "en": "Landslide and dry-stone walls",
+        "el": "Κατολίσθηση στις ξερολιθιές"
+      },
+      "text": {
+        "en": "Dry-stone walls are built from stones alone, with no mortar. When the slope slides, they lean and fall.",
+        "el": "Οι ξερολιθιές χτίζονται μόνο με πέτρες, χωρίς λάσπη. Όταν η πλαγιά γλιστράει, γέρνουν και γκρεμίζονται."
+      }
+    },
+    "lucretili-landscape.dissociation.dry-stone-walls": {
+      "title": {
+        "en": "The skill of dry-stone walling is fading",
+        "el": "Χάνεται η τέχνη της ξερολιθιάς"
+      },
+      "text": {
+        "en": "When nobody builds or repairs dry-stone walls any more, the knowledge of how to do it is lost, and the walls fall apart.",
+        "el": "Όταν κανείς δεν χτίζει ούτε επισκευάζει πια ξερολιθιές, χάνεται και η γνώση για το πώς γίνονται, και οι τοίχοι ρημάζουν."
+      }
+    },
+    "lucretili-conventillo.subsidence.site": {
+      "title": {
+        "en": "The ground sinks under the rock complex",
+        "el": "Το έδαφος βουλιάζει κάτω από το συγκρότημα"
+      },
+      "text": {
+        "en": "The ground under the building and its caves can slowly sink, and the walls crack.",
+        "el": "Το έδαφος κάτω από το κτίριο και τις σπηλιές του μπορεί να βουλιάζει σιγά σιγά, και οι τοίχοι ραγίζουν."
+      }
+    },
+    "lucretili-conventillo.dissociation.site": {
+      "title": {
+        "en": "Abandonment of Sant'Angelo al Morra",
+        "el": "Εγκατάλειψη του Sant'Angelo al Morra"
+      },
+      "text": {
+        "en": "When a place is abandoned, nobody looks after it and people forget its story.",
+        "el": "Όταν ένα μέρος εγκαταλείπεται, κανείς δεν το φροντίζει και οι άνθρωποι ξεχνούν την ιστορία του."
+      }
+    },
+    "lucretili-montefalco.subsidence.castle": {
+      "title": {
+        "en": "The castle walls sink",
+        "el": "Βουλιάζουν τα τείχη του κάστρου"
+      },
+      "text": {
+        "en": "If the ground under Montefalco Castle sinks, its standing walls crack and lean.",
+        "el": "Αν το έδαφος κάτω από το κάστρο Montefalco βουλιάξει, οι τοίχοι που στέκουν ακόμα ραγίζουν και γέρνουν."
+      }
+    },
+    "lucretili-montefalco.abandonment.castle": {
+      "title": {
+        "en": "A forgotten castle",
+        "el": "Ένα κάστρο που ξεχνιέται"
+      },
+      "text": {
+        "en": "Without visitors or care, the castle is slowly forgotten and small damage is never repaired.",
+        "el": "Χωρίς επισκέπτες και φροντίδα, το κάστρο ξεχνιέται σιγά σιγά και οι μικρές ζημιές δεν επισκευάζονται ποτέ."
+      }
+    },
+    "lucretili-landscape.subsidence.dry-stone-walls": {
+      "title": {
+        "en": "Dry-stone walls sink",
+        "el": "Βουλιάζουν οι ξερολιθιές"
+      },
+      "text": {
+        "en": "When the ground under a dry-stone wall sinks, the stones shift and the wall bulges.",
+        "el": "Όταν το έδαφος κάτω από μια ξερολιθιά βουλιάζει, οι πέτρες μετακινούνται και ο τοίχος φουσκώνει."
+      }
+    },
+    "lucretili-conventillo.relative-humidity.mural-paintings": {
+      "title": {
+        "en": "Mould on the wall paintings",
+        "el": "Μούχλα στις τοιχογραφίες"
+      },
+      "text": {
+        "en": "When the air stays very damp for a long time, mould grows on the medieval wall paintings.",
+        "el": "Όταν ο αέρας μένει πολύ υγρός για πολύ καιρό, φυτρώνει μούχλα πάνω στις μεσαιωνικές τοιχογραφίες."
+      }
+    },
+    "lucretili-montefalco.landslide.castle": {
+      "title": {
+        "en": "Landslide under the castle",
+        "el": "Κατολίσθηση κάτω από το κάστρο"
+      },
+      "text": {
+        "en": "The hillside under Montefalco Castle can slide and take parts of the castle with it.",
+        "el": "Η πλαγιά κάτω από το κάστρο Montefalco μπορεί να γλιστρήσει και να πάρει μαζί της κομμάτια του κάστρου."
+      }
+    },
+    "lucretili-montefalco.earthquake.castle": {
+      "title": {
+        "en": "Earthquake at the castle",
+        "el": "Σεισμός στο κάστρο"
+      },
+      "text": {
+        "en": "A strong earthquake can shake down the castle walls that are still standing.",
+        "el": "Ένας δυνατός σεισμός μπορεί να ρίξει τους τοίχους του κάστρου που στέκουν ακόμα."
+      }
+    },
+    "lucretili-montefalco.forest-management.castle": {
+      "title": {
+        "en": "The forest hides the castle",
+        "el": "Το δάσος κρύβει το κάστρο"
+      },
+      "text": {
+        "en": "When nobody looks after the forest, trees and bushes cover the castle, so people can no longer reach or even see it.",
+        "el": "Όταν κανείς δεν φροντίζει το δάσος, δέντρα και θάμνοι σκεπάζουν το κάστρο και οι άνθρωποι δεν μπορούν πια να φτάσουν ούτε καν να το δουν."
+      }
+    },
+    "lucretili-conventillo.earthquake.site": {
+      "title": {
+        "en": "Earthquake at Sant'Angelo al Morra",
+        "el": "Σεισμός στο Sant'Angelo al Morra"
+      },
+      "text": {
+        "en": "A strong earthquake can damage the complex inside and out.",
+        "el": "Ένας δυνατός σεισμός μπορεί να προκαλέσει ζημιές στο συγκρότημα, μέσα και έξω."
+      }
+    },
+    "lucretili-conventillo.forest-management.site": {
+      "title": {
+        "en": "Trees and bushes with no care",
+        "el": "Δέντρα και θάμνοι χωρίς φροντίδα"
+      },
+      "text": {
+        "en": "Without a plan for the forest around it, plants grow over the outside of the complex and damage it.",
+        "el": "Χωρίς σχέδιο για το δάσος γύρω του, τα φυτά απλώνονται πάνω στο συγκρότημα και του κάνουν ζημιά."
+      }
+    },
+    "lucretili-conventillo.uv.mural-paintings": {
+      "title": {
+        "en": "Sunlight fades the paintings",
+        "el": "Ο ήλιος ξεθωριάζει τις τοιχογραφίες"
+      },
+      "text": {
+        "en": "Wall paintings that the sun reaches slowly lose their colours.",
+        "el": "Οι τοιχογραφίες που τις βλέπει ο ήλιος χάνουν σιγά σιγά τα χρώματά τους."
+      }
+    },
+    "lucretili-landscape.earthquake.dry-stone-walls": {
+      "title": {
+        "en": "Earthquake and dry-stone walls",
+        "el": "Σεισμός στις ξερολιθιές"
+      },
+      "text": {
+        "en": "With no mortar holding them, the stones of a dry-stone wall can fall in an earthquake.",
+        "el": "Χωρίς λάσπη να τις κρατάει, οι πέτρες μιας ξερολιθιάς μπορεί να πέσουν σε έναν σεισμό."
+      }
+    },
+    "lucretili-landscape.forest-management.dry-stone-walls": {
+      "title": {
+        "en": "Roots inside the walls",
+        "el": "Ρίζες μέσα στις ξερολιθιές"
+      },
+      "text": {
+        "en": "In the woods, roots grow between the stones and push them apart.",
+        "el": "Μέσα στο δάσος, οι ρίζες μεγαλώνουν ανάμεσα στις πέτρες και τις σπρώχνουν να ανοίξουν."
+      }
+    },
+    "lucretili-villa-orazio.abandonment.structures": {
+      "title": {
+        "en": "Abandonment of Horace's villa",
+        "el": "Εγκατάλειψη της έπαυλης του Οράτιου"
+      },
+      "text": {
+        "en": "If nobody looks after the walls of the Roman villa, small damage grows year by year.",
+        "el": "Αν κανείς δεν φροντίζει τους τοίχους της ρωμαϊκής έπαυλης, οι μικρές ζημιές μεγαλώνουν χρόνο με τον χρόνο."
+      }
+    },
+    "lucretili-villa-orazio.forest-management.structures": {
+      "title": {
+        "en": "Plants over Horace's villa",
+        "el": "Φυτά πάνω στην έπαυλη του Οράτιου"
+      },
+      "text": {
+        "en": "Plants that nobody cuts back grow over the villa and their roots break its walls.",
+        "el": "Τα φυτά που κανείς δεν κόβει σκεπάζουν την έπαυλη και οι ρίζες τους σπάνε τους τοίχους της."
+      }
+    }
+  }
 }

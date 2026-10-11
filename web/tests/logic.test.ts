@@ -29,9 +29,28 @@ const ranverso = data.monuments.find((m) => m.pilot_key === "ranverso") as Monum
 const cards = cardById(data);
 
 describe("data pack", () => {
-  it("has one playable monument with a story and a budget", () => {
-    expect(data.monuments.filter(isPlayable).map((m) => m.pilot_key)).toEqual(["ranverso"]);
-    expect(ranverso.budget).toBeGreaterThan(0);
+  it("has five playable monuments, each with a story and a budget", () => {
+    expect(data.monuments.filter(isPlayable)).toHaveLength(5);
+    for (const m of data.monuments.filter(isPlayable)) expect(m.budget, m.pilot_key).toBeGreaterThan(0);
+  });
+
+  it("lets every level of every monument reach a full score within the budget", () => {
+    for (const mon of data.monuments.filter(isPlayable)) {
+      for (const lv of mon.levels.filter((l) => l.available)) {
+        const threats = missionScenarios(mon, lv.id);
+        const alarm = featuredAlarm(mon, lv.id);
+        const rule = alarm && ruleFor(data, mon, alarm);
+        // Cheapest set of cards (one of each) that gives 100: try every subset of the relevant cards.
+        const relevant = [...new Set([...threats.flatMap((s) => s.primary_cards), ...(rule?.detect_with.flat() ?? [])])];
+        let perfect = Infinity;
+        for (let mask = 0; mask < 1 << relevant.length; mask++) {
+          const picks = Object.fromEntries(relevant.filter((_, i) => mask & (1 << i)).map((c) => [c, 1]));
+          const s = score(threats, rule, picks, cards);
+          if (s.total === 100) perfect = Math.min(perfect, s.spentCoins);
+        }
+        expect(perfect, `${mon.pilot_key} ${lv.id}`).toBeLessThanOrEqual(mon.budget);
+      }
+    }
   });
 
   it("offers every available level a 3-threat mission and a real alarm", () => {

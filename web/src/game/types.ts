@@ -94,6 +94,8 @@ export interface Alarm {
   policy_name: string | null;
   threat_name: string | null;
   score: number | null;
+  /** AI alarms only: share (0..1) of the model's top feature contributions taken by `variable`. */
+  feature_share: number | null;
   variable: string;
   value: number;
   threshold: number;
@@ -198,6 +200,8 @@ export interface Monument extends MonumentBase {
   installed: Installed;
   alarms: Alarm[];
   discussion_prompts: Prompt[];
+  /** Why this monument has no alarm to replay, when it has none. */
+  no_alarm_note?: Prompt;
 }
 
 export interface GameData {

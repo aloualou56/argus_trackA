@@ -23,7 +23,14 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
     return (
       <div className="screen event">
         <h1 tabIndex={-1}>{t("event.heading")}</h1>
-        <p className="lead">{t("event.none")}</p>
+        {mon.no_alarm_note ? (
+          <p className="lead" data-needs-review={mon.no_alarm_note.needs_review}>
+            {pick(mon.no_alarm_note)}
+          </p>
+        ) : (
+          <p className="lead">{t("event.none")}</p>
+        )}
+        <p>{t("event.noneScore")}</p>
         {next}
       </div>
     );
@@ -40,6 +47,10 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
   const pickedHuman = [...owned(session.picks)].some((c) => human.has(c));
   const scale = Math.max(alarm.value, alarm.threshold) * 1.15;
   const missionKeys = new Set(missionScenarios(mon, session.level).map((s) => s.scenario_key));
+  const ai = alarm.type === "DL";
+  const episode = alarm.episode.alarm_count > 1 && (
+    <p>{t("event.episode", { n: alarm.episode.alarm_count, start: date(alarm.episode.start), end: date(alarm.episode.end) })}</p>
+  );
   const linked = (alarm.context?.links ?? [])
     .map((key) => mon.scenarios.find((s) => s.scenario_key === key))
     .filter((s): s is NonNullable<typeof s> => !!s);
@@ -47,30 +58,45 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
   return (
     <div className="screen event">
       <h1 tabIndex={-1}>{t("event.heading")}</h1>
-      <p className="lead">{t("event.what", { date: date(alarm.timestamp), measures: pick(rule.measures) })}</p>
+      <p className="lead">
+        {t(ai ? "event.whatAi" : "event.what", { date: date(alarm.timestamp), measures: pick(rule.measures) })}
+      </p>
 
-      <section className="panel reading" aria-label={pick(rule.measures)}>
-        <dl className="readings">
-          <div>
-            <dt>{t("event.value")}</dt>
-            <dd>{withUnit(alarm.value)}</dd>
+      {ai ? (
+        <section className="panel reading" aria-label={pick(rule.measures)}>
+          <p>{t("event.aiHow")}</p>
+          {alarm.feature_share !== null && (
+            <p>
+              <strong>{t("event.aiShare", { pct: number(alarm.feature_share * 100, 0) })}</strong>
+            </p>
+          )}
+          {episode}
+        </section>
+      ) : (
+        <section className="panel reading" aria-label={pick(rule.measures)}>
+          <dl className="readings">
+            <div>
+              <dt>{t("event.value")}</dt>
+              <dd>{withUnit(alarm.value)}</dd>
+            </div>
+            <div>
+              <dt>{t("event.limit")}</dt>
+              <dd>{withUnit(alarm.threshold)}</dd>
+            </div>
+          </dl>
+          <div className="gauge" aria-hidden="true">
+            <span className="gauge-fill" style={{ width: `${(alarm.value / scale) * 100}%` }} />
+            <span className="gauge-limit" style={{ left: `${(alarm.threshold / scale) * 100}%` }} />
           </div>
-          <div>
-            <dt>{t("event.limit")}</dt>
-            <dd>{withUnit(alarm.threshold)}</dd>
-          </div>
-        </dl>
-        <div className="gauge" aria-hidden="true">
-          <span className="gauge-fill" style={{ width: `${(alarm.value / scale) * 100}%` }} />
-          <span className="gauge-limit" style={{ left: `${(alarm.threshold / scale) * 100}%` }} />
-        </div>
-        <p>
-          {alarm.direction === "above"
-            ? t("event.timesAbove", { x: number(alarm.times_threshold ?? alarm.value / alarm.threshold) })
-            : t("event.timesBelow", { pct: number((alarm.value / alarm.threshold) * 100, 0) })}
-        </p>
-        {alarm.quality_flags.includes("flat_signal") && <p className="note">{t("event.flatNote")}</p>}
-      </section>
+          <p>
+            {alarm.direction === "above"
+              ? t("event.timesAbove", { x: number(alarm.times_threshold ?? alarm.value / alarm.threshold) })
+              : t("event.timesBelow", { pct: number((alarm.value / alarm.threshold) * 100, 0) })}
+          </p>
+          {alarm.quality_flags.includes("flat_signal") && <p className="note">{t("event.flatNote")}</p>}
+          {episode}
+        </section>
+      )}
 
       <section
         className={detection.detected ? "panel result is-yes" : "panel result is-no"}
@@ -112,7 +138,10 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
       )}
 
       <p className="small">
-        {t("event.dataNote")} {t("event.source", { rule: alarm.rule, ids: alarm.event_ids.join(", ") })}
+        {t("event.dataNote")}{" "}
+        {ai
+          ? t("event.sourceAi", { ids: alarm.event_ids.join(", ") })
+          : t("event.source", { rule: alarm.rule, ids: alarm.event_ids.join(", ") })}
       </p>
       {next}
     </div>

@@ -37,15 +37,49 @@ class GameData(unittest.TestCase):
 
     def test_small_enough_for_the_browser(self):
         size = len(json.dumps(self.data, ensure_ascii=False).encode("utf-8"))
-        self.assertLess(size, 200 * 1024)
+        self.assertLess(size, 300 * 1024)
 
     def test_no_secrets_or_api_hosts(self):
         text = json.dumps(self.data, ensure_ascii=False) + self.notes
         self.assertIsNone(re.search(r"(?i)bearer\s|authorization|api[_-]?key|password|token", text))
 
-    def test_five_monuments_one_playable(self):
+    def test_five_monuments_all_playable(self):
         self.assertEqual([m["asset_id"] for m in self.data["monuments"]], [26, 27, 28, 29, 30])
-        self.assertEqual([m["pilot_key"] for m in self.data["monuments"] if m["playable"]], ["ranverso"])
+        self.assertTrue(all(m["playable"] for m in self.data["monuments"]))
+
+    def test_every_monument_level_is_complete(self):
+        card_ids = self.card_ids
+        for mon in self.data["monuments"]:
+            keys = {s["scenario_key"] for s in mon["scenarios"]}
+            alarm_ids = {a["id"]: a for a in mon["alarms"]}
+            for lv in mon["levels"]:
+                if not lv["available"]:
+                    continue
+                name = f"{mon['pilot_key']} {lv['id']}"
+                self.assertEqual(len(set(lv["mission"])), self.data["mission_size"], name)
+                self.assertTrue(set(lv["mission"]) <= keys, name)
+                if lv["featured_alarm"] is not None:
+                    alarm = alarm_ids[lv["featured_alarm"]]
+                    self.assertNotIn("flat_signal", alarm["quality_flags"], name)
+                    self.assertTrue(alarm["instruments"], name)
+                    self.assertIn(f"{mon['pilot_key']}:{alarm['rule']}", self.data["rule_sensor_map"], name)
+            if all(lv.get("featured_alarm") is None for lv in mon["levels"]):
+                self.assertTrue(mon.get("no_alarm_note"), f"{mon['pilot_key']}: no alarm and no note saying why")
+            for s in mon["scenarios"]:
+                self.assertTrue(set(s["capable_cards"]) <= card_ids, s["scenario_key"])
+
+    def test_alarms_used_per_monument(self):
+        featured = {m["pilot_key"]: {a["rule"] for lv in m["levels"] for a in m["alarms"] if a["id"] == lv.get("featured_alarm")}
+                    for m in self.data["monuments"]}
+        self.assertEqual(featured["ranverso"], {"R2_rain_7d"})
+        self.assertEqual(featured["lucretili"], {"R2a_tilt_step", "R7_wind"})
+        self.assertEqual(featured["schenkenberg"], {"R2_crack_step", "R3_vib_zscore"})
+        self.assertEqual(featured["delos"], {"DL_soil_moisture"})
+        self.assertEqual(featured["baltanas"], set())
+        lucretili = next(m for m in self.data["monuments"] if m["pilot_key"] == "lucretili")
+        for a in lucretili["alarms"]:
+            if a["rule"] == "R9a_temp_lt":
+                self.assertLessEqual(a["value"], 30)
 
     def test_ranverso_scenarios(self):
         scenarios = self.ranverso["scenarios"]

@@ -1,7 +1,476 @@
 {
-  "_about": "DRAFT pack: names only, so the home screen can list the monument. Remove \"draft\" and add story, budget, missions, plain_threats, featured_alarm, alarm_context and discussion_prompts (see ranverso.json) to make it playable. Needs review.",
+  "_about": "AUTHORED by the game team for Delos. Story text, plain-language threat texts, mission picks, budget, alarm explanations and discussion prompts are ours, not ARGUS data, and all need human review (history facts, Greek wording, science). House and room names come from the ARGUS heritage_asset and instrument names.",
   "pilot_key": "delos",
-  "draft": true,
-  "display_name": { "en": "Delos", "el": "Δήλος" },
-  "place": { "en": "Cyclades, Greece", "el": "Κυκλάδες, Ελλάδα" }
+  "display_name": {
+    "en": "Delos",
+    "el": "Δήλος"
+  },
+  "place": {
+    "en": "Cyclades, Greece",
+    "el": "Κυκλάδες, Ελλάδα"
+  },
+  "story": {
+    "hook_scenario": "delos-masks.salinity.site",
+    "text": {
+      "en": "Delos is a small island in the middle of the Cyclades. In ancient times it was a sacred island: in myth, Apollo and Artemis were born here. Today the whole island is an archaeological site. Here ARGUS watches two ancient houses, the House of the Masks and the House of Fournoi. Experts say the biggest danger is salt.",
+      "el": "Η Δήλος είναι ένα μικρό νησί στη μέση των Κυκλάδων. Στην αρχαιότητα ήταν ιερό νησί: κατά τον μύθο, εδώ γεννήθηκαν ο Απόλλωνας και η Άρτεμη. Σήμερα όλο το νησί είναι αρχαιολογικός χώρος. Εδώ το ARGUS προσέχει δύο αρχαία σπίτια, την Οικία των Προσωπείων και την Οικία των Φούρνων. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος είναι το αλάτι."
+    },
+    "needs_review": true,
+    "review_note": "Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses)."
+  },
+  "budget": 8,
+  "missions": {
+    "_about": "Three scenario keys per priority level, mixing the two houses and avoiding repeats of the same kind of threat. Delos has only 1 Extreme scenario, so that mission borrows two High ones.",
+    "Catastrophic priority": [
+      "delos-masks.salinity.site",
+      "delos-fournoi.rh-fluctuations.site",
+      "delos-masks.architectural-stability.site"
+    ],
+    "Extreme priority": [
+      "delos-masks.wind-erosion.site",
+      "delos-fournoi.high-temperature.site",
+      "delos-fournoi.rainfall.site"
+    ],
+    "High priority": [
+      "delos-fournoi.architectural-stability.site",
+      "delos-fournoi.heatwaves.site",
+      "delos-masks.air-pollution.site"
+    ],
+    "Medium priority": [
+      "delos-fournoi.soil-erosion.site",
+      "delos-fournoi.water-rise.site",
+      "delos-masks.heatwaves.site"
+    ],
+    "Low priority": [
+      "delos-masks.seismic.site",
+      "delos-fournoi.flooding.site",
+      "delos-masks.prolonged-dry-periods.site"
+    ]
+  },
+  "featured_alarm": {
+    "_about": "Delos has only AI alarms. 26 of them, daily from 31 Aug to 24 Sep 2026, are driven mainly by soil-moisture sensor 149368 under the Theatrical Masks mosaic (Room 215, House of the Masks). Levels replay the first, the strongest or the last of that run.",
+    "default": {
+      "rule": "DL_soil_moisture",
+      "pick": "first"
+    },
+    "High priority": {
+      "rule": "DL_soil_moisture",
+      "pick": "peak"
+    },
+    "Medium priority": {
+      "rule": "DL_soil_moisture",
+      "pick": "peak"
+    },
+    "Low priority": {
+      "rule": "DL_soil_moisture",
+      "pick": "last"
+    }
+  },
+  "alarm_context": {
+    "DL_soil_moisture": {
+      "links": [
+        "delos-masks.water-rise.site",
+        "delos-masks.salinity.site",
+        "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+        "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+        "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "needs_review": true
+    },
+    "DL_humidity": {
+      "links": [
+        "delos-masks.rh-fluctuations.site",
+        "delos-masks.salinity.site"
+      ],
+      "why": {
+        "en": "The humidity in a room of the House of the Masks behaved unusually. Damp that goes up and down makes salts swell and shrink inside the walls.",
+        "el": "Η υγρασία σε ένα δωμάτιο της Οικίας των Προσωπείων συμπεριφέρθηκε ασυνήθιστα. Η υγρασία που ανεβοκατεβαίνει κάνει τα άλατα να φουσκώνουν και να ξεφουσκώνουν μέσα στους τοίχους."
+      },
+      "needs_review": true
+    }
+  },
+  "discussion_prompts": [
+    {
+      "en": "ARGUS put 6 soil-moisture probes and 5 humidity sensors on Delos. Why does damp matter so much on a dry island?",
+      "el": "Το ARGUS έβαλε στη Δήλο 6 αισθητήρες υγρασίας εδάφους και 5 αισθητήρες υγρασίας αέρα. Γιατί η υγρασία μετράει τόσο πολύ σε ένα ξερό νησί;",
+      "needs_review": true,
+      "review_note": "Counts from the ARGUS installed instruments for Delos."
+    },
+    {
+      "en": "The alarm here came from artificial intelligence, not from a fixed limit. What is good about that, and what could go wrong?",
+      "el": "Ο συναγερμός εδώ ήρθε από τεχνητή νοημοσύνη και όχι από ένα σταθερό όριο. Τι καλό έχει αυτό και τι θα μπορούσε να πάει στραβά;",
+      "needs_review": false
+    },
+    {
+      "en": "Many visitors come to Delos every summer. How could visitors help to look after the ancient houses?",
+      "el": "Πολλοί επισκέπτες έρχονται στη Δήλο κάθε καλοκαίρι. Πώς θα μπορούσαν οι επισκέπτες να βοηθήσουν να προσέχουμε τα αρχαία σπίτια;",
+      "needs_review": true,
+      "review_note": "Visitor numbers are general knowledge, not ARGUS data."
+    }
+  ],
+  "plain_threats": {
+    "_about": "Plain-language PLACEHOLDER texts, one per ARGUS scenario. Both houses share the same kinds of threat; the house is named in the title.",
+    "delos-masks.salinity.site": {
+      "title": {
+        "en": "Salt in the walls · House of the Masks",
+        "el": "Αλάτι στους τοίχους · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Salt from the sea and the ground gets into the walls. When the damp changes, it turns into crystals that crumble stone and plaster.",
+        "el": "Το αλάτι από τη θάλασσα και το έδαφος μπαίνει στους τοίχους. Όταν αλλάζει η υγρασία, γίνεται κρύσταλλοι που θρυμματίζουν την πέτρα και τα κονιάματα."
+      }
+    },
+    "delos-masks.rh-fluctuations.site": {
+      "title": {
+        "en": "Damp that goes up and down · House of the Masks",
+        "el": "Η υγρασία ανεβοκατεβαίνει · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "When the air keeps switching between damp and dry, salts and materials swell and shrink again and again.",
+        "el": "Όταν ο αέρας αλλάζει συνέχεια από υγρός σε ξερός, τα άλατα και τα υλικά φουσκώνουν και ξεφουσκώνουν ξανά και ξανά."
+      }
+    },
+    "delos-masks.wind-erosion.site": {
+      "title": {
+        "en": "Wind wears the stone · House of the Masks",
+        "el": "Ο αέρας φθείρει την πέτρα · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Strong Aegean winds carry sand and salt that slowly rub away the surfaces.",
+        "el": "Οι δυνατοί άνεμοι του Αιγαίου κουβαλούν άμμο και αλάτι που τρίβουν σιγά σιγά τις επιφάνειες."
+      }
+    },
+    "delos-masks.architectural-stability.site": {
+      "title": {
+        "en": "Will the walls stand? · House of the Masks",
+        "el": "Θα αντέξουν οι τοίχοι; · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Ancient walls without a roof can crack, lean or fall.",
+        "el": "Οι αρχαίοι τοίχοι χωρίς στέγη μπορεί να ραγίσουν, να γείρουν ή να πέσουν."
+      }
+    },
+    "delos-masks.high-temperature.site": {
+      "title": {
+        "en": "High temperatures · House of the Masks",
+        "el": "Υψηλές θερμοκρασίες · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Strong heat dries out and weakens plaster and mortar.",
+        "el": "Η μεγάλη ζέστη ξεραίνει και αδυνατίζει τους σοβάδες και τα κονιάματα."
+      }
+    },
+    "delos-masks.storm.site": {
+      "title": {
+        "en": "Storms · House of the Masks",
+        "el": "Καταιγίδες · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Storms bring strong wind and heavy rain at the same time.",
+        "el": "Οι καταιγίδες φέρνουν μαζί δυνατό αέρα και πολλή βροχή."
+      }
+    },
+    "delos-masks.air-pollution.site": {
+      "title": {
+        "en": "Air pollution · House of the Masks",
+        "el": "Ρύπανση του αέρα · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Pollutants in the air settle on surfaces and stain or eat into them.",
+        "el": "Οι ρύποι του αέρα κάθονται στις επιφάνειες και τις λερώνουν ή τις διαβρώνουν."
+      }
+    },
+    "delos-masks.heatwaves.site": {
+      "title": {
+        "en": "Heatwaves · House of the Masks",
+        "el": "Καύσωνες · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Many very hot days in a row stress the materials again and again.",
+        "el": "Πολλές πολύ ζεστές μέρες στη σειρά ταλαιπωρούν τα υλικά ξανά και ξανά."
+      }
+    },
+    "delos-masks.rainfall.site": {
+      "title": {
+        "en": "Rain · House of the Masks",
+        "el": "Βροχή · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Rain soaks walls and floors that have no roof to protect them.",
+        "el": "Η βροχή μουσκεύει τοίχους και δάπεδα που δεν έχουν στέγη να τα προστατεύει."
+      }
+    },
+    "delos-masks.soil-erosion.site": {
+      "title": {
+        "en": "Soil washed away · House of the Masks",
+        "el": "Το χώμα φεύγει · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Rain and wind carry away the soil around the walls, so their bases are left exposed.",
+        "el": "Η βροχή και ο αέρας παίρνουν το χώμα γύρω από τους τοίχους και οι βάσεις τους μένουν ακάλυπτες."
+      }
+    },
+    "delos-masks.water-rise.site": {
+      "title": {
+        "en": "Water rising from below · House of the Masks",
+        "el": "Νερό που ανεβαίνει από κάτω · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Water in the ground climbs into walls and floors and brings salt with it.",
+        "el": "Το νερό του εδάφους ανεβαίνει στους τοίχους και στα δάπεδα και φέρνει μαζί του αλάτι."
+      }
+    },
+    "delos-masks.prolonged-dry-periods.site": {
+      "title": {
+        "en": "Long dry spells · House of the Masks",
+        "el": "Μεγάλη ξηρασία · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "After a long time without rain, the ground and the walls dry out and can crack.",
+        "el": "Μετά από πολύ καιρό χωρίς βροχή, το έδαφος και οι τοίχοι ξεραίνονται και μπορεί να ραγίσουν."
+      }
+    },
+    "delos-masks.gravitational-slope-movements.site": {
+      "title": {
+        "en": "The slope slips · House of the Masks",
+        "el": "Η πλαγιά γλιστράει · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "The ground on a slope can slowly slip downhill and pull walls with it.",
+        "el": "Το έδαφος σε μια πλαγιά μπορεί να γλιστράει σιγά σιγά προς τα κάτω και να τραβάει μαζί του τους τοίχους."
+      }
+    },
+    "delos-masks.flooding.site": {
+      "title": {
+        "en": "Flooding · House of the Masks",
+        "el": "Πλημμύρα · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Heavy rain can flood the rooms and leave mud and salt behind.",
+        "el": "Μια δυνατή βροχή μπορεί να πλημμυρίσει τα δωμάτια και να αφήσει πίσω λάσπη και αλάτι."
+      }
+    },
+    "delos-masks.freeze-thaw-cycles.site": {
+      "title": {
+        "en": "Freezing and thawing · House of the Masks",
+        "el": "Πάγωμα και ξεπάγωμα · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "On the rare cold nights, water in the stone can freeze and swell.",
+        "el": "Τις λίγες κρύες νύχτες, το νερό μέσα στην πέτρα μπορεί να παγώσει και να φουσκώσει."
+      }
+    },
+    "delos-masks.seismic.site": {
+      "title": {
+        "en": "Earthquakes · House of the Masks",
+        "el": "Σεισμοί · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "An earthquake can shake ancient walls and make them crack or fall.",
+        "el": "Ένας σεισμός μπορεί να τραντάξει τους αρχαίους τοίχους και να τους ραγίσει ή να τους ρίξει."
+      }
+    },
+    "delos-masks.low-temperature.site": {
+      "title": {
+        "en": "Low temperatures · House of the Masks",
+        "el": "Χαμηλές θερμοκρασίες · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "Cold makes materials shrink and keeps damp in the walls for longer.",
+        "el": "Το κρύο κάνει τα υλικά να συστέλλονται και κρατάει την υγρασία στους τοίχους περισσότερο."
+      }
+    },
+    "delos-masks.subsidence.site": {
+      "title": {
+        "en": "The ground sinks · House of the Masks",
+        "el": "Το έδαφος βουλιάζει · Οικία των Προσωπείων"
+      },
+      "text": {
+        "en": "If the ground under the house sinks, the walls and floors crack.",
+        "el": "Αν το έδαφος κάτω από το σπίτι βουλιάξει, οι τοίχοι και τα δάπεδα ραγίζουν."
+      }
+    },
+    "delos-fournoi.salinity.site": {
+      "title": {
+        "en": "Salt in the walls · House of Fournoi",
+        "el": "Αλάτι στους τοίχους · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Salt from the sea and the ground gets into the walls. When the damp changes, it turns into crystals that crumble stone and plaster.",
+        "el": "Το αλάτι από τη θάλασσα και το έδαφος μπαίνει στους τοίχους. Όταν αλλάζει η υγρασία, γίνεται κρύσταλλοι που θρυμματίζουν την πέτρα και τα κονιάματα."
+      }
+    },
+    "delos-fournoi.rh-fluctuations.site": {
+      "title": {
+        "en": "Damp that goes up and down · House of Fournoi",
+        "el": "Η υγρασία ανεβοκατεβαίνει · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "When the air keeps switching between damp and dry, salts and materials swell and shrink again and again.",
+        "el": "Όταν ο αέρας αλλάζει συνέχεια από υγρός σε ξερός, τα άλατα και τα υλικά φουσκώνουν και ξεφουσκώνουν ξανά και ξανά."
+      }
+    },
+    "delos-fournoi.wind-erosion.site": {
+      "title": {
+        "en": "Wind wears the stone · House of Fournoi",
+        "el": "Ο αέρας φθείρει την πέτρα · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Strong Aegean winds carry sand and salt that slowly rub away the surfaces.",
+        "el": "Οι δυνατοί άνεμοι του Αιγαίου κουβαλούν άμμο και αλάτι που τρίβουν σιγά σιγά τις επιφάνειες."
+      }
+    },
+    "delos-fournoi.architectural-stability.site": {
+      "title": {
+        "en": "Will the walls stand? · House of Fournoi",
+        "el": "Θα αντέξουν οι τοίχοι; · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Ancient walls without a roof can crack, lean or fall.",
+        "el": "Οι αρχαίοι τοίχοι χωρίς στέγη μπορεί να ραγίσουν, να γείρουν ή να πέσουν."
+      }
+    },
+    "delos-fournoi.high-temperature.site": {
+      "title": {
+        "en": "High temperatures · House of Fournoi",
+        "el": "Υψηλές θερμοκρασίες · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Strong heat dries out and weakens plaster and mortar.",
+        "el": "Η μεγάλη ζέστη ξεραίνει και αδυνατίζει τους σοβάδες και τα κονιάματα."
+      }
+    },
+    "delos-fournoi.storm.site": {
+      "title": {
+        "en": "Storms · House of Fournoi",
+        "el": "Καταιγίδες · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Storms bring strong wind and heavy rain at the same time.",
+        "el": "Οι καταιγίδες φέρνουν μαζί δυνατό αέρα και πολλή βροχή."
+      }
+    },
+    "delos-fournoi.air-pollution.site": {
+      "title": {
+        "en": "Air pollution · House of Fournoi",
+        "el": "Ρύπανση του αέρα · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Pollutants in the air settle on surfaces and stain or eat into them.",
+        "el": "Οι ρύποι του αέρα κάθονται στις επιφάνειες και τις λερώνουν ή τις διαβρώνουν."
+      }
+    },
+    "delos-fournoi.heatwaves.site": {
+      "title": {
+        "en": "Heatwaves · House of Fournoi",
+        "el": "Καύσωνες · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Many very hot days in a row stress the materials again and again.",
+        "el": "Πολλές πολύ ζεστές μέρες στη σειρά ταλαιπωρούν τα υλικά ξανά και ξανά."
+      }
+    },
+    "delos-fournoi.rainfall.site": {
+      "title": {
+        "en": "Rain · House of Fournoi",
+        "el": "Βροχή · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Rain soaks walls and floors that have no roof to protect them.",
+        "el": "Η βροχή μουσκεύει τοίχους και δάπεδα που δεν έχουν στέγη να τα προστατεύει."
+      }
+    },
+    "delos-fournoi.soil-erosion.site": {
+      "title": {
+        "en": "Soil washed away · House of Fournoi",
+        "el": "Το χώμα φεύγει · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Rain and wind carry away the soil around the walls, so their bases are left exposed.",
+        "el": "Η βροχή και ο αέρας παίρνουν το χώμα γύρω από τους τοίχους και οι βάσεις τους μένουν ακάλυπτες."
+      }
+    },
+    "delos-fournoi.water-rise.site": {
+      "title": {
+        "en": "Water rising from below · House of Fournoi",
+        "el": "Νερό που ανεβαίνει από κάτω · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Water in the ground climbs into walls and floors and brings salt with it.",
+        "el": "Το νερό του εδάφους ανεβαίνει στους τοίχους και στα δάπεδα και φέρνει μαζί του αλάτι."
+      }
+    },
+    "delos-fournoi.prolonged-dry-periods.site": {
+      "title": {
+        "en": "Long dry spells · House of Fournoi",
+        "el": "Μεγάλη ξηρασία · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "After a long time without rain, the ground and the walls dry out and can crack.",
+        "el": "Μετά από πολύ καιρό χωρίς βροχή, το έδαφος και οι τοίχοι ξεραίνονται και μπορεί να ραγίσουν."
+      }
+    },
+    "delos-fournoi.gravitational-slope-movements.site": {
+      "title": {
+        "en": "The slope slips · House of Fournoi",
+        "el": "Η πλαγιά γλιστράει · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "The ground on a slope can slowly slip downhill and pull walls with it.",
+        "el": "Το έδαφος σε μια πλαγιά μπορεί να γλιστράει σιγά σιγά προς τα κάτω και να τραβάει μαζί του τους τοίχους."
+      }
+    },
+    "delos-fournoi.flooding.site": {
+      "title": {
+        "en": "Flooding · House of Fournoi",
+        "el": "Πλημμύρα · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Heavy rain can flood the rooms and leave mud and salt behind.",
+        "el": "Μια δυνατή βροχή μπορεί να πλημμυρίσει τα δωμάτια και να αφήσει πίσω λάσπη και αλάτι."
+      }
+    },
+    "delos-fournoi.freeze-thaw-cycles.site": {
+      "title": {
+        "en": "Freezing and thawing · House of Fournoi",
+        "el": "Πάγωμα και ξεπάγωμα · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "On the rare cold nights, water in the stone can freeze and swell.",
+        "el": "Τις λίγες κρύες νύχτες, το νερό μέσα στην πέτρα μπορεί να παγώσει και να φουσκώσει."
+      }
+    },
+    "delos-fournoi.seismic.site": {
+      "title": {
+        "en": "Earthquakes · House of Fournoi",
+        "el": "Σεισμοί · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "An earthquake can shake ancient walls and make them crack or fall.",
+        "el": "Ένας σεισμός μπορεί να τραντάξει τους αρχαίους τοίχους και να τους ραγίσει ή να τους ρίξει."
+      }
+    },
+    "delos-fournoi.low-temperature.site": {
+      "title": {
+        "en": "Low temperatures · House of Fournoi",
+        "el": "Χαμηλές θερμοκρασίες · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "Cold makes materials shrink and keeps damp in the walls for longer.",
+        "el": "Το κρύο κάνει τα υλικά να συστέλλονται και κρατάει την υγρασία στους τοίχους περισσότερο."
+      }
+    },
+    "delos-fournoi.subsidence.site": {
+      "title": {
+        "en": "The ground sinks · House of Fournoi",
+        "el": "Το έδαφος βουλιάζει · Οικία των Φούρνων"
+      },
+      "text": {
+        "en": "If the ground under the house sinks, the walls and floors crack.",
+        "el": "Αν το έδαφος κάτω από το σπίτι βουλιάξει, οι τοίχοι και τα δάπεδα ραγίζουν."
+      }
+    }
+  }
 }

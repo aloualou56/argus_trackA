@@ -235,6 +235,56 @@ ${prefix}`);
   await context.close();
 }
 
+// Every level of every monument: reaches the alarm and score screens without errors or axe problems.
+// The default level of each monument is also saved as a picture.
+async function playEveryMonument(browser, lang) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(String(e)));
+  console.log(`\n${lang}-monuments`);
+  for (const mon of data.monuments.filter((m) => m.playable)) {
+    const levels = mon.levels.filter((l) => l.available);
+    for (const lv of levels) {
+      const label = `${lang} ${mon.pilot_key} ${lv.id}`;
+      await page.goto(URL_BASE);
+      await page.getByRole("radio", { name: new RegExp(mon.display_name[lang]) }).check();
+      await page.getByRole("radio", { name: new RegExp(t[`level.${lv.id}`]) }).check();
+      await page.getByRole("button", { name: t["home.start"] }).click();
+      await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
+      await page.getByRole("button", { name: t["story.continue"] }).click();
+      // One card that helps with the first mission threat, when there is one.
+      const first = mon.scenarios.find((s) => s.scenario_key === lv.mission[0]);
+      const card = first.primary_cards[0] ?? "humidity";
+      await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, card) }), exact: true }).click();
+      await page.getByRole("button", { name: t["mission.done"] }).click();
+      await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
+      await page.getByRole("button", { name: t["reveal.continue"] }).click();
+      await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
+      const alarm = mon.alarms.find((a) => a.id === lv.featured_alarm);
+      if (alarm && !(await page.locator(".result").count())) note(`${label}: alarm ${alarm.id} not replayed`);
+      if (!alarm && !(await page.getByText(mon.no_alarm_note?.[lang] ?? t["event.none"]).isVisible())) {
+        note(`${label}: no explanation for the missing alarm`);
+      }
+      const isDefault = lv === levels[levels.length - 1];
+      if (isDefault) {
+        await checkPage(page, `${label} event`);
+        await shot(page, `${lang}-phone-${mon.pilot_key}-5-event`);
+      }
+      await page.getByRole("button", { name: t["event.continue"] }).click();
+      await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
+      if (isDefault) {
+        await checkPage(page, `${label} score`);
+        await shot(page, `${lang}-phone-${mon.pilot_key}-6-score`);
+      }
+    }
+  }
+  if (errors.length) note(`${lang}-monuments: page errors: ${errors.join(" | ")}`);
+  await context.close();
+}
+
 // Map pictures blocked (offline, or a sandbox that only allows its own files): the game must
 // switch to the drawn plan by itself, say so, and stay fully playable.
 async function playWithoutMapPictures(browser, lang) {
@@ -280,9 +330,11 @@ const browser = await chromium.launch({
   headless: true,
 });
 try {
-  for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
-  for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
-  for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);
+  const only = process.env.SCREENSHOT_ONLY; // e.g. "monuments" to run just that part
+  if (!only) for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
+  if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
+  if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
+  if (!only) for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);
 } finally {
   await browser.close();
   server.kill();

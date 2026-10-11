@@ -24,11 +24,11 @@ Snapshot fetched at: 2026-10-11T21:32:59+03:00
 
 | asset id | name | pilot key | scenarios | Low / Med / High / Extr / Cat | instrument records | distinct instruments | alarms (sample) | usable alarms | playable |
 |---|---|---|---|---|---|---|---|---|---|
-| 26 | Delos Island | delos | 36 | 14 / 8 / 7 / 1 / 6 | 30 | 30 | 40 | 0 | not yet |
-| 27 | Cellar Town of Baltanás | baltanas | 7 | 0 / 4 / 2 / 1 / 0 | 39 | 39 | 36 | 0 | not yet |
-| 28 | Monti Lucretili | lucretili | 19 | 0 / 0 / 2 / 13 / 4 | 19 | 19 | 125 | 33 | not yet |
+| 26 | Delos Island | delos | 36 | 14 / 8 / 7 / 1 / 6 | 30 | 30 | 40 | 27 | yes |
+| 27 | Cellar Town of Baltanás | baltanas | 7 | 0 / 4 / 2 / 1 / 0 | 39 | 39 | 36 | 0 | yes |
+| 28 | Monti Lucretili | lucretili | 19 | 0 / 0 / 2 / 13 / 4 | 19 | 19 | 125 | 13 | yes |
 | 29 | Sant’Antonio di Ranverso Preceptory | ranverso | 26 | 14 / 7 / 3 / 2 / 0 | 26 | 20 | 92 | 32 | yes |
-| 30 | Schenkenberg Castle | schenkenberg | 11 | 2 / 1 / 2 / 6 / 0 | 9 | 9 | 11 | 6 | not yet |
+| 30 | Schenkenberg Castle | schenkenberg | 11 | 2 / 1 / 2 / 6 / 0 | 9 | 9 | 11 | 6 | yes |
 
 ## Overall counts
 
@@ -38,6 +38,244 @@ Snapshot fetched at: 2026-10-11T21:32:59+03:00
 - Humidity-named alarm variables: 61, of which 39 are above 100 (ranverso 39).
 - policies.json: 181 records; 37 AD-RT expert-rule policies (policy_type_id 2), all mapped in `content/rule_sensor_map.json`.
 - installed-instruments.json: 123 records; instrument-types.json: 40 types (25 distinct names).
+
+## Delos Island (delos)
+
+### Scenarios
+
+| threat id | scenario key | category | MR | label | capable cards (* = primary) |
+|---|---|---|---|---|---|
+| 75 | delos-fournoi.salinity.site | salts | 15.0 | Catastrophic priority | humidity*, soil_moisture, camera, observer |
+| 93 | delos-masks.salinity.site | salts | 15.0 | Catastrophic priority | humidity*, soil_moisture, camera, observer |
+| 74 | delos-fournoi.rh-fluctuations.site | incorrect_relative_humidity | 14.0 | Catastrophic priority | humidity* |
+| 81 | delos-fournoi.wind-erosion.site | physical_forces | 14.0 | Catastrophic priority | weather_station*, observer |
+| 83 | delos-masks.architectural-stability.site | physical_forces | 14.0 | Catastrophic priority | crackmeter*, tiltmeter*, gnss, observer |
+| 92 | delos-masks.rh-fluctuations.site | incorrect_relative_humidity | 14.0 | Catastrophic priority | humidity* |
+| 99 | delos-masks.wind-erosion.site | physical_forces | 12.0 | Extreme priority | weather_station*, observer |
+| 65 | delos-fournoi.architectural-stability.site | physical_forces | 11.0 | High priority | crackmeter*, tiltmeter*, gnss, observer |
+| 70 | delos-fournoi.high-temperature.site | incorrect_temperature | 11.0 | High priority | temperature*, weather_station* |
+| 78 | delos-fournoi.storm.site | physical_forces | 11.0 | High priority | weather_station*, rain_gauge |
+| 64 | delos-fournoi.air-pollution.site | pollutants | 10.0 | High priority | air_quality* |
+| 69 | delos-fournoi.heatwaves.site | incorrect_temperature | 10.0 | High priority | temperature*, weather_station* |
+| 73 | delos-fournoi.rainfall.site | water | 10.0 | High priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 82 | delos-masks.air-pollution.site | pollutants | 10.0 | High priority | air_quality* |
+| 96 | delos-masks.storm.site | physical_forces | 9.5 | Medium priority | weather_station*, rain_gauge |
+| 77 | delos-fournoi.soil-erosion.site | physical_forces | 8.0 | Medium priority | rain_gauge*, soil_moisture*, observer |
+| 80 | delos-fournoi.water-rise.site | water | 8.0 | Medium priority | soil_moisture*, humidity |
+| 87 | delos-masks.heatwaves.site | incorrect_temperature | 8.0 | Medium priority | temperature*, weather_station* |
+| 88 | delos-masks.high-temperature.site | incorrect_temperature | 8.0 | Medium priority | temperature*, weather_station* |
+| 91 | delos-masks.rainfall.site | water | 8.0 | Medium priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 98 | delos-masks.water-rise.site | water | 8.0 | Medium priority | soil_moisture*, humidity |
+| 72 | delos-fournoi.prolonged-dry-periods.site | drought | 7.5 | Medium priority | soil_moisture*, rain_gauge*, weather_station, satellite |
+| 68 | delos-fournoi.gravitational-slope-movements.site | physical_forces | 7.0 | Low priority | tiltmeter*, gnss*, crackmeter, soil_moisture, observer |
+| 66 | delos-fournoi.flooding.site | water | 6.0 | Low priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 67 | delos-fournoi.freeze-thaw-cycles.site | physical_forces | 6.0 | Low priority | temperature*, humidity, weather_station* |
+| 84 | delos-masks.flooding.site | water | 6.0 | Low priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 90 | delos-masks.prolonged-dry-periods.site | drought | 6.0 | Low priority | soil_moisture*, rain_gauge*, weather_station, satellite |
+| 95 | delos-masks.soil-erosion.site | physical_forces | 6.0 | Low priority | rain_gauge*, soil_moisture*, observer |
+| 86 | delos-masks.gravitational-slope-movements.site | physical_forces | 5.5 | Low priority | tiltmeter*, gnss*, crackmeter, soil_moisture, observer |
+| 94 | delos-masks.seismic.site | physical_forces | 5.3 | Low priority | vibration*, crackmeter*, tiltmeter*, observer |
+| 71 | delos-fournoi.low-temperature.site | incorrect_temperature | 5.0 | Low priority | temperature*, weather_station* |
+| 85 | delos-masks.freeze-thaw-cycles.site | physical_forces | 5.0 | Low priority | temperature*, humidity, weather_station* |
+| 89 | delos-masks.low-temperature.site | incorrect_temperature | 5.0 | Low priority | temperature*, weather_station* |
+| 76 | delos-fournoi.seismic.site | physical_forces | 4.8 | Low priority | vibration*, crackmeter*, tiltmeter*, observer |
+| 79 | delos-fournoi.subsidence.site | physical_forces | 4.3 | Low priority | tiltmeter*, gnss*, crackmeter*, observer |
+| 97 | delos-masks.subsidence.site | physical_forces | 4.3 | Low priority | tiltmeter*, gnss*, crackmeter*, observer |
+
+### Levels
+
+| level | scenarios | mission | source | featured alarm |
+|---|---|---|---|---|
+| Low priority | 14 | delos-masks.seismic.site, delos-fournoi.flooding.site, delos-masks.prolonged-dry-periods.site | curated | delos:DL_soil_moisture:2026-09-24T20:30:00 |
+| Medium priority | 8 | delos-fournoi.soil-erosion.site, delos-fournoi.water-rise.site, delos-masks.heatwaves.site | curated | delos:DL_soil_moisture:2026-09-02T08:30:00 |
+| High priority | 7 | delos-fournoi.architectural-stability.site, delos-fournoi.heatwaves.site, delos-masks.air-pollution.site | curated | delos:DL_soil_moisture:2026-09-02T08:30:00 |
+| Extreme priority | 1 | delos-masks.wind-erosion.site, delos-fournoi.high-temperature.site, delos-fournoi.rainfall.site | curated | delos:DL_soil_moisture:2026-08-31T20:30:00 |
+| Catastrophic priority | 6 | delos-masks.salinity.site, delos-fournoi.rh-fluctuations.site, delos-masks.architectural-stability.site | curated | delos:DL_soil_moisture:2026-08-31T20:30:00 |
+
+### Installed instruments
+
+30 installed-instrument records, 30 distinct instruments, 30 physical (one virtual Earth Observation layer).
+
+| card | count | ARGUS types | nodes |
+|---|---|---|---|
+| humidity | 5 | Humidity Sensor x5 | 151805, 151809, 151815, 151836, 168439 |
+| temperature | 5 | Temperature Sensor x5 | 151805, 151809, 151815, 151836, 168439 |
+| airflow | 2 | Air Flow Sensor x2 | 109315, 149405 |
+| light_uv | 5 | Lux Meter Sensor x4, Pyranometer Sensor x1 | 151805, 151809, 151815, 151836, 168439 |
+| soil_moisture | 6 | Soil Moisture Sensor x6 | 149368, 149423, 149460, 149529, 149678, 151815 |
+| weather_station | 2 | Weather Station Sensor x2 | 2cf7f1c061300548, 2cf7f1c0723001f4 |
+| tiltmeter | 4 | Tiltmeter Sensor x4 | 150900, 153157, 153242, 153295 |
+| visitor_counter | 1 | People Counter Sensor x1 | 2cf7f1c062800035 |
+
+
+Map: 30 instruments with coordinates at 15 distinct points; without a position: none.
+
+### Alarm funnel
+
+- AD-RT alarm records in the sample: 40 ({'DL': 40})
+- By rule: {'(DL, no rule)': 40}
+- After removing duplicates (same rule, timestamp, variable): 31
+- Excluded, AI alarm whose main signal is not mapped to a card (e.g. wind direction): 4
+- Usable: 27
+- Episode `DL_humidity`: 2026-09-12T20:30:00 to 2026-09-12T20:30:00, 1 alarms
+- Episode `DL_soil_moisture`: 2026-08-31T20:30:00 to 2026-09-24T20:30:00, 26 alarms
+- Featured in the game (first, peak and last of each episode): 5
+
+| alarm id | value | threshold | x threshold | roles | instrument | flags |
+|---|---|---|---|---|---|---|
+| delos:DL_soil_moisture:2026-08-31T20:30:00 | 0.0266 | 0.0208 | 1.28 | first | Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic) | - |
+| delos:DL_soil_moisture:2026-09-02T08:30:00 | 0.0441 | 0.0208 | 2.12 | peak | Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic) | - |
+| delos:DL_soil_moisture:2026-09-07T08:30:00 | 0.0434 | 0.0208 | 2.09 | extra | Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic) | - |
+| delos:DL_humidity:2026-09-12T20:30:00 | 0.0226 | 0.0208 | 1.09 | first, peak, last | Installed Instrument Humidity - 151836 (Room 215 - Theatrical Masks mosaic) | - |
+| delos:DL_soil_moisture:2026-09-24T20:30:00 | 0.028 | 0.0208 | 1.34 | last | Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic) | - |
+
+## Cellar Town of Baltanás (baltanas)
+
+### Scenarios
+
+| threat id | scenario key | category | MR | label | capable cards (* = primary) |
+|---|---|---|---|---|---|
+| 21 | baltanas.subsidence.cellar-ensemble | physical_forces | 11.5 | Extreme priority | tiltmeter*, crackmeter*, gnss*, observer |
+| 23 | baltanas.relative-humidity.wine-elements | incorrect_relative_humidity | 10.0 | High priority | humidity* |
+| 25 | baltanas.flooding.wine-elements | water | 10.0 | High priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 22 | baltanas.relative-humidity.structural-wood | incorrect_relative_humidity | 9.0 | Medium priority | humidity* |
+| 24 | baltanas.flooding.structural-wood | water | 9.0 | Medium priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 56 | baltanas.flooding.structural-wood | water | 9.0 | Medium priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+| 57 | baltanas.flooding.structural-wood | water | 9.0 | Medium priority | rain_gauge*, soil_moisture*, weather_station, satellite |
+
+### Levels
+
+| level | scenarios | mission | source | featured alarm |
+|---|---|---|---|---|
+| Low priority | 0 | - | - | - |
+| Medium priority | 4 | baltanas.relative-humidity.structural-wood, baltanas.flooding.structural-wood, baltanas.subsidence.cellar-ensemble | curated | - |
+| High priority | 2 | baltanas.relative-humidity.wine-elements, baltanas.flooding.wine-elements, baltanas.relative-humidity.structural-wood | curated | - |
+| Extreme priority | 1 | baltanas.subsidence.cellar-ensemble, baltanas.relative-humidity.wine-elements, baltanas.flooding.wine-elements | curated | - |
+| Catastrophic priority | 0 | - | - | - |
+
+### Installed instruments
+
+39 installed-instrument records, 39 distinct instruments, 39 physical (one virtual Earth Observation layer).
+
+| card | count | ARGUS types | nodes |
+|---|---|---|---|
+| humidity | 6 | Humidity Sensor x6 | 13280278-h, 13280523-h, 7347939-h, 7348424-h, shellyht-6b6dee, shellyht-caae03 |
+| temperature | 7 | Temperature Sensor x7 | 13280278-t, 13280523-t, 7347939-t, 7348424-t, shellydw2-aab1ac, shellyht-6b6dee, shellyht-caae03 |
+| airflow | 5 | Air Flow Sensor x4, Pir-Airflow Sensor x1 | a8610a3230467704, af1-149367, af2-149780, af3-149402, af4-149421 |
+| air_quality | 3 | Gas Sensor x3 | lagar) [baltanas-gas-151810-2], lagar) [baltanas-gas-151810-3], lagar) [baltanas-gas-151810] |
+| light_uv | 1 | Lux Meter Sensor x1 | shellydw2-aab1ac |
+| soil_moisture | 6 | Soil Moisture Sensor x4, Water Potential Sensor x2 | 1-149265, 115666, 151810, 2-177322, wp1-130432, wp2-130314 |
+| weather_station | 2 | Barometer Sensor x1, Weather Station Sensor x1 | 149443, 2cf7f1c073400212 |
+| tiltmeter | 2 | Tiltmeter Sensor x2 | 82e0d400-784e-11f0-9283-e956b63ef652, shellydw2-aab1ac |
+| vibration | 4 | Accelerometer Sensor x3, Vibration Sensor x1 | 159313, a1-159164, a2-159347, shellydw2-aab1ac |
+| gnss | 1 | GNSS Sensor x1 | 168762 |
+| visitor_counter | 2 | Barrier Sensor x2 | a8610a34324d7f09, a8610a343345720d |
+
+
+Map: 31 instruments with coordinates at 23 distinct points; without a position: Humidity Sensor (coordinates unavailable), Temperature Sensor (coordinates unavailable), Humidity Sensor (coordinates unavailable), Temperature Sensor (coordinates unavailable), Temperature Sensor (coordinates unavailable), Vibration Sensor (coordinates unavailable), Lux Meter Sensor (coordinates unavailable), Tiltmeter Sensor (coordinates unavailable).
+
+### Alarm funnel
+
+- AD-RT alarm records in the sample: 36 ({'DL': 36})
+- By rule: {'(DL, no rule)': 36}
+- After removing duplicates (same rule, timestamp, variable): 27
+- Excluded, AI alarm whose main signal is not mapped to a card (e.g. wind direction): 6
+- Excluded, AI alarm with no clear main signal (top contribution below 30%): 21
+- Usable: 0
+- Featured in the game (first, peak and last of each episode): 0
+
+| alarm id | value | threshold | x threshold | roles | instrument | flags |
+|---|---|---|---|---|---|---|
+
+## Monti Lucretili (lucretili)
+
+### Scenarios
+
+| threat id | scenario key | category | MR | label | capable cards (* = primary) |
+|---|---|---|---|---|---|
+| 27 | lucretili-conventillo.landslide.site | physical_forces | 13.5 | Catastrophic priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 41 | lucretili-landscape.landslide.dry-stone-walls | physical_forces | 13.5 | Catastrophic priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 43 | lucretili-landscape.dissociation.dry-stone-walls | dissociation | 13.5 | Catastrophic priority | (none) |
+| 26 | lucretili-conventillo.subsidence.site | physical_forces | 13.0 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 29 | lucretili-conventillo.dissociation.site | dissociation | 13.0 | Extreme priority | observer* |
+| 35 | lucretili-montefalco.subsidence.castle | physical_forces | 13.0 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 38 | lucretili-montefalco.abandonment.castle | dissociation | 13.0 | Catastrophic priority | observer* |
+| 40 | lucretili-landscape.subsidence.dry-stone-walls | physical_forces | 13.0 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 31 | lucretili-conventillo.relative-humidity.mural-paintings | incorrect_relative_humidity | 12.5 | Extreme priority | humidity* |
+| 36 | lucretili-montefalco.landslide.castle | physical_forces | 12.5 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 37 | lucretili-montefalco.earthquake.castle | physical_forces | 12.5 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 39 | lucretili-montefalco.forest-management.castle | dissociation | 12.0 | Extreme priority | observer*, satellite*, camera |
+| 28 | lucretili-conventillo.earthquake.site | physical_forces | 11.5 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 30 | lucretili-conventillo.forest-management.site | dissociation | 11.5 | Extreme priority | observer*, satellite*, camera |
+| 32 | lucretili-conventillo.uv.mural-paintings | light_uv | 11.5 | Extreme priority | light_uv* |
+| 42 | lucretili-landscape.earthquake.dry-stone-walls | physical_forces | 11.5 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 44 | lucretili-landscape.forest-management.dry-stone-walls | dissociation | 11.5 | Extreme priority | observer*, satellite*, camera |
+| 33 | lucretili-villa-orazio.abandonment.structures | dissociation | 11.0 | High priority | observer* |
+| 34 | lucretili-villa-orazio.forest-management.structures | dissociation | 11.0 | High priority | observer*, satellite*, camera |
+
+### Levels
+
+| level | scenarios | mission | source | featured alarm |
+|---|---|---|---|---|
+| Low priority | 0 | - | - | - |
+| Medium priority | 0 | - | - | - |
+| High priority | 2 | lucretili-villa-orazio.abandonment.structures, lucretili-villa-orazio.forest-management.structures, lucretili-montefalco.earthquake.castle | curated | lucretili:R7_wind:2026-09-07T08:30:00 |
+| Extreme priority | 13 | lucretili-conventillo.subsidence.site, lucretili-conventillo.relative-humidity.mural-paintings, lucretili-conventillo.uv.mural-paintings | curated | lucretili:R2a_tilt_step:2026-08-31T20:30:00 |
+| Catastrophic priority | 4 | lucretili-conventillo.landslide.site, lucretili-montefalco.abandonment.castle, lucretili-landscape.dissociation.dry-stone-walls | curated | lucretili:R2a_tilt_step:2026-08-31T20:30:00 |
+
+### Installed instruments
+
+19 installed-instrument records, 19 distinct instruments, 19 physical (one virtual Earth Observation layer).
+
+| card | count | ARGUS types | nodes |
+|---|---|---|---|
+| humidity | 2 | Humidity Sensor x2 | 177239, 177281 |
+| temperature | 1 | Temperature Sensor x1 | 177239 |
+| light_uv | 1 | Pyranometer Sensor x1 | 177237 |
+| rain_gauge | 1 | Rain Gauge Sensor x1 | 177281 |
+| weather_station | 1 | Weather Station Sensor x1 | 2cf7f1c072300286 |
+| crackmeter | 7 | Crackmeter Sensor x7 | 174156, 177253, 177266, 177287, 177310, 177320, 177325 |
+| tiltmeter | 3 | Tiltmeter Sensor x3 | 152816, 152931, 153061 |
+| vibration | 1 | Vibration Sensor x1 | 152608 |
+| visitor_counter | 2 | People Counter Sensor x2 | 24e124600e450308, 2cf7f1c062800056 |
+
+
+Map: 19 instruments with coordinates at 17 distinct points; without a position: none.
+
+### Alarm funnel
+
+- AD-RT alarm records in the sample: 125 ({'DL': 17, 'EK': 108})
+- By rule: {'(DL, no rule)': 17, 'R1a_crack_step': 7, 'R1b_crack_offset': 7, 'R2a_tilt_step': 10, 'R2b_tilt_offset': 7, 'R4a_hum_spike_6h': 7, 'R4c_hum_rapid_1h': 7, 'R7_wind': 1, 'R8_baro': 2, 'R9a_temp_lt': 42, 'R9b_temp_st': 18}
+- After removing duplicates (same rule, timestamp, variable): 87
+- Excluded, AI alarm whose main signal is not mapped to a card (e.g. wind direction): 7
+- Excluded, AI alarm with no clear main signal (top contribution below 30%): 7
+- Excluded, implausible temperature value (outside -50 to 60): 18
+- Excluded, implausible value for R9a_temp_lt (outside 0 to 30): 14
+- Excluded, implausible value for R9b_temp_st (outside 0 to 10): 6
+- Excluded, not exactly one variable: 22
+- Usable: 13
+- Episode `R2a_tilt_step`: 2026-08-31T20:30:00 to 2026-08-31T20:30:00, 1 alarms
+- Episode `R4c_hum_rapid_1h`: 2026-08-30T20:30:00 to 2026-08-31T20:30:00, 3 alarms
+- Episode `R7_wind`: 2026-09-07T08:30:00 to 2026-09-07T08:30:00, 1 alarms
+- Episode `R8_baro`: 2026-09-11T20:30:00 to 2026-09-11T20:30:00, 1 alarms
+- Episode `R8_baro`: 2026-09-22T20:30:00 to 2026-09-22T20:30:00, 1 alarms
+- Episode `R9b_temp_st`: 2026-08-31T20:30:00 to 2026-09-02T08:30:00, 2 alarms
+- Episode `R9b_temp_st`: 2026-09-08T15:00:00 to 2026-09-10T20:30:00, 3 alarms
+- Episode `R9b_temp_st`: 2026-09-24T20:30:00 to 2026-09-24T20:30:00, 1 alarms
+- Featured in the game (first, peak and last of each episode): 10
+
+| alarm id | value | threshold | x threshold | roles | instrument | flags |
+|---|---|---|---|---|---|---|
+| lucretili:R4c_hum_rapid_1h:2026-08-30T20:30:00 | 2.1667 | 0.15 | 14.44 | first | - | threshold_differs_from_current_policy |
+| lucretili:R4c_hum_rapid_1h:2026-08-31T12:00:00 | 6.05 | 0.15 | 40.33 | peak | - | threshold_differs_from_current_policy |
+| lucretili:R2a_tilt_step:2026-08-31T20:30:00 | 0.84 | 0.7 | 1.2 | first, peak, last | Installed Instrument Tiltmeter - 152816 (Conventillo - Third floor, close to a window) | - |
+| lucretili:R9b_temp_st:2026-08-31T20:30:00 | 9.816 | 5.0 | 1.96 | first, peak | Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) | - |
+| lucretili:R4c_hum_rapid_1h:2026-08-31T20:30:00 | 2.6667 | 0.15 | 17.78 | last | - | threshold_differs_from_current_policy |
+| lucretili:R7_wind:2026-09-07T08:30:00 | 6.0485 | 6.0 | 1.01 | first, peak, last | Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) | - |
+| lucretili:R9b_temp_st:2026-09-08T15:00:00 | 8.3702 | 5.0 | 1.67 | first, peak | Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) | - |
+| lucretili:R8_baro:2026-09-11T20:30:00 | 308.3333 | 300.0 | 1.03 | first, peak, last | Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) | - |
+| lucretili:R8_baro:2026-09-22T20:30:00 | 446.9048 | 300.0 | 1.49 | first, peak, last | Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) | - |
+| lucretili:R9b_temp_st:2026-09-24T20:30:00 | 7.2579 | 5.0 | 1.45 | first, peak, last | Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) | - |
 
 ## Sant’Antonio di Ranverso Preceptory (ranverso)
 
@@ -121,7 +359,7 @@ Map: 19 instruments with coordinates at 11 distinct points; without a position: 
 - AD-RT alarm records in the sample: 92 ({'DL': 14, 'EK': 78})
 - By rule: {'(DL, no rule)': 14, 'R1_hum_inside': 39, 'R2_rain_7d': 7, 'R4b_soil_low': 32}
 - After removing duplicates (same rule, timestamp, variable): 73
-- Excluded, deep-learning alarm without a rule (not mappable to a sensor): 12
+- Excluded, AI alarm whose main signal is not mapped to a card (e.g. wind direction): 12
 - Excluded, implausible humidity value (outside 0 to 100): 28
 - Excluded, soil_moisture value exactly 0 (probable sensor dropout): 1
 - Usable: 32
@@ -137,6 +375,69 @@ Map: 19 instruments with coordinates at 11 distinct points; without a position: 
 | ranverso:R2_rain_7d:2026-09-16T15:30:00 | 38.3 | 20.0 | 1.91 | last | Installed Instrument Rain Gauge - 177315 | - |
 | ranverso:R4b_soil_low:2026-09-21T20:30:00 | 2.4677 | 5.0 | 2.03 | last | Installed Instrument Soil Moisture - A8610A333526680F | flat_signal |
 
+## Schenkenberg Castle (schenkenberg)
+
+### Scenarios
+
+| threat id | scenario key | category | MR | label | capable cards (* = primary) |
+|---|---|---|---|---|---|
+| 45 | schenkenberg.plant-growth.untreated-30y | plant_growth | 13.0 | Extreme priority | camera*, satellite*, observer*, soil_moisture, humidity |
+| 48 | schenkenberg.freeze-thaw.masonry | freeze_thaw | 13.0 | Extreme priority | temperature*, humidity, weather_station* |
+| 46 | schenkenberg.plant-growth.treated-3y | plant_growth | 12.5 | Extreme priority | camera*, satellite*, observer*, soil_moisture, humidity |
+| 47 | schenkenberg.plant-growth.treated-annually | plant_growth | 12.0 | Extreme priority | camera*, satellite*, observer*, soil_moisture, humidity |
+| 49 | schenkenberg.temperature-variation.walls | temperature | 12.0 | Extreme priority | temperature*, weather_station* |
+| 50 | schenkenberg.earthquake.475y | physical_forces | 12.0 | Extreme priority | crackmeter*, tiltmeter*, vibration*, gnss*, observer |
+| 53 | schenkenberg.fire.large-100y | fire | 12.0 | High priority | satellite*, temperature |
+| 51 | schenkenberg.wind-storm.walls | wind_storm | 11.0 | High priority | weather_station* |
+| 54 | schenkenberg.air-pollution.surfaces | air_pollution | 8.0 | Medium priority | air_quality* |
+| 55 | schenkenberg.vandalism.graffiti | vandalism | 6.5 | Low priority | observer*, visitor_counter, camera |
+| 52 | schenkenberg.fire.small-30y | fire | 5.5 | Low priority | satellite*, temperature |
+
+### Levels
+
+| level | scenarios | mission | source | featured alarm |
+|---|---|---|---|---|
+| Low priority | 2 | schenkenberg.vandalism.graffiti, schenkenberg.fire.small-30y, schenkenberg.air-pollution.surfaces | curated | schenkenberg:R3_vib_zscore:2026-09-16T20:30:00 |
+| Medium priority | 1 | schenkenberg.air-pollution.surfaces, schenkenberg.plant-growth.treated-annually, schenkenberg.wind-storm.walls | curated | schenkenberg:R2_crack_step:2026-09-20T20:30:00 |
+| High priority | 2 | schenkenberg.fire.large-100y, schenkenberg.wind-storm.walls, schenkenberg.temperature-variation.walls | curated | schenkenberg:R3_vib_zscore:2026-09-16T20:30:00 |
+| Extreme priority | 6 | schenkenberg.plant-growth.untreated-30y, schenkenberg.freeze-thaw.masonry, schenkenberg.earthquake.475y | curated | schenkenberg:R2_crack_step:2026-09-20T20:30:00 |
+| Catastrophic priority | 0 | - | - | - |
+
+### Installed instruments
+
+9 installed-instrument records, 9 distinct instruments, 9 physical (one virtual Earth Observation layer).
+
+| card | count | ARGUS types | nodes |
+|---|---|---|---|
+| weather_station | 1 | Weather Station Sensor x1 | 2cf7f1c072300226 |
+| crackmeter | 1 | Crackmeter Sensor x1 | 149796 |
+| tiltmeter | 2 | Tiltmeter Sensor x2 | 152899, 152914 |
+| vibration | 4 | Accelerometer Sensor x4 | 152479, 152555, 159070, 175480 |
+
+
+Map: 9 instruments with coordinates at 8 distinct points; without a position: none.
+
+### Alarm funnel
+
+- AD-RT alarm records in the sample: 11 ({'DL': 1, 'EK': 10})
+- By rule: {'(DL, no rule)': 1, 'R2_crack_step': 9, 'R3_vib_zscore': 1}
+- After removing duplicates (same rule, timestamp, variable): 7
+- Excluded, AI alarm whose main signal is not mapped to a card (e.g. wind direction): 1
+- Usable: 6
+- Episode `R2_crack_step`: 2026-08-28T09:00:00 to 2026-08-28T09:00:00, 1 alarms
+- Episode `R2_crack_step`: 2026-08-30T20:30:00 to 2026-08-31T20:30:00, 3 alarms
+- Episode `R2_crack_step`: 2026-09-20T20:30:00 to 2026-09-20T20:30:00, 1 alarms
+- Episode `R3_vib_zscore`: 2026-09-16T20:30:00 to 2026-09-16T20:30:00, 1 alarms
+- Featured in the game (first, peak and last of each episode): 5
+
+| alarm id | value | threshold | x threshold | roles | instrument | flags |
+|---|---|---|---|---|---|---|
+| schenkenberg:R2_crack_step:2026-08-28T09:00:00 | 0.0299 | 0.005 | 5.98 | first, peak, last | Installed Instrument Crackmeter - 149796 | threshold_differs_from_current_policy |
+| schenkenberg:R2_crack_step:2026-08-30T20:30:00 | 0.0203 | 0.005 | 4.06 | first, peak | Installed Instrument Crackmeter - 149796 | threshold_differs_from_current_policy |
+| schenkenberg:R2_crack_step:2026-08-31T20:30:00 | 0.0161 | 0.005 | 3.22 | last | Installed Instrument Crackmeter - 149796 | threshold_differs_from_current_policy |
+| schenkenberg:R3_vib_zscore:2026-09-16T20:30:00 | 5.7159 | 4.5 | 1.27 | first, peak, last | Installed Instrument Accelerometer - 152555 (Schenkenberg tower - North wall) | - |
+| schenkenberg:R2_crack_step:2026-09-20T20:30:00 | 0.4753 | 0.1 | 4.75 | first, peak, last | Installed Instrument Crackmeter - 149796 | - |
+
 ## Data quirks found
 
 - Priority labels carry a ' priority' suffix ('Extreme priority'). Labels do not sort strictly by MR across pilots (e.g. a High at MR 12.0 and an Extreme at MR 11.5); we use the label as given.
@@ -150,7 +451,8 @@ Map: 19 instruments with coordinates at 11 distinct points; without a position: 
 - All Ranverso indoor-humidity alarms (R1_hum_inside, sensor 168442 at the left altar) have values from 110 to 558 against a threshold of 80, so they are unusable.
 - Ranverso DL alarms all attribute 100% to NO2 (sensor 359111) with scores in the millions against a threshold of 142; we do not use them.
 - Ranverso soil-moisture alarms stay between 2.457 and 2.476 for three weeks (possible stuck sensor); the first one (28 Aug) has value 0.0 with threshold 0.5 while the current policy threshold is 5.
-- Delos and Baltanas alarms in the sample are all deep-learning (DL) alarms without rule names, so the rule-to-sensor check cannot be used there yet.
+- Delos and Baltanas alarms in the sample are all deep-learning (AI) alarms without rule names. At Delos, 26 of 33 distinct AI alarms are driven mainly (30 to 55% of the top feature contributions) by soil moisture sensor 149368 under the Theatrical Masks mosaic (Room 215, House of the Masks), daily from 31 Aug to 24 Sep; the other 7 by wind direction or one humidity sensor. At Baltanas, 21 of 27 have no signal with a 30% share; the other 6 are driven by wind.
+- Lucretili temperature alarms: R9a_temp_lt (daily temperature range) has values of 55 to 60 against a limit of 15 to 20 and R9b_temp_st (one-hour change) values up to 57, which are not physically plausible; most are excluded by the per-rule ranges in content/rule_sensor_map.json. Its crack and tilt-offset alarms carry six sensors each (normalised values), so they are not replayed.
 - Units are not part of the alarm data.
 - Ranverso scenario 'evidence' lists are empty ('left empty until AD-RT/EOP observability is configured'), so there is no official link between Ranverso scenarios and sensors or rules.
 
@@ -164,6 +466,7 @@ Game-design rules (in code):
 - Score (web/src/game/logic.ts): per mission threat 20 points with a primary card, 8 with only supporting cards (60); 25 if the network detects the replayed real alarm; up to 15 for the share of coins spent on cards that help with a mission threat or the alarm. The total is scaled to 100 when a part does not apply (no replayable alarm, or a threat no card can warn about).
 - Replayed alarms never come from a flat signal (a probably stuck sensor); the build refuses such a pick.
 - The human-observer card stands for regular visual inspection by people. It helps with threats people can see (pests, mould, vandalism, new cracks) but never detects an AD-RT alarm, and it is left out of the ARGUS comparison because ARGUS lists instruments only.
+- AI alarms: used only when one signal accounts for at least 30% of the model's top feature contributions and content/rule_sensor_map.json maps that signal (dl_features) to a pseudo-rule such as DL_soil_moisture. The game then shows the main signal and its share, not the anomaly score against its limit.
 - Detection: the player's network detects an alarm if, for every group in the rule's detect_with, it has at least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level without a usable alarm (e.g. DL-only sites) skips the replay with a short message.
 - Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.
 - Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.
@@ -182,9 +485,13 @@ Authored content flagged `needs_review`:
 - Rule `baltanas:R1_ppv` -> [['vibration']]: PPV unit assumed (mm/s); threshold 0.25.
 - Rule `baltanas:R3_gnss_change` -> [['gnss']]: GNSS daily change unit assumed (mm); threshold 3.
 - Rule `baltanas:R5a_airflow_const` -> [['airflow']]: 'Abnormally constant' airflow may also be a sensor fault; check meaning with Baltanas team.
+- Rule `delos:DL_humidity` -> [['humidity']]: Pseudo-rule for AI alarms whose main signal is a humidity sensor.
+- Rule `delos:DL_soil_moisture` -> [['soil_moisture']]: Pseudo-rule for AI alarms whose main signal is a soil-moisture sensor (Delos: sensor 149368, Room 215, Theatrical Masks mosaic). The AI model's own meaning of the anomaly is not documented.
 - Rule `delos:R2_wind` -> [['weather_station']]: Wind unit assumed (m/s); threshold 12.
 - Rule `lucretili:R10_solar_zscore` -> [['light_uv']]: CONFLICT: rule name says 'solar' but the policy name/description say 'GNSS z-score'. Lucretili has a pyranometer and no GNSS sensor, so we mapped it to light_uv. Ask ARGUS.
 - Rule `lucretili:R8_baro` -> [['weather_station']]: Barometric range threshold is 300 with no unit; Lucretili has no separate barometer, so we assume the weather station.
+- Rule `lucretili:R9a_temp_lt` -> [['temperature', 'weather_station']]: A daily temperature range above 30 °C is not physically plausible at this site; the sample has 55 to 60, so we treat those as sensor or processing errors.
+- Rule `lucretili:R9b_temp_st` -> [['temperature', 'weather_station']]: A change of more than 10 °C in one hour is not plausible in open air; the sample has 13 to 57, so we treat those as sensor or processing errors.
 - Rule `ranverso:R2_rain_7d` -> [['rain_gauge', 'weather_station']]: Threshold key is 'R2_rain_7d_diff'; we read it as 7-day rainfall in mm. Counting the weather station as a rain detector is our assumption.
 - Rule `ranverso:R3_temp_nodiff` -> [['temperature', 'weather_station'], ['soil_moisture']]: Policy calls this a 'sensor consistency' threat (a check on the sensors). Assumes the soil probe also measures soil temperature.
 - Units are not in the ARGUS alarm data; these are our guesses: `baltanas:R1_ppv` (mm/s), `baltanas:R2_hum_daily_range` (%), `baltanas:R3_gnss_change` (mm), `baltanas:R4a_soil_high` (%), `baltanas:R4b_soil_range` (%), `baltanas:R6_rain_1h` (mm), `delos:R1a_rain_1h` (mm), `delos:R1b_rain_3h` (mm), `delos:R2_wind` (m/s), `lucretili:R4a_hum_spike_6h` (%), `lucretili:R4b_hum_persist_7d` (%), `lucretili:R4c_hum_rapid_1h` (%), `lucretili:R6a_rain` (mm), `lucretili:R6b_rain_cum7d` (mm), `lucretili:R9a_temp_lt` (°C), `lucretili:R9b_temp_st` (°C), `ranverso:R1_hum_inside` (%), `ranverso:R2_rain_7d` (mm), `ranverso:R3_temp_nodiff` (°C), `ranverso:R4a_soil_high` (%), `ranverso:R4b_soil_low` (%)
@@ -201,6 +508,28 @@ Authored content flagged `needs_review`:
 - Threat category `salts` -> ['humidity', 'soil_moisture', 'camera', 'observer'], primary ['humidity']
 - Threat category `vandalism` -> ['observer', 'visitor_counter', 'camera'], primary ['observer']
 - Threat category `water` -> ['rain_gauge', 'soil_moisture', 'weather_station', 'satellite'], primary ['rain_gauge', 'soil_moisture']
+- Scenario `baltanas.subsidence.cellar-ensemble` -> ['tiltmeter', 'crackmeter', 'gnss', 'observer'], primary ['tiltmeter', 'crackmeter', 'gnss']: Ground sinking shows as walls leaning, cracks opening and the ground moving.
+- Scenario `delos-fournoi.architectural-stability.site` -> ['crackmeter', 'tiltmeter', 'gnss', 'observer'], primary ['crackmeter', 'tiltmeter']
+- Scenario `delos-fournoi.gravitational-slope-movements.site` -> ['tiltmeter', 'gnss', 'crackmeter', 'soil_moisture', 'observer'], primary ['tiltmeter', 'gnss']
+- Scenario `delos-fournoi.seismic.site` -> ['vibration', 'crackmeter', 'tiltmeter', 'observer'], primary ['vibration', 'crackmeter', 'tiltmeter']
+- Scenario `delos-fournoi.soil-erosion.site` -> ['rain_gauge', 'soil_moisture', 'observer'], primary ['rain_gauge', 'soil_moisture']: Rain washes soil away; people see it.
+- Scenario `delos-fournoi.subsidence.site` -> ['tiltmeter', 'gnss', 'crackmeter', 'observer'], primary ['tiltmeter', 'gnss', 'crackmeter']
+- Scenario `delos-fournoi.water-rise.site` -> ['soil_moisture', 'humidity'], primary ['soil_moisture']: Rising water from the ground, as with Ranverso groundwater.
+- Scenario `delos-fournoi.wind-erosion.site` -> ['weather_station', 'observer'], primary ['weather_station']: Wind erosion: the weather station measures the wind; people see worn surfaces.
+- Scenario `delos-masks.architectural-stability.site` -> ['crackmeter', 'tiltmeter', 'gnss', 'observer'], primary ['crackmeter', 'tiltmeter']
+- Scenario `delos-masks.gravitational-slope-movements.site` -> ['tiltmeter', 'gnss', 'crackmeter', 'soil_moisture', 'observer'], primary ['tiltmeter', 'gnss']
+- Scenario `delos-masks.seismic.site` -> ['vibration', 'crackmeter', 'tiltmeter', 'observer'], primary ['vibration', 'crackmeter', 'tiltmeter']
+- Scenario `delos-masks.soil-erosion.site` -> ['rain_gauge', 'soil_moisture', 'observer'], primary ['rain_gauge', 'soil_moisture']: Rain washes soil away; people see it.
+- Scenario `delos-masks.subsidence.site` -> ['tiltmeter', 'gnss', 'crackmeter', 'observer'], primary ['tiltmeter', 'gnss', 'crackmeter']
+- Scenario `delos-masks.water-rise.site` -> ['soil_moisture', 'humidity'], primary ['soil_moisture']: Rising water from the ground, as with Ranverso groundwater.
+- Scenario `delos-masks.wind-erosion.site` -> ['weather_station', 'observer'], primary ['weather_station']: Wind erosion: the weather station measures the wind; people see worn surfaces.
+- Scenario `lucretili-conventillo.dissociation.site` -> ['observer'], primary ['observer']: Abandonment shows first as missing care, which people notice; no instrument measures neglect.
+- Scenario `lucretili-conventillo.forest-management.site` -> ['observer', 'satellite', 'camera'], primary ['observer', 'satellite']: Overgrown vegetation is seen on site by people and from space by satellite images.
+- Scenario `lucretili-landscape.forest-management.dry-stone-walls` -> ['observer', 'satellite', 'camera'], primary ['observer', 'satellite']: Overgrown vegetation is seen on site by people and from space by satellite images.
+- Scenario `lucretili-montefalco.abandonment.castle` -> ['observer'], primary ['observer']: Abandonment shows first as missing care, which people notice; no instrument measures neglect.
+- Scenario `lucretili-montefalco.forest-management.castle` -> ['observer', 'satellite', 'camera'], primary ['observer', 'satellite']: Overgrown vegetation is seen on site by people and from space by satellite images.
+- Scenario `lucretili-villa-orazio.abandonment.structures` -> ['observer'], primary ['observer']: Abandonment shows first as missing care, which people notice; no instrument measures neglect.
+- Scenario `lucretili-villa-orazio.forest-management.structures` -> ['observer', 'satellite', 'camera'], primary ['observer', 'satellite']: Overgrown vegetation is seen on site by people and from space by satellite images.
 - Scenario `ranverso.criminals.illegal-landfill` -> ['satellite', 'observer', 'camera'], primary ['satellite', 'observer']
 - Scenario `ranverso.criminals.vandalism-abandonment-lack-of-maintenance` -> ['observer', 'visitor_counter', 'camera'], primary ['observer']
 - Scenario `ranverso.fire.building-fire` -> ['temperature', 'observer'], primary ['temperature']: Weak match: no smoke detector in the deck.
@@ -220,9 +549,26 @@ Authored content flagged `needs_review`:
 - Scenario `ranverso.pollutants.visitors` -> ['visitor_counter', 'observer'], primary ['visitor_counter']
 - Scenario `ranverso.water.flooding` -> ['rain_gauge', 'weather_station', 'satellite', 'soil_moisture'], primary ['rain_gauge', 'weather_station', 'satellite']
 - Scenario `ranverso.water.groundwater` -> ['soil_moisture', 'humidity'], primary ['soil_moisture']: Rising damp: the ground probe watches the cause directly; air humidity only shows the effect.
-- `content/monuments/baltanas.json` (draft): monument name and place in Greek and English
-- `content/monuments/delos.json` (draft): monument name and place in Greek and English
-- `content/monuments/lucretili.json` (draft): monument name and place in Greek and English
+- `content/monuments/baltanas.json` story: '374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme).
+- `content/monuments/baltanas.json`: all 5 plain-language threat texts are placeholders (check science and Greek)
+- `baltanas` discussion prompt "ARGUS put 7 thermometers and 6 humidity sensors in the cella...": Counts from the ARGUS installed instruments for Baltanas.
+- `baltanas` mission picks per level and budget (8 coins)
+- `content/monuments/delos.json` story: Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).
+- `content/monuments/delos.json`: all 36 plain-language threat texts are placeholders (check science and Greek)
+- `delos` discussion prompt "ARGUS put 6 soil-moisture probes and 5 humidity sensors on D...": Counts from the ARGUS installed instruments for Delos.
+- `delos` discussion prompt "Many visitors come to Delos every summer. How could visitors...": Visitor numbers are general knowledge, not ARGUS data.
+- `delos` alarm explanation for `DL_humidity` and its linked threats ['delos-masks.rh-fluctuations.site', 'delos-masks.salinity.site']
+- `delos` alarm explanation for `DL_soil_moisture` and its linked threats ['delos-masks.water-rise.site', 'delos-masks.salinity.site', 'delos-masks.rh-fluctuations.site']
+- `delos` mission picks per level and budget (8 coins)
+- `content/monuments/lucretili.json` story: Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).
+- `content/monuments/lucretili.json`: all 19 plain-language threat texts are placeholders (check science and Greek)
+- `lucretili` discussion prompt "The sites here are kilometres apart: Horace's villa, the cas...": ARGUS sensor positions: Sant'Angelo al Morra about 42.024, 12.827 and Horace's villa about 42.066, 12.902, roughly 7 km apart.
+- `lucretili` alarm explanation for `R2a_tilt_step` and its linked threats ['lucretili-conventillo.landslide.site', 'lucretili-conventillo.subsidence.site', 'lucretili-conventillo.earthquake.site']
+- `lucretili` alarm explanation for `R4c_hum_rapid_1h` and its linked threats ['lucretili-conventillo.relative-humidity.mural-paintings']
+- `lucretili` alarm explanation for `R7_wind` and its linked threats ['lucretili-villa-orazio.forest-management.structures', 'lucretili-villa-orazio.abandonment.structures']
+- `lucretili` alarm explanation for `R8_baro` and its linked threats []
+- `lucretili` alarm explanation for `R9b_temp_st` and its linked threats []
+- `lucretili` mission picks per level and budget (8 coins)
 - `content/monuments/ranverso.json` story: History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).
 - `content/monuments/ranverso.json`: all 26 plain-language threat texts are placeholders (check science and Greek)
 - `ranverso` discussion prompt "One ARGUS soil-moisture sensor here showed almost the same v...": From the R4b_soil_low alarms (values 2.457 to 2.476 against a limit of 5, sensor A8610A333526680F). A stuck sensor is our reading, not confirmed by ARGUS, so the prompt asks rather than states. It replaces replaying this alarm in the Low level.
@@ -230,4 +576,10 @@ Authored content flagged `needs_review`:
 - `ranverso` alarm explanation for `R2_rain_7d` and its linked threats ['ranverso.water.groundwater', 'ranverso.water.flooding', 'ranverso.incorrect-rh.prolonged-wet-periods', 'ranverso.physical-forces.storm']
 - `ranverso` alarm explanation for `R4b_soil_low` and its linked threats ['ranverso.water.groundwater', 'ranverso.incorrect-rh.prolonged-dry-periods']
 - `ranverso` mission picks per level and budget (8 coins)
-- `content/monuments/schenkenberg.json` (draft): monument name and place in Greek and English
+- `content/monuments/schenkenberg.json` story: 'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.
+- `content/monuments/schenkenberg.json`: all 11 plain-language threat texts are placeholders (check science and Greek)
+- `schenkenberg` discussion prompt "ARGUS put 4 vibration sensors here but no camera to watch th...": Counts from the ARGUS installed instruments (4 in the vibration card: vibration and accelerometer sensors; no camera).
+- `schenkenberg` discussion prompt "Experts scored plants cut back every year, every three years...": ABC magnitudes 12.0 (annually), 12.5 (every 3 years), 13.0 (untreated), all Extreme.
+- `schenkenberg` alarm explanation for `R2_crack_step` and its linked threats ['schenkenberg.freeze-thaw.masonry', 'schenkenberg.earthquake.475y', 'schenkenberg.plant-growth.untreated-30y']
+- `schenkenberg` alarm explanation for `R3_vib_zscore` and its linked threats ['schenkenberg.wind-storm.walls', 'schenkenberg.earthquake.475y']
+- `schenkenberg` mission picks per level and budget (8 coins)

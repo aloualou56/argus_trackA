@@ -1,7 +1,117 @@
 {
-  "_about": "DRAFT pack: names only. See delos.json. Needs review.",
+  "_about": "AUTHORED by the game team for the cellar town of Baltanas. Story text, plain-language threat texts, mission picks, budget, discussion prompts and the no-alarm note are ours, not ARGUS data, and all need human review (history facts, Greek wording, science).",
   "pilot_key": "baltanas",
-  "draft": true,
-  "display_name": { "en": "The cellar town of Baltanás", "el": "Τα υπόγεια κελάρια της Μπαλτανάς" },
-  "place": { "en": "Palencia, Spain", "el": "Παλένθια, Ισπανία" }
+  "display_name": {
+    "en": "The cellar town of Baltanás",
+    "el": "Τα υπόγεια κελάρια της Μπαλτανάς"
+  },
+  "place": {
+    "en": "Palencia, Spain",
+    "el": "Παλένθια, Ισπανία"
+  },
+  "story": {
+    "hook_scenario": "baltanas.subsidence.cellar-ensemble",
+    "text": {
+      "en": "In Baltanás, in Spain, a whole hill is full of underground wine cellars: 374 cellars dug into the earth, with old wine presses and barrels inside. Experts say the biggest danger is that the ground sinks and the cellars cave in.",
+      "el": "Στη Μπαλτανάς της Ισπανίας, ένας ολόκληρος λόφος είναι γεμάτος υπόγεια κελάρια κρασιού: 374 κελάρια σκαμμένα στο χώμα, με παλιά πατητήρια και βαρέλια μέσα τους. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος είναι να βουλιάξει το έδαφος και να καταρρεύσουν τα κελάρια."
+    },
+    "needs_review": true,
+    "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme)."
+  },
+  "budget": 8,
+  "missions": {
+    "_about": "Three scenario keys per priority level. Baltanas has no Low or Catastrophic scenarios and lists flooding.structural-wood three times; missions use each key once.",
+    "Extreme priority": [
+      "baltanas.subsidence.cellar-ensemble",
+      "baltanas.relative-humidity.wine-elements",
+      "baltanas.flooding.wine-elements"
+    ],
+    "High priority": [
+      "baltanas.relative-humidity.wine-elements",
+      "baltanas.flooding.wine-elements",
+      "baltanas.relative-humidity.structural-wood"
+    ],
+    "Medium priority": [
+      "baltanas.relative-humidity.structural-wood",
+      "baltanas.flooding.structural-wood",
+      "baltanas.subsidence.cellar-ensemble"
+    ]
+  },
+  "no_alarm_note": {
+    "en": "At Baltanás, ARGUS alarms come from an artificial-intelligence model. In the data we have, most of them have no clear cause, and when one signal does stand out, it is the wind, which tells us nothing about the cellars. So here there is no real alarm to replay.",
+    "el": "Στη Μπαλτανάς, οι συναγερμοί του ARGUS προέρχονται από ένα μοντέλο τεχνητής νοημοσύνης. Στα δεδομένα που έχουμε, οι περισσότεροι δεν έχουν καθαρή αιτία, κι όταν ένα σήμα ξεχωρίζει, είναι ο αέρας, που δεν μας λέει τίποτα για τα κελάρια. Γι' αυτό εδώ δεν υπάρχει πραγματικός συναγερμός να ξαναζήσουμε.",
+    "needs_review": true,
+    "review_note": "27 distinct AI alarms in the sample. 21 have no feature with a 30% share or more; the other 6 are driven by wind direction or wind speed, which the game does not map to a danger."
+  },
+  "discussion_prompts": [
+    {
+      "en": "ARGUS put 7 thermometers and 6 humidity sensors in the cellars. Why so many underground?",
+      "el": "Το ARGUS έβαλε στα κελάρια 7 θερμόμετρα και 6 αισθητήρες υγρασίας. Γιατί τόσοι πολλοί κάτω από τη γη;",
+      "needs_review": true,
+      "review_note": "Counts from the ARGUS installed instruments for Baltanas."
+    },
+    {
+      "en": "A cellar that nobody visits can flood without anyone seeing it. What would you do to find out in time?",
+      "el": "Ένα κελάρι που δεν το επισκέπτεται κανείς μπορεί να πλημμυρίσει χωρίς να το δει κανείς. Τι θα έκανες για να το μάθεις έγκαιρα;",
+      "needs_review": false
+    },
+    {
+      "en": "Here the artificial intelligence raised alarms, but we could not tell why. Should people trust an alarm they cannot explain?",
+      "el": "Εδώ η τεχνητή νοημοσύνη σήμανε συναγερμούς, αλλά δεν μπορέσαμε να καταλάβουμε γιατί. Πρέπει οι άνθρωποι να εμπιστεύονται έναν συναγερμό που δεν μπορούν να εξηγήσουν;",
+      "needs_review": false
+    }
+  ],
+  "plain_threats": {
+    "_about": "Plain-language PLACEHOLDER texts, one per ARGUS scenario key. ARGUS lists baltanas.flooding.structural-wood three times (same key); one text covers all three.",
+    "baltanas.subsidence.cellar-ensemble": {
+      "title": {
+        "en": "Cellars that cave in",
+        "el": "Κελάρια που καταρρέουν"
+      },
+      "text": {
+        "en": "The cellars are dug into the hill. If the ground sinks, a cellar can partly collapse.",
+        "el": "Τα κελάρια είναι σκαμμένα μέσα στον λόφο. Αν το έδαφος βουλιάξει, ένα κελάρι μπορεί να καταρρεύσει εν μέρει."
+      }
+    },
+    "baltanas.relative-humidity.wine-elements": {
+      "title": {
+        "en": "Damp wine presses and barrels",
+        "el": "Υγρασία στα πατητήρια και στα βαρέλια"
+      },
+      "text": {
+        "en": "When the air in a cellar stays very damp, the old wooden wine presses and barrels rot.",
+        "el": "Όταν ο αέρας σε ένα κελάρι μένει πολύ υγρός, τα παλιά ξύλινα πατητήρια και βαρέλια σαπίζουν."
+      }
+    },
+    "baltanas.flooding.wine-elements": {
+      "title": {
+        "en": "A flooded cellar",
+        "el": "Πλημμύρα στο κελάρι"
+      },
+      "text": {
+        "en": "Rainwater can run down into a cellar and soak the wine presses and barrels.",
+        "el": "Το νερό της βροχής μπορεί να κατέβει σε ένα κελάρι και να μουσκέψει τα πατητήρια και τα βαρέλια."
+      }
+    },
+    "baltanas.relative-humidity.structural-wood": {
+      "title": {
+        "en": "Damp ceiling beams",
+        "el": "Υγρασία στα δοκάρια της οροφής"
+      },
+      "text": {
+        "en": "Wooden beams hold up some cellar ceilings. In air that stays very damp, they rot and weaken.",
+        "el": "Ξύλινα δοκάρια στηρίζουν την οροφή σε κάποια κελάρια. Σε αέρα που μένει πολύ υγρός, σαπίζουν και αδυνατίζουν."
+      }
+    },
+    "baltanas.flooding.structural-wood": {
+      "title": {
+        "en": "Flooding and ceiling beams",
+        "el": "Πλημμύρα και δοκάρια"
+      },
+      "text": {
+        "en": "When a cellar floods, water soaks the wooden beams that hold up its ceiling.",
+        "el": "Όταν ένα κελάρι πλημμυρίζει, το νερό μουσκεύει τα ξύλινα δοκάρια που κρατάνε την οροφή του."
+      }
+    }
+  }
 }

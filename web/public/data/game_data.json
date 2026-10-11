@@ -548,6 +548,34 @@
    "unit_confirmed": false,
    "needs_review": false
   },
+  "delos:DL_humidity": {
+   "detect_with": [
+    [
+     "humidity"
+    ]
+   ],
+   "measures": {
+    "en": "in the humidity of a room",
+    "el": "στην υγρασία ενός δωματίου"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": true
+  },
+  "delos:DL_soil_moisture": {
+   "detect_with": [
+    [
+     "soil_moisture"
+    ]
+   ],
+   "measures": {
+    "en": "in the moisture of the ground under a mosaic",
+    "el": "στην υγρασία του εδάφους κάτω από ένα ψηφιδωτό"
+   },
+   "unit": null,
+   "unit_confirmed": true,
+   "needs_review": true
+  },
   "delos:R1a_rain_1h": {
    "detect_with": [
     [
@@ -817,7 +845,7 @@
    },
    "unit": "°C",
    "unit_confirmed": false,
-   "needs_review": false
+   "needs_review": true
   },
   "lucretili:R9b_temp_st": {
    "detect_with": [
@@ -832,7 +860,7 @@
    },
    "unit": "°C",
    "unit_confirmed": false,
-   "needs_review": false
+   "needs_review": true
   },
   "ranverso:R1_hum_inside": {
    "detect_with": [
@@ -1020,38 +1048,73 @@
    "country": "Greece",
    "asset_type": "Heritage Site",
    "source_url": "https://www.argus-project.eu/pilot-site1-delos-island",
-   "playable": false,
+   "playable": true,
    "scenario_count": 36,
    "levels": [
     {
      "key": "Low priority",
      "id": "low",
      "scenario_count": 14,
-     "available": true
+     "available": true,
+     "mission": [
+      "delos-masks.seismic.site",
+      "delos-fournoi.flooding.site",
+      "delos-masks.prolonged-dry-periods.site"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "delos:DL_soil_moisture:2026-09-24T20:30:00"
     },
     {
      "key": "Medium priority",
      "id": "medium",
      "scenario_count": 8,
-     "available": true
+     "available": true,
+     "mission": [
+      "delos-fournoi.soil-erosion.site",
+      "delos-fournoi.water-rise.site",
+      "delos-masks.heatwaves.site"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "delos:DL_soil_moisture:2026-09-02T08:30:00"
     },
     {
      "key": "High priority",
      "id": "high",
      "scenario_count": 7,
-     "available": true
+     "available": true,
+     "mission": [
+      "delos-fournoi.architectural-stability.site",
+      "delos-fournoi.heatwaves.site",
+      "delos-masks.air-pollution.site"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "delos:DL_soil_moisture:2026-09-02T08:30:00"
     },
     {
      "key": "Extreme priority",
      "id": "extreme",
      "scenario_count": 1,
-     "available": true
+     "available": true,
+     "mission": [
+      "delos-masks.wind-erosion.site",
+      "delos-fournoi.high-temperature.site",
+      "delos-fournoi.rainfall.site"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00"
     },
     {
      "key": "Catastrophic priority",
      "id": "catastrophic",
      "scenario_count": 6,
-     "available": true
+     "available": true,
+     "mission": [
+      "delos-masks.salinity.site",
+      "delos-fournoi.rh-fluctuations.site",
+      "delos-masks.architectural-stability.site"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00"
     }
    ],
    "installed_summary": {
@@ -1083,6 +1146,2294 @@
     "en": "Cyclades, Greece",
     "el": "Κυκλάδες, Ελλάδα"
    },
+   "story": {
+    "hook_scenario": "delos-masks.salinity.site",
+    "text": {
+     "en": "Delos is a small island in the middle of the Cyclades. In ancient times it was a sacred island: in myth, Apollo and Artemis were born here. Today the whole island is an archaeological site. Here ARGUS watches two ancient houses, the House of the Masks and the House of Fournoi. Experts say the biggest danger is salt.",
+     "el": "Η Δήλος είναι ένα μικρό νησί στη μέση των Κυκλάδων. Στην αρχαιότητα ήταν ιερό νησί: κατά τον μύθο, εδώ γεννήθηκαν ο Απόλλωνας και η Άρτεμη. Σήμερα όλο το νησί είναι αρχαιολογικός χώρος. Εδώ το ARGUS προσέχει δύο αρχαία σπίτια, την Οικία των Προσωπείων και την Οικία των Φούρνων. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος είναι το αλάτι."
+    },
+    "needs_review": true,
+    "review_note": "Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).",
+    "authored": true
+   },
+   "budget": 8,
+   "scenarios": [
+    {
+     "threat_id": 75,
+     "scenario_key": "delos-fournoi.salinity.site",
+     "risk_category": "salts",
+     "description": "Salinity",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 15.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Salinity"
+     },
+     "plain": {
+      "title": {
+       "en": "Salt in the walls · House of Fournoi",
+       "el": "Αλάτι στους τοίχους · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Salt from the sea and the ground gets into the walls. When the damp changes, it turns into crystals that crumble stone and plaster.",
+       "el": "Το αλάτι από τη θάλασσα και το έδαφος μπαίνει στους τοίχους. Όταν αλλάζει η υγρασία, γίνεται κρύσταλλοι που θρυμματίζουν την πέτρα και τα κονιάματα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity",
+      "soil_moisture",
+      "camera",
+      "observer"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 93,
+     "scenario_key": "delos-masks.salinity.site",
+     "risk_category": "salts",
+     "description": "Salinity",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 15.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Salinity"
+     },
+     "plain": {
+      "title": {
+       "en": "Salt in the walls · House of the Masks",
+       "el": "Αλάτι στους τοίχους · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Salt from the sea and the ground gets into the walls. When the damp changes, it turns into crystals that crumble stone and plaster.",
+       "el": "Το αλάτι από τη θάλασσα και το έδαφος μπαίνει στους τοίχους. Όταν αλλάζει η υγρασία, γίνεται κρύσταλλοι που θρυμματίζουν την πέτρα και τα κονιάματα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity",
+      "soil_moisture",
+      "camera",
+      "observer"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 74,
+     "scenario_key": "delos-fournoi.rh-fluctuations.site",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "RH Fluctuations",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 4.0,
+      "mr": 14.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "RH Fluctuations"
+     },
+     "plain": {
+      "title": {
+       "en": "Damp that goes up and down · House of Fournoi",
+       "el": "Η υγρασία ανεβοκατεβαίνει · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "When the air keeps switching between damp and dry, salts and materials swell and shrink again and again.",
+       "el": "Όταν ο αέρας αλλάζει συνέχεια από υγρός σε ξερός, τα άλατα και τα υλικά φουσκώνουν και ξεφουσκώνουν ξανά και ξανά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 81,
+     "scenario_key": "delos-fournoi.wind-erosion.site",
+     "risk_category": "physical_forces",
+     "description": "Wind Erosion",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 4.0,
+      "mr": 14.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Wind Erosion"
+     },
+     "plain": {
+      "title": {
+       "en": "Wind wears the stone · House of Fournoi",
+       "el": "Ο αέρας φθείρει την πέτρα · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Strong Aegean winds carry sand and salt that slowly rub away the surfaces.",
+       "el": "Οι δυνατοί άνεμοι του Αιγαίου κουβαλούν άμμο και αλάτι που τρίβουν σιγά σιγά τις επιφάνειες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station",
+      "observer"
+     ],
+     "primary_cards": [
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 83,
+     "scenario_key": "delos-masks.architectural-stability.site",
+     "risk_category": "physical_forces",
+     "description": "Architectural Stability",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 4.0,
+      "mr": 14.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Architectural Stability"
+     },
+     "plain": {
+      "title": {
+       "en": "Will the walls stand? · House of the Masks",
+       "el": "Θα αντέξουν οι τοίχοι; · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Ancient walls without a roof can crack, lean or fall.",
+       "el": "Οι αρχαίοι τοίχοι χωρίς στέγη μπορεί να ραγίσουν, να γείρουν ή να πέσουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 92,
+     "scenario_key": "delos-masks.rh-fluctuations.site",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "RH Fluctuations",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 4.0,
+      "mr": 14.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "RH Fluctuations"
+     },
+     "plain": {
+      "title": {
+       "en": "Damp that goes up and down · House of the Masks",
+       "el": "Η υγρασία ανεβοκατεβαίνει · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "When the air keeps switching between damp and dry, salts and materials swell and shrink again and again.",
+       "el": "Όταν ο αέρας αλλάζει συνέχεια από υγρός σε ξερός, τα άλατα και τα υλικά φουσκώνουν και ξεφουσκώνουν ξανά και ξανά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 99,
+     "scenario_key": "delos-masks.wind-erosion.site",
+     "risk_category": "physical_forces",
+     "description": "Wind Erosion",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 2.0,
+      "mr": 12.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Wind Erosion"
+     },
+     "plain": {
+      "title": {
+       "en": "Wind wears the stone · House of the Masks",
+       "el": "Ο αέρας φθείρει την πέτρα · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Strong Aegean winds carry sand and salt that slowly rub away the surfaces.",
+       "el": "Οι δυνατοί άνεμοι του Αιγαίου κουβαλούν άμμο και αλάτι που τρίβουν σιγά σιγά τις επιφάνειες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station",
+      "observer"
+     ],
+     "primary_cards": [
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 65,
+     "scenario_key": "delos-fournoi.architectural-stability.site",
+     "risk_category": "physical_forces",
+     "description": "Architectural Stability",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 5.0,
+      "c": 1.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Architectural Stability"
+     },
+     "plain": {
+      "title": {
+       "en": "Will the walls stand? · House of Fournoi",
+       "el": "Θα αντέξουν οι τοίχοι; · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Ancient walls without a roof can crack, lean or fall.",
+       "el": "Οι αρχαίοι τοίχοι χωρίς στέγη μπορεί να ραγίσουν, να γείρουν ή να πέσουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 70,
+     "scenario_key": "delos-fournoi.high-temperature.site",
+     "risk_category": "incorrect_temperature",
+     "description": "High Temperature",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 4.0,
+      "c": 4.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "High Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "High temperatures · House of Fournoi",
+       "el": "Υψηλές θερμοκρασίες · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Strong heat dries out and weakens plaster and mortar.",
+       "el": "Η μεγάλη ζέστη ξεραίνει και αδυνατίζει τους σοβάδες και τα κονιάματα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 78,
+     "scenario_key": "delos-fournoi.storm.site",
+     "risk_category": "physical_forces",
+     "description": "Storm",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 4.5,
+      "b": 3.0,
+      "c": 3.5,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Storm"
+     },
+     "plain": {
+      "title": {
+       "en": "Storms · House of Fournoi",
+       "el": "Καταιγίδες · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Storms bring strong wind and heavy rain at the same time.",
+       "el": "Οι καταιγίδες φέρνουν μαζί δυνατό αέρα και πολλή βροχή."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station",
+      "rain_gauge"
+     ],
+     "primary_cards": [
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 64,
+     "scenario_key": "delos-fournoi.air-pollution.site",
+     "risk_category": "pollutants",
+     "description": "Air pollution",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 2.0,
+      "mr": 10.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Air pollution"
+     },
+     "plain": {
+      "title": {
+       "en": "Air pollution · House of Fournoi",
+       "el": "Ρύπανση του αέρα · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Pollutants in the air settle on surfaces and stain or eat into them.",
+       "el": "Οι ρύποι του αέρα κάθονται στις επιφάνειες και τις λερώνουν ή τις διαβρώνουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "air_quality"
+     ],
+     "primary_cards": [
+      "air_quality"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 69,
+     "scenario_key": "delos-fournoi.heatwaves.site",
+     "risk_category": "incorrect_temperature",
+     "description": "Heatwaves",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 3.0,
+      "c": 3.0,
+      "mr": 10.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Heatwaves"
+     },
+     "plain": {
+      "title": {
+       "en": "Heatwaves · House of Fournoi",
+       "el": "Καύσωνες · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Many very hot days in a row stress the materials again and again.",
+       "el": "Πολλές πολύ ζεστές μέρες στη σειρά ταλαιπωρούν τα υλικά ξανά και ξανά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 73,
+     "scenario_key": "delos-fournoi.rainfall.site",
+     "risk_category": "water",
+     "description": "Rainfall",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 2.0,
+      "c": 3.0,
+      "mr": 10.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Rainfall"
+     },
+     "plain": {
+      "title": {
+       "en": "Rain · House of Fournoi",
+       "el": "Βροχή · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Rain soaks walls and floors that have no roof to protect them.",
+       "el": "Η βροχή μουσκεύει τοίχους και δάπεδα που δεν έχουν στέγη να τα προστατεύει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 82,
+     "scenario_key": "delos-masks.air-pollution.site",
+     "risk_category": "pollutants",
+     "description": "Air pollution",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 2.0,
+      "mr": 10.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Air pollution"
+     },
+     "plain": {
+      "title": {
+       "en": "Air pollution · House of the Masks",
+       "el": "Ρύπανση του αέρα · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Pollutants in the air settle on surfaces and stain or eat into them.",
+       "el": "Οι ρύποι του αέρα κάθονται στις επιφάνειες και τις λερώνουν ή τις διαβρώνουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "air_quality"
+     ],
+     "primary_cards": [
+      "air_quality"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 96,
+     "scenario_key": "delos-masks.storm.site",
+     "risk_category": "physical_forces",
+     "description": "Storm",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 4.5,
+      "b": 3.0,
+      "c": 2.0,
+      "mr": 9.5
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Storm"
+     },
+     "plain": {
+      "title": {
+       "en": "Storms · House of the Masks",
+       "el": "Καταιγίδες · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Storms bring strong wind and heavy rain at the same time.",
+       "el": "Οι καταιγίδες φέρνουν μαζί δυνατό αέρα και πολλή βροχή."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station",
+      "rain_gauge"
+     ],
+     "primary_cards": [
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 77,
+     "scenario_key": "delos-fournoi.soil-erosion.site",
+     "risk_category": "physical_forces",
+     "description": "Soil erosion",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 1.5,
+      "c": 1.5,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Soil-Erosion"
+     },
+     "plain": {
+      "title": {
+       "en": "Soil washed away · House of Fournoi",
+       "el": "Το χώμα φεύγει · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Rain and wind carry away the soil around the walls, so their bases are left exposed.",
+       "el": "Η βροχή και ο αέρας παίρνουν το χώμα γύρω από τους τοίχους και οι βάσεις τους μένουν ακάλυπτες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "observer"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 80,
+     "scenario_key": "delos-fournoi.water-rise.site",
+     "risk_category": "water",
+     "description": "Water Rise",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 1.5,
+      "c": 1.5,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Water Rise"
+     },
+     "plain": {
+      "title": {
+       "en": "Water rising from below · House of Fournoi",
+       "el": "Νερό που ανεβαίνει από κάτω · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Water in the ground climbs into walls and floors and brings salt with it.",
+       "el": "Το νερό του εδάφους ανεβαίνει στους τοίχους και στα δάπεδα και φέρνει μαζί του αλάτι."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "soil_moisture",
+      "humidity"
+     ],
+     "primary_cards": [
+      "soil_moisture"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 87,
+     "scenario_key": "delos-masks.heatwaves.site",
+     "risk_category": "incorrect_temperature",
+     "description": "Heatwaves",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 3.0,
+      "c": 1.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Heatwaves"
+     },
+     "plain": {
+      "title": {
+       "en": "Heatwaves · House of the Masks",
+       "el": "Καύσωνες · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Many very hot days in a row stress the materials again and again.",
+       "el": "Πολλές πολύ ζεστές μέρες στη σειρά ταλαιπωρούν τα υλικά ξανά και ξανά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 88,
+     "scenario_key": "delos-masks.high-temperature.site",
+     "risk_category": "incorrect_temperature",
+     "description": "High Temperature",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 2.0,
+      "c": 3.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "High Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "High temperatures · House of the Masks",
+       "el": "Υψηλές θερμοκρασίες · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Strong heat dries out and weakens plaster and mortar.",
+       "el": "Η μεγάλη ζέστη ξεραίνει και αδυνατίζει τους σοβάδες και τα κονιάματα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 91,
+     "scenario_key": "delos-masks.rainfall.site",
+     "risk_category": "water",
+     "description": "Rainfall",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 2.0,
+      "c": 1.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Rainfall"
+     },
+     "plain": {
+      "title": {
+       "en": "Rain · House of the Masks",
+       "el": "Βροχή · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Rain soaks walls and floors that have no roof to protect them.",
+       "el": "Η βροχή μουσκεύει τοίχους και δάπεδα που δεν έχουν στέγη να τα προστατεύει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 98,
+     "scenario_key": "delos-masks.water-rise.site",
+     "risk_category": "water",
+     "description": "Water Rise",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 2.0,
+      "c": 1.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Water Rise"
+     },
+     "plain": {
+      "title": {
+       "en": "Water rising from below · House of the Masks",
+       "el": "Νερό που ανεβαίνει από κάτω · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Water in the ground climbs into walls and floors and brings salt with it.",
+       "el": "Το νερό του εδάφους ανεβαίνει στους τοίχους και στα δάπεδα και φέρνει μαζί του αλάτι."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "soil_moisture",
+      "humidity"
+     ],
+     "primary_cards": [
+      "soil_moisture"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 72,
+     "scenario_key": "delos-fournoi.prolonged-dry-periods.site",
+     "risk_category": "drought",
+     "description": "Prolonged dry periods",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 1.5,
+      "c": 1.0,
+      "mr": 7.5
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Prolonged dry periods"
+     },
+     "plain": {
+      "title": {
+       "en": "Long dry spells · House of Fournoi",
+       "el": "Μεγάλη ξηρασία · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "After a long time without rain, the ground and the walls dry out and can crack.",
+       "el": "Μετά από πολύ καιρό χωρίς βροχή, το έδαφος και οι τοίχοι ξεραίνονται και μπορεί να ραγίσουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "soil_moisture",
+      "rain_gauge",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "soil_moisture",
+      "rain_gauge"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 68,
+     "scenario_key": "delos-fournoi.gravitational-slope-movements.site",
+     "risk_category": "physical_forces",
+     "description": "Gravitational slope movements",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 2.0,
+      "c": 1.0,
+      "mr": 7.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Gravitational slope movements"
+     },
+     "plain": {
+      "title": {
+       "en": "The slope slips · House of Fournoi",
+       "el": "Η πλαγιά γλιστράει · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "The ground on a slope can slowly slip downhill and pull walls with it.",
+       "el": "Το έδαφος σε μια πλαγιά μπορεί να γλιστράει σιγά σιγά προς τα κάτω και να τραβάει μαζί του τους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "tiltmeter",
+      "gnss",
+      "crackmeter",
+      "soil_moisture",
+      "observer"
+     ],
+     "primary_cards": [
+      "tiltmeter",
+      "gnss"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 66,
+     "scenario_key": "delos-fournoi.flooding.site",
+     "risk_category": "water",
+     "description": "Flooding",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Flooding"
+     },
+     "plain": {
+      "title": {
+       "en": "Flooding · House of Fournoi",
+       "el": "Πλημμύρα · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Heavy rain can flood the rooms and leave mud and salt behind.",
+       "el": "Μια δυνατή βροχή μπορεί να πλημμυρίσει τα δωμάτια και να αφήσει πίσω λάσπη και αλάτι."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 67,
+     "scenario_key": "delos-fournoi.freeze-thaw-cycles.site",
+     "risk_category": "physical_forces",
+     "description": "Freeze-thaw cycles",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 1.0,
+      "c": 1.0,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Freeze-thaw cycles"
+     },
+     "plain": {
+      "title": {
+       "en": "Freezing and thawing · House of Fournoi",
+       "el": "Πάγωμα και ξεπάγωμα · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "On the rare cold nights, water in the stone can freeze and swell.",
+       "el": "Τις λίγες κρύες νύχτες, το νερό μέσα στην πέτρα μπορεί να παγώσει και να φουσκώσει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "humidity",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 84,
+     "scenario_key": "delos-masks.flooding.site",
+     "risk_category": "water",
+     "description": "Flooding",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Flooding"
+     },
+     "plain": {
+      "title": {
+       "en": "Flooding · House of the Masks",
+       "el": "Πλημμύρα · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Heavy rain can flood the rooms and leave mud and salt behind.",
+       "el": "Μια δυνατή βροχή μπορεί να πλημμυρίσει τα δωμάτια και να αφήσει πίσω λάσπη και αλάτι."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 90,
+     "scenario_key": "delos-masks.prolonged-dry-periods.site",
+     "risk_category": "drought",
+     "description": "Prolonged dry periods",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Prolonged dry periods"
+     },
+     "plain": {
+      "title": {
+       "en": "Long dry spells · House of the Masks",
+       "el": "Μεγάλη ξηρασία · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "After a long time without rain, the ground and the walls dry out and can crack.",
+       "el": "Μετά από πολύ καιρό χωρίς βροχή, το έδαφος και οι τοίχοι ξεραίνονται και μπορεί να ραγίσουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "soil_moisture",
+      "rain_gauge",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "soil_moisture",
+      "rain_gauge"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 95,
+     "scenario_key": "delos-masks.soil-erosion.site",
+     "risk_category": "physical_forces",
+     "description": "Soil erosion",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 6.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Soil-Erosion"
+     },
+     "plain": {
+      "title": {
+       "en": "Soil washed away · House of the Masks",
+       "el": "Το χώμα φεύγει · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Rain and wind carry away the soil around the walls, so their bases are left exposed.",
+       "el": "Η βροχή και ο αέρας παίρνουν το χώμα γύρω από τους τοίχους και οι βάσεις τους μένουν ακάλυπτες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "observer"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 86,
+     "scenario_key": "delos-masks.gravitational-slope-movements.site",
+     "risk_category": "physical_forces",
+     "description": "Gravitational slope movements",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 1.0,
+      "c": 0.5,
+      "mr": 5.5
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Gravitational slope movements"
+     },
+     "plain": {
+      "title": {
+       "en": "The slope slips · House of the Masks",
+       "el": "Η πλαγιά γλιστράει · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "The ground on a slope can slowly slip downhill and pull walls with it.",
+       "el": "Το έδαφος σε μια πλαγιά μπορεί να γλιστράει σιγά σιγά προς τα κάτω και να τραβάει μαζί του τους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "tiltmeter",
+      "gnss",
+      "crackmeter",
+      "soil_moisture",
+      "observer"
+     ],
+     "primary_cards": [
+      "tiltmeter",
+      "gnss"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 94,
+     "scenario_key": "delos-masks.seismic.site",
+     "risk_category": "physical_forces",
+     "description": "Seismic",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 0.3,
+      "b": 4.0,
+      "c": 1.0,
+      "mr": 5.3
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Seismic"
+     },
+     "plain": {
+      "title": {
+       "en": "Earthquakes · House of the Masks",
+       "el": "Σεισμοί · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "An earthquake can shake ancient walls and make them crack or fall.",
+       "el": "Ένας σεισμός μπορεί να τραντάξει τους αρχαίους τοίχους και να τους ραγίσει ή να τους ρίξει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "vibration",
+      "crackmeter",
+      "tiltmeter",
+      "observer"
+     ],
+     "primary_cards": [
+      "vibration",
+      "crackmeter",
+      "tiltmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 71,
+     "scenario_key": "delos-fournoi.low-temperature.site",
+     "risk_category": "incorrect_temperature",
+     "description": "Low Temperature",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 5.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Low Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "Low temperatures · House of Fournoi",
+       "el": "Χαμηλές θερμοκρασίες · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "Cold makes materials shrink and keeps damp in the walls for longer.",
+       "el": "Το κρύο κάνει τα υλικά να συστέλλονται και κρατάει την υγρασία στους τοίχους περισσότερο."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 85,
+     "scenario_key": "delos-masks.freeze-thaw-cycles.site",
+     "risk_category": "physical_forces",
+     "description": "Freeze-thaw cycles",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 5.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Freeze-thaw cycles"
+     },
+     "plain": {
+      "title": {
+       "en": "Freezing and thawing · House of the Masks",
+       "el": "Πάγωμα και ξεπάγωμα · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "On the rare cold nights, water in the stone can freeze and swell.",
+       "el": "Τις λίγες κρύες νύχτες, το νερό μέσα στην πέτρα μπορεί να παγώσει και να φουσκώσει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "humidity",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 89,
+     "scenario_key": "delos-masks.low-temperature.site",
+     "risk_category": "incorrect_temperature",
+     "description": "Low Temperature",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 4.0,
+      "b": 0.5,
+      "c": 0.5,
+      "mr": 5.0
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Low Temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "Low temperatures · House of the Masks",
+       "el": "Χαμηλές θερμοκρασίες · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "Cold makes materials shrink and keeps damp in the walls for longer.",
+       "el": "Το κρύο κάνει τα υλικά να συστέλλονται και κρατάει την υγρασία στους τοίχους περισσότερο."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 76,
+     "scenario_key": "delos-fournoi.seismic.site",
+     "risk_category": "physical_forces",
+     "description": "Seismic",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 0.3,
+      "b": 4.0,
+      "c": 0.5,
+      "mr": 4.8
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Seismic"
+     },
+     "plain": {
+      "title": {
+       "en": "Earthquakes · House of Fournoi",
+       "el": "Σεισμοί · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "An earthquake can shake ancient walls and make them crack or fall.",
+       "el": "Ένας σεισμός μπορεί να τραντάξει τους αρχαίους τοίχους και να τους ραγίσει ή να τους ρίξει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "vibration",
+      "crackmeter",
+      "tiltmeter",
+      "observer"
+     ],
+     "primary_cards": [
+      "vibration",
+      "crackmeter",
+      "tiltmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 79,
+     "scenario_key": "delos-fournoi.subsidence.site",
+     "risk_category": "physical_forces",
+     "description": "Subsidence",
+     "heritage_asset": "House of Fournoi",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 2.0,
+      "c": 0.3,
+      "mr": 4.3
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Subsidence"
+     },
+     "plain": {
+      "title": {
+       "en": "The ground sinks · House of Fournoi",
+       "el": "Το έδαφος βουλιάζει · Οικία των Φούρνων"
+      },
+      "text": {
+       "en": "If the ground under the house sinks, the walls and floors crack.",
+       "el": "Αν το έδαφος κάτω από το σπίτι βουλιάξει, οι τοίχοι και τα δάπεδα ραγίζουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "tiltmeter",
+      "gnss",
+      "crackmeter",
+      "observer"
+     ],
+     "primary_cards": [
+      "tiltmeter",
+      "gnss",
+      "crackmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 97,
+     "scenario_key": "delos-masks.subsidence.site",
+     "risk_category": "physical_forces",
+     "description": "Subsidence",
+     "heritage_asset": "House of Masks",
+     "status": "active",
+     "abc": {
+      "a": 2.0,
+      "b": 2.0,
+      "c": 0.3,
+      "mr": 4.3
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx",
+      "section": "Subsidence"
+     },
+     "plain": {
+      "title": {
+       "en": "The ground sinks · House of the Masks",
+       "el": "Το έδαφος βουλιάζει · Οικία των Προσωπείων"
+      },
+      "text": {
+       "en": "If the ground under the house sinks, the walls and floors crack.",
+       "el": "Αν το έδαφος κάτω από το σπίτι βουλιάξει, οι τοίχοι και τα δάπεδα ραγίζουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "tiltmeter",
+      "gnss",
+      "crackmeter",
+      "observer"
+     ],
+     "primary_cards": [
+      "tiltmeter",
+      "gnss",
+      "crackmeter"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    }
+   ],
+   "installed": {
+    "asset_state_ids": [
+     135
+    ],
+    "records": 30,
+    "distinct_instruments": 30,
+    "physical_instruments": 30,
+    "by_card": [
+     {
+      "card": "humidity",
+      "count": 5,
+      "instrument_types": {
+       "Humidity Sensor": 5
+      },
+      "nodes": [
+       "151805",
+       "151809",
+       "151815",
+       "151836",
+       "168439"
+      ]
+     },
+     {
+      "card": "temperature",
+      "count": 5,
+      "instrument_types": {
+       "Temperature Sensor": 5
+      },
+      "nodes": [
+       "151805",
+       "151809",
+       "151815",
+       "151836",
+       "168439"
+      ]
+     },
+     {
+      "card": "airflow",
+      "count": 2,
+      "instrument_types": {
+       "Air Flow Sensor": 2
+      },
+      "nodes": [
+       "109315",
+       "149405"
+      ]
+     },
+     {
+      "card": "light_uv",
+      "count": 5,
+      "instrument_types": {
+       "Lux Meter Sensor": 4,
+       "Pyranometer Sensor": 1
+      },
+      "nodes": [
+       "151805",
+       "151809",
+       "151815",
+       "151836",
+       "168439"
+      ]
+     },
+     {
+      "card": "soil_moisture",
+      "count": 6,
+      "instrument_types": {
+       "Soil Moisture Sensor": 6
+      },
+      "nodes": [
+       "149368",
+       "149423",
+       "149460",
+       "149529",
+       "149678",
+       "151815"
+      ]
+     },
+     {
+      "card": "weather_station",
+      "count": 2,
+      "instrument_types": {
+       "Weather Station Sensor": 2
+      },
+      "nodes": [
+       "2cf7f1c061300548",
+       "2cf7f1c0723001f4"
+      ]
+     },
+     {
+      "card": "tiltmeter",
+      "count": 4,
+      "instrument_types": {
+       "Tiltmeter Sensor": 4
+      },
+      "nodes": [
+       "150900",
+       "153157",
+       "153242",
+       "153295"
+      ]
+     },
+     {
+      "card": "visitor_counter",
+      "count": 1,
+      "instrument_types": {
+       "People Counter Sensor": 1
+      },
+      "nodes": [
+       "2cf7f1c062800035"
+      ]
+     }
+    ],
+    "other": [],
+    "duplicate_records": [],
+    "flags": [],
+    "points": [
+     {
+      "lat": 37.3963444,
+      "lon": 25.2693833,
+      "height": 35.25,
+      "label": "Room 215 - Theatrical Masks mosaic",
+      "instruments": [
+       {
+        "instrument_id": 80,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "109315"
+       },
+       {
+        "instrument_id": 86,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "168439"
+       },
+       {
+        "instrument_id": 91,
+        "card": "light_uv",
+        "instrument_type": "Lux Meter Sensor",
+        "node": "168439"
+       },
+       {
+        "instrument_id": 103,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "168439"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3963389,
+      "lon": 25.2694833,
+      "height": 35.37,
+      "label": "Room 214 - Dionysus mosaic",
+      "instruments": [
+       {
+        "instrument_id": 81,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "149405"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.396275,
+      "lon": 25.2693139,
+      "height": 34.14,
+      "label": "Room 217 - Dolphins mosaic",
+      "instruments": [
+       {
+        "instrument_id": 83,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "151805"
+       },
+       {
+        "instrument_id": 88,
+        "card": "light_uv",
+        "instrument_type": "Lux Meter Sensor",
+        "node": "151805"
+       },
+       {
+        "instrument_id": 100,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "151805"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3963444,
+      "lon": 25.2693528,
+      "height": 35.12,
+      "label": "Room 216 - Seilinos mosaic",
+      "instruments": [
+       {
+        "instrument_id": 84,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "151809"
+       },
+       {
+        "instrument_id": 89,
+        "card": "light_uv",
+        "instrument_type": "Lux Meter Sensor",
+        "node": "151809"
+       },
+       {
+        "instrument_id": 101,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "151809"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3962972,
+      "lon": 25.2695389,
+      "height": 35.22,
+      "label": "Room 215 - Theatrical Masks mosaic",
+      "instruments": [
+       {
+        "instrument_id": 85,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "151836"
+       },
+       {
+        "instrument_id": 90,
+        "card": "light_uv",
+        "instrument_type": "Lux Meter Sensor",
+        "node": "151836"
+       },
+       {
+        "instrument_id": 102,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "151836"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3920556,
+      "lon": 25.2692556,
+      "height": 30.84,
+      "label": "Few meters away from the House of Fournoi",
+      "instruments": [
+       {
+        "instrument_id": 87,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "151815"
+       },
+       {
+        "instrument_id": 93,
+        "card": "light_uv",
+        "instrument_type": "Pyranometer Sensor",
+        "node": "151815"
+       },
+       {
+        "instrument_id": 99,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "151815"
+       },
+       {
+        "instrument_id": 104,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "151815"
+       },
+       {
+        "instrument_id": 110,
+        "card": "weather_station",
+        "instrument_type": "Weather Station Sensor",
+        "node": "2cf7f1c0723001f4"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3963083,
+      "lon": 25.2693833,
+      "height": 35.34,
+      "label": "Above door of room 214 - Dionysus mosaic",
+      "instruments": [
+       {
+        "instrument_id": 92,
+        "card": "visitor_counter",
+        "instrument_type": "People Counter Sensor",
+        "node": "2cf7f1c062800035"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3963389,
+      "lon": 25.2694667,
+      "height": 35.34,
+      "label": "Room 215 - Theatrical Masks mosaic",
+      "instruments": [
+       {
+        "instrument_id": 94,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "149368"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3963194,
+      "lon": 25.2694944,
+      "height": 35.31,
+      "label": "Room 215 - Theatrical Masks mosaic",
+      "instruments": [
+       {
+        "instrument_id": 95,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "149423"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3962556,
+      "lon": 25.269825,
+      "height": 36.99,
+      "label": "Few meters away from the House of the Masks",
+      "instruments": [
+       {
+        "instrument_id": 96,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "149460"
+       },
+       {
+        "instrument_id": 109,
+        "card": "weather_station",
+        "instrument_type": "Weather Station Sensor",
+        "node": "2cf7f1c061300548"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3914389,
+      "lon": 25.2679167,
+      "height": 26.84,
+      "label": "Sensor placed on a plastered wall at the House of Fournoi",
+      "instruments": [
+       {
+        "instrument_id": 97,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "149678"
+       },
+       {
+        "instrument_id": 98,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "149529"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.4033278,
+      "lon": 25.266225,
+      "height": 12.32,
+      "label": "Leaning wall in Skardanas district",
+      "instruments": [
+       {
+        "instrument_id": 105,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "153157"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.397,
+      "lon": 25.2675167,
+      "height": 17.92,
+      "label": "Theater district",
+      "instruments": [
+       {
+        "instrument_id": 106,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "150900"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3976583,
+      "lon": 25.2709278,
+      "height": 43.48,
+      "label": "Close to the Temple of Isis",
+      "instruments": [
+       {
+        "instrument_id": 107,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "153242"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 37.3983528,
+      "lon": 25.2699194,
+      "height": 26.45,
+      "label": "Place in Inopos district",
+      "instruments": [
+       {
+        "instrument_id": 108,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "153295"
+       }
+      ],
+      "flags": []
+     }
+    ],
+    "unplaced": []
+   },
+   "alarms": [
+    {
+     "id": "delos:DL_soil_moisture:2026-08-31T20:30:00",
+     "event_ids": [
+      123,
+      129
+     ],
+     "timestamp": "2026-08-31T20:30:00",
+     "type": "DL",
+     "rule": "DL_soil_moisture",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0266,
+     "feature_share": 0.44,
+     "variable": "149368_h_masks_in_room215_2_soil_moisture",
+     "value": 0.0266,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 1.28,
+     "instruments": [
+      {
+       "instrument_id": 94,
+       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 37.3963389,
+       "lon": 25.2694667
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first"
+     ],
+     "episode": {
+      "rule": "DL_soil_moisture",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-24T20:30:00",
+      "alarm_count": 26,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.water-rise.site",
+       "delos-masks.salinity.site",
+       "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:DL_soil_moisture:2026-09-02T08:30:00",
+     "event_ids": [
+      135
+     ],
+     "timestamp": "2026-09-02T08:30:00",
+     "type": "DL",
+     "rule": "DL_soil_moisture",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0441,
+     "feature_share": 0.359,
+     "variable": "149368_h_masks_in_room215_2_soil_moisture",
+     "value": 0.0441,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 2.12,
+     "instruments": [
+      {
+       "instrument_id": 94,
+       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 37.3963389,
+       "lon": 25.2694667
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "peak"
+     ],
+     "episode": {
+      "rule": "DL_soil_moisture",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-24T20:30:00",
+      "alarm_count": 26,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.water-rise.site",
+       "delos-masks.salinity.site",
+       "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:DL_soil_moisture:2026-09-07T08:30:00",
+     "event_ids": [
+      181
+     ],
+     "timestamp": "2026-09-07T08:30:00",
+     "type": "DL",
+     "rule": "DL_soil_moisture",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0434,
+     "feature_share": 0.303,
+     "variable": "149368_h_masks_in_room215_2_soil_moisture",
+     "value": 0.0434,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 2.09,
+     "instruments": [
+      {
+       "instrument_id": 94,
+       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 37.3963389,
+       "lon": 25.2694667
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "extra"
+     ],
+     "episode": {
+      "rule": "DL_soil_moisture",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-24T20:30:00",
+      "alarm_count": 26,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.water-rise.site",
+       "delos-masks.salinity.site",
+       "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:DL_humidity:2026-09-12T20:30:00",
+     "event_ids": [
+      276
+     ],
+     "timestamp": "2026-09-12T20:30:00",
+     "type": "DL",
+     "rule": "DL_humidity",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0226,
+     "feature_share": 0.3,
+     "variable": "151836_h_masks_in_room214_hum",
+     "value": 0.0226,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 1.09,
+     "instruments": [
+      {
+       "instrument_id": 85,
+       "name": "Installed Instrument Humidity - 151836 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Humidity Sensor",
+       "card": "humidity",
+       "lat": 37.3962972,
+       "lon": 25.2695389
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "DL_humidity",
+      "start": "2026-09-12T20:30:00",
+      "end": "2026-09-12T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.rh-fluctuations.site",
+       "delos-masks.salinity.site"
+      ],
+      "why": {
+       "en": "The humidity in a room of the House of the Masks behaved unusually. Damp that goes up and down makes salts swell and shrink inside the walls.",
+       "el": "Η υγρασία σε ένα δωμάτιο της Οικίας των Προσωπείων συμπεριφέρθηκε ασυνήθιστα. Η υγρασία που ανεβοκατεβαίνει κάνει τα άλατα να φουσκώνουν και να ξεφουσκώνουν μέσα στους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:DL_soil_moisture:2026-09-24T20:30:00",
+     "event_ids": [
+      741
+     ],
+     "timestamp": "2026-09-24T20:30:00",
+     "type": "DL",
+     "rule": "DL_soil_moisture",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.028,
+     "feature_share": 0.313,
+     "variable": "149368_h_masks_in_room215_2_soil_moisture",
+     "value": 0.028,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 1.34,
+     "instruments": [
+      {
+       "instrument_id": 94,
+       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 37.3963389,
+       "lon": 25.2694667
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "last"
+     ],
+     "episode": {
+      "rule": "DL_soil_moisture",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-24T20:30:00",
+      "alarm_count": 26,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.water-rise.site",
+       "delos-masks.salinity.site",
+       "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    }
+   ],
+   "alarm_funnel": {
+    "records": 40,
+    "unique": 31,
+    "usable": 27,
+    "featured": 5,
+    "excluded": {
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 4
+    },
+    "by_rule": {
+     "(DL, no rule)": 40
+    }
+   },
+   "discussion_prompts": [
+    {
+     "en": "ARGUS put 6 soil-moisture probes and 5 humidity sensors on Delos. Why does damp matter so much on a dry island?",
+     "el": "Το ARGUS έβαλε στη Δήλο 6 αισθητήρες υγρασίας εδάφους και 5 αισθητήρες υγρασίας αέρα. Γιατί η υγρασία μετράει τόσο πολύ σε ένα ξερό νησί;",
+     "needs_review": true,
+     "review_note": "Counts from the ARGUS installed instruments for Delos.",
+     "authored": true
+    },
+    {
+     "en": "The alarm here came from artificial intelligence, not from a fixed limit. What is good about that, and what could go wrong?",
+     "el": "Ο συναγερμός εδώ ήρθε από τεχνητή νοημοσύνη και όχι από ένα σταθερό όριο. Τι καλό έχει αυτό και τι θα μπορούσε να πάει στραβά;",
+     "needs_review": false,
+     "authored": true
+    },
+    {
+     "en": "Many visitors come to Delos every summer. How could visitors help to look after the ancient houses?",
+     "el": "Πολλοί επισκέπτες έρχονται στη Δήλο κάθε καλοκαίρι. Πώς θα μπορούσαν οι επισκέπτες να βοηθήσουν να προσέχουμε τα αρχαία σπίτια;",
+     "needs_review": true,
+     "review_note": "Visitor numbers are general knowledge, not ARGUS data.",
+     "authored": true
+    }
+   ],
    "backdrop": null
   },
   {
@@ -1092,7 +3443,7 @@
    "country": "Spain",
    "asset_type": "Heritage Site",
    "source_url": "https://www.argus-project.eu/pilot-site2-cellar-town-baltanas",
-   "playable": false,
+   "playable": true,
    "scenario_count": 7,
    "levels": [
     {
@@ -1105,19 +3456,40 @@
      "key": "Medium priority",
      "id": "medium",
      "scenario_count": 4,
-     "available": true
+     "available": true,
+     "mission": [
+      "baltanas.relative-humidity.structural-wood",
+      "baltanas.flooding.structural-wood",
+      "baltanas.subsidence.cellar-ensemble"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": null
     },
     {
      "key": "High priority",
      "id": "high",
      "scenario_count": 2,
-     "available": true
+     "available": true,
+     "mission": [
+      "baltanas.relative-humidity.wine-elements",
+      "baltanas.flooding.wine-elements",
+      "baltanas.relative-humidity.structural-wood"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": null
     },
     {
      "key": "Extreme priority",
      "id": "extreme",
      "scenario_count": 1,
-     "available": true
+     "available": true,
+     "mission": [
+      "baltanas.subsidence.cellar-ensemble",
+      "baltanas.relative-humidity.wine-elements",
+      "baltanas.flooding.wine-elements"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": null
     },
     {
      "key": "Catastrophic priority",
@@ -1155,6 +3527,972 @@
     "en": "Palencia, Spain",
     "el": "Παλένθια, Ισπανία"
    },
+   "story": {
+    "hook_scenario": "baltanas.subsidence.cellar-ensemble",
+    "text": {
+     "en": "In Baltanás, in Spain, a whole hill is full of underground wine cellars: 374 cellars dug into the earth, with old wine presses and barrels inside. Experts say the biggest danger is that the ground sinks and the cellars cave in.",
+     "el": "Στη Μπαλτανάς της Ισπανίας, ένας ολόκληρος λόφος είναι γεμάτος υπόγεια κελάρια κρασιού: 374 κελάρια σκαμμένα στο χώμα, με παλιά πατητήρια και βαρέλια μέσα τους. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος είναι να βουλιάξει το έδαφος και να καταρρεύσουν τα κελάρια."
+    },
+    "needs_review": true,
+    "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme).",
+    "authored": true
+   },
+   "budget": 8,
+   "scenarios": [
+    {
+     "threat_id": 21,
+     "scenario_key": "baltanas.subsidence.cellar-ensemble",
+     "risk_category": "physical_forces",
+     "description": "Subsidence or partial collapse of historic cellars",
+     "heritage_asset": "Hill landscape and network of 374 underground cellars",
+     "status": "active",
+     "abc": {
+      "a": 4.5,
+      "b": 4.5,
+      "c": 2.5,
+      "mr": 11.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Physical Forces / Subsidence"
+     },
+     "plain": {
+      "title": {
+       "en": "Cellars that cave in",
+       "el": "Κελάρια που καταρρέουν"
+      },
+      "text": {
+       "en": "The cellars are dug into the hill. If the ground sinks, a cellar can partly collapse.",
+       "el": "Τα κελάρια είναι σκαμμένα μέσα στον λόφο. Αν το έδαφος βουλιάξει, ένα κελάρι μπορεί να καταρρεύσει εν μέρει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "tiltmeter",
+      "crackmeter",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "tiltmeter",
+      "crackmeter",
+      "gnss"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 23,
+     "scenario_key": "baltanas.relative-humidity.wine-elements",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "Decay of wine-production wooden elements caused by persistently high relative humidity",
+     "heritage_asset": "Wine presses and wine barrels",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 2.0,
+      "mr": 10.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Incorrect Relative Humidity / Wooden elements"
+     },
+     "plain": {
+      "title": {
+       "en": "Damp wine presses and barrels",
+       "el": "Υγρασία στα πατητήρια και στα βαρέλια"
+      },
+      "text": {
+       "en": "When the air in a cellar stays very damp, the old wooden wine presses and barrels rot.",
+       "el": "Όταν ο αέρας σε ένα κελάρι μένει πολύ υγρός, τα παλιά ξύλινα πατητήρια και βαρέλια σαπίζουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 25,
+     "scenario_key": "baltanas.flooding.wine-elements",
+     "risk_category": "water",
+     "description": "Cellar flooding affecting historic wine-production elements",
+     "heritage_asset": "Wine presses and wine barrels",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 2.0,
+      "mr": 10.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Water / Flooding / Wooden elements"
+     },
+     "plain": {
+      "title": {
+       "en": "A flooded cellar",
+       "el": "Πλημμύρα στο κελάρι"
+      },
+      "text": {
+       "en": "Rainwater can run down into a cellar and soak the wine presses and barrels.",
+       "el": "Το νερό της βροχής μπορεί να κατέβει σε ένα κελάρι και να μουσκέψει τα πατητήρια και τα βαρέλια."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 22,
+     "scenario_key": "baltanas.relative-humidity.structural-wood",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "Decay of structural timber caused by persistently high relative humidity",
+     "heritage_asset": "Structural timber in cellar ceilings",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 1.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Incorrect Relative Humidity / Structural wood"
+     },
+     "plain": {
+      "title": {
+       "en": "Damp ceiling beams",
+       "el": "Υγρασία στα δοκάρια της οροφής"
+      },
+      "text": {
+       "en": "Wooden beams hold up some cellar ceilings. In air that stays very damp, they rot and weaken.",
+       "el": "Ξύλινα δοκάρια στηρίζουν την οροφή σε κάποια κελάρια. Σε αέρα που μένει πολύ υγρός, σαπίζουν και αδυνατίζουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 24,
+     "scenario_key": "baltanas.flooding.structural-wood",
+     "risk_category": "water",
+     "description": "Cellar flooding affecting structural timber",
+     "heritage_asset": "Structural timber in cellar ceilings",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 1.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Water / Flooding / Structural wood"
+     },
+     "plain": {
+      "title": {
+       "en": "Flooding and ceiling beams",
+       "el": "Πλημμύρα και δοκάρια"
+      },
+      "text": {
+       "en": "When a cellar floods, water soaks the wooden beams that hold up its ceiling.",
+       "el": "Όταν ένα κελάρι πλημμυρίζει, το νερό μουσκεύει τα ξύλινα δοκάρια που κρατάνε την οροφή του."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 56,
+     "scenario_key": "baltanas.flooding.structural-wood",
+     "risk_category": "water",
+     "description": "Cellar flooding affecting structural timber",
+     "heritage_asset": "Structural timber in cellar ceilings",
+     "status": "superseded",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 1.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Water / Flooding / Structural wood"
+     },
+     "plain": {
+      "title": {
+       "en": "Flooding and ceiling beams",
+       "el": "Πλημμύρα και δοκάρια"
+      },
+      "text": {
+       "en": "When a cellar floods, water soaks the wooden beams that hold up its ceiling.",
+       "el": "Όταν ένα κελάρι πλημμυρίζει, το νερό μουσκεύει τα ξύλινα δοκάρια που κρατάνε την οροφή του."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 57,
+     "scenario_key": "baltanas.flooding.structural-wood",
+     "risk_category": "water",
+     "description": "Cellar flooding affecting structural timber",
+     "heritage_asset": "Structural timber in cellar ceilings",
+     "status": "superseded",
+     "abc": {
+      "a": 5.0,
+      "b": 3.0,
+      "c": 1.0,
+      "mr": 9.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "RiskAssesment_ICCROM_Baltanas_FINAL.docx",
+      "section": "Water / Flooding / Structural wood"
+     },
+     "plain": {
+      "title": {
+       "en": "Flooding and ceiling beams",
+       "el": "Πλημμύρα και δοκάρια"
+      },
+      "text": {
+       "en": "When a cellar floods, water soaks the wooden beams that hold up its ceiling.",
+       "el": "Όταν ένα κελάρι πλημμυρίζει, το νερό μουσκεύει τα ξύλινα δοκάρια που κρατάνε την οροφή του."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "rain_gauge",
+      "soil_moisture",
+      "weather_station",
+      "satellite"
+     ],
+     "primary_cards": [
+      "rain_gauge",
+      "soil_moisture"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    }
+   ],
+   "installed": {
+    "asset_state_ids": [
+     136
+    ],
+    "records": 39,
+    "distinct_instruments": 39,
+    "physical_instruments": 39,
+    "by_card": [
+     {
+      "card": "humidity",
+      "count": 6,
+      "instrument_types": {
+       "Humidity Sensor": 6
+      },
+      "nodes": [
+       "13280278-h",
+       "13280523-h",
+       "7347939-h",
+       "7348424-h",
+       "shellyht-6b6dee",
+       "shellyht-caae03"
+      ]
+     },
+     {
+      "card": "temperature",
+      "count": 7,
+      "instrument_types": {
+       "Temperature Sensor": 7
+      },
+      "nodes": [
+       "13280278-t",
+       "13280523-t",
+       "7347939-t",
+       "7348424-t",
+       "shellydw2-aab1ac",
+       "shellyht-6b6dee",
+       "shellyht-caae03"
+      ]
+     },
+     {
+      "card": "airflow",
+      "count": 5,
+      "instrument_types": {
+       "Air Flow Sensor": 4,
+       "Pir-Airflow Sensor": 1
+      },
+      "nodes": [
+       "a8610a3230467704",
+       "af1-149367",
+       "af2-149780",
+       "af3-149402",
+       "af4-149421"
+      ]
+     },
+     {
+      "card": "air_quality",
+      "count": 3,
+      "instrument_types": {
+       "Gas Sensor": 3
+      },
+      "nodes": [
+       "lagar) [baltanas-gas-151810-2]",
+       "lagar) [baltanas-gas-151810-3]",
+       "lagar) [baltanas-gas-151810]"
+      ]
+     },
+     {
+      "card": "light_uv",
+      "count": 1,
+      "instrument_types": {
+       "Lux Meter Sensor": 1
+      },
+      "nodes": [
+       "shellydw2-aab1ac"
+      ]
+     },
+     {
+      "card": "soil_moisture",
+      "count": 6,
+      "instrument_types": {
+       "Soil Moisture Sensor": 4,
+       "Water Potential Sensor": 2
+      },
+      "nodes": [
+       "1-149265",
+       "115666",
+       "151810",
+       "2-177322",
+       "wp1-130432",
+       "wp2-130314"
+      ]
+     },
+     {
+      "card": "weather_station",
+      "count": 2,
+      "instrument_types": {
+       "Barometer Sensor": 1,
+       "Weather Station Sensor": 1
+      },
+      "nodes": [
+       "149443",
+       "2cf7f1c073400212"
+      ]
+     },
+     {
+      "card": "tiltmeter",
+      "count": 2,
+      "instrument_types": {
+       "Tiltmeter Sensor": 2
+      },
+      "nodes": [
+       "82e0d400-784e-11f0-9283-e956b63ef652",
+       "shellydw2-aab1ac"
+      ]
+     },
+     {
+      "card": "vibration",
+      "count": 4,
+      "instrument_types": {
+       "Accelerometer Sensor": 3,
+       "Vibration Sensor": 1
+      },
+      "nodes": [
+       "159313",
+       "a1-159164",
+       "a2-159347",
+       "shellydw2-aab1ac"
+      ]
+     },
+     {
+      "card": "gnss",
+      "count": 1,
+      "instrument_types": {
+       "GNSS Sensor": 1
+      },
+      "nodes": [
+       "168762"
+      ]
+     },
+     {
+      "card": "visitor_counter",
+      "count": 2,
+      "instrument_types": {
+       "Barrier Sensor": 2
+      },
+      "nodes": [
+       "a8610a34324d7f09",
+       "a8610a343345720d"
+      ]
+     }
+    ],
+    "other": [],
+    "duplicate_records": [],
+    "flags": [],
+    "points": [
+     {
+      "lat": 41.9383806,
+      "lon": -4.2437694,
+      "height": 797.16,
+      "label": "Cellar 88 - Outside - car path",
+      "instruments": [
+       {
+        "instrument_id": 40,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "a1-159164"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384306,
+      "lon": -4.2438667,
+      "height": 797.51,
+      "label": "Cellar 88 - Inside - Sisa",
+      "instruments": [
+       {
+        "instrument_id": 41,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "a2-159347"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9379306,
+      "lon": -4.2433111,
+      "height": 796.85,
+      "label": "Cellar 364 - Outside - car path",
+      "instruments": [
+       {
+        "instrument_id": 42,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "159313"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384056,
+      "lon": -4.2438194,
+      "height": 797.33,
+      "label": "Cellar 88 - Chimney 1 Kitchen",
+      "instruments": [
+       {
+        "instrument_id": 43,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "af1-149367"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.93845,
+      "lon": -4.2437972,
+      "height": 797.52,
+      "label": "Cellar 88 - Chimney 2 Lagar",
+      "instruments": [
+       {
+        "instrument_id": 44,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "af2-149780"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384722,
+      "lon": -4.2438972,
+      "height": 797.81,
+      "label": "Cellar 88 - Chimney 3 Sisa 4",
+      "instruments": [
+       {
+        "instrument_id": 45,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "af3-149402"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9385417,
+      "lon": -4.2439389,
+      "height": 798.38,
+      "label": "Cellar 88 - Chimney 4 Pasillo sisa3-sisa4",
+      "instruments": [
+       {
+        "instrument_id": 46,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "af4-149421"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384333,
+      "lon": -4.2438556,
+      "height": 797.52,
+      "label": "Cellar 88 - Sisa2",
+      "instruments": [
+       {
+        "instrument_id": 47,
+        "card": "weather_station",
+        "instrument_type": "Barometer Sensor",
+        "node": "149443"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9383944,
+      "lon": -4.2437778,
+      "height": 797.22,
+      "label": "Cellar 88 - Outside",
+      "instruments": [
+       {
+        "instrument_id": 48,
+        "card": "visitor_counter",
+        "instrument_type": "Barrier Sensor",
+        "node": "a8610a343345720d"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.937925,
+      "lon": -4.2433139,
+      "height": 796.84,
+      "label": "Cellar 364 - Outside - car path",
+      "instruments": [
+       {
+        "instrument_id": 49,
+        "card": "visitor_counter",
+        "instrument_type": "Barrier Sensor",
+        "node": "a8610a34324d7f09"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9385361,
+      "lon": -4.2433111,
+      "height": 797.07,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 50,
+        "card": "air_quality",
+        "instrument_type": "Gas Sensor",
+        "node": "lagar) [baltanas-gas-151810]"
+       },
+       {
+        "instrument_id": 51,
+        "card": "air_quality",
+        "instrument_type": "Gas Sensor",
+        "node": "lagar) [baltanas-gas-151810-2]"
+       },
+       {
+        "instrument_id": 52,
+        "card": "air_quality",
+        "instrument_type": "Gas Sensor",
+        "node": "lagar) [baltanas-gas-151810-3]"
+       },
+       {
+        "instrument_id": 62,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "151810"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9383833,
+      "lon": -4.2438389,
+      "height": 797.22,
+      "label": "Cellar 88 - Chimney 1",
+      "instruments": [
+       {
+        "instrument_id": 53,
+        "card": "gnss",
+        "instrument_type": "GNSS Sensor",
+        "node": "168762"
+       },
+       {
+        "instrument_id": 132,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "82e0d400-784e-11f0-9283-e956b63ef652"
+       }
+      ],
+      "flags": [
+       "position_from_sibling_sensor"
+      ]
+     },
+     {
+      "lat": 41.9383972,
+      "lon": -4.2437889,
+      "height": 797.26,
+      "label": "Cellar 88 - Outside",
+      "instruments": [
+       {
+        "instrument_id": 54,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "7347939-h"
+       },
+       {
+        "instrument_id": 63,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "7347939-t"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384111,
+      "lon": -4.2438306,
+      "height": 797.36,
+      "label": "Cellar 88 - Kitchen",
+      "instruments": [
+       {
+        "instrument_id": 55,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "13280523-h"
+       },
+       {
+        "instrument_id": 64,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "13280523-t"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.938425,
+      "lon": -4.2438583,
+      "height": 797.46,
+      "label": "Cellar 88 - Sisa",
+      "instruments": [
+       {
+        "instrument_id": 56,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "7348424-h"
+       },
+       {
+        "instrument_id": 65,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "7348424-t"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384444,
+      "lon": -4.2438,
+      "height": 797.49,
+      "label": "Cellar 88 - Lagar",
+      "instruments": [
+       {
+        "instrument_id": 57,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "13280278-h"
+       },
+       {
+        "instrument_id": 66,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "13280278-t"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9385333,
+      "lon": -4.2432917,
+      "height": 797.09,
+      "label": "Cellar 193 - Entry",
+      "instruments": [
+       {
+        "instrument_id": 58,
+        "card": "airflow",
+        "instrument_type": "Pir-Airflow Sensor",
+        "node": "a8610a3230467704"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384028,
+      "lon": -4.2438278,
+      "height": 797.32,
+      "label": "Cellar 88 - Kitchen",
+      "instruments": [
+       {
+        "instrument_id": 59,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "115666"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384833,
+      "lon": -4.2438333,
+      "height": 797.75,
+      "label": "Cellar 88 - Paso1",
+      "instruments": [
+       {
+        "instrument_id": 60,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "1-149265"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384556,
+      "lon": -4.2438389,
+      "height": 797.61,
+      "label": "Cellar 88 - Nicho 1 de Sisa2",
+      "instruments": [
+       {
+        "instrument_id": 61,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "2-177322"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384806,
+      "lon": -4.2438361,
+      "height": 797.75,
+      "label": "Cellar 88 - Paso1",
+      "instruments": [
+       {
+        "instrument_id": 67,
+        "card": "soil_moisture",
+        "instrument_type": "Water Potential Sensor",
+        "node": "wp1-130432"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9384528,
+      "lon": -4.2438444,
+      "height": 797.6,
+      "label": "Cellar 88 - Nicho 1 de Sisa2",
+      "instruments": [
+       {
+        "instrument_id": 68,
+        "card": "soil_moisture",
+        "instrument_type": "Water Potential Sensor",
+        "node": "wp2-130314"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 41.9390972,
+      "lon": -4.2465806,
+      "height": 789.85,
+      "label": "Outside - Church tower",
+      "instruments": [
+       {
+        "instrument_id": 69,
+        "card": "weather_station",
+        "instrument_type": "Weather Station Sensor",
+        "node": "2cf7f1c073400212"
+       }
+      ],
+      "flags": []
+     }
+    ],
+    "unplaced": [
+     {
+      "instrument_id": 133,
+      "card": "humidity",
+      "instrument_type": "Humidity Sensor",
+      "node": "shellyht-caae03",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 134,
+      "card": "temperature",
+      "instrument_type": "Temperature Sensor",
+      "node": "shellyht-caae03",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 136,
+      "card": "humidity",
+      "instrument_type": "Humidity Sensor",
+      "node": "shellyht-6b6dee",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 137,
+      "card": "temperature",
+      "instrument_type": "Temperature Sensor",
+      "node": "shellyht-6b6dee",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 138,
+      "card": "temperature",
+      "instrument_type": "Temperature Sensor",
+      "node": "shellydw2-aab1ac",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 139,
+      "card": "vibration",
+      "instrument_type": "Vibration Sensor",
+      "node": "shellydw2-aab1ac",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 140,
+      "card": "light_uv",
+      "instrument_type": "Lux Meter Sensor",
+      "node": "shellydw2-aab1ac",
+      "reason": "coordinates unavailable"
+     },
+     {
+      "instrument_id": 141,
+      "card": "tiltmeter",
+      "instrument_type": "Tiltmeter Sensor",
+      "node": "shellydw2-aab1ac",
+      "reason": "coordinates unavailable"
+     }
+    ]
+   },
+   "alarms": [],
+   "alarm_funnel": {
+    "records": 36,
+    "unique": 27,
+    "usable": 0,
+    "featured": 0,
+    "excluded": {
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 6,
+     "AI alarm with no clear main signal (top contribution below 30%)": 21
+    },
+    "by_rule": {
+     "(DL, no rule)": 36
+    }
+   },
+   "discussion_prompts": [
+    {
+     "en": "ARGUS put 7 thermometers and 6 humidity sensors in the cellars. Why so many underground?",
+     "el": "Το ARGUS έβαλε στα κελάρια 7 θερμόμετρα και 6 αισθητήρες υγρασίας. Γιατί τόσοι πολλοί κάτω από τη γη;",
+     "needs_review": true,
+     "review_note": "Counts from the ARGUS installed instruments for Baltanas.",
+     "authored": true
+    },
+    {
+     "en": "A cellar that nobody visits can flood without anyone seeing it. What would you do to find out in time?",
+     "el": "Ένα κελάρι που δεν το επισκέπτεται κανείς μπορεί να πλημμυρίσει χωρίς να το δει κανείς. Τι θα έκανες για να το μάθεις έγκαιρα;",
+     "needs_review": false,
+     "authored": true
+    },
+    {
+     "en": "Here the artificial intelligence raised alarms, but we could not tell why. Should people trust an alarm they cannot explain?",
+     "el": "Εδώ η τεχνητή νοημοσύνη σήμανε συναγερμούς, αλλά δεν μπορέσαμε να καταλάβουμε γιατί. Πρέπει οι άνθρωποι να εμπιστεύονται έναν συναγερμό που δεν μπορούν να εξηγήσουν;",
+     "needs_review": false,
+     "authored": true
+    }
+   ],
+   "no_alarm_note": {
+    "en": "At Baltanás, ARGUS alarms come from an artificial-intelligence model. In the data we have, most of them have no clear cause, and when one signal does stand out, it is the wind, which tells us nothing about the cellars. So here there is no real alarm to replay.",
+    "el": "Στη Μπαλτανάς, οι συναγερμοί του ARGUS προέρχονται από ένα μοντέλο τεχνητής νοημοσύνης. Στα δεδομένα που έχουμε, οι περισσότεροι δεν έχουν καθαρή αιτία, κι όταν ένα σήμα ξεχωρίζει, είναι ο αέρας, που δεν μας λέει τίποτα για τα κελάρια. Γι' αυτό εδώ δεν υπάρχει πραγματικός συναγερμός να ξαναζήσουμε.",
+    "needs_review": true,
+    "review_note": "27 distinct AI alarms in the sample. 21 have no feature with a 30% share or more; the other 6 are driven by wind direction or wind speed, which the game does not map to a danger.",
+    "authored": true
+   },
    "backdrop": null
   },
   {
@@ -1164,7 +4502,7 @@
    "country": "Italy",
    "asset_type": "Heritage Site",
    "source_url": "https://www.argus-project.eu/pilot-site3-monti-lucretili",
-   "playable": false,
+   "playable": true,
    "scenario_count": 19,
    "levels": [
     {
@@ -1183,19 +4521,40 @@
      "key": "High priority",
      "id": "high",
      "scenario_count": 2,
-     "available": true
+     "available": true,
+     "mission": [
+      "lucretili-villa-orazio.abandonment.structures",
+      "lucretili-villa-orazio.forest-management.structures",
+      "lucretili-montefalco.earthquake.castle"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "lucretili:R7_wind:2026-09-07T08:30:00"
     },
     {
      "key": "Extreme priority",
      "id": "extreme",
      "scenario_count": 13,
-     "available": true
+     "available": true,
+     "mission": [
+      "lucretili-conventillo.subsidence.site",
+      "lucretili-conventillo.relative-humidity.mural-paintings",
+      "lucretili-conventillo.uv.mural-paintings"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "lucretili:R2a_tilt_step:2026-08-31T20:30:00"
     },
     {
      "key": "Catastrophic priority",
      "id": "catastrophic",
      "scenario_count": 4,
-     "available": true
+     "available": true,
+     "mission": [
+      "lucretili-conventillo.landslide.site",
+      "lucretili-montefalco.abandonment.castle",
+      "lucretili-landscape.dissociation.dry-stone-walls"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "lucretili:R2a_tilt_step:2026-08-31T20:30:00"
     }
    ],
    "installed_summary": {
@@ -1227,6 +4586,1786 @@
     "en": "Near Rome, Italy",
     "el": "Κοντά στη Ρώμη, Ιταλία"
    },
+   "story": {
+    "hook_scenario": "lucretili-conventillo.landslide.site",
+    "text": {
+     "en": "Monti Lucretili are hills near Rome. Spread over them are the villa of the Roman poet Horace, Montefalco Castle, the Sant'Angelo al Morra complex carved into the rock with medieval wall paintings, and old dry-stone walls. Experts say the biggest danger here is the ground itself: slopes that slide.",
+     "el": "Τα Όρη Λουκρετίλι είναι λόφοι κοντά στη Ρώμη. Πάνω τους βρίσκονται η έπαυλη του Ρωμαίου ποιητή Οράτιου, το κάστρο Montefalco, το συγκρότημα Sant'Angelo al Morra σκαμμένο στον βράχο με μεσαιωνικές τοιχογραφίες, και παλιές ξερολιθιές. Οι ειδικοί λένε ότι ο μεγαλύτερος κίνδυνος εδώ είναι το ίδιο το έδαφος: πλαγιές που γλιστράνε."
+    },
+    "needs_review": true,
+    "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).",
+    "authored": true
+   },
+   "budget": 8,
+   "scenarios": [
+    {
+     "threat_id": 27,
+     "scenario_key": "lucretili-conventillo.landslide.site",
+     "risk_category": "physical_forces",
+     "description": "Landslide or gravitational slope movement affecting the complex",
+     "heritage_asset": "Sant’Angelo al Morra complex",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 13.5
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Physical Forces / Landslide"
+     },
+     "plain": {
+      "title": {
+       "en": "Landslide at Sant'Angelo al Morra",
+       "el": "Κατολίσθηση στο Sant'Angelo al Morra"
+      },
+      "text": {
+       "en": "The slope can slide downhill and drag with it the Sant'Angelo al Morra complex, which is carved into the rock.",
+       "el": "Η πλαγιά μπορεί να γλιστρήσει προς τα κάτω και να παρασύρει το συγκρότημα Sant'Angelo al Morra, που είναι σκαμμένο μέσα στον βράχο."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 41,
+     "scenario_key": "lucretili-landscape.landslide.dry-stone-walls",
+     "risk_category": "physical_forces",
+     "description": "Landslide and slope movement affecting dry-stone walls",
+     "heritage_asset": "Dry-stone walls in Monti Lucretili",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 13.5
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC RiskAssessment_Muretti_a_secco.docx",
+      "section": "Physical Forces / Landslide"
+     },
+     "plain": {
+      "title": {
+       "en": "Landslide and dry-stone walls",
+       "el": "Κατολίσθηση στις ξερολιθιές"
+      },
+      "text": {
+       "en": "Dry-stone walls are built from stones alone, with no mortar. When the slope slides, they lean and fall.",
+       "el": "Οι ξερολιθιές χτίζονται μόνο με πέτρες, χωρίς λάσπη. Όταν η πλαγιά γλιστράει, γέρνουν και γκρεμίζονται."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 43,
+     "scenario_key": "lucretili-landscape.dissociation.dry-stone-walls",
+     "risk_category": "dissociation",
+     "description": "Loss of dry-stone wall knowledge and fabric through abandonment",
+     "heritage_asset": "Dry-stone walls in Monti Lucretili",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 13.5
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC RiskAssessment_Muretti_a_secco.docx",
+      "section": "Dissociation / Anthropogenic risks"
+     },
+     "plain": {
+      "title": {
+       "en": "The skill of dry-stone walling is fading",
+       "el": "Χάνεται η τέχνη της ξερολιθιάς"
+      },
+      "text": {
+       "en": "When nobody builds or repairs dry-stone walls any more, the knowledge of how to do it is lost, and the walls fall apart.",
+       "el": "Όταν κανείς δεν χτίζει ούτε επισκευάζει πια ξερολιθιές, χάνεται και η γνώση για το πώς γίνονται, και οι τοίχοι ρημάζουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [],
+     "primary_cards": [],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 26,
+     "scenario_key": "lucretili-conventillo.subsidence.site",
+     "risk_category": "physical_forces",
+     "description": "Subsidence affecting the rock-cut building and cave complex",
+     "heritage_asset": "Sant’Angelo al Morra complex",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Physical Forces / Subsidence"
+     },
+     "plain": {
+      "title": {
+       "en": "The ground sinks under the rock complex",
+       "el": "Το έδαφος βουλιάζει κάτω από το συγκρότημα"
+      },
+      "text": {
+       "en": "The ground under the building and its caves can slowly sink, and the walls crack.",
+       "el": "Το έδαφος κάτω από το κτίριο και τις σπηλιές του μπορεί να βουλιάζει σιγά σιγά, και οι τοίχοι ραγίζουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 29,
+     "scenario_key": "lucretili-conventillo.dissociation.site",
+     "risk_category": "dissociation",
+     "description": "Abandonment, absence of maintenance and loss of local knowledge",
+     "heritage_asset": "Sant’Angelo al Morra complex",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Dissociation / Anthropogenic risks"
+     },
+     "plain": {
+      "title": {
+       "en": "Abandonment of Sant'Angelo al Morra",
+       "el": "Εγκατάλειψη του Sant'Angelo al Morra"
+      },
+      "text": {
+       "en": "When a place is abandoned, nobody looks after it and people forget its story.",
+       "el": "Όταν ένα μέρος εγκαταλείπεται, κανείς δεν το φροντίζει και οι άνθρωποι ξεχνούν την ιστορία του."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer"
+     ],
+     "primary_cards": [
+      "observer"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 35,
+     "scenario_key": "lucretili-montefalco.subsidence.castle",
+     "risk_category": "physical_forces",
+     "description": "Subsidence affecting standing castle walls",
+     "heritage_asset": "Montefalco Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.5,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Montefalco Castle.docx",
+      "section": "Physical Forces / Subsidence"
+     },
+     "plain": {
+      "title": {
+       "en": "The castle walls sink",
+       "el": "Βουλιάζουν τα τείχη του κάστρου"
+      },
+      "text": {
+       "en": "If the ground under Montefalco Castle sinks, its standing walls crack and lean.",
+       "el": "Αν το έδαφος κάτω από το κάστρο Montefalco βουλιάξει, οι τοίχοι που στέκουν ακόμα ραγίζουν και γέρνουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 38,
+     "scenario_key": "lucretili-montefalco.abandonment.castle",
+     "risk_category": "dissociation",
+     "description": "Abandonment, absence of maintenance and loss of memory",
+     "heritage_asset": "Montefalco Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.5,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Catastrophic priority",
+     "level": "catastrophic",
+     "source": {
+      "document": "ABC RiskAssessment_Montefalco Castle.docx",
+      "section": "Anthropogenic risks"
+     },
+     "plain": {
+      "title": {
+       "en": "A forgotten castle",
+       "el": "Ένα κάστρο που ξεχνιέται"
+      },
+      "text": {
+       "en": "Without visitors or care, the castle is slowly forgotten and small damage is never repaired.",
+       "el": "Χωρίς επισκέπτες και φροντίδα, το κάστρο ξεχνιέται σιγά σιγά και οι μικρές ζημιές δεν επισκευάζονται ποτέ."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer"
+     ],
+     "primary_cards": [
+      "observer"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 40,
+     "scenario_key": "lucretili-landscape.subsidence.dry-stone-walls",
+     "risk_category": "physical_forces",
+     "description": "Subsidence affecting historic dry-stone walls",
+     "heritage_asset": "Dry-stone walls in Monti Lucretili",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.5,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Muretti_a_secco.docx",
+      "section": "Physical Forces / Subsidence"
+     },
+     "plain": {
+      "title": {
+       "en": "Dry-stone walls sink",
+       "el": "Βουλιάζουν οι ξερολιθιές"
+      },
+      "text": {
+       "en": "When the ground under a dry-stone wall sinks, the stones shift and the wall bulges.",
+       "el": "Όταν το έδαφος κάτω από μια ξερολιθιά βουλιάζει, οι πέτρες μετακινούνται και ο τοίχος φουσκώνει."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 31,
+     "scenario_key": "lucretili-conventillo.relative-humidity.mural-paintings",
+     "risk_category": "incorrect_relative_humidity",
+     "description": "Mould and fungal deterioration caused by persistently high relative humidity",
+     "heritage_asset": "Medieval mural paintings",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 4.5,
+      "c": 3.0,
+      "mr": 12.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Incorrect RH / Relative Humidity"
+     },
+     "plain": {
+      "title": {
+       "en": "Mould on the wall paintings",
+       "el": "Μούχλα στις τοιχογραφίες"
+      },
+      "text": {
+       "en": "When the air stays very damp for a long time, mould grows on the medieval wall paintings.",
+       "el": "Όταν ο αέρας μένει πολύ υγρός για πολύ καιρό, φυτρώνει μούχλα πάνω στις μεσαιωνικές τοιχογραφίες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "humidity"
+     ],
+     "primary_cards": [
+      "humidity"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 36,
+     "scenario_key": "lucretili-montefalco.landslide.castle",
+     "risk_category": "physical_forces",
+     "description": "Landslide or gravitational slope movement affecting the castle",
+     "heritage_asset": "Montefalco Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.5,
+      "c": 4.5,
+      "mr": 12.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Montefalco Castle.docx",
+      "section": "Physical Forces / Landslide"
+     },
+     "plain": {
+      "title": {
+       "en": "Landslide under the castle",
+       "el": "Κατολίσθηση κάτω από το κάστρο"
+      },
+      "text": {
+       "en": "The hillside under Montefalco Castle can slide and take parts of the castle with it.",
+       "el": "Η πλαγιά κάτω από το κάστρο Montefalco μπορεί να γλιστρήσει και να πάρει μαζί της κομμάτια του κάστρου."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 37,
+     "scenario_key": "lucretili-montefalco.earthquake.castle",
+     "risk_category": "physical_forces",
+     "description": "Severe earthquake affecting standing castle walls",
+     "heritage_asset": "Montefalco Castle",
+     "status": "active",
+     "abc": {
+      "a": 2.5,
+      "b": 5.0,
+      "c": 5.0,
+      "mr": 12.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Montefalco Castle.docx",
+      "section": "Physical Forces / Earthquake"
+     },
+     "plain": {
+      "title": {
+       "en": "Earthquake at the castle",
+       "el": "Σεισμός στο κάστρο"
+      },
+      "text": {
+       "en": "A strong earthquake can shake down the castle walls that are still standing.",
+       "el": "Ένας δυνατός σεισμός μπορεί να ρίξει τους τοίχους του κάστρου που στέκουν ακόμα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 39,
+     "scenario_key": "lucretili-montefalco.forest-management.castle",
+     "risk_category": "dissociation",
+     "description": "Loss of accessibility and visibility caused by deficient forest management",
+     "heritage_asset": "External walls of Montefalco Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 5.0,
+      "c": 4.0,
+      "mr": 12.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Montefalco Castle.docx",
+      "section": "Deficient forest management"
+     },
+     "plain": {
+      "title": {
+       "en": "The forest hides the castle",
+       "el": "Το δάσος κρύβει το κάστρο"
+      },
+      "text": {
+       "en": "When nobody looks after the forest, trees and bushes cover the castle, so people can no longer reach or even see it.",
+       "el": "Όταν κανείς δεν φροντίζει το δάσος, δέντρα και θάμνοι σκεπάζουν το κάστρο και οι άνθρωποι δεν μπορούν πια να φτάσουν ούτε καν να το δουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer",
+      "satellite",
+      "camera"
+     ],
+     "primary_cards": [
+      "observer",
+      "satellite"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 28,
+     "scenario_key": "lucretili-conventillo.earthquake.site",
+     "risk_category": "physical_forces",
+     "description": "Severe earthquake affecting the external and internal complex",
+     "heritage_asset": "Sant’Angelo al Morra complex",
+     "status": "active",
+     "abc": {
+      "a": 2.5,
+      "b": 4.0,
+      "c": 5.0,
+      "mr": 11.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Physical Forces / Earthquake"
+     },
+     "plain": {
+      "title": {
+       "en": "Earthquake at Sant'Angelo al Morra",
+       "el": "Σεισμός στο Sant'Angelo al Morra"
+      },
+      "text": {
+       "en": "A strong earthquake can damage the complex inside and out.",
+       "el": "Ένας δυνατός σεισμός μπορεί να προκαλέσει ζημιές στο συγκρότημα, μέσα και έξω."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 30,
+     "scenario_key": "lucretili-conventillo.forest-management.site",
+     "risk_category": "dissociation",
+     "description": "Deterioration caused by a deficient or absent forest management plan",
+     "heritage_asset": "External parts of Sant’Angelo al Morra",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.0,
+      "c": 4.0,
+      "mr": 11.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Dissociation / Deficient forest management"
+     },
+     "plain": {
+      "title": {
+       "en": "Trees and bushes with no care",
+       "el": "Δέντρα και θάμνοι χωρίς φροντίδα"
+      },
+      "text": {
+       "en": "Without a plan for the forest around it, plants grow over the outside of the complex and damage it.",
+       "el": "Χωρίς σχέδιο για το δάσος γύρω του, τα φυτά απλώνονται πάνω στο συγκρότημα και του κάνουν ζημιά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer",
+      "satellite",
+      "camera"
+     ],
+     "primary_cards": [
+      "observer",
+      "satellite"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 32,
+     "scenario_key": "lucretili-conventillo.uv.mural-paintings",
+     "risk_category": "light_uv",
+     "description": "Fading of exposed mural paintings caused by solar and UV radiation",
+     "heritage_asset": "Medieval mural paintings",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 4.5,
+      "c": 2.0,
+      "mr": 11.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssesment_Conventillo.docx",
+      "section": "Light / UV / Solar radiation"
+     },
+     "plain": {
+      "title": {
+       "en": "Sunlight fades the paintings",
+       "el": "Ο ήλιος ξεθωριάζει τις τοιχογραφίες"
+      },
+      "text": {
+       "en": "Wall paintings that the sun reaches slowly lose their colours.",
+       "el": "Οι τοιχογραφίες που τις βλέπει ο ήλιος χάνουν σιγά σιγά τα χρώματά τους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "light_uv"
+     ],
+     "primary_cards": [
+      "light_uv"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 42,
+     "scenario_key": "lucretili-landscape.earthquake.dry-stone-walls",
+     "risk_category": "physical_forces",
+     "description": "Earthquake damage to dry-stone walls",
+     "heritage_asset": "Dry-stone walls in Monti Lucretili",
+     "status": "active",
+     "abc": {
+      "a": 2.5,
+      "b": 4.0,
+      "c": 5.0,
+      "mr": 11.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Muretti_a_secco.docx",
+      "section": "Physical Forces / Earthquake"
+     },
+     "plain": {
+      "title": {
+       "en": "Earthquake and dry-stone walls",
+       "el": "Σεισμός στις ξερολιθιές"
+      },
+      "text": {
+       "en": "With no mortar holding them, the stones of a dry-stone wall can fall in an earthquake.",
+       "el": "Χωρίς λάσπη να τις κρατάει, οι πέτρες μιας ξερολιθιάς μπορεί να πέσουν σε έναν σεισμό."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 44,
+     "scenario_key": "lucretili-landscape.forest-management.dry-stone-walls",
+     "risk_category": "dissociation",
+     "description": "Structural damage from roots and invasive vegetation",
+     "heritage_asset": "Dry-stone walls in wooded areas",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.0,
+      "c": 4.0,
+      "mr": 11.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC RiskAssessment_Muretti_a_secco.docx",
+      "section": "Deficient forest management"
+     },
+     "plain": {
+      "title": {
+       "en": "Roots inside the walls",
+       "el": "Ρίζες μέσα στις ξερολιθιές"
+      },
+      "text": {
+       "en": "In the woods, roots grow between the stones and push them apart.",
+       "el": "Μέσα στο δάσος, οι ρίζες μεγαλώνουν ανάμεσα στις πέτρες και τις σπρώχνουν να ανοίξουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer",
+      "satellite",
+      "camera"
+     ],
+     "primary_cards": [
+      "observer",
+      "satellite"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 33,
+     "scenario_key": "lucretili-villa-orazio.abandonment.structures",
+     "risk_category": "dissociation",
+     "description": "Deterioration caused by abandonment and absence of maintenance",
+     "heritage_asset": "Walls and structures of Horace’s Roman villa",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 4.0,
+      "c": 4.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC RiskAssessment Horace Roman villa.docx",
+      "section": "Anthropogenic risks"
+     },
+     "plain": {
+      "title": {
+       "en": "Abandonment of Horace's villa",
+       "el": "Εγκατάλειψη της έπαυλης του Οράτιου"
+      },
+      "text": {
+       "en": "If nobody looks after the walls of the Roman villa, small damage grows year by year.",
+       "el": "Αν κανείς δεν φροντίζει τους τοίχους της ρωμαϊκής έπαυλης, οι μικρές ζημιές μεγαλώνουν χρόνο με τον χρόνο."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer"
+     ],
+     "primary_cards": [
+      "observer"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 34,
+     "scenario_key": "lucretili-villa-orazio.forest-management.structures",
+     "risk_category": "dissociation",
+     "description": "Structural deterioration caused by deficient vegetation management",
+     "heritage_asset": "Entire structure of Horace’s Roman villa",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 3.0,
+      "c": 5.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC RiskAssessment Horace Roman villa.docx",
+      "section": "Deficient forest management"
+     },
+     "plain": {
+      "title": {
+       "en": "Plants over Horace's villa",
+       "el": "Φυτά πάνω στην έπαυλη του Οράτιου"
+      },
+      "text": {
+       "en": "Plants that nobody cuts back grow over the villa and their roots break its walls.",
+       "el": "Τα φυτά που κανείς δεν κόβει σκεπάζουν την έπαυλη και οι ρίζες τους σπάνε τους τοίχους της."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer",
+      "satellite",
+      "camera"
+     ],
+     "primary_cards": [
+      "observer",
+      "satellite"
+     ],
+     "capable_cards_source": "scenario",
+     "capable_cards_needs_review": true
+    }
+   ],
+   "installed": {
+    "asset_state_ids": [
+     137
+    ],
+    "records": 19,
+    "distinct_instruments": 19,
+    "physical_instruments": 19,
+    "by_card": [
+     {
+      "card": "humidity",
+      "count": 2,
+      "instrument_types": {
+       "Humidity Sensor": 2
+      },
+      "nodes": [
+       "177239",
+       "177281"
+      ]
+     },
+     {
+      "card": "temperature",
+      "count": 1,
+      "instrument_types": {
+       "Temperature Sensor": 1
+      },
+      "nodes": [
+       "177239"
+      ]
+     },
+     {
+      "card": "light_uv",
+      "count": 1,
+      "instrument_types": {
+       "Pyranometer Sensor": 1
+      },
+      "nodes": [
+       "177237"
+      ]
+     },
+     {
+      "card": "rain_gauge",
+      "count": 1,
+      "instrument_types": {
+       "Rain Gauge Sensor": 1
+      },
+      "nodes": [
+       "177281"
+      ]
+     },
+     {
+      "card": "weather_station",
+      "count": 1,
+      "instrument_types": {
+       "Weather Station Sensor": 1
+      },
+      "nodes": [
+       "2cf7f1c072300286"
+      ]
+     },
+     {
+      "card": "crackmeter",
+      "count": 7,
+      "instrument_types": {
+       "Crackmeter Sensor": 7
+      },
+      "nodes": [
+       "174156",
+       "177253",
+       "177266",
+       "177287",
+       "177310",
+       "177320",
+       "177325"
+      ]
+     },
+     {
+      "card": "tiltmeter",
+      "count": 3,
+      "instrument_types": {
+       "Tiltmeter Sensor": 3
+      },
+      "nodes": [
+       "152816",
+       "152931",
+       "153061"
+      ]
+     },
+     {
+      "card": "vibration",
+      "count": 1,
+      "instrument_types": {
+       "Vibration Sensor": 1
+      },
+      "nodes": [
+       "152608"
+      ]
+     },
+     {
+      "card": "visitor_counter",
+      "count": 2,
+      "instrument_types": {
+       "People Counter Sensor": 2
+      },
+      "nodes": [
+       "24e124600e450308",
+       "2cf7f1c062800056"
+      ]
+     }
+    ],
+    "other": [],
+    "duplicate_records": [],
+    "flags": [],
+    "points": [
+     {
+      "lat": 42.0236667,
+      "lon": 12.8273694,
+      "height": 723.76,
+      "label": "Conventillo - Staircase access façade",
+      "instruments": [
+       {
+        "instrument_id": 111,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "177266"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.02365,
+      "lon": 12.8274333,
+      "height": 719.24,
+      "label": "Conventillo - First-storey crack",
+      "instruments": [
+       {
+        "instrument_id": 112,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "177253"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0236972,
+      "lon": 12.8273389,
+      "height": 731.62,
+      "label": "Conventillo - Sensor and logger on the same wall",
+      "instruments": [
+       {
+        "instrument_id": 113,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "177320"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0664556,
+      "lon": 12.9012556,
+      "height": 425.63,
+      "label": "Villa di Orazio - Close to a mosaic",
+      "instruments": [
+       {
+        "instrument_id": 114,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "174156"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0663528,
+      "lon": 12.9013139,
+      "height": 426.1,
+      "label": "Villa di Orazio - Perimetral wall enclosing a mosaic",
+      "instruments": [
+       {
+        "instrument_id": 115,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "177287"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.1012444,
+      "lon": 12.8195556,
+      "height": 896.06,
+      "label": "Montefalco Castle - External wall",
+      "instruments": [
+       {
+        "instrument_id": 116,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "177310"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.1013667,
+      "lon": 12.81965,
+      "height": 894.85,
+      "label": "Montefalco Castle - External wall",
+      "instruments": [
+       {
+        "instrument_id": 117,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "177325"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0236889,
+      "lon": 12.8273806,
+      "height": 730.14,
+      "label": "Conventillo - Main room, second floor",
+      "instruments": [
+       {
+        "instrument_id": 118,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "177239"
+       },
+       {
+        "instrument_id": 123,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "177239"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.1012417,
+      "lon": 12.8196306,
+      "height": 895.55,
+      "label": "Montefalco Castle - Exterior wall pole",
+      "instruments": [
+       {
+        "instrument_id": 119,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "177281"
+       },
+       {
+        "instrument_id": 131,
+        "card": "rain_gauge",
+        "instrument_type": "Rain Gauge Sensor",
+        "node": "177281"
+       }
+      ],
+      "flags": [
+       "position_from_sibling_sensor"
+      ]
+     },
+     {
+      "lat": 42.0236778,
+      "lon": 12.8273639,
+      "height": 726.74,
+      "label": "Conventillo - Main entrance",
+      "instruments": [
+       {
+        "instrument_id": 120,
+        "card": "visitor_counter",
+        "instrument_type": "People Counter Sensor",
+        "node": "2cf7f1c062800056"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0662528,
+      "lon": 12.9015972,
+      "height": 429.69,
+      "label": "Villa di Orazio - Entrance gate pillar",
+      "instruments": [
+       {
+        "instrument_id": 121,
+        "card": "visitor_counter",
+        "instrument_type": "People Counter Sensor",
+        "node": "24e124600e450308"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0663583,
+      "lon": 12.9010833,
+      "height": 424.63,
+      "label": "Villa di Orazio - Gateway pole",
+      "instruments": [
+       {
+        "instrument_id": 122,
+        "card": "light_uv",
+        "instrument_type": "Pyranometer Sensor",
+        "node": "177237"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0236667,
+      "lon": 12.8273667,
+      "height": 723.22,
+      "label": "Conventillo - Staircase access façade",
+      "instruments": [
+       {
+        "instrument_id": 125,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "152931"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0236417,
+      "lon": 12.8274056,
+      "height": 717.33,
+      "label": "Conventillo - First floor, close to a window",
+      "instruments": [
+       {
+        "instrument_id": 126,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "153061"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0236889,
+      "lon": 12.8273583,
+      "height": 729.17,
+      "label": "Conventillo - Third floor, close to a window",
+      "instruments": [
+       {
+        "instrument_id": 127,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "152816"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0236806,
+      "lon": 12.8274167,
+      "height": 727.94,
+      "label": "Montefalco Castle - External wall",
+      "instruments": [
+       {
+        "instrument_id": 128,
+        "card": "vibration",
+        "instrument_type": "Vibration Sensor",
+        "node": "152608"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 42.0663778,
+      "lon": 12.9016056,
+      "height": 429.36,
+      "label": "Villa di Orazio - Gateway pillar",
+      "instruments": [
+       {
+        "instrument_id": 129,
+        "card": "weather_station",
+        "instrument_type": "Weather Station Sensor",
+        "node": "2cf7f1c072300286"
+       }
+      ],
+      "flags": []
+     }
+    ],
+    "unplaced": []
+   },
+   "alarms": [
+    {
+     "id": "lucretili:R4c_hum_rapid_1h:2026-08-30T20:30:00",
+     "event_ids": [
+      54
+     ],
+     "timestamp": "2026-08-30T20:30:00",
+     "type": "EK",
+     "rule": "R4c_hum_rapid_1h",
+     "policy_id": 30,
+     "policy_name": "AD-RT Lucretili policy - humidity rapid change",
+     "threat_name": "AD-RT humidity instability threat",
+     "score": 1.0,
+     "feature_share": null,
+     "variable": "300286_hum1",
+     "value": 2.1667,
+     "threshold": 0.15,
+     "direction": "above",
+     "times_threshold": 14.44,
+     "instruments": [],
+     "quality_flags": [
+      "threshold_differs_from_current_policy"
+     ],
+     "roles": [
+      "first"
+     ],
+     "episode": {
+      "rule": "R4c_hum_rapid_1h",
+      "start": "2026-08-30T20:30:00",
+      "end": "2026-08-31T20:30:00",
+      "alarm_count": 3,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "lucretili-conventillo.relative-humidity.mural-paintings"
+      ],
+      "why": {
+       "en": "The humidity changed very fast within one hour. Sudden changes in damp are hard on wall paintings.",
+       "el": "Η υγρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Οι απότομες αλλαγές στην υγρασία κουράζουν τις τοιχογραφίες."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R4c_hum_rapid_1h:2026-08-31T12:00:00",
+     "event_ids": [
+      66,
+      79,
+      92
+     ],
+     "timestamp": "2026-08-31T12:00:00",
+     "type": "EK",
+     "rule": "R4c_hum_rapid_1h",
+     "policy_id": 30,
+     "policy_name": "AD-RT Lucretili policy - humidity rapid change",
+     "threat_name": "AD-RT humidity instability threat",
+     "score": 1.0,
+     "feature_share": null,
+     "variable": "300286_hum1",
+     "value": 6.05,
+     "threshold": 0.15,
+     "direction": "above",
+     "times_threshold": 40.33,
+     "instruments": [],
+     "quality_flags": [
+      "threshold_differs_from_current_policy"
+     ],
+     "roles": [
+      "peak"
+     ],
+     "episode": {
+      "rule": "R4c_hum_rapid_1h",
+      "start": "2026-08-30T20:30:00",
+      "end": "2026-08-31T20:30:00",
+      "alarm_count": 3,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "lucretili-conventillo.relative-humidity.mural-paintings"
+      ],
+      "why": {
+       "en": "The humidity changed very fast within one hour. Sudden changes in damp are hard on wall paintings.",
+       "el": "Η υγρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Οι απότομες αλλαγές στην υγρασία κουράζουν τις τοιχογραφίες."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R2a_tilt_step:2026-08-31T20:30:00",
+     "event_ids": [
+      124,
+      130
+     ],
+     "timestamp": "2026-08-31T20:30:00",
+     "type": "EK",
+     "rule": "R2a_tilt_step",
+     "policy_id": 25,
+     "policy_name": "AD-RT Lucretili policy - tilt step",
+     "threat_name": "AD-RT tilt movement threat",
+     "score": 0.5498,
+     "feature_share": null,
+     "variable": "152816_conv_tilt3_y",
+     "value": 0.84,
+     "threshold": 0.7,
+     "direction": "above",
+     "times_threshold": 1.2,
+     "instruments": [
+      {
+       "instrument_id": 127,
+       "name": "Installed Instrument Tiltmeter - 152816 (Conventillo - Third floor, close to a window)",
+       "instrument_type": "Tiltmeter Sensor",
+       "card": "tiltmeter",
+       "lat": 42.0236889,
+       "lon": 12.8273583
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2a_tilt_step",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-08-31T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "lucretili-conventillo.landslide.site",
+       "lucretili-conventillo.subsidence.site",
+       "lucretili-conventillo.earthquake.site"
+      ],
+      "why": {
+       "en": "A wall of Sant'Angelo al Morra suddenly changed how it leans. On a slope that can slide or sink, a wall that starts to lean is an early warning.",
+       "el": "Ένας τοίχος του Sant'Angelo al Morra άλλαξε απότομα κλίση. Σε μια πλαγιά που μπορεί να γλιστρήσει ή να βουλιάξει, ένας τοίχος που αρχίζει να γέρνει είναι μια πρώτη προειδοποίηση."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R9b_temp_st:2026-08-31T20:30:00",
+     "event_ids": [
+      109,
+      122,
+      126,
+      132
+     ],
+     "timestamp": "2026-08-31T20:30:00",
+     "type": "EK",
+     "rule": "R9b_temp_st",
+     "policy_id": 37,
+     "policy_name": "AD-RT Lucretili policy - rapid temperature change",
+     "threat_name": "AD-RT temperature instability threat",
+     "score": 0.7238,
+     "feature_share": null,
+     "variable": "300286_temp1",
+     "value": 9.816,
+     "threshold": 5.0,
+     "direction": "above",
+     "times_threshold": 1.96,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak"
+     ],
+     "episode": {
+      "rule": "R9b_temp_st",
+      "start": "2026-08-31T20:30:00",
+      "end": "2026-09-02T08:30:00",
+      "alarm_count": 2,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [],
+      "why": {
+       "en": "The temperature changed very fast within one hour. Quick heating and cooling make stone and plaster expand and shrink.",
+       "el": "Η θερμοκρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Το γρήγορο ζέσταμα και κρύωμα κάνει την πέτρα και τον σοβά να διαστέλλονται και να συστέλλονται."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R4c_hum_rapid_1h:2026-08-31T20:30:00",
+     "event_ids": [
+      107,
+      120
+     ],
+     "timestamp": "2026-08-31T20:30:00",
+     "type": "EK",
+     "rule": "R4c_hum_rapid_1h",
+     "policy_id": 30,
+     "policy_name": "AD-RT Lucretili policy - humidity rapid change",
+     "threat_name": "AD-RT humidity instability threat",
+     "score": 1.0,
+     "feature_share": null,
+     "variable": "300286_hum1",
+     "value": 2.6667,
+     "threshold": 0.15,
+     "direction": "above",
+     "times_threshold": 17.78,
+     "instruments": [],
+     "quality_flags": [
+      "threshold_differs_from_current_policy"
+     ],
+     "roles": [
+      "last"
+     ],
+     "episode": {
+      "rule": "R4c_hum_rapid_1h",
+      "start": "2026-08-30T20:30:00",
+      "end": "2026-08-31T20:30:00",
+      "alarm_count": 3,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "lucretili-conventillo.relative-humidity.mural-paintings"
+      ],
+      "why": {
+       "en": "The humidity changed very fast within one hour. Sudden changes in damp are hard on wall paintings.",
+       "el": "Η υγρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Οι απότομες αλλαγές στην υγρασία κουράζουν τις τοιχογραφίες."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R7_wind:2026-09-07T08:30:00",
+     "event_ids": [
+      184
+     ],
+     "timestamp": "2026-09-07T08:30:00",
+     "type": "EK",
+     "rule": "R7_wind",
+     "policy_id": 34,
+     "policy_name": "AD-RT Lucretili policy - wind peak ratio",
+     "threat_name": "AD-RT wind threat",
+     "score": 0.502,
+     "feature_share": null,
+     "variable": "300286_wind_peak_1",
+     "value": 6.0485,
+     "threshold": 6.0,
+     "direction": "above",
+     "times_threshold": 1.01,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R7_wind",
+      "start": "2026-09-07T08:30:00",
+      "end": "2026-09-07T08:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "lucretili-villa-orazio.forest-management.structures",
+       "lucretili-villa-orazio.abandonment.structures"
+      ],
+      "why": {
+       "en": "Strong gusts hit Horace's villa. Wind can bring down branches and trees that nobody has cut back onto the old walls.",
+       "el": "Δυνατές ριπές ανέμου χτύπησαν την έπαυλη του Οράτιου. Ο αέρας μπορεί να ρίξει πάνω στους παλιούς τοίχους κλαδιά και δέντρα που κανείς δεν έχει κόψει."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R9b_temp_st:2026-09-08T15:00:00",
+     "event_ids": [
+      202
+     ],
+     "timestamp": "2026-09-08T15:00:00",
+     "type": "EK",
+     "rule": "R9b_temp_st",
+     "policy_id": 37,
+     "policy_name": "AD-RT Lucretili policy - rapid temperature change",
+     "threat_name": "AD-RT temperature instability threat",
+     "score": 0.6624,
+     "feature_share": null,
+     "variable": "300286_temp1",
+     "value": 8.3702,
+     "threshold": 5.0,
+     "direction": "above",
+     "times_threshold": 1.67,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak"
+     ],
+     "episode": {
+      "rule": "R9b_temp_st",
+      "start": "2026-09-08T15:00:00",
+      "end": "2026-09-10T20:30:00",
+      "alarm_count": 3,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [],
+      "why": {
+       "en": "The temperature changed very fast within one hour. Quick heating and cooling make stone and plaster expand and shrink.",
+       "el": "Η θερμοκρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Το γρήγορο ζέσταμα και κρύωμα κάνει την πέτρα και τον σοβά να διαστέλλονται και να συστέλλονται."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R8_baro:2026-09-11T20:30:00",
+     "event_ids": [
+      267
+     ],
+     "timestamp": "2026-09-11T20:30:00",
+     "type": "EK",
+     "rule": "R8_baro",
+     "policy_id": 35,
+     "policy_name": "AD-RT Lucretili policy - barometer range",
+     "threat_name": "AD-RT pressure instability threat",
+     "score": 0.5069,
+     "feature_share": null,
+     "variable": "300286_baro",
+     "value": 308.3333,
+     "threshold": 300.0,
+     "direction": "above",
+     "times_threshold": 1.03,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R8_baro",
+      "start": "2026-09-11T20:30:00",
+      "end": "2026-09-11T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [],
+      "why": {
+       "en": "The air pressure changed a lot, which often comes before a storm.",
+       "el": "Η πίεση του αέρα άλλαξε πολύ, κάτι που συχνά έρχεται πριν από μια καταιγίδα."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R8_baro:2026-09-22T20:30:00",
+     "event_ids": [
+      679
+     ],
+     "timestamp": "2026-09-22T20:30:00",
+     "type": "EK",
+     "rule": "R8_baro",
+     "policy_id": 35,
+     "policy_name": "AD-RT Lucretili policy - barometer range",
+     "threat_name": "AD-RT pressure instability threat",
+     "score": 0.62,
+     "feature_share": null,
+     "variable": "300286_baro",
+     "value": 446.9048,
+     "threshold": 300.0,
+     "direction": "above",
+     "times_threshold": 1.49,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R8_baro",
+      "start": "2026-09-22T20:30:00",
+      "end": "2026-09-22T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [],
+      "why": {
+       "en": "The air pressure changed a lot, which often comes before a storm.",
+       "el": "Η πίεση του αέρα άλλαξε πολύ, κάτι που συχνά έρχεται πριν από μια καταιγίδα."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R9b_temp_st:2026-09-24T20:30:00",
+     "event_ids": [
+      766
+     ],
+     "timestamp": "2026-09-24T20:30:00",
+     "type": "EK",
+     "rule": "R9b_temp_st",
+     "policy_id": 37,
+     "policy_name": "AD-RT Lucretili policy - rapid temperature change",
+     "threat_name": "AD-RT temperature instability threat",
+     "score": 0.611,
+     "feature_share": null,
+     "variable": "300286_temp1",
+     "value": 7.2579,
+     "threshold": 5.0,
+     "direction": "above",
+     "times_threshold": 1.45,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R9b_temp_st",
+      "start": "2026-09-24T20:30:00",
+      "end": "2026-09-24T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [],
+      "why": {
+       "en": "The temperature changed very fast within one hour. Quick heating and cooling make stone and plaster expand and shrink.",
+       "el": "Η θερμοκρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Το γρήγορο ζέσταμα και κρύωμα κάνει την πέτρα και τον σοβά να διαστέλλονται και να συστέλλονται."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    }
+   ],
+   "alarm_funnel": {
+    "records": 125,
+    "unique": 87,
+    "usable": 13,
+    "featured": 10,
+    "excluded": {
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 7,
+     "AI alarm with no clear main signal (top contribution below 30%)": 7,
+     "implausible temperature value (outside -50 to 60)": 18,
+     "implausible value for R9a_temp_lt (outside 0 to 30)": 14,
+     "implausible value for R9b_temp_st (outside 0 to 10)": 6,
+     "not exactly one variable": 22
+    },
+    "by_rule": {
+     "(DL, no rule)": 17,
+     "R1a_crack_step": 7,
+     "R1b_crack_offset": 7,
+     "R2a_tilt_step": 10,
+     "R2b_tilt_offset": 7,
+     "R4a_hum_spike_6h": 7,
+     "R4c_hum_rapid_1h": 7,
+     "R7_wind": 1,
+     "R8_baro": 2,
+     "R9a_temp_lt": 42,
+     "R9b_temp_st": 18
+    }
+   },
+   "discussion_prompts": [
+    {
+     "en": "The sites here are kilometres apart: Horace's villa, the castle and the rock complex. How would you share a few sensors over such a big area?",
+     "el": "Τα μνημεία εδώ απέχουν χιλιόμετρα μεταξύ τους: η έπαυλη του Οράτιου, το κάστρο και το συγκρότημα στον βράχο. Πώς θα μοίραζες λίγους αισθητήρες σε τόσο μεγάλη περιοχή;",
+     "needs_review": true,
+     "review_note": "ARGUS sensor positions: Sant'Angelo al Morra about 42.024, 12.827 and Horace's villa about 42.066, 12.902, roughly 7 km apart.",
+     "authored": true
+    },
+    {
+     "en": "Many dangers here are about abandonment and forgotten skills. No sensor measures those. What can local people and visitors do?",
+     "el": "Πολλοί κίνδυνοι εδώ έχουν να κάνουν με την εγκατάλειψη και με γνώσεις που ξεχνιούνται. Κανένας αισθητήρας δεν τα μετράει αυτά. Τι μπορούν να κάνουν οι κάτοικοι και οι επισκέπτες;",
+     "needs_review": false,
+     "authored": true
+    },
+    {
+     "en": "Dry-stone walls are built with stones only, no mortar. Do you know anyone who still knows how to build one?",
+     "el": "Οι ξερολιθιές χτίζονται μόνο με πέτρες, χωρίς λάσπη. Ξέρεις κάποιον που ξέρει ακόμα να χτίζει ξερολιθιά;",
+     "needs_review": false,
+     "authored": true
+    }
+   ],
    "backdrop": null
   },
   {
@@ -2894,6 +8033,7 @@
      "policy_name": "AD-RT Ranverso policy - soil moisture low",
      "threat_name": "AD-RT soil moisture threat",
      "score": 0.8917,
+     "feature_share": null,
      "variable": "26680f_moisture",
      "value": 2.472,
      "threshold": 5.0,
@@ -2947,6 +8087,7 @@
      "policy_name": "AD-RT Ranverso policy - rainfall 7d",
      "threat_name": "AD-RT rainfall threat",
      "score": 0.9775,
+     "feature_share": null,
      "variable": "177315_out_rain",
      "value": 95.426,
      "threshold": 20.0,
@@ -3003,6 +8144,7 @@
      "policy_name": "AD-RT Ranverso policy - soil moisture low",
      "threat_name": "AD-RT soil moisture threat",
      "score": 0.8915,
+     "feature_share": null,
      "variable": "26680f_moisture",
      "value": 2.4574,
      "threshold": 5.0,
@@ -3057,6 +8199,7 @@
      "policy_name": "AD-RT Ranverso policy - rainfall 7d",
      "threat_name": "AD-RT rainfall threat",
      "score": 0.714,
+     "feature_share": null,
      "variable": "177315_out_rain",
      "value": 38.3,
      "threshold": 20.0,
@@ -3110,6 +8253,7 @@
      "policy_name": "AD-RT Ranverso policy - soil moisture low",
      "threat_name": "AD-RT soil moisture threat",
      "score": 0.9821,
+     "feature_share": null,
      "variable": "26680f_moisture",
      "value": 2.4677,
      "threshold": 5.0,
@@ -3158,7 +8302,7 @@
     "usable": 32,
     "featured": 5,
     "excluded": {
-     "deep-learning alarm without a rule (not mappable to a sensor)": 12,
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 12,
      "implausible humidity value (outside 0 to 100)": 28,
      "soil_moisture value exactly 0 (probable sensor dropout)": 1
     },
@@ -3206,32 +8350,60 @@
    "country": "Switzerland",
    "asset_type": "Monument",
    "source_url": "https://www.argus-project.eu/pilot-site5-schenkenberg-castle",
-   "playable": false,
+   "playable": true,
    "scenario_count": 11,
    "levels": [
     {
      "key": "Low priority",
      "id": "low",
      "scenario_count": 2,
-     "available": true
+     "available": true,
+     "mission": [
+      "schenkenberg.vandalism.graffiti",
+      "schenkenberg.fire.small-30y",
+      "schenkenberg.air-pollution.surfaces"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00"
     },
     {
      "key": "Medium priority",
      "id": "medium",
      "scenario_count": 1,
-     "available": true
+     "available": true,
+     "mission": [
+      "schenkenberg.air-pollution.surfaces",
+      "schenkenberg.plant-growth.treated-annually",
+      "schenkenberg.wind-storm.walls"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00"
     },
     {
      "key": "High priority",
      "id": "high",
      "scenario_count": 2,
-     "available": true
+     "available": true,
+     "mission": [
+      "schenkenberg.fire.large-100y",
+      "schenkenberg.wind-storm.walls",
+      "schenkenberg.temperature-variation.walls"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00"
     },
     {
      "key": "Extreme priority",
      "id": "extreme",
      "scenario_count": 6,
-     "available": true
+     "available": true,
+     "mission": [
+      "schenkenberg.plant-growth.untreated-30y",
+      "schenkenberg.freeze-thaw.masonry",
+      "schenkenberg.earthquake.475y"
+     ],
+     "mission_source": "curated",
+     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00"
     },
     {
      "key": "Catastrophic priority",
@@ -3269,6 +8441,1001 @@
     "en": "Aargau, Switzerland",
     "el": "Αργκάου, Ελβετία"
    },
+   "story": {
+    "hook_scenario": "schenkenberg.plant-growth.untreated-30y",
+    "text": {
+     "en": "Schenkenberg Castle is the ruin of a medieval castle on a hill in Switzerland. Its walls and towers stand on their own, with no roof, open to the weather. Experts say one of the biggest dangers is something small: plants that grow between the stones.",
+     "el": "Το κάστρο Σένκενμπεργκ είναι τα ερείπια ενός μεσαιωνικού κάστρου πάνω σε έναν λόφο στην Ελβετία. Οι τοίχοι και οι πύργοι του στέκουν μόνοι τους, χωρίς στέγη, εκτεθειμένοι στον καιρό. Οι ειδικοί λένε ότι ένας από τους μεγαλύτερους κινδύνους είναι κάτι μικρό: τα φυτά που φυτρώνουν ανάμεσα στις πέτρες."
+    },
+    "needs_review": true,
+    "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.",
+    "authored": true
+   },
+   "budget": 8,
+   "scenarios": [
+    {
+     "threat_id": 45,
+     "scenario_key": "schenkenberg.plant-growth.untreated-30y",
+     "risk_category": "plant_growth",
+     "description": "Plant growth left untreated between major conservation events",
+     "heritage_asset": "Schenkenberg Castle ruins",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.5,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Plant growth / Scenario 1"
+     },
+     "plain": {
+      "title": {
+       "en": "Plants nobody cuts back",
+       "el": "Φυτά που κανείς δεν κόβει"
+      },
+      "text": {
+       "en": "If plants are left alone for many years, their roots get into the joints between the stones and push them apart.",
+       "el": "Αν τα φυτά μείνουν ανέγγιχτα για πολλά χρόνια, οι ρίζες τους μπαίνουν στους αρμούς ανάμεσα στις πέτρες και τις σπρώχνουν να ανοίξουν."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "camera",
+      "satellite",
+      "observer",
+      "soil_moisture",
+      "humidity"
+     ],
+     "primary_cards": [
+      "camera",
+      "satellite",
+      "observer"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 48,
+     "scenario_key": "schenkenberg.freeze-thaw.masonry",
+     "risk_category": "freeze_thaw",
+     "description": "Cumulative freeze-thaw damage in water-bearing masonry discontinuities",
+     "heritage_asset": "Exposed masonry walls",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.5,
+      "c": 5.0,
+      "mr": 13.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Freeze-thaw cycles"
+     },
+     "plain": {
+      "title": {
+       "en": "Ice in the cracks",
+       "el": "Πάγος στις ρωγμές"
+      },
+      "text": {
+       "en": "Water gets into cracks in the walls, freezes at night and swells. Every winter the cracks grow a little more.",
+       "el": "Το νερό μπαίνει στις ρωγμές των τοίχων, παγώνει τη νύχτα και φουσκώνει. Κάθε χειμώνα οι ρωγμές μεγαλώνουν λίγο ακόμα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "humidity",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 46,
+     "scenario_key": "schenkenberg.plant-growth.treated-3y",
+     "risk_category": "plant_growth",
+     "description": "Plant growth treated every three years",
+     "heritage_asset": "Schenkenberg Castle ruins",
+     "status": "active",
+     "abc": {
+      "a": 4.5,
+      "b": 3.0,
+      "c": 5.0,
+      "mr": 12.5
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Plant growth / Scenario 2"
+     },
+     "plain": {
+      "title": {
+       "en": "Plants cut back every three years",
+       "el": "Φυτά που κόβονται κάθε τρία χρόνια"
+      },
+      "text": {
+       "en": "Even when plants are cleared every three years, they grow back in between and keep damaging the walls a little.",
+       "el": "Ακόμα κι όταν τα φυτά καθαρίζονται κάθε τρία χρόνια, ξαναφυτρώνουν στο ενδιάμεσο και συνεχίζουν να φθείρουν λίγο τους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "camera",
+      "satellite",
+      "observer",
+      "soil_moisture",
+      "humidity"
+     ],
+     "primary_cards": [
+      "camera",
+      "satellite",
+      "observer"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 47,
+     "scenario_key": "schenkenberg.plant-growth.treated-annually",
+     "risk_category": "plant_growth",
+     "description": "Plant growth treated annually",
+     "heritage_asset": "Schenkenberg Castle ruins",
+     "status": "active",
+     "abc": {
+      "a": 5.0,
+      "b": 2.0,
+      "c": 5.0,
+      "mr": 12.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Plant growth / Scenario 3"
+     },
+     "plain": {
+      "title": {
+       "en": "Plants cut back every year",
+       "el": "Φυτά που κόβονται κάθε χρόνο"
+      },
+      "text": {
+       "en": "Clearing plants every year keeps their roots small, but it takes steady work.",
+       "el": "Όταν τα φυτά καθαρίζονται κάθε χρόνο, οι ρίζες τους μένουν μικρές, αλλά χρειάζεται σταθερή δουλειά."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "camera",
+      "satellite",
+      "observer",
+      "soil_moisture",
+      "humidity"
+     ],
+     "primary_cards": [
+      "camera",
+      "satellite",
+      "observer"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 49,
+     "scenario_key": "schenkenberg.temperature-variation.walls",
+     "risk_category": "temperature",
+     "description": "Cumulative damage caused by extreme temperature variation",
+     "heritage_asset": "Free-standing walls and towers",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 4.0,
+      "c": 4.5,
+      "mr": 12.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "High-low temperature"
+     },
+     "plain": {
+      "title": {
+       "en": "Heat and cold",
+       "el": "Ζέστη και κρύο"
+      },
+      "text": {
+       "en": "Walls and towers with no roof heat up in the sun and cool at night. Over the years, this slowly breaks the stone.",
+       "el": "Οι τοίχοι και οι πύργοι χωρίς στέγη ζεσταίνονται στον ήλιο και κρυώνουν τη νύχτα. Με τα χρόνια, αυτό σπάει σιγά σιγά την πέτρα."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "primary_cards": [
+      "temperature",
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 50,
+     "scenario_key": "schenkenberg.earthquake.475y",
+     "risk_category": "physical_forces",
+     "description": "Earthquake with a 475-year return period",
+     "heritage_asset": "Free-standing walls of Schenkenberg Castle",
+     "status": "active",
+     "abc": {
+      "a": 2.5,
+      "b": 5.0,
+      "c": 4.5,
+      "mr": 12.0
+     },
+     "priority_label": "Extreme priority",
+     "level": "extreme",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Earthquake"
+     },
+     "plain": {
+      "title": {
+       "en": "A big earthquake",
+       "el": "Ένας μεγάλος σεισμός"
+      },
+      "text": {
+       "en": "A very strong earthquake, the kind expected about once every 475 years, could bring down free-standing walls.",
+       "el": "Ένας πολύ δυνατός σεισμός, από αυτούς που περιμένουμε περίπου μία φορά στα 475 χρόνια, θα μπορούσε να ρίξει τους τοίχους που στέκουν μόνοι τους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss",
+      "observer"
+     ],
+     "primary_cards": [
+      "crackmeter",
+      "tiltmeter",
+      "vibration",
+      "gnss"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 53,
+     "scenario_key": "schenkenberg.fire.large-100y",
+     "risk_category": "fire",
+     "description": "Large fire event every 100 years",
+     "heritage_asset": "Schenkenberg Castle",
+     "status": "draft",
+     "abc": {
+      "a": 3.0,
+      "b": 4.0,
+      "c": 5.0,
+      "mr": 12.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Fires / Scenario 2"
+     },
+     "plain": {
+      "title": {
+       "en": "A large fire",
+       "el": "Μεγάλη φωτιά"
+      },
+      "text": {
+       "en": "A large fire, the kind expected about once a century, would crack and blacken the stones.",
+       "el": "Μια μεγάλη φωτιά, από αυτές που περιμένουμε περίπου μία φορά στα εκατό χρόνια, θα ράγιζε και θα μαύριζε τις πέτρες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "satellite",
+      "temperature"
+     ],
+     "primary_cards": [
+      "satellite"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 51,
+     "scenario_key": "schenkenberg.wind-storm.walls",
+     "risk_category": "wind_storm",
+     "description": "Wind or storm damage to free-standing walls",
+     "heritage_asset": "Free-standing walls of Schenkenberg Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.0,
+      "b": 4.0,
+      "c": 4.0,
+      "mr": 11.0
+     },
+     "priority_label": "High priority",
+     "level": "high",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Wind loads / storm"
+     },
+     "plain": {
+      "title": {
+       "en": "Storm winds",
+       "el": "Θύελλα"
+      },
+      "text": {
+       "en": "Strong storm winds push hard against tall walls that stand on their own.",
+       "el": "Οι δυνατοί άνεμοι μιας θύελλας σπρώχνουν με δύναμη τους ψηλούς τοίχους που στέκουν μόνοι τους."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "weather_station"
+     ],
+     "primary_cards": [
+      "weather_station"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 54,
+     "scenario_key": "schenkenberg.air-pollution.surfaces",
+     "risk_category": "air_pollution",
+     "description": "Accumulated air-pollution effects between conservation events",
+     "heritage_asset": "Wall surfaces of Schenkenberg Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 2.5,
+      "c": 2.0,
+      "mr": 8.0
+     },
+     "priority_label": "Medium priority",
+     "level": "medium",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Air pollution"
+     },
+     "plain": {
+      "title": {
+       "en": "Pollution on the stones",
+       "el": "Ρύπανση στις πέτρες"
+      },
+      "text": {
+       "en": "Dirty air leaves dark crusts on the walls and slowly eats into the stone between two restorations.",
+       "el": "Ο βρόμικος αέρας αφήνει μαύρες κρούστες στους τοίχους και διαβρώνει σιγά σιγά την πέτρα ανάμεσα σε δύο συντηρήσεις."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "air_quality"
+     ],
+     "primary_cards": [
+      "air_quality"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": false
+    },
+    {
+     "threat_id": 55,
+     "scenario_key": "schenkenberg.vandalism.graffiti",
+     "risk_category": "vandalism",
+     "description": "Local damage and graffiti accumulated over 30 years",
+     "heritage_asset": "Schenkenberg Castle ruins",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 2.0,
+      "c": 1.0,
+      "mr": 6.5
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Vandalism"
+     },
+     "plain": {
+      "title": {
+       "en": "Graffiti and small damage",
+       "el": "Γκράφιτι και μικρές ζημιές"
+      },
+      "text": {
+       "en": "Over many years, graffiti, scratches and stones taken away add up.",
+       "el": "Με τα χρόνια, τα γκράφιτι, οι χαρακιές και οι πέτρες που παίρνει κάποιος μαζί του αθροίζονται."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "observer",
+      "visitor_counter",
+      "camera"
+     ],
+     "primary_cards": [
+      "observer"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    },
+    {
+     "threat_id": 52,
+     "scenario_key": "schenkenberg.fire.small-30y",
+     "risk_category": "fire",
+     "description": "Small fire event every 30 years",
+     "heritage_asset": "Stone surfaces of Schenkenberg Castle",
+     "status": "active",
+     "abc": {
+      "a": 3.5,
+      "b": 1.0,
+      "c": 1.0,
+      "mr": 5.5
+     },
+     "priority_label": "Low priority",
+     "level": "low",
+     "source": {
+      "document": "ABC_Risk_assessment_Swiss_pilot.docx",
+      "section": "Fires / Scenario 1"
+     },
+     "plain": {
+      "title": {
+       "en": "A small fire",
+       "el": "Μικρή φωτιά"
+      },
+      "text": {
+       "en": "A small fire, the kind expected about once every 30 years, can scorch the stone surfaces.",
+       "el": "Μια μικρή φωτιά, από αυτές που περιμένουμε περίπου μία φορά στα 30 χρόνια, μπορεί να καψαλίσει τις πέτρινες επιφάνειες."
+      },
+      "authored": true,
+      "needs_review": true
+     },
+     "capable_cards": [
+      "satellite",
+      "temperature"
+     ],
+     "primary_cards": [
+      "satellite"
+     ],
+     "capable_cards_source": "category",
+     "capable_cards_needs_review": true
+    }
+   ],
+   "installed": {
+    "asset_state_ids": [
+     138
+    ],
+    "records": 9,
+    "distinct_instruments": 9,
+    "physical_instruments": 9,
+    "by_card": [
+     {
+      "card": "weather_station",
+      "count": 1,
+      "instrument_types": {
+       "Weather Station Sensor": 1
+      },
+      "nodes": [
+       "2cf7f1c072300226"
+      ]
+     },
+     {
+      "card": "crackmeter",
+      "count": 1,
+      "instrument_types": {
+       "Crackmeter Sensor": 1
+      },
+      "nodes": [
+       "149796"
+      ]
+     },
+     {
+      "card": "tiltmeter",
+      "count": 2,
+      "instrument_types": {
+       "Tiltmeter Sensor": 2
+      },
+      "nodes": [
+       "152899",
+       "152914"
+      ]
+     },
+     {
+      "card": "vibration",
+      "count": 4,
+      "instrument_types": {
+       "Accelerometer Sensor": 4
+      },
+      "nodes": [
+       "152479",
+       "152555",
+       "159070",
+       "175480"
+      ]
+     }
+    ],
+    "other": [
+     {
+      "instrument_type": "Composite sensor 2 Sensor",
+      "count": 1
+     }
+    ],
+    "duplicate_records": [],
+    "flags": [],
+    "points": [
+     {
+      "lat": 47.4421417,
+      "lon": 8.1010194,
+      "height": 640.99,
+      "label": "Schenkenberg tower - North wall",
+      "instruments": [
+       {
+        "instrument_id": 70,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "159070"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.4421528,
+      "lon": 8.1010778,
+      "height": 643.52,
+      "label": "Schenkenberg tower - North wall",
+      "instruments": [
+       {
+        "instrument_id": 71,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "152555"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.4421194,
+      "lon": 8.1010583,
+      "height": 643.18,
+      "label": "Schenkenberg tower - South wall",
+      "instruments": [
+       {
+        "instrument_id": 72,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "152479"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.442125,
+      "lon": 8.1010167,
+      "height": 642.77,
+      "label": "Schenkenberg tower - South wall",
+      "instruments": [
+       {
+        "instrument_id": 73,
+        "card": "vibration",
+        "instrument_type": "Accelerometer Sensor",
+        "node": "175480"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.4421306,
+      "lon": 8.1010444,
+      "height": 637.9,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 75,
+        "card": null,
+        "instrument_type": "Composite sensor 2 Sensor",
+        "node": "2cf7f1c072600345"
+       },
+       {
+        "instrument_id": 76,
+        "card": "crackmeter",
+        "instrument_type": "Crackmeter Sensor",
+        "node": "149796"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.4421417,
+      "lon": 8.101025,
+      "height": 643.53,
+      "label": "North face",
+      "instruments": [
+       {
+        "instrument_id": 77,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "152914"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.4421222,
+      "lon": 8.1010694,
+      "height": 642.68,
+      "label": "South face",
+      "instruments": [
+       {
+        "instrument_id": 78,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "152899"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 47.4421194,
+      "lon": 8.1010528,
+      "height": 646.02,
+      "label": "Top of the tower",
+      "instruments": [
+       {
+        "instrument_id": 79,
+        "card": "weather_station",
+        "instrument_type": "Weather Station Sensor",
+        "node": "2cf7f1c072300226"
+       }
+      ],
+      "flags": []
+     }
+    ],
+    "unplaced": []
+   },
+   "alarms": [
+    {
+     "id": "schenkenberg:R2_crack_step:2026-08-28T09:00:00",
+     "event_ids": [
+      32,
+      45
+     ],
+     "timestamp": "2026-08-28T09:00:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.9932,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.0299,
+     "threshold": 0.005,
+     "direction": "above",
+     "times_threshold": 5.98,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [
+      "threshold_differs_from_current_policy"
+     ],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-08-28T09:00:00",
+      "end": "2026-08-28T09:00:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "schenkenberg:R2_crack_step:2026-08-30T20:30:00",
+     "event_ids": [
+      57
+     ],
+     "timestamp": "2026-08-30T20:30:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.9549,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.0203,
+     "threshold": 0.005,
+     "direction": "above",
+     "times_threshold": 4.06,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [
+      "threshold_differs_from_current_policy"
+     ],
+     "roles": [
+      "first",
+      "peak"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-08-30T20:30:00",
+      "end": "2026-08-31T20:30:00",
+      "alarm_count": 3,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "schenkenberg:R2_crack_step:2026-08-31T20:30:00",
+     "event_ids": [
+      98,
+      111
+     ],
+     "timestamp": "2026-08-31T20:30:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.9017,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.0161,
+     "threshold": 0.005,
+     "direction": "above",
+     "times_threshold": 3.22,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [
+      "threshold_differs_from_current_policy"
+     ],
+     "roles": [
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-08-30T20:30:00",
+      "end": "2026-08-31T20:30:00",
+      "alarm_count": 3,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00",
+     "event_ids": [
+      425
+     ],
+     "timestamp": "2026-09-16T20:30:00",
+     "type": "EK",
+     "rule": "R3_vib_zscore",
+     "policy_id": 46,
+     "policy_name": "AD-RT Schenkenberg policy - vibration z-score",
+     "threat_name": "AD-RT vibration threat",
+     "score": 0.5671,
+     "feature_share": null,
+     "variable": "152555_acc2_pgax",
+     "value": 5.7159,
+     "threshold": 4.5,
+     "direction": "above",
+     "times_threshold": 1.27,
+     "instruments": [
+      {
+       "instrument_id": 71,
+       "name": "Installed Instrument Accelerometer - 152555 (Schenkenberg tower - North wall)",
+       "instrument_type": "Accelerometer Sensor",
+       "card": "vibration",
+       "lat": 47.4421528,
+       "lon": 8.1010778
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R3_vib_zscore",
+      "start": "2026-09-16T20:30:00",
+      "end": "2026-09-16T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.wind-storm.walls",
+       "schenkenberg.earthquake.475y"
+      ],
+      "why": {
+       "en": "A wall shook much more than usual. Tall walls standing on their own shake in strong wind and in earthquakes.",
+       "el": "Ένας τοίχος τράνταξε πολύ περισσότερο από το συνηθισμένο. Οι ψηλοί τοίχοι που στέκουν μόνοι τους τρέμουν με τον δυνατό αέρα και με τους σεισμούς."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "schenkenberg:R2_crack_step:2026-09-20T20:30:00",
+     "event_ids": [
+      608
+     ],
+     "timestamp": "2026-09-20T20:30:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.9771,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.4753,
+     "threshold": 0.1,
+     "direction": "above",
+     "times_threshold": 4.75,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-09-20T20:30:00",
+      "end": "2026-09-20T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    }
+   ],
+   "alarm_funnel": {
+    "records": 11,
+    "unique": 7,
+    "usable": 6,
+    "featured": 5,
+    "excluded": {
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 1
+    },
+    "by_rule": {
+     "(DL, no rule)": 1,
+     "R2_crack_step": 9,
+     "R3_vib_zscore": 1
+    }
+   },
+   "discussion_prompts": [
+    {
+     "en": "ARGUS put 4 vibration sensors here but no camera to watch the plants. Why? Who could keep an eye on the plants?",
+     "el": "Το ARGUS έβαλε εδώ 4 αισθητήρες δονήσεων αλλά καμία κάμερα για τα φυτά. Γιατί; Ποιος θα μπορούσε να προσέχει τα φυτά;",
+     "needs_review": true,
+     "review_note": "Counts from the ARGUS installed instruments (4 in the vibration card: vibration and accelerometer sensors; no camera).",
+     "authored": true
+    },
+    {
+     "en": "Experts scored plants cut back every year, every three years, and never. All three are high risk, but the risk is lower when plants are cleared more often. What does that tell us about regular care?",
+     "el": "Οι ειδικοί βαθμολόγησαν τα φυτά που κόβονται κάθε χρόνο, κάθε τρία χρόνια και ποτέ. Και τα τρία είναι υψηλός κίνδυνος, αλλά ο κίνδυνος μικραίνει όσο πιο συχνά καθαρίζονται. Τι μας λέει αυτό για την τακτική φροντίδα;",
+     "needs_review": true,
+     "review_note": "ABC magnitudes 12.0 (annually), 12.5 (every 3 years), 13.0 (untreated), all Extreme.",
+     "authored": true
+    },
+    {
+     "en": "A crack opened suddenly on 20 September 2026. What would you want to check first if you were the castle's guardian?",
+     "el": "Μια ρωγμή άνοιξε απότομα στις 20 Σεπτεμβρίου 2026. Τι θα ήθελες να ελέγξεις πρώτα αν ήσουν ο φύλακας του κάστρου;",
+     "needs_review": false,
+     "authored": true
+    }
+   ],
    "backdrop": null
   }
  ]

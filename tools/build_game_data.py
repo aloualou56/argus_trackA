@@ -64,6 +64,9 @@ ZERO_IS_SUSPECT = {"humidity", "soil_moisture"}
 EPISODE_GAP = dt.timedelta(hours=48)
 # Spread below this fraction of the mean marks an episode's signal as flat.
 FLAT_SIGNAL_SPREAD = 0.02
+# An AI (deep-learning) alarm is used only when one signal clearly drives it: its share of the
+# model's top feature contributions must reach this, and content maps that signal to a card.
+DL_MIN_SHARE = 0.3
 MIN_FEATURED_ALARMS = 5
 MAX_FEATURED_ALARMS = 10
 
@@ -252,6 +255,7 @@ class Content:
                 self.type_to_card[type_name] = card["id"]
         self.unmapped_types = set(raw["cards"].get("unmapped_instrument_types", {}).get("types", []))
         self.rules = raw["rule_map"]["rules"]
+        self.dl_features = raw["rule_map"].get("dl_features", {}).get("patterns", [])
         self.threat_categories = raw["threat_map"]["categories"]
         self.threat_scenarios = raw["threat_map"]["scenarios"]
         self.monuments = raw["monuments"]
@@ -390,6 +394,16 @@ def build_installed(snap: Snapshot, content: Content, asset_id: int) -> Dict[str
     }
 
 
+def dl_rule(content: Content, alarm: Dict[str, Any]) -> Tuple[Optional[str], Optional[str], float]:
+    """(pseudo-rule, main feature, its share) for an AI alarm, from content's dl_features patterns."""
+    features = alarm.get("top_feature_contributions") or {}
+    if not features:
+        return None, None, 0.0
+    name = max(features, key=features.get)
+    rule = next((p["rule"] for p in content.dl_features if re.search(p["match"], name)), None)
+    return rule, name, float(features[name])
+
+
 def primary_card(rule_entry: Dict[str, Any]) -> Optional[str]:
     groups = rule_entry.get("detect_with") or []
     return groups[0][0] if groups and groups[0] else None
@@ -419,7 +433,8 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
     for e, m in sorted(site_alarms, key=lambda x: x[0]["id"]):
         a = m["alarm"]
         variables = a.get("variables") or []
-        key = (a.get("type"), a.get("rule"), a.get("timestamp"), tuple(v.get("name") for v in variables))
+        names = tuple(v.get("name") for v in variables) or tuple(sorted(a.get("top_feature_contributions") or {}))
+        key = (a.get("type"), a.get("rule"), a.get("timestamp"), names)
         if key in unique:
             unique[key]["event_ids"].append(e["id"])
             if [v.get("value") for v in variables] != [v.get("value") for v in unique[key]["alarm"].get("variables") or []]:
@@ -435,14 +450,26 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
     for item in unique.values():
         a = item["alarm"]
         rule = a.get("rule")
-        if a.get("type") != "EK" or not rule:
-            excluded["deep-learning alarm without a rule (not mappable to a sensor)"] += 1
+        feature_share = None
+        if a.get("type") == "DL":
+            # AI alarms have no rule: use the signal that drove the decision, if it is clear and mapped.
+            rule, feature, feature_share = dl_rule(content, a)
+            if feature is None or feature_share < DL_MIN_SHARE:
+                excluded[f"AI alarm with no clear main signal (top contribution below {DL_MIN_SHARE:.0%})"] += 1
+                continue
+            if rule is None:
+                excluded["AI alarm whose main signal is not mapped to a card (e.g. wind direction)"] += 1
+                continue
+            variables = [{"name": feature, "value": a.get("score"), "threshold": a.get("threshold")}]
+        elif not rule:
+            excluded["expert-rule alarm without a rule name"] += 1
             continue
+        else:
+            variables = a.get("variables") or []
         entry = content.rule(pilot, rule)
         if entry is None:
             excluded["rule not in content/rule_sensor_map.json"] += 1
             continue
-        variables = a.get("variables") or []
         if len(variables) != 1:
             excluded["not exactly one variable"] += 1
             continue
@@ -452,9 +479,15 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
             excluded["missing value or threshold"] += 1
             continue
         card = primary_card(entry)
-        lo_hi = PLAUSIBLE_RANGES.get(card)
+        # An AI alarm's value is the model's anomaly score, not a physical quantity.
+        lo_hi = PLAUSIBLE_RANGES.get(card) if a.get("type") == "EK" else None
         if lo_hi and not (lo_hi[0] <= value <= lo_hi[1]):
             excluded[f"implausible {card} value (outside {lo_hi[0]:g} to {lo_hi[1]:g})"] += 1
+            continue
+        # A rule can narrow the range further when it measures a derived quantity (e.g. a daily range).
+        rule_range = entry.get("plausible")
+        if rule_range and not (rule_range[0] <= value <= rule_range[1]):
+            excluded[f"implausible value for {rule} (outside {rule_range[0]:g} to {rule_range[1]:g})"] += 1
             continue
         if card in ZERO_IS_SUSPECT and value == 0:
             excluded[f"{card} value exactly 0 (probable sensor dropout)"] += 1
@@ -476,6 +509,7 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
             "policy_name": a.get("policy_name"),
             "threat_name": a.get("threat_name"),
             "score": round_or_none(a.get("score")),
+            "feature_share": round_or_none(feature_share, 3),
             "variable": var.get("name"),
             "value": round_or_none(value),
             "threshold": round_or_none(threshold),
@@ -585,7 +619,14 @@ def resolve_featured(alarms: List[Dict[str, Any]], spec: Optional[Dict[str, Any]
         return None
     if spec:
         for alarm in alarms:
-            if alarm["rule"] == spec.get("rule") and spec.get("pick", "peak") in alarm["roles"]:
+            if alarm["rule"] != spec.get("rule"):
+                continue
+            # "at" names one alarm exactly (a rule can have several episodes); otherwise the first with the role.
+            if "at" in spec:
+                matches = alarm["timestamp"] == spec["at"]
+            else:
+                matches = spec.get("pick", "peak") in alarm["roles"]
+            if matches:
                 return alarm["id"]
     peaks = sorted((a for a in alarms if "peak" in a["roles"]), key=lambda a: -(a["times_threshold"] or 0))
     return (peaks or alarms)[0]["id"]
@@ -660,6 +701,8 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         "alarm_funnel": {k: funnel[k] for k in ("records", "unique", "usable", "featured", "excluded", "by_rule")},
         "discussion_prompts": [dict(p, authored=True) for p in pack.get("discussion_prompts", [])],
     })
+    if pack.get("no_alarm_note"):
+        entry["no_alarm_note"] = dict(pack["no_alarm_note"], authored=True)
     return entry, stats
 
 
@@ -1016,8 +1059,15 @@ DATA_QUIRKS = [
     "of 142; we do not use them.",
     "Ranverso soil-moisture alarms stay between 2.457 and 2.476 for three weeks (possible stuck sensor); the first "
     "one (28 Aug) has value 0.0 with threshold 0.5 while the current policy threshold is 5.",
-    "Delos and Baltanas alarms in the sample are all deep-learning (DL) alarms without rule names, so the "
-    "rule-to-sensor check cannot be used there yet.",
+    "Delos and Baltanas alarms in the sample are all deep-learning (AI) alarms without rule names. At Delos, 26 "
+    "of 33 distinct AI alarms are driven mainly (30 to 55% of the top feature contributions) by soil moisture "
+    "sensor 149368 under the Theatrical Masks mosaic (Room 215, House of the Masks), daily from 31 Aug to 24 Sep; "
+    "the other 7 by wind direction or one humidity sensor. At Baltanas, 21 of 27 have no signal with a 30% share; "
+    "the other 6 are driven by wind.",
+    "Lucretili temperature alarms: R9a_temp_lt (daily temperature range) has values of 55 to 60 against a limit "
+    "of 15 to 20 and R9b_temp_st (one-hour change) values up to 57, which are not physically plausible; most are "
+    "excluded by the per-rule ranges in content/rule_sensor_map.json. Its crack and tilt-offset alarms carry six "
+    "sensors each (normalised values), so they are not replayed.",
     "Units are not part of the alarm data.",
     "Ranverso scenario 'evidence' lists are empty ('left empty until AD-RT/EOP observability is configured'), so "
     "there is no official link between Ranverso scenarios and sensors or rules.",
@@ -1038,6 +1088,9 @@ DESIGN_ASSUMPTIONS = [
     "The human-observer card stands for regular visual inspection by people. It helps with threats people can see "
     "(pests, mould, vandalism, new cracks) but never detects an AD-RT alarm, and it is left out of the ARGUS "
     "comparison because ARGUS lists instruments only.",
+    "AI alarms: used only when one signal accounts for at least 30% of the model's top feature contributions and "
+    "content/rule_sensor_map.json maps that signal (dl_features) to a pseudo-rule such as DL_soil_moisture. The "
+    "game then shows the main signal and its share, not the anomaly score against its limit.",
     "Detection: the player's network detects an alarm if, for every group in the rule's detect_with, it has at "
     "least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level "
     "without a usable alarm (e.g. DL-only sites) skips the replay with a short message.",
