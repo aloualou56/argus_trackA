@@ -1,6 +1,19 @@
 // Pure game rules. No React, no DOM: everything here is unit-tested in tests/logic.test.ts.
 // The scoring and detection rules are game-design assumptions listed in docs/data_notes.md.
-import type { Alarm, Card, GameData, Level, LevelId, Monument, Picks, RuleEntry, Scenario } from "./types";
+import type {
+  Alarm,
+  Card,
+  GameData,
+  LatLng,
+  Level,
+  LevelId,
+  MapPoint,
+  Monument,
+  Picks,
+  Placement,
+  RuleEntry,
+  Scenario,
+} from "./types";
 
 export const COVERAGE_POINTS_PER_THREAT = 25;
 export const EFFICIENCY_POINTS = 25;
@@ -159,17 +172,20 @@ export function compareMix(mon: Monument, picks: Picks): MixRow[] {
     .sort((a, b) => b.argus - a.argus || b.player - a.player || a.card.localeCompare(b.card));
 }
 
-export type PromptKind = "many" | "onlyYou" | "onlyArgus";
+export type PromptKind = "many" | "onlyYou" | "onlyArgus" | "distance";
 
 export interface AutoPrompt {
   kind: PromptKind;
   card: string;
+  /** A count, or metres for "distance". */
   n: number;
 }
 
 /** Up to one discussion prompt of each kind, built from the differences. Never a penalty. */
-export function autoPrompts(rows: MixRow[]): AutoPrompt[] {
+export function autoPrompts(rows: MixRow[], distances: Map<string, number> = new Map()): AutoPrompt[] {
   const out: AutoPrompt[] = [];
+  const near = rows.find((r) => distances.has(r.card));
+  if (near) out.push({ kind: "distance", card: near.card, n: Math.round(distances.get(near.card)!) });
   const many = rows.find((r) => r.argus >= 2 && r.player < r.argus);
   if (many) out.push({ kind: "many", card: many.card, n: many.argus });
   const onlyYou = rows.find((r) => r.player > 0 && r.argus === 0);
@@ -177,4 +193,80 @@ export function autoPrompts(rows: MixRow[]): AutoPrompt[] {
   const onlyArgus = rows.find((r) => r.argus > 0 && r.player === 0 && r.card !== many?.card);
   if (onlyArgus) out.push({ kind: "onlyArgus", card: onlyArgus.card, n: onlyArgus.argus });
   return out;
+}
+
+// ---------------------------------------------------------------- map
+
+const METRES_PER_DEGREE = 111_320;
+
+export function countPicks(placements: Placement[]): Picks {
+  const picks: Picks = {};
+  for (const p of placements) picks[p.card] = (picks[p.card] ?? 0) + 1;
+  return picks;
+}
+
+/** Ground distance in metres (equirectangular; exact enough within a few km). */
+export function distanceMeters(a: LatLng, b: LatLng): number {
+  const x = (b[1] - a[1]) * Math.cos((((a[0] + b[0]) / 2) * Math.PI) / 180);
+  const y = b[0] - a[0];
+  return Math.hypot(x, y) * METRES_PER_DEGREE;
+}
+
+/** Where a new pin goes: at `base`, or spiralled out a little so pins never hide each other. */
+export function placeNear(base: LatLng, placements: Placement[], spacing = 3.5): LatLng {
+  const pins = placements.filter((p) => p.lat !== null && p.lng !== null).map((p) => [p.lat, p.lng] as LatLng);
+  // Walk out along a sunflower spiral until a spot is at least half a spacing from every pin.
+  for (let k = 0; k < 500; k++) {
+    const r = spacing * Math.sqrt(k);
+    const angle = k * 2.39996; // golden angle
+    const candidate: LatLng = [
+      base[0] + (r * Math.cos(angle)) / METRES_PER_DEGREE,
+      base[1] + (r * Math.sin(angle)) / (METRES_PER_DEGREE * Math.cos((base[0] * Math.PI) / 180)),
+    ];
+    if (pins.every((pin) => distanceMeters(candidate, pin) >= spacing / 2)) return candidate;
+  }
+  return base;
+}
+
+/** Per card: metres from the player's nearest pin to the nearest ARGUS sensor of the same card. */
+export function nearestToArgus(mon: Monument, placements: Placement[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const p of placements) {
+    if (p.lat === null || p.lng === null) continue;
+    for (const point of mon.installed.points) {
+      if (!point.instruments.some((i) => i.card === p.card)) continue;
+      const d = distanceMeters([p.lat, p.lng], [point.lat, point.lon]);
+      if (!out.has(p.card) || d < out.get(p.card)!) out.set(p.card, d);
+    }
+  }
+  return out;
+}
+
+/** Display only: ARGUS points closer than `metres` share one marker (data keeps exact positions). */
+export function clusterPoints(points: MapPoint[], metres = 2.5): MapPoint[] {
+  const clusters: { lat: number; lon: number; members: MapPoint[] }[] = [];
+  for (const p of points) {
+    const near = clusters.find((c) => distanceMeters([c.lat, c.lon], [p.lat, p.lon]) < metres);
+    if (!near) {
+      clusters.push({ lat: p.lat, lon: p.lon, members: [p] });
+      continue;
+    }
+    near.members.push(p);
+    near.lat = near.members.reduce((s, m) => s + m.lat, 0) / near.members.length;
+    near.lon = near.members.reduce((s, m) => s + m.lon, 0) / near.members.length;
+  }
+  return clusters.map((c) => ({
+    lat: c.lat,
+    lon: c.lon,
+    height: null,
+    label: c.members.find((m) => m.label)?.label ?? null,
+    instruments: c.members.flatMap((m) => m.instruments),
+    flags: [...new Set(c.members.flatMap((m) => m.flags))],
+  }));
+}
+
+let nextId = 0;
+export function newPlacementId(): string {
+  nextId += 1;
+  return `p${Date.now().toString(36)}${nextId}`;
 }

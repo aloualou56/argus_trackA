@@ -84,6 +84,7 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
           </strong>
         </p>
         {caughtBy.length > 0 && <p>{t("event.argusCaught", { names: names(caughtBy) })}</p>}
+        {alarm.instruments.some((i) => i.lat !== null) && <p className="small">{t("event.mapNote")}</p>}
       </section>
 
       {alarm.context && (

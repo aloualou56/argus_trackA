@@ -19,6 +19,15 @@
   --no-bg: #fbede3;
   --you: #0072b2; /* Okabe-Ito blue */
   --argus: #d55e00; /* Okabe-Ito vermillion */
+  --argus-pin: #a84300; /* darker vermillion: white numbers on it reach 5.5:1 */
+  --map-height: 42vh;
+  /* drawn plan (OpenStreetMap / Natural Earth outlines) */
+  --plan-water: #c9dbe6;
+  --plan-land: #ece6d8;
+  --plan-green: #dce5ca;
+  --plan-built: #e3dccd;
+  --plan-building: #cfc3ae;
+  --plan-road: #ffffff;
   --focus: #0b57d0;
   --review: #c026d3;
   --radius: 0.75rem;
@@ -35,6 +44,8 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* the sticky map must never hide the element that has focus */
+  scroll-padding-top: calc(var(--map-height) + 0.5rem);
 }
 
 body {
@@ -125,8 +136,6 @@ main:focus {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  max-width: var(--page);
-  margin: 0 auto;
 }
 
 .brand {
@@ -817,6 +826,388 @@ main {
   color: var(--no);
 }
 
+/* ------------------------------------------------------------------ board: map + panel */
+
+.board-map {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px); /* below a phone's status bar when the page runs edge to edge */
+  z-index: 20;
+  height: var(--map-height);
+  min-height: 240px;
+  background: #dde3e8;
+  border-bottom: 2px solid var(--primary);
+}
+.board-map .map {
+  position: absolute;
+  inset: 0;
+}
+.leaflet-container {
+  font: inherit;
+  background: #dde3e8;
+}
+.leaflet-container:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+.leaflet-marker-icon:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 22px;
+}
+.leaflet-control-attribution {
+  font-size: 11px;
+}
+
+.map-switch {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 0.6rem;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+.map-switch button {
+  min-height: 44px;
+  padding: 0 0.8rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+.map-switch button[aria-pressed="true"] {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* lives in its own map pane: above the imagery, below the pins */
+.crosshair {
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  transition: transform 0.18s ease;
+}
+.crosshair svg {
+  display: block;
+  overflow: visible;
+}
+.crosshair g,
+.crosshair circle {
+  fill: none;
+  stroke-linecap: round;
+}
+.reticle-halo {
+  stroke: var(--ink);
+  stroke-opacity: 0.55;
+  stroke-width: 7;
+}
+.reticle-casing {
+  stroke: #fff;
+  stroke-width: 4;
+}
+.crosshair .reticle-ring {
+  stroke: var(--you);
+  stroke-width: 2;
+}
+.crosshair .reticle-dot {
+  fill: var(--you);
+  stroke: #fff;
+  stroke-width: 2;
+  transition: opacity 0.18s ease;
+}
+/* lifts while the map moves, settles when it stops */
+.crosshair.is-moving {
+  transform: scale(1.12);
+}
+.crosshair.is-moving .reticle-dot {
+  opacity: 0.4;
+}
+/* small "drop" when a sensor is placed */
+.crosshair.just-placed {
+  animation: reticle-drop 0.35s ease-out;
+}
+@keyframes reticle-drop {
+  from {
+    transform: scale(0.72);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.crosshair-label {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 38px);
+  z-index: 1000;
+  transform: translateX(-50%);
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px var(--edge), 0 1px 4px rgb(0 0 0 / 0.25);
+}
+
+.map-legend {
+  position: absolute;
+  left: 10px;
+  bottom: 26px;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  background: rgb(255 255 255 / 0.95);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.legend-you,
+.legend-argus {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: -1px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.legend-you {
+  border-radius: 50%;
+  background: var(--you);
+}
+.legend-argus {
+  border-radius: 2px;
+  background: var(--argus-pin);
+}
+.map-notice {
+  position: absolute;
+  top: 62px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: min(18rem, calc(100% - 80px));
+  padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+  border: 1px solid var(--edge);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.map-notice p {
+  margin: 0;
+}
+.map-notice-close {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.pin {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 0 0 1.5px rgb(27 36 48 / 0.85), 0 2px 6px rgb(0 0 0 / 0.35);
+}
+.pin-you {
+  background: var(--you);
+}
+.pin-argus {
+  border-radius: 6px; /* squares = ARGUS, circles = you */
+  background: var(--argus-pin);
+}
+.pin-num {
+  font-size: 15px;
+  font-weight: 800;
+}
+.pin.is-dim {
+  opacity: 0.6;
+}
+.pin.is-alarm {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--ink);
+}
+.pin.is-temporary {
+  border-style: dashed;
+}
+.alarm-ring {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--no), inset 0 0 0 3px var(--no);
+  animation: alarm-pulse 1.6s ease-out infinite;
+}
+@keyframes alarm-pulse {
+  from {
+    transform: scale(0.65);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.25);
+    opacity: 0.25;
+  }
+}
+.alarm-label,
+.site-label {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.site-label.is-soon {
+  color: var(--muted);
+  font-weight: 500;
+}
+.site-pin {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 0 1.5px var(--ink);
+}
+.site-pin.is-soon {
+  background: var(--disabled);
+}
+.site-pin.is-selected {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--you);
+}
+.map-popup p {
+  margin: 0 0 0.35rem;
+}
+.map-popup-title {
+  font-weight: 700;
+}
+.map-popup-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.map-popup-btn {
+  min-height: 44px;
+  margin-top: 0.25rem;
+}
+.map-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.map-hint svg {
+  flex: none;
+  margin-top: 0.2rem;
+}
+
+@media (min-width: 60rem) {
+  :root {
+    --map-height: 0px;
+  }
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(24rem, 34rem);
+    align-items: start;
+  }
+  .board.no-map {
+    display: block;
+  }
+  .board-map {
+    height: 100vh;
+    border-bottom: 0;
+    border-right: 2px solid var(--primary);
+  }
+}
+
+.board-map.is-plan .leaflet-container {
+  background: var(--plan-water);
+}
+.bd {
+  stroke-width: 1;
+}
+.bd-land {
+  fill: var(--plan-land);
+  fill-opacity: 1;
+  stroke: var(--edge);
+}
+.bd-green {
+  fill: var(--plan-green);
+  fill-opacity: 1;
+  stroke: none;
+}
+.bd-built,
+.bd-site {
+  fill: var(--plan-built);
+  fill-opacity: 1;
+  stroke: none;
+}
+.bd-water {
+  fill: var(--plan-water);
+  fill-opacity: 1;
+  stroke: #7fa9c4;
+  stroke-width: 2;
+}
+.bd-road {
+  fill: none;
+  stroke: var(--plan-road);
+  stroke-width: 6;
+}
+.bd-rail {
+  fill: none;
+  stroke: var(--disabled);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+.bd-building {
+  fill: var(--plan-building);
+  fill-opacity: 1;
+  stroke: var(--edge);
+}
+.bd-heritage {
+  fill: var(--primary-soft);
+  fill-opacity: 1;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+}
+.plan-label {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
 /* ------------------------------------------------------------------ review mode (?review) */
 
 .review [data-needs-review="true"] {
@@ -839,10 +1230,12 @@ main {
   }
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (max-width: 59.99rem) {
   .sensor-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+@media (min-width: 48rem) {
   .lead {
     max-width: 44rem;
   }
@@ -861,6 +1254,13 @@ main {
 }
 
 @media (forced-colors: active) {
+  .reticle-casing,
+  .crosshair .reticle-ring {
+    stroke: CanvasText;
+  }
+  .crosshair .reticle-dot {
+    fill: Highlight;
+  }
   .level-bars span.on,
   .progress-bar li.done,
   .progress-bar li.now,

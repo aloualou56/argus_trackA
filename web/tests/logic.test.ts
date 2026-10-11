@@ -6,7 +6,12 @@ import {
   cardById,
   coinsLeft,
   compareMix,
+  clusterPoints,
+  countPicks,
   coverage,
+  distanceMeters,
+  nearestToArgus,
+  placeNear,
   detects,
   featuredAlarm,
   isPlayable,
@@ -135,5 +140,60 @@ describe("reveal", () => {
     const prompts = autoPrompts(compareMix(ranverso, { crackmeter: 1 }));
     expect(prompts.map((p) => p.kind)).toEqual(["many", "onlyYou", "onlyArgus"]);
     expect(prompts.find((p) => p.kind === "onlyYou")?.card).toBe("crackmeter");
+  });
+});
+
+describe("map", () => {
+  const at = (card: string, lat: number | null, lng: number | null, id = card) => ({ id, card, lat, lng });
+
+  it("counts placements per card, including cards without a pin", () => {
+    expect(countPicks([at("humidity", 45, 7), at("humidity", 45, 7, "h2"), at("satellite", null, null)])).toEqual({
+      humidity: 2,
+      satellite: 1,
+    });
+  });
+
+  it("measures metres between points", () => {
+    expect(distanceMeters([45, 7], [45.001, 7])).toBeCloseTo(111.3, 0);
+    expect(distanceMeters([45, 7], [45, 7.001])).toBeCloseTo(78.7, 0);
+  });
+
+  it("never stacks a new pin exactly on another one", () => {
+    const base: [number, number] = [45.0812, 7.4497];
+    expect(placeNear(base, [])).toEqual(base);
+    const first = placeNear(base, [at("humidity", ...base)]);
+    expect(distanceMeters(base, first)).toBeCloseTo(3.5, 1);
+    const second = placeNear(base, [at("humidity", ...base), at("crackmeter", ...first, "c")]);
+    expect(distanceMeters(first, second)).toBeGreaterThan(1);
+  });
+
+  it("finds the distance to the nearest ARGUS sensor of the same card", () => {
+    const rain = ranverso.installed.points.find((p) => p.instruments.some((i) => i.card === "rain_gauge"))!;
+    const d = nearestToArgus(ranverso, [at("rain_gauge", rain.lat + 10 / 111_320, rain.lon), at("crackmeter", 45, 7)]);
+    expect(d.get("rain_gauge")).toBeCloseTo(10, 0);
+    expect(d.has("crackmeter")).toBe(false); // ARGUS has no crack meter at Ranverso
+  });
+
+  it("puts a distance prompt first when a card is on both maps", () => {
+    const rows = compareMix(ranverso, { humidity: 1 });
+    const prompts = autoPrompts(rows, new Map([["humidity", 12.4]]));
+    expect(prompts[0]).toEqual({ kind: "distance", card: "humidity", n: 12 });
+  });
+
+  it("merges ARGUS points closer than 2.5 m into one marker without losing instruments", () => {
+    const clusters = clusterPoints(ranverso.installed.points);
+    expect(clusters.length).toBeLessThan(ranverso.installed.points.length);
+    expect(clusters.flatMap((c) => c.instruments)).toHaveLength(
+      ranverso.installed.points.reduce((n, p) => n + p.instruments.length, 0),
+    );
+    for (let i = 0; i < clusters.length; i++)
+      for (let j = i + 1; j < clusters.length; j++)
+        expect(distanceMeters([clusters[i].lat, clusters[i].lon], [clusters[j].lat, clusters[j].lon])).toBeGreaterThan(2.5);
+  });
+
+  it("has a map view and real sensor positions for the playable monument", () => {
+    expect(ranverso.map).not.toBeNull();
+    expect(ranverso.installed.points.length).toBeGreaterThan(0);
+    for (const alarm of ranverso.alarms) expect(alarm.instruments.some((i) => i.lat !== null)).toBe(true);
   });
 });

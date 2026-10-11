@@ -1,0 +1,541 @@
+// The game board: one Leaflet map that stays mounted across screens. Screens change what is
+// drawn (mode), never the map itself. Sensor positions come from ARGUS (installed-devices
+// coordinates); base-map tiles are only a backdrop, so the game still works if they fail.
+//
+// Accessibility: the map is optional for playing (every action also exists in the panel).
+// The container is keyboard focusable (arrow keys pan, +/- zoom), pins are buttons with
+// labels, and nothing animates when the user prefers reduced motion.
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { clusterPoints } from "../game/logic";
+import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
+import { useI18n } from "../i18n";
+import { iconSvg } from "./Icon";
+
+export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "score";
+
+export interface MapApi {
+  /** Centre of the current view: where the crosshair is. */
+  center(): LatLng;
+}
+
+interface Props {
+  data: GameData;
+  mode: MapMode;
+  pilot: string | null;
+  placements: Placement[];
+  alarm: Alarm | null;
+  apiRef: MutableRefObject<MapApi | null>;
+  onSelectSite: (pilot: string) => void;
+  onMovePlacement: (id: string, at: LatLng) => void;
+  onRemovePlacement: (id: string) => void;
+}
+
+// Placement reticle: ring and ticks leave the centre open; the dot is the exact spot a new
+// sensor goes. Each shape is drawn three times (dark halo, white casing, colour) so it reads on
+// dark satellite imagery and on the light plan alike.
+const RETICLE_SHAPES = '<circle cx="32" cy="32" r="15"/><path d="M32 3v10M32 51v10M3 32h10M51 32h10"/>';
+const RETICLE = `<svg width="64" height="64" viewBox="0 0 64 64" focusable="false">
+  <g class="reticle-halo">${RETICLE_SHAPES}</g>
+  <g class="reticle-casing">${RETICLE_SHAPES}</g>
+  <circle class="reticle-ring" cx="32" cy="32" r="15"/>
+  <circle class="reticle-dot" cx="32" cy="32" r="3.5"/>
+</svg>`;
+
+const BASEMAP_KEY = "guardian.basemap";
+
+type Backdrop = GeoJSON.FeatureCollection<GeoJSON.Geometry, { kind: string; name?: string }>;
+const backdropCache = new Map<string, Promise<Backdrop>>();
+
+/** Drawn-plan outlines (OpenStreetMap / Natural Earth) shipped with the game; fetched once. */
+function loadBackdrop(path: string): Promise<Backdrop> {
+  if (!backdropCache.has(path)) {
+    const request = fetch(`${import.meta.env.BASE_URL}${path}`).then((r) => {
+      if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+      return r.json() as Promise<Backdrop>;
+    });
+    request.catch(() => backdropCache.delete(path));
+    backdropCache.set(path, request);
+  }
+  return backdropCache.get(path)!;
+}
+// Imagery stops at zoom 19; one step of over-zoom keeps sensors a few metres apart readable.
+const MONUMENT_MAX_ZOOM = 20;
+const PIN = 30;
+
+function prefersReducedMotion(): boolean {
+  try {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return false;
+  }
+}
+
+function savedBasemap(data: GameData): string {
+  try {
+    const saved = window.localStorage.getItem(BASEMAP_KEY);
+    if (saved && data.basemaps.layers.some((l) => l.id === saved)) return saved;
+  } catch {
+    // storage blocked: use the default
+  }
+  return data.basemaps.default;
+}
+
+function escapeHtml(text: string): string {
+  return text.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+}
+
+function attributionHtml(layer: Basemap): string {
+  const text = escapeHtml(layer.attribution);
+  return layer.attribution_url ? `<a href="${escapeHtml(layer.attribution_url)}" target="_blank" rel="noopener">${text}</a>` : text;
+}
+
+function el(tag: string, className: string, text?: string): HTMLElement {
+  const node = document.createElement(tag);
+  node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+/** Give a Leaflet marker an accessible name once it is on the map. */
+function label(marker: L.Marker, text: string): L.Marker {
+  const node = marker.getElement();
+  if (node) {
+    node.setAttribute("role", "button");
+    node.setAttribute("aria-label", text);
+    node.removeAttribute("title");
+  }
+  return marker;
+}
+
+export function GameMap(props: Props) {
+  const { data, mode, pilot, placements, alarm } = props;
+  const { t, pick, lang } = useI18n();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const layersRef = useRef<{ sites: L.LayerGroup; argus: L.LayerGroup; player: L.LayerGroup; alarm: L.LayerGroup } | null>(null);
+  const tilesRef = useRef<L.TileLayer | null>(null);
+  const zoomRef = useRef<L.Control.Zoom | null>(null);
+  const latest = useRef(props);
+  latest.current = props;
+  const reduced = useMemo(prefersReducedMotion, []);
+  const [basemap, setBasemap] = useState(() => savedBasemap(data));
+  const [tilesFailed, setTilesFailed] = useState(false);
+  const [fellBack, setFellBack] = useState(false);
+  const [noticeClosed, setNoticeClosed] = useState(false);
+  const [moving, setMoving] = useState(false);
+  const reticleRef = useRef<L.Marker | null>(null);
+  const pinned = placements.filter((p) => p.lat !== null).length;
+  const planLayer = data.basemaps.layers.find((l) => l.type === "vector");
+  const activeLayer = data.basemaps.layers.find((l) => l.id === basemap) ?? data.basemaps.layers[0];
+  const isPlan = activeLayer.type === "vector";
+  const backdropRef = useRef<L.LayerGroup | null>(null);
+  const cards = useMemo(() => new Map(data.cards.cards.map((c) => [c.id, c])), [data]);
+  const mon = data.monuments.find((m) => m.pilot_key === pilot) ?? null;
+  const playable = mon && mon.playable ? (mon as Monument) : null;
+  const cardName = (id: string | null, fallback = "") => (id ? pick(cards.get(id)?.name) : fallback);
+
+  // ---------------------------------------------------------------- create once
+  useEffect(() => {
+    const map = L.map(containerRef.current!, {
+      zoomControl: false,
+      maxZoom: 21,
+      zoomSnap: 0.5,
+      keyboard: true,
+      zoomAnimation: !reduced,
+      fadeAnimation: !reduced,
+      markerZoomAnimation: !reduced,
+    }).setView([45, 10], 4);
+    map.createPane("backdrop").style.zIndex = "250"; // above tiles, below sensors
+    const reticlePane = map.createPane("reticle"); // above the plan, below the pins
+    reticlePane.style.zIndex = "550";
+    reticlePane.style.pointerEvents = "none";
+    backdropRef.current = L.layerGroup().addTo(map);
+    layersRef.current = {
+      sites: L.layerGroup().addTo(map),
+      alarm: L.layerGroup().addTo(map),
+      argus: L.layerGroup().addTo(map),
+      player: L.layerGroup().addTo(map),
+    };
+    // In the mission, a tap moves the crosshair there; the panel's "+" then places a sensor.
+    map.on("movestart", () => setMoving(true));
+    map.on("moveend", () => setMoving(false));
+    map.on("move", () => reticleRef.current?.setLatLng(map.getCenter()));
+    map.on("click", (e: L.LeafletMouseEvent) => {
+      if (latest.current.mode === "mission") map.panTo(e.latlng, { animate: !reduced });
+    });
+    props.apiRef.current = {
+      center: () => {
+        const c = map.getCenter();
+        return [c.lat, c.lng];
+      },
+    };
+    const resize = new ResizeObserver(() => map.invalidateSize());
+    resize.observe(containerRef.current!);
+    mapRef.current = map;
+    return () => {
+      resize.disconnect();
+      map.remove();
+      mapRef.current = null;
+      layersRef.current = null;
+      props.apiRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ---------------------------------------------------------------- base map
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const layer = activeLayer;
+    tilesRef.current?.remove();
+    tilesRef.current = null;
+    setTilesFailed(false);
+    if (layer.type === "vector" || !layer.url) {
+      map.attributionControl.addAttribution(attributionHtml(layer));
+      return () => {
+        map.attributionControl.removeAttribution(attributionHtml(layer));
+      };
+    }
+    let loaded = 0;
+    const tiles = L.tileLayer(layer.url, {
+      maxNativeZoom: layer.max_native_zoom,
+      maxZoom: 21,
+      attribution: attributionHtml(layer),
+    })
+      .on("tileload", () => {
+        loaded += 1;
+        setTilesFailed(false);
+      })
+      .on("tileerror", () => {
+        if (loaded > 0) return;
+        // No picture has loaded at all (offline, or outside images are blocked): use the plan.
+        if (planLayer) {
+          setFellBack(true);
+          setBasemap(planLayer.id);
+        } else {
+          setTilesFailed(true);
+        }
+      })
+      .addTo(map);
+    tiles.bringToBack();
+    tilesRef.current = tiles;
+    try {
+      if (!fellBack) window.localStorage.setItem(BASEMAP_KEY, basemap);
+    } catch {
+      // not remembered, still works
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [basemap, data]);
+
+  // ---------------------------------------------------------------- placement reticle (mission only)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || mode !== "mission") return;
+    const reticle = L.marker(map.getCenter(), {
+      pane: "reticle",
+      interactive: false,
+      keyboard: false,
+      icon: L.divIcon({ className: "", html: `<div class="crosshair">${RETICLE}</div>`, iconSize: [64, 64], iconAnchor: [32, 32] }),
+    }).addTo(map);
+    reticleRef.current = reticle;
+    return () => {
+      reticle.remove();
+      reticleRef.current = null;
+    };
+  }, [mode]);
+
+  useEffect(() => {
+    reticleRef.current?.getElement()?.querySelector(".crosshair")?.classList.toggle("is-moving", moving);
+  }, [moving]);
+
+  // Replay the small "drop" each time a pin is added.
+  const lastPinned = useRef(pinned);
+  useEffect(() => {
+    const node = reticleRef.current?.getElement()?.querySelector<HTMLElement>(".crosshair");
+    if (node && pinned > lastPinned.current) {
+      node.classList.remove("just-placed");
+      void node.offsetWidth; // restart the animation
+      node.classList.add("just-placed");
+    }
+    lastPinned.current = pinned;
+  }, [pinned]);
+
+  // ---------------------------------------------------------------- drawn plan (vector backdrop)
+  useEffect(() => {
+    const group = backdropRef.current;
+    if (!group) return;
+    group.clearLayers();
+    if (!isPlan) return;
+    let cancelled = false;
+    const paths = [data.basemaps.world, mode !== "overview" ? mon?.backdrop : null].filter((p): p is string => !!p);
+    Promise.all(paths.map(loadBackdrop))
+      .then((collections) => {
+        if (cancelled) return;
+        for (const collection of collections) {
+          L.geoJSON(collection, {
+            pane: "backdrop",
+            interactive: false,
+            style: (feature) => ({ className: `bd bd-${feature?.properties.kind ?? "other"}` }),
+            onEachFeature: (feature, layer) => {
+              // Name the monument while the story is told; later its label would hide sensors.
+              if (mode === "story" && feature.properties.kind === "heritage" && feature.properties.name) {
+                layer.bindTooltip(el("span", "", feature.properties.name), {
+                  permanent: true,
+                  direction: "center",
+                  className: "plan-label",
+                });
+              }
+            },
+          }).addTo(group);
+        }
+      })
+      .catch(() => !cancelled && setTilesFailed(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [isPlan, mode, mon, data]);
+
+  // ---------------------------------------------------------------- translated controls and labels
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    zoomRef.current?.remove();
+    zoomRef.current = L.control
+      .zoom({ position: "topleft", zoomInTitle: t("map.zoomIn"), zoomOutTitle: t("map.zoomOut") })
+      .addTo(map);
+    const node = containerRef.current!;
+    node.setAttribute("role", "application");
+    node.setAttribute("aria-roledescription", t("map.roledescription"));
+    node.setAttribute(
+      "aria-label",
+      mode === "overview" || !mon ? t("map.overviewLabel") : t("map.label", { name: mon.display_name ? pick(mon.display_name) : mon.name }),
+    );
+    node.setAttribute("aria-describedby", "map-help");
+  }, [t, pick, mode, mon]);
+
+  // ---------------------------------------------------------------- camera: only when the screen changes
+  const viewKey = `${mode}|${pilot}|${alarm?.id ?? ""}`;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    // Extra room top-left keeps markers and their labels clear of the zoom buttons and switch.
+    const options = {
+      animate: !reduced,
+      duration: 1.6,
+      paddingTopLeft: L.point(70, 90),
+      paddingBottomRight: L.point(48, 56),
+      maxZoom: MONUMENT_MAX_ZOOM,
+    };
+    if (mode === "overview" || !mon?.map) {
+      const centres = data.monuments.filter((m) => m.map).map((m) => m.map!.center);
+      map.flyToBounds(L.latLngBounds(centres).pad(0.2), { ...options, maxZoom: 6 });
+      return;
+    }
+    const bounds = L.latLngBounds(mon.map.bounds);
+    if (mode === "reveal" || mode === "score") {
+      placements.forEach((p) => p.lat !== null && p.lng !== null && bounds.extend([p.lat, p.lng]));
+    }
+    if (mode === "event" && alarm) {
+      const at = alarm.instruments.find((i) => i.lat !== null && i.lon !== null);
+      if (at) {
+        const focus = L.latLngBounds([[at.lat!, at.lon!]]);
+        placements.forEach((p) => p.lat !== null && p.lng !== null && focus.extend([p.lat, p.lng]));
+        map.flyToBounds(focus, options);
+        return;
+      }
+    }
+    map.flyToBounds(bounds, options);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewKey]);
+
+  // ---------------------------------------------------------------- what is drawn
+  useEffect(() => {
+    const layers = layersRef.current;
+    const map = mapRef.current;
+    if (!layers || !map) return;
+    Object.values(layers).forEach((g) => g.clearLayers());
+
+    if (mode === "overview") {
+      for (const m of data.monuments) {
+        if (!m.map) continue;
+        const name = m.display_name ? pick(m.display_name) : m.name;
+        const place = m.place ? pick(m.place) : m.country;
+        const selected = m.pilot_key === pilot;
+        const marker = L.marker(m.map.center, {
+          keyboard: m.playable,
+          interactive: true,
+          zIndexOffset: selected ? 1000 : 0,
+          icon: L.divIcon({
+            className: "",
+            html: `<span class="site-pin${m.playable ? "" : " is-soon"}${selected ? " is-selected" : ""}">${iconSvg("shield", 18)}</span>`,
+            iconSize: [36, 36],
+            iconAnchor: [18, 18],
+          }),
+        })
+          .bindTooltip(el("span", "", m.playable ? name : `${name} · ${t("home.comingSoon")}`), {
+            permanent: selected,
+            direction: "right",
+            offset: [16, 0],
+            className: `site-label${m.playable ? "" : " is-soon"}`,
+          })
+          .on("click", () => m.playable && latest.current.onSelectSite(m.pilot_key))
+          .addTo(layers.sites);
+        if (m.playable) label(marker, `${name}, ${place}`);
+      }
+      return;
+    }
+    if (!playable) return;
+
+    const showArgus = mode === "reveal" || mode === "score" || mode === "event";
+    if (showArgus) drawArgus(clusterPoints(playable.installed.points), layers.argus);
+    if (mode === "event" && alarm) drawAlarm(alarm, layers.alarm);
+    drawPlayer(layers.player, map);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, pilot, placements, alarm, lang, data]);
+
+  function pointNames(point: MapPoint): string {
+    const counts = new Map<string, number>();
+    for (const i of point.instruments) {
+      const name = cardName(i.card, i.instrument_type);
+      counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+    return [...counts].map(([name, n]) => (n > 1 ? `${name} ×${n}` : name)).join(", ");
+  }
+
+  function drawArgus(points: MapPoint[], group: L.LayerGroup) {
+    const alarmIds = new Set(alarm?.instruments.map((i) => i.instrument_id) ?? []);
+    for (const point of points) {
+      const n = point.instruments.length;
+      const isAlarm = mode === "event" && point.instruments.some((i) => alarmIds.has(i.instrument_id));
+      const inner = n > 1 ? `<span class="pin-num">${n}</span>` : iconSvg(point.instruments[0].card ?? "other", 16);
+      const names = pointNames(point);
+      const temporary = point.flags.includes("temporary_position");
+      const popup = el("div", "map-popup");
+      popup.append(el("p", "map-popup-title", "ARGUS"), el("p", "", names));
+      if (point.label) popup.append(el("p", "map-popup-meta", point.label));
+      if (temporary) popup.append(el("p", "map-popup-meta", t("map.tempPosition")));
+      const marker = L.marker([point.lat, point.lon], {
+        keyboard: true,
+        zIndexOffset: isAlarm ? 500 : 0,
+        icon: L.divIcon({
+          className: "",
+          html: `<span class="pin pin-argus${isAlarm ? " is-alarm" : ""}${mode === "event" && !isAlarm ? " is-dim" : ""}${temporary ? " is-temporary" : ""}">${inner}</span>`,
+          iconSize: [PIN, PIN],
+          iconAnchor: [PIN / 2, PIN / 2],
+        }),
+      })
+        .bindPopup(popup)
+        .addTo(group);
+      label(marker, `${t("map.argus", { names })}${temporary ? `. ${t("map.tempPosition")}` : ""}`);
+    }
+  }
+
+  function drawAlarm(a: Alarm, group: L.LayerGroup) {
+    const at = a.instruments.find((i) => i.lat !== null && i.lon !== null);
+    if (!at) return;
+    L.marker([at.lat!, at.lon!], {
+      interactive: false,
+      keyboard: false,
+      zIndexOffset: -500,
+      icon: L.divIcon({ className: "", html: '<span class="alarm-ring"></span>', iconSize: [72, 72], iconAnchor: [36, 36] }),
+    })
+      .bindTooltip(el("span", "", t("map.alarmHere", { name: cardName(at.card, at.instrument_type) })), {
+        permanent: true,
+        direction: "right",
+        offset: [30, 0],
+        className: "alarm-label",
+      })
+      .addTo(group);
+  }
+
+  function drawPlayer(group: L.LayerGroup, map: L.Map) {
+    const editable = mode === "mission";
+    for (const p of placements) {
+      if (p.lat === null || p.lng === null) continue;
+      const name = cardName(p.card);
+      const popup = el("div", "map-popup");
+      popup.append(el("p", "map-popup-title", t("map.you", { name })));
+      if (editable) {
+        const remove = el("button", "btn btn-quiet map-popup-btn", t("map.remove")) as HTMLButtonElement;
+        remove.type = "button";
+        remove.addEventListener("click", () => {
+          map.closePopup();
+          latest.current.onRemovePlacement(p.id);
+        });
+        popup.append(remove);
+      }
+      const marker = L.marker([p.lat, p.lng], {
+        draggable: editable,
+        keyboard: true,
+        zIndexOffset: 1000,
+        icon: L.divIcon({
+          className: "",
+          html: `<span class="pin pin-you${mode === "event" ? " is-dim" : ""}">${iconSvg(p.card, 16)}</span>`,
+          iconSize: [PIN, PIN],
+          iconAnchor: [PIN / 2, PIN / 2],
+        }),
+      })
+        .bindPopup(popup)
+        .on("popupopen", () => popup.querySelector("button")?.focus())
+        .on("dragend", (e) => {
+          const at = (e.target as L.Marker).getLatLng();
+          latest.current.onMovePlacement(p.id, [at.lat, at.lng]);
+        })
+        .addTo(group);
+      label(marker, t("map.you", { name }));
+    }
+  }
+
+  return (
+    <section className={`board-map mode-${mode}${isPlan ? " is-plan" : ""}`} aria-label={t("map.region")}>
+      <div ref={containerRef} className="map" />
+      <p id="map-help" className="sr-only">
+        {t("map.instructions")}
+      </p>
+      {mode === "mission" && (
+        <>
+          {pinned === 0 && (
+            <span className="crosshair-label" aria-hidden="true">
+              {t("map.crosshairHint")}
+            </span>
+          )}
+        </>
+      )}
+      <div className="map-switch" role="group" aria-label={t("map.basemap")}>
+        {data.basemaps.layers.map((layer) => (
+          <button
+            key={layer.id}
+            type="button"
+            aria-pressed={basemap === layer.id}
+            onClick={() => {
+              setFellBack(false);
+              setBasemap(layer.id);
+            }}
+          >
+            {pick(layer.name)}
+          </button>
+        ))}
+      </div>
+      {(mode === "reveal" || mode === "score" || mode === "event") && (
+        <div className="map-legend">
+          <span>
+            <span className="legend-you" aria-hidden="true" /> {t("map.legendYou")}
+          </span>
+          <span>
+            <span className="legend-argus" aria-hidden="true" /> {t("map.legendArgus")}
+          </span>
+        </div>
+      )}
+      {(tilesFailed || (fellBack && isPlan)) && !noticeClosed && (
+        <div className="map-notice" role="status">
+          <p>{tilesFailed ? t("map.tilesFailed") : t("map.planFallback")}</p>
+          <button type="button" className="map-notice-close" aria-label={t("map.closeNotice")} onClick={() => setNoticeClosed(true)}>
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      )}
+    </section>
+  );
+}

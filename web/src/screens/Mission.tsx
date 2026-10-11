@@ -1,12 +1,27 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MutableRefObject } from "react";
 import type { ScreenProps } from "../App";
+import type { MapApi } from "../components/GameMap";
 import { Icon } from "../components/Icon";
 import { LevelBadge } from "../components/LevelBadge";
-import { canAdd, cardById, coinsLeft, missionScenarios, totalSensors, withChange } from "../game/logic";
-import type { Card, Picks } from "../game/types";
+import {
+  canAdd,
+  cardById,
+  coinsLeft,
+  missionScenarios,
+  newPlacementId,
+  placeNear,
+  totalSensors,
+  withChange,
+} from "../game/logic";
+import type { Card, Placement } from "../game/types";
 import { useI18n } from "../i18n";
 
-export function Mission({ data, mon, session, go, announce, setPicks }: ScreenProps & { setPicks: (p: Picks) => void }) {
+interface Props extends ScreenProps {
+  setPlacements: (update: (prev: Placement[]) => Placement[]) => void;
+  mapApi: MutableRefObject<MapApi | null>;
+}
+
+export function Mission({ data, mon, session, go, announce, setPlacements, mapApi }: Props) {
   const { t, tn, pick } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level);
@@ -22,10 +37,20 @@ export function Mission({ data, mon, session, go, announce, setPicks }: ScreenPr
       return;
     }
     if (delta < 0 && !picks[card.id]) return;
+    if (delta > 0) {
+      // New pins go where the map's crosshair is; cards like satellite images get no pin.
+      const at = card.on_map ? placeNear(mapApi.current?.center() ?? mon.map!.center, session.placements) : null;
+      setPlacements((ps) => [...ps, { id: newPlacementId(), card: card.id, lat: at?.[0] ?? null, lng: at?.[1] ?? null }]);
+    } else {
+      setPlacements((ps) => {
+        const last = ps.map((p) => p.card).lastIndexOf(card.id);
+        return last < 0 ? ps : [...ps.slice(0, last), ...ps.slice(last + 1)];
+      });
+    }
     const next = withChange(picks, card.id, delta);
-    setPicks(next);
     setHint("");
-    announce(t("mission.changed", { name, n: next[card.id] ?? 0, left: coinsLeft(mon.budget, next, cards) }));
+    const changed = t("mission.changed", { name, n: next[card.id] ?? 0, left: coinsLeft(mon.budget, next, cards) });
+    announce(delta > 0 && card.on_map ? `${changed} ${t("mission.placed")}` : changed);
   };
 
   const done = () => {
@@ -56,6 +81,10 @@ export function Mission({ data, mon, session, go, announce, setPicks }: ScreenPr
 
       <section aria-labelledby="sensors-title">
         <h2 id="sensors-title">{t("mission.sensors")}</h2>
+        <p className="hint map-hint">
+          <Icon name="plus" size={18} />
+          {t("mission.placeHint")}
+        </p>
         {data.cards.groups.map((group) => (
           <div key={group.id} className="card-group">
             <h3>{pick(group.name)}</h3>

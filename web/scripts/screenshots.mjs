@@ -16,7 +16,7 @@ import { chromium } from "playwright-core";
 const here = dirname(fileURLToPath(import.meta.url));
 const web = join(here, "..");
 const outDir = join(web, "..", "docs", "screenshots");
-const PORT = 4173;
+const PORT = Number(process.env.SCREENSHOT_PORT) || 4180;
 const URL_BASE = `http://localhost:${PORT}/`;
 
 const dict = {
@@ -69,8 +69,31 @@ async function expectFocusOnHeading(page, label) {
   if (tag !== "H1") note(`${label}: focus is on ${tag}, expected the H1 after a screen change`);
 }
 
+const ranverso = data.monuments.find((m) => m.pilot_key === "ranverso");
+
+/** The map must show real tiles (not the failure notice) and the expected number of markers. */
+async function checkMap(page, label, selector, expected) {
+  try {
+    await page.waitForFunction(() => document.querySelectorAll(".leaflet-tile-loaded").length >= 4, null, { timeout: 20000 });
+  } catch {
+    note(`${label}: map tiles did not load`);
+  }
+  if (await page.locator(".map-notice").count()) note(`${label}: map shows the tiles-failed notice`);
+  if (selector) {
+    const n = await page.locator(selector).count();
+    if (n !== expected) note(`${label}: expected ${expected} × ${selector} on the map, found ${n}`);
+  }
+}
+
+// Full-page captures cannot show the sticky map (the capture stretches the viewport), so
+// desktop shots are what the screen shows; phones also get a full-page shot of the panel.
 async function shot(page, name) {
-  await page.screenshot({ path: join(outDir, `${name}.png`), fullPage: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+  if (name.includes("-phone-")) {
+    await page.screenshot({ path: join(outDir, `${name}-panel.png`), fullPage: true });
+  }
+  await page.screenshot({ path: join(outDir, `${name}.png`) });
   console.log(`  saved ${name}.png`);
 }
 
@@ -92,18 +115,23 @@ async function play(browser, lang, vpName) {
   await page.goto(URL_BASE);
   await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
   if ((await page.getAttribute("html", "lang")) !== lang) note(`${prefix}: <html lang> is not ${lang}`);
+  await checkMap(page, `${prefix} home`, ".site-pin", data.monuments.length);
   await checkPage(page, `${prefix} home`);
   await shot(page, `${prefix}-1-home`);
 
   await page.getByRole("button", { name: t["home.start"] }).click();
   await page.getByRole("heading", { level: 1, name: data.monuments.find((m) => m.pilot_key === "ranverso").display_name[lang] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} story`);
+  await checkMap(page, `${prefix} story`);
   await checkPage(page, `${prefix} story`);
   await shot(page, `${prefix}-2-story`);
 
   await page.getByRole("button", { name: t["story.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} mission`);
+
+  if (!(await page.locator(".crosshair-label").isVisible())) note(`${prefix}: no "sensors go here" label before the first pin`);
+  await page.locator(".board-map").screenshot({ path: join(outDir, `${prefix}-3-reticle.png`) });
 
   // "Done" with no sensors must explain itself instead of moving on. It is aria-disabled
   // (still focusable and clickable for assistive tech), so Playwright needs force.
@@ -130,18 +158,26 @@ async function play(browser, lang, vpName) {
   if (!afterCamera.includes(fill(t["mission.notEnough"], { name: cardName(lang, "camera") }))) {
     note(`${prefix}: overspending was not announced (${afterCamera})`);
   }
+  // humidity x2, soil x1, crack x1, camera x1: five pins
+  await checkMap(page, `${prefix} mission`, ".pin-you", 5);
+  if (!(await page.locator(".crosshair").count())) note(`${prefix}: no crosshair on the mission map`);
   await checkPage(page, `${prefix} mission`);
   await shot(page, `${prefix}-3-mission`);
 
   await page.getByRole("button", { name: t["mission.done"] }).click();
   await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} reveal`);
+  await checkMap(page, `${prefix} reveal`);
+  const shown = await page.$$eval(".pin-argus", (pins) => pins.reduce((n, p) => n + (Number(p.textContent) || 1), 0));
+  const placed = ranverso.installed.points.reduce((n, p) => n + p.instruments.length, 0);
+  if (shown !== placed) note(`${prefix} reveal: ARGUS markers show ${shown} instruments, expected ${placed}`);
   await checkPage(page, `${prefix} reveal`);
   await shot(page, `${prefix}-4-reveal`);
 
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} event`);
+  await checkMap(page, `${prefix} event`, ".alarm-ring", 1);
   await checkPage(page, `${prefix} event`);
   await shot(page, `${prefix}-5-event`);
 
@@ -185,12 +221,51 @@ ${prefix}`);
   await context.close();
 }
 
+// Map pictures blocked (offline, or a sandbox that only allows its own files): the game must
+// switch to the drawn plan by itself, say so, and stay fully playable.
+async function playWithoutMapPictures(browser, lang) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.route(/arcgisonline\.com|openstreetmap\.org/, (route) => route.abort());
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(String(e)));
+  const prefix = `${lang}-phone-plan`;
+  console.log(`
+${prefix}`);
+  await page.goto(URL_BASE);
+  try {
+    await page.locator(".map-notice", { hasText: t["map.planFallback"] }).waitFor({ timeout: 15000 });
+  } catch {
+    note(`${prefix}: no switch to the plan when map pictures are blocked`);
+  }
+  await page.waitForSelector(".bd-land", { timeout: 15000 }).catch(() => note(`${prefix}: no land drawn on the plan`));
+  await checkPage(page, `${prefix} home`);
+  await shot(page, `${prefix}-1-home`);
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await page.waitForSelector(".bd-heritage", { timeout: 15000 }).catch(() => note(`${prefix}: church outline missing`));
+  await checkPage(page, `${prefix} story`);
+  await shot(page, `${prefix}-2-story`);
+  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "soil_moisture") }), exact: true }).click();
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
+  if ((await page.locator(".pin-argus").count()) === 0) note(`${prefix}: no ARGUS sensors on the plan`);
+  await checkPage(page, `${prefix} reveal`);
+  await shot(page, `${prefix}-4-reveal`);
+  if (errors.length) note(`${prefix}: page errors: ${errors.join(" | ")}`);
+  await context.close();
+}
+
 mkdirSync(outDir, { recursive: true });
 const server = await startServer();
 const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "msedge", headless: true });
 try {
   for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
+  for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);
 } finally {
   await browser.close();
   server.kill();

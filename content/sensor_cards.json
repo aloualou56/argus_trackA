@@ -1,5 +1,5 @@
 {
-  "_about": "AUTHORED by the game team, not ARGUS data. Card names, sentences, groups and coin costs are game-design assumptions for human review. Costs are game coins, not real prices. 'instrument_types' links each card to ARGUS instrument-type names (instrument-types.json) so the reveal can group the real network by card.",
+  "_about": "AUTHORED by the game team, not ARGUS data. Card names, sentences, groups and coin costs are game-design assumptions for human review. Costs are game coins, not real prices. 'instrument_types' links each card to ARGUS instrument-type names (instrument-types.json) so the reveal can group the real network by card. 'on_map': false means the card covers the whole area and gets no pin on the map (default true).",
   "currency": "coins",
   "groups": [
     { "id": "air", "name": { "en": "Air and light", "el": "Αέρας και φως" } },
@@ -121,7 +121,7 @@
       "review_note": "Multispectral camera; confirm what ARGUS uses it for at Ranverso."
     },
     {
-      "id": "satellite", "group": "eyes", "cost": 3,
+      "id": "satellite", "group": "eyes", "cost": 3, "on_map": false,
       "instrument_types": ["Earth Observation Layer Instrument"],
       "name": { "en": "Satellite images", "el": "Δορυφορικές εικόνες" },
       "tells": { "en": "Watches the area from space for floods, fires and changes on the ground.", "el": "Παρακολουθεί την περιοχή από το διάστημα για πλημμύρες, φωτιές και αλλαγές στο έδαφος." },

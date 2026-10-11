@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import type { ScreenProps } from "../App";
 import { Icon } from "../components/Icon";
-import { autoPrompts, cardById, compareMix, type AutoPrompt } from "../game/logic";
+import { autoPrompts, cardById, compareMix, nearestToArgus, type AutoPrompt } from "../game/logic";
 import { useI18n, type MessageKey } from "../i18n";
 
 const MAX_PROMPTS = 4;
 
 const PROMPT_KEYS: Record<AutoPrompt["kind"], MessageKey> = {
+  distance: "reveal.promptDistance",
   many: "reveal.promptMany",
   onlyYou: "reveal.promptOnlyYou",
   onlyArgus: "reveal.promptOnlyArgus",
@@ -26,7 +27,7 @@ export function Reveal({ data, mon, session, go }: ScreenProps) {
   const { t, pick } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const rows = compareMix(mon, session.picks);
-  const prompts = autoPrompts(rows);
+  const prompts = autoPrompts(rows, nearestToArgus(mon, session.placements));
   const cardName = (id: string) => pick(cards.get(id)?.name);
   const hasSatellite = mon.installed.by_card.some((r) => r.card === "satellite");
   // Alternate prompts from the player's choices with the monument's own, at most four.
@@ -103,6 +104,7 @@ export function Reveal({ data, mon, session, go }: ScreenProps) {
         </table>
       </div>
 
+      <p className="note">{t("reveal.mapNote")}</p>
       <p className="note">{t("reveal.noWrong")}</p>
 
       <section className="panel discuss" aria-labelledby="discuss-title">

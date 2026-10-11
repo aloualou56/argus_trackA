@@ -1,5 +1,4 @@
-import { useState, type FormEvent } from "react";
-import type { Session } from "../App";
+import { useEffect, useState, type FormEvent } from "react";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
 import type { GameData, LevelId, LevelSummary } from "../game/types";
@@ -7,7 +6,10 @@ import { useI18n } from "../i18n";
 
 interface Props {
   data: GameData;
-  initial: Session | null;
+  /** Selected monument; shared with the map so a tap on a pin selects it here too. */
+  pilot: string | null;
+  setPilot: (pilot: string) => void;
+  initialLevel?: LevelId;
   onStart: (pilot: string, level: LevelId) => void;
 }
 
@@ -16,20 +18,18 @@ function defaultLevel(levels: LevelSummary[]): LevelId | undefined {
   return [...levels].reverse().find((l) => l.available)?.id;
 }
 
-export function Home({ data, initial, onStart }: Props) {
+export function Home({ data, pilot, setPilot, initialLevel, onStart }: Props) {
   const { t, pick } = useI18n();
-  const firstPlayable = data.monuments.find((m) => m.playable);
-  const [pilot, setPilot] = useState(initial?.pilot ?? firstPlayable?.pilot_key ?? "");
   const mon = data.monuments.find((m) => m.pilot_key === pilot);
-  const [level, setLevel] = useState<LevelId | undefined>(
-    initial?.pilot === pilot ? initial.level : mon && defaultLevel(mon.levels),
-  );
+  const [level, setLevel] = useState<LevelId | undefined>(initialLevel ?? (mon && defaultLevel(mon.levels)));
 
-  const choosePilot = (key: string) => {
-    setPilot(key);
-    const next = data.monuments.find((m) => m.pilot_key === key);
-    setLevel(next && defaultLevel(next.levels));
-  };
+  // A new monument (from the list or the map) starts at its highest available level.
+  const [levelFor, setLevelFor] = useState(pilot);
+  useEffect(() => {
+    if (pilot === levelFor) return;
+    setLevelFor(pilot);
+    setLevel(mon && defaultLevel(mon.levels));
+  }, [pilot, levelFor, mon]);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -55,6 +55,7 @@ export function Home({ data, initial, onStart }: Props) {
         <legend>
           <h2>{t("home.monument")}</h2>
         </legend>
+        <p className="hint">{t("home.mapHint")}</p>
         {[...data.monuments].sort((a, b) => Number(b.playable) - Number(a.playable)).map((m) => (
           <label key={m.pilot_key} className={`choice${m.playable ? "" : " is-disabled"}`}>
             <input
@@ -63,7 +64,7 @@ export function Home({ data, initial, onStart }: Props) {
               value={m.pilot_key}
               checked={pilot === m.pilot_key}
               disabled={!m.playable}
-              onChange={() => choosePilot(m.pilot_key)}
+              onChange={() => setPilot(m.pilot_key)}
             />
             <span className="choice-body">
               <span className="choice-title">{m.display_name ? pick(m.display_name) : m.name}</span>

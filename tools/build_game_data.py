@@ -20,6 +20,7 @@ import argparse
 import collections
 import datetime as dt
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -29,6 +30,8 @@ SNAPSHOT_DIR = ROOT / "snapshot"
 CONTENT_DIR = ROOT / "content"
 OUT_JSON = ROOT / "web" / "public" / "data" / "game_data.json"
 OUT_NOTES = ROOT / "docs" / "data_notes.md"
+OUT_BACKDROPS = ROOT / "web" / "public" / "data" / "backdrops"
+BACKDROP_URL = "data/backdrops/{name}"  # relative to the web app
 
 SCHEMA_VERSION = 1
 MISSION_SIZE = 3
@@ -122,6 +125,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "cards": load_json(content_dir / "sensor_cards.json"),
         "rule_map": load_json(content_dir / "rule_sensor_map.json"),
         "threat_map": load_json(content_dir / "threat_sensor_map.json"),
+        "map": load_json(content_dir / "map.json"),
         "monuments": monuments,
     }
 
@@ -133,8 +137,34 @@ def parse_ts(value: str) -> dt.datetime:
 
 
 def node_token(name: str) -> str:
-    """Last ' - ' part of an ARGUS instrument name, lower-case, e.g. '177315'."""
-    return name.rsplit(" - ", 1)[-1].strip().lower()
+    """Node id from an ARGUS instrument name, lower-case: the last ' - ' part once a trailing
+    '(place)' is removed. 'Crackmeter - 177266 (Conventillo - Staircase)' -> '177266'."""
+    return re.sub(r"\s*\([^)]*\)\s*$", "", name).rsplit(" - ", 1)[-1].strip().lower()
+
+
+def place_label(name: str) -> Optional[str]:
+    """Trailing '(place)' of an instrument name, e.g. 'Conventillo - Staircase access façade'."""
+    match = re.search(r"\(([^)]*)\)\s*$", name)
+    return match.group(1).strip() if match else None
+
+
+def instrument_position(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """WGS84 position of an installed device (installed-devices metadata.coordinates), if any."""
+    coords = (row.get("device_meta") or {}).get("coordinates")
+    if not isinstance(coords, dict) or coords.get("latitude") is None or coords.get("longitude") is None:
+        return None
+    return {"lat": round(float(coords["latitude"]), 7), "lon": round(float(coords["longitude"]), 7),
+            "height": round_or_none(coords.get("height"), 2)}
+
+
+def map_view(points: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Median centre and bounding box of the sensor positions (real ARGUS data)."""
+    if not points:
+        return None
+    lats = sorted(p["lat"] for p in points)
+    lons = sorted(p["lon"] for p in points)
+    return {"center": [lats[len(lats) // 2], lons[len(lons) // 2]],
+            "bounds": [[lats[0], lons[0]], [lats[-1], lons[-1]]]}
 
 
 def round_or_none(value: Optional[float], digits: int = 4) -> Optional[float]:
@@ -225,6 +255,7 @@ class Content:
         self.threat_categories = raw["threat_map"]["categories"]
         self.threat_scenarios = raw["threat_map"]["scenarios"]
         self.monuments = raw["monuments"]
+        self.basemaps = raw["map"]
 
     def rule(self, pilot: str, rule: str) -> Optional[Dict[str, Any]]:
         return self.rules.get(f"{pilot}:{rule}")
@@ -284,9 +315,33 @@ def build_installed(snap: Snapshot, content: Content, asset_id: int) -> Dict[str
     by_card = collections.OrderedDict()
     other = collections.Counter()
     flags = []
+    points = collections.OrderedDict()
+    positions = {}
+    unplaced = []
     for instrument_id, regs in by_instrument.items():
         first = regs[0]
         card = content.type_to_card.get(first["instrument_type"])
+        item = {"instrument_id": instrument_id, "card": card, "instrument_type": first["instrument_type"],
+                "node": node_token(first["name"])}
+        pos = instrument_position(first)
+        src = (first["device_meta"] or {}).get("source") or {}
+        if pos is None:
+            reason = ("virtual" if str(first["ii_meta"].get("kind", "")).startswith("virtual")
+                      else "coordinates unavailable" if src.get("coordinates_from") == "unavailable"
+                      else "no coordinates")
+            unplaced.append(dict(item, reason=reason))
+        else:
+            positions[instrument_id] = pos
+            point = points.setdefault((pos["lat"], pos["lon"]),
+                                      dict(pos, label=place_label(first["name"]), instruments=[], flags=[]))
+            point["instruments"].append(item)
+            point_flag = None
+            if src.get("verification_required") or str(src.get("coordinates_from", "")).startswith("temporary"):
+                point_flag = "temporary_position"
+            elif src.get("coordinates_from") == "sibling sensor on same node":
+                point_flag = "position_from_sibling_sensor"
+            if point_flag and point_flag not in point["flags"]:
+                point["flags"].append(point_flag)
         if card is None:
             other[first["instrument_type"]] += 1
         else:
@@ -326,7 +381,10 @@ def build_installed(snap: Snapshot, content: Content, asset_id: int) -> Dict[str
         "other": [{"instrument_type": k, "count": v} for k, v in sorted(other.items())],
         "duplicate_records": duplicates,
         "flags": flags,
+        "points": list(points.values()),
+        "unplaced": unplaced,
         "_rows": rows,  # removed before writing; used to link alarms to instruments
+        "_positions": positions,
     }
 
 
@@ -345,7 +403,8 @@ def policy_thresholds(snap: Snapshot, pilot: str) -> Dict[str, List[float]]:
     return out
 
 
-def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: List[Dict[str, Any]]):
+def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: List[Dict[str, Any]],
+                 positions: Dict[int, Dict[str, Any]]):
     """Return (featured alarms, funnel summary). See docs/data_notes.md for the rules."""
     site_alarms = [(e, m) for e, m in snap.alarms if (m.get("alarm") or {}).get("site") == pilot]
     funnel = collections.OrderedDict()
@@ -421,7 +480,7 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
             "direction": direction,
             "times_threshold": round_or_none(severity, 2),
             "_severity": severity or 0.0,
-            "instruments": link_instruments(var.get("name", ""), entry, content, installed_rows),
+            "instruments": link_instruments(var.get("name", ""), entry, content, installed_rows, positions),
             "quality_flags": flags,
         })
     funnel["excluded"] = dict(sorted(excluded.items()))
@@ -475,7 +534,8 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
     return chosen, funnel
 
 
-def link_instruments(variable: str, entry: Dict[str, Any], content: Content, rows: List[Dict[str, Any]]):
+def link_instruments(variable: str, entry: Dict[str, Any], content: Content, rows: List[Dict[str, Any]],
+                     positions: Dict[int, Dict[str, Any]]):
     token = variable.split("_", 1)[0].lower()
     if not token:
         return []
@@ -489,9 +549,11 @@ def link_instruments(variable: str, entry: Dict[str, Any], content: Content, row
         if content.type_to_card.get(row["instrument_type"]) not in allowed:
             continue
         seen.add(row["instrument_id"])
+        pos = positions.get(row["instrument_id"]) or {}
         out.append({"instrument_id": row["instrument_id"], "name": row["name"],
                     "instrument_type": row["instrument_type"],
-                    "card": content.type_to_card.get(row["instrument_type"])})
+                    "card": content.type_to_card.get(row["instrument_type"]),
+                    "lat": pos.get("lat"), "lon": pos.get("lon")})
     return out
 
 
@@ -551,7 +613,8 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
     scenarios = build_scenarios(snap, content, pilot, pack)
     installed = build_installed(snap, content, asset["id"])
     rows = installed.pop("_rows")
-    alarms, funnel = build_alarms(snap, content, pilot, rows)
+    positions = installed.pop("_positions")
+    alarms, funnel = build_alarms(snap, content, pilot, rows, positions)
     levels = build_levels(scenarios, alarms, pack)
 
     stats = {"pilot": pilot, "asset": asset, "scenarios": scenarios, "installed": installed,
@@ -567,6 +630,7 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         "scenario_count": len(scenarios),
         "levels": [{k: lv[k] for k in ("key", "id", "scenario_count", "available")} for lv in levels],
         "installed_summary": {k: installed[k] for k in ("records", "distinct_instruments", "physical_instruments")},
+        "map": map_view(installed["points"]),
     }
     if draft is not None:
         entry["display_name"] = draft["display_name"]
@@ -625,9 +689,19 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
     for name in sorted(all_types - set(content.type_to_card) - content.unmapped_types):
         problems.append(f"instrument type '{name}' is neither on a card nor listed as unmapped")
 
+    layer_ids = [layer["id"] for layer in content.basemaps.get("layers", [])]
+    if content.basemaps.get("default") not in layer_ids:
+        problems.append("content/map.json: 'default' is not one of the layers")
+    for layer in content.basemaps.get("layers", []):
+        for key in ("attribution", "name") + (() if layer.get("type") == "vector" else ("url",)):
+            if not layer.get(key):
+                problems.append(f"content/map.json layer {layer.get('id')}: missing {key}")
+
     for mon in monuments:
         if not mon["playable"]:
             continue
+        if not mon["map"]:
+            problems.append(f"{mon['pilot_key']}: no sensor coordinates, so no map view")
         keys = {s["scenario_key"] for s in mon["scenarios"]}
         for s in mon["scenarios"]:
             if not s["plain"]["title"] or not s["plain"]["text"]:
@@ -658,7 +732,8 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
 
 def public_cards(content: Content) -> Dict[str, Any]:
     raw = content.raw["cards"]
-    cards = [{k: c[k] for k in ("id", "group", "cost", "name", "tells", "instrument_types", "needs_review")}
+    cards = [dict({k: c[k] for k in ("id", "group", "cost", "name", "tells", "instrument_types", "needs_review")},
+                  on_map=c.get("on_map", True))
              for c in raw["cards"]]
     return {"currency": raw["currency"], "groups": raw["groups"], "cards": cards}
 
@@ -701,8 +776,16 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
         "mission_size": MISSION_SIZE,
         "cards": public_cards(content),
         "rule_sensor_map": public_rule_map(content),
+        "basemaps": {"default": content.basemaps["default"],
+                     "layers": [{k: v for k, v in layer.items() if k != "review_note"}
+                                for layer in content.basemaps["layers"]],
+                     "world": BACKDROP_URL.format(name="world_land.json")
+                     if (content_dir / "backdrops" / "world_land.json").exists() else None},
         "monuments": monuments,
     }
+    for mon in monuments:
+        mon["backdrop"] = (BACKDROP_URL.format(name=f"{mon['pilot_key']}.json")
+                           if (content_dir / "backdrops" / f"{mon['pilot_key']}.json").exists() else None)
     notes = render_notes(snap, content, stats)
     return data, notes
 
@@ -724,6 +807,9 @@ def collect_review_items(content: Content) -> List[str]:
     unconfirmed = sorted(f"`{k}` ({e['unit']})" for k, e in content.rules.items() if e.get("unit") and not e.get("unit_confirmed"))
     if unconfirmed:
         items.append("Units are not in the ARGUS alarm data; these are our guesses: " + ", ".join(unconfirmed))
+    for layer in content.basemaps.get("layers", []):
+        if layer.get("needs_review"):
+            items.append(f"Base map `{layer['id']}`: {layer.get('review_note', 'check licence')}")
     for key, entry in sorted(content.threat_categories.items()):
         if entry.get("needs_review"):
             items.append(f"Threat category `{key}` -> {entry['cards']}" + (f": {entry['note']}" if entry.get("note") else ""))
@@ -837,6 +923,10 @@ def render_notes(snap: Snapshot, content: Content, stats: List[Dict[str, Any]]) 
         for f in inst["flags"]:
             w(f"- installed-instrument {f['installed_instrument_id']}: {f['flag']}. {f['detail']}")
         w("")
+        w(f"Map: {sum(len(p['instruments']) for p in inst['points'])} instruments with coordinates at "
+          f"{len(inst['points'])} distinct points; without a position: "
+          + (", ".join(f"{u['instrument_type']} ({u['reason']})" for u in inst["unplaced"]) or "none") + ".")
+        w("")
         w("### Alarm funnel")
         w("")
         w(f"- AD-RT alarm records in the sample: {funnel['records']} ({funnel['by_type']})")
@@ -918,7 +1008,22 @@ DESIGN_ASSUMPTIONS = [
     "least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level "
     "without a usable alarm (e.g. DL-only sites) skips the replay with a short message.",
     "Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.",
+    "Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the "
+    "map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.",
 ]
+
+
+def copy_backdrops(content_dir: Path = CONTENT_DIR, out_dir: Path = OUT_BACKDROPS) -> List[str]:
+    """Copy the drawn-plan backdrops (OSM / Natural Earth, see tools/fetch_backdrops.py) next to the game."""
+    copied = []
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for src in sorted((content_dir / "backdrops").glob("*.json")):
+        collection = load_json(src)
+        if collection.get("type") != "FeatureCollection" or not collection.get("attribution"):
+            raise BuildError(f"{src.name}: not a FeatureCollection with an attribution")
+        (out_dir / src.name).write_bytes(src.read_bytes())
+        copied.append(src.name)
+    return copied
 
 
 def write_outputs(data: Dict[str, Any], notes: str, out_json: Path = OUT_JSON, out_notes: Path = OUT_NOTES) -> None:
@@ -948,6 +1053,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     playable = [m["pilot_key"] for m in data["monuments"] if m["playable"]]
     if not args.check:
         write_outputs(data, notes)
+        copy_backdrops(args.content)
     print(f"build_game_data: {'checked' if args.check else 'wrote'} {OUT_JSON.relative_to(ROOT)} "
           f"({size / 1024:.1f} KiB), playable: {', '.join(playable) or 'none'}")
     return 0

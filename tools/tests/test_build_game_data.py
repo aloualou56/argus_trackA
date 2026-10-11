@@ -135,6 +135,53 @@ class GameData(unittest.TestCase):
             for field in ("name", "tells"):
                 self.assertTrue(card[field]["en"] and card[field]["el"], card["id"])
 
+    def test_map_data(self):
+        self.assertIn(self.data["basemaps"]["default"], [l["id"] for l in self.data["basemaps"]["layers"]])
+        for layer in self.data["basemaps"]["layers"]:
+            self.assertTrue(layer["attribution"])
+            if layer.get("type") == "vector":
+                self.assertTrue(self.data["basemaps"]["world"])
+            else:
+                self.assertTrue(layer["url"].startswith("https://"))
+        for mon in self.data["monuments"]:
+            self.assertIsNotNone(mon["map"], mon["pilot_key"])
+            (south, west), (north, east) = mon["map"]["bounds"]
+            lat, lon = mon["map"]["center"]
+            self.assertTrue(south <= lat <= north and west <= lon <= east, mon["pilot_key"])
+
+    def test_ranverso_sensor_positions(self):
+        inst = self.ranverso["installed"]
+        placed = sum(len(p["instruments"]) for p in inst["points"])
+        self.assertEqual(len(inst["points"]), 11)
+        self.assertEqual(placed + len(inst["unplaced"]), inst["distinct_instruments"])
+        self.assertEqual([u["card"] for u in inst["unplaced"]], ["satellite"])
+        for point in inst["points"]:
+            self.assertAlmostEqual(point["lat"], 45.0812, places=3)
+            self.assertAlmostEqual(point["lon"], 7.4497, places=3)
+        flagged = [p for p in inst["points"] if "temporary_position" in p["flags"]]
+        self.assertEqual([i["card"] for p in flagged for i in p["instruments"]], ["weather_station"])
+
+    def test_plan_backdrops(self):
+        """The drawn plan (used offline or when map pictures are blocked) ships with the game."""
+        web_public = b.OUT_JSON.parent.parent
+        for rel in (self.data["basemaps"]["world"], self.ranverso["backdrop"]):
+            collection = json.loads((web_public / rel).read_text(encoding="utf-8"))
+            self.assertEqual(collection["type"], "FeatureCollection")
+            self.assertTrue(collection["attribution"])
+            self.assertTrue(collection["features"])
+        osm = json.loads((web_public / self.ranverso["backdrop"]).read_text(encoding="utf-8"))
+        church = [f for f in osm["features"] if f["properties"]["kind"] == "heritage"]
+        self.assertEqual([f["geometry"]["type"] for f in church], ["Polygon"])
+        lon, lat = zip(*church[0]["geometry"]["coordinates"][0])
+        centre = self.ranverso["map"]["center"]
+        self.assertTrue(min(lat) - 0.001 < centre[0] < max(lat) + 0.001 and min(lon) - 0.001 < centre[1] < max(lon) + 0.001)
+
+    def test_alarm_sensors_have_positions(self):
+        for alarm in self.ranverso["alarms"]:
+            for instrument in alarm["instruments"]:
+                self.assertIsNotNone(instrument["lat"], alarm["id"])
+                self.assertIsNotNone(instrument["lon"], alarm["id"])
+
     def test_notes_list_assumptions(self):
         self.assertIn("## Assumptions needing human review", self.notes)
         self.assertIn("## Data quirks found", self.notes)
@@ -150,6 +197,10 @@ class PureHelpers(unittest.TestCase):
     def test_node_token(self):
         self.assertEqual(b.node_token("Installed Instrument Rain Gauge - 177315"), "177315")
         self.assertEqual(b.node_token("Installed Instrument Soil Moisture - A8610A333526680F"), "a8610a333526680f")
+        name = "Installed Instrument Crackmeter - 177266 (Conventillo - Staircase access façade)"
+        self.assertEqual(b.node_token(name), "177266")
+        self.assertEqual(b.place_label(name), "Conventillo - Staircase access façade")
+        self.assertIsNone(b.place_label("Installed Instrument Rain Gauge - 177315"))
 
     def test_auto_mission_fills_from_lower_level(self):
         def s(key, label, mr, cards=("humidity",), desc=None):

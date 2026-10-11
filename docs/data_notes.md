@@ -114,6 +114,8 @@ Double-registered instruments (same instrument_id, two installed-instrument reco
 - installed-instrument 157: virtual. Virtual Earth Observation layer, not a physical sensor on site.
 - installed-instrument 162: verification_required. Coordinates marked temporary; device was re-assigned from another site.
 
+Map: 19 instruments with coordinates at 11 distinct points; without a position: Earth Observation Layer Instrument (virtual).
+
 ### Alarm funnel
 
 - AD-RT alarm records in the sample: 92 ({'DL': 14, 'EK': 78})
@@ -162,6 +164,7 @@ Game-design rules (in code):
 - Score: 25 points per mission threat covered by at least one capable card (75) plus up to 25 for budget efficiency (share of coins spent on cards that cover a mission threat or the replayed alarm). The historical alarm is shown but not scored.
 - Detection: the player's network detects an alarm if, for every group in the rule's detect_with, it has at least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level without a usable alarm (e.g. DL-only sites) skips the replay with a short message.
 - Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.
+- Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.
 
 Authored content flagged `needs_review`:
 
@@ -182,6 +185,8 @@ Authored content flagged `needs_review`:
 - Rule `ranverso:R2_rain_7d` -> [['rain_gauge', 'weather_station']]: Threshold key is 'R2_rain_7d_diff'; we read it as 7-day rainfall in mm. Counting the weather station as a rain detector is our assumption.
 - Rule `ranverso:R3_temp_nodiff` -> [['temperature', 'weather_station'], ['soil_moisture']]: Policy calls this a 'sensor consistency' threat (a check on the sensors). Assumes the soil probe also measures soil temperature.
 - Units are not in the ARGUS alarm data; these are our guesses: `baltanas:R1_ppv` (mm/s), `baltanas:R2_hum_daily_range` (%), `baltanas:R3_gnss_change` (mm), `baltanas:R4a_soil_high` (%), `baltanas:R4b_soil_range` (%), `baltanas:R6_rain_1h` (mm), `delos:R1a_rain_1h` (mm), `delos:R1b_rain_3h` (mm), `delos:R2_wind` (m/s), `lucretili:R4a_hum_spike_6h` (%), `lucretili:R4b_hum_persist_7d` (%), `lucretili:R4c_hum_rapid_1h` (%), `lucretili:R6a_rain` (mm), `lucretili:R6b_rain_cum7d` (mm), `lucretili:R9a_temp_lt` (°C), `lucretili:R9b_temp_st` (°C), `ranverso:R1_hum_inside` (%), `ranverso:R2_rain_7d` (mm), `ranverso:R3_temp_nodiff` (°C), `ranverso:R4a_soil_high` (%), `ranverso:R4b_soil_low` (%)
+- Base map `satellite`: Esri World Imagery: confirm that a free, public educational game may use these tiles without an ArcGIS key, or get a free ArcGIS Location Platform key. Alternatives with open licences: swisstopo SWISSIMAGE (CH), PNOA (ES), regional orthophotos (IT, GR).
+- Base map `streets`: OpenStreetMap tile usage policy allows light use with attribution and no offline caching. For a large public launch, switch to a tile provider.
 - Threat category `criminals` -> ['visitor_counter', 'camera']
 - Threat category `dissociation` -> []: ICCROM 'dissociation' (loss of objects, records or knowledge) cannot be sensed.
 - Threat category `drought` -> ['soil_moisture', 'rain_gauge', 'weather_station', 'satellite']

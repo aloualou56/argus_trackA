@@ -119,7 +119,8 @@
     "instrument_types": [
      "Humidity Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "temperature",
@@ -136,7 +137,8 @@
     "instrument_types": [
      "Temperature Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "airflow",
@@ -154,7 +156,8 @@
      "Air Flow Sensor",
      "Pir-Airflow Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "air_quality",
@@ -171,7 +174,8 @@
     "instrument_types": [
      "Gas Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "light_uv",
@@ -190,7 +194,8 @@
      "UV Meter Sensor",
      "Pyranometer Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "rain_gauge",
@@ -207,7 +212,8 @@
     "instrument_types": [
      "Rain Gauge Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "soil_moisture",
@@ -225,7 +231,8 @@
      "Soil Moisture Sensor",
      "Water Potential Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "weather_station",
@@ -243,7 +250,8 @@
      "Weather Station Sensor",
      "Barometer Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "crackmeter",
@@ -260,7 +268,8 @@
     "instrument_types": [
      "Crackmeter Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "tiltmeter",
@@ -277,7 +286,8 @@
     "instrument_types": [
      "Tiltmeter Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "vibration",
@@ -295,7 +305,8 @@
      "Vibration Sensor",
      "Accelerometer Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "gnss",
@@ -312,7 +323,8 @@
     "instrument_types": [
      "GNSS Sensor"
     ],
-    "needs_review": false
+    "needs_review": false,
+    "on_map": true
    },
    {
     "id": "acoustic",
@@ -329,7 +341,8 @@
     "instrument_types": [
      "Acoustic Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "visitor_counter",
@@ -347,7 +360,8 @@
      "People Counter Sensor",
      "Barrier Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "camera",
@@ -364,7 +378,8 @@
     "instrument_types": [
      "Multispectral Camera Sensor"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": true
    },
    {
     "id": "satellite",
@@ -381,7 +396,8 @@
     "instrument_types": [
      "Earth Observation Layer Instrument"
     ],
-    "needs_review": true
+    "needs_review": true,
+    "on_map": false
    }
   ]
  },
@@ -922,6 +938,47 @@
    "needs_review": false
   }
  },
+ "basemaps": {
+  "default": "satellite",
+  "layers": [
+   {
+    "id": "satellite",
+    "name": {
+     "en": "Satellite",
+     "el": "Δορυφόρος"
+    },
+    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "attribution": "Imagery © Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+    "attribution_url": "https://www.esri.com/en-us/legal/terms/full-master-agreement",
+    "max_native_zoom": 19,
+    "needs_review": true
+   },
+   {
+    "id": "streets",
+    "name": {
+     "en": "Map",
+     "el": "Χάρτης"
+    },
+    "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "attribution": "© OpenStreetMap contributors",
+    "attribution_url": "https://www.openstreetmap.org/copyright",
+    "max_native_zoom": 19,
+    "needs_review": true
+   },
+   {
+    "id": "plan",
+    "type": "vector",
+    "name": {
+     "en": "Plan",
+     "el": "Σχέδιο"
+    },
+    "attribution": "© OpenStreetMap contributors (ODbL) · Natural Earth",
+    "attribution_url": "https://www.openstreetmap.org/copyright",
+    "needs_review": false
+   }
+  ],
+  "world": "data/backdrops/world_land.json"
+ },
  "monuments": [
   {
    "pilot_key": "delos",
@@ -969,6 +1026,22 @@
     "distinct_instruments": 30,
     "physical_instruments": 30
    },
+   "map": {
+    "center": [
+     37.3963389,
+     25.2693833
+    ],
+    "bounds": [
+     [
+      37.3914389,
+      25.266225
+     ],
+     [
+      37.4033278,
+      25.2709278
+     ]
+    ]
+   },
    "display_name": {
     "en": "Delos",
     "el": "Δήλος"
@@ -976,7 +1049,8 @@
    "place": {
     "en": "Cyclades, Greece",
     "el": "Κυκλάδες, Ελλάδα"
-   }
+   },
+   "backdrop": null
   },
   {
    "pilot_key": "baltanas",
@@ -1024,6 +1098,22 @@
     "distinct_instruments": 39,
     "physical_instruments": 39
    },
+   "map": {
+    "center": [
+     41.9384333,
+     -4.2438306
+    ],
+    "bounds": [
+     [
+      41.937925,
+      -4.2465806
+     ],
+     [
+      41.9390972,
+      -4.2432917
+     ]
+    ]
+   },
    "display_name": {
     "en": "The cellar town of Baltanás",
     "el": "Τα υπόγεια κελάρια της Μπαλτανάς"
@@ -1031,7 +1121,8 @@
    "place": {
     "en": "Palencia, Spain",
     "el": "Παλένθια, Ισπανία"
-   }
+   },
+   "backdrop": null
   },
   {
    "pilot_key": "lucretili",
@@ -1079,6 +1170,22 @@
     "distinct_instruments": 19,
     "physical_instruments": 19
    },
+   "map": {
+    "center": [
+     42.0236972,
+     12.8273806
+    ],
+    "bounds": [
+     [
+      42.0236417,
+      12.8195556
+     ],
+     [
+      42.1013667,
+      12.9016056
+     ]
+    ]
+   },
    "display_name": {
     "en": "Monti Lucretili",
     "el": "Όρη Λουκρετίλι"
@@ -1086,7 +1193,8 @@
    "place": {
     "en": "Near Rome, Italy",
     "el": "Κοντά στη Ρώμη, Ιταλία"
-   }
+   },
+   "backdrop": null
   },
   {
    "pilot_key": "ranverso",
@@ -1161,6 +1269,22 @@
     "records": 26,
     "distinct_instruments": 20,
     "physical_instruments": 19
+   },
+   "map": {
+    "center": [
+     45.0811778,
+     7.449825
+    ],
+    "bounds": [
+     [
+      45.0810583,
+      7.4493528
+     ],
+     [
+      45.081225,
+      7.4499139
+     ]
+    ]
    },
    "display_name": {
     "en": "Sant'Antonio di Ranverso",
@@ -2395,6 +2519,232 @@
       "flag": "verification_required",
       "detail": "Coordinates marked temporary; device was re-assigned from another site."
      }
+    ],
+    "points": [
+     {
+      "lat": 45.0811806,
+      "lon": 7.449825,
+      "height": 339.11,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 21,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "168442"
+       },
+       {
+        "instrument_id": 24,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "168442"
+       },
+       {
+        "instrument_id": 29,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "149248"
+       },
+       {
+        "instrument_id": 32,
+        "card": "light_uv",
+        "instrument_type": "Lux Meter Sensor",
+        "node": "168442"
+       },
+       {
+        "instrument_id": 39,
+        "card": "light_uv",
+        "instrument_type": "UV Meter Sensor",
+        "node": "168442"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0811778,
+      "lon": 7.449825,
+      "height": 339.12,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 22,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "174188"
+       },
+       {
+        "instrument_id": 25,
+        "card": "temperature",
+        "instrument_type": "Temperature Sensor",
+        "node": "174188"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.081225,
+      "lon": 7.4493528,
+      "height": 338.89,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 23,
+        "card": "humidity",
+        "instrument_type": "Humidity Sensor",
+        "node": "177315"
+       },
+       {
+        "instrument_id": 35,
+        "card": "rain_gauge",
+        "instrument_type": "Rain Gauge Sensor",
+        "node": "177315"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0811333,
+      "lon": 7.4499139,
+      "height": 339.42,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 27,
+        "card": "vibration",
+        "instrument_type": "Vibration Sensor",
+        "node": "170894"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0810583,
+      "lon": 7.4496472,
+      "height": 340.16,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 28,
+        "card": "acoustic",
+        "instrument_type": "Acoustic Sensor",
+        "node": "raspi-100000007a1083f5"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0812167,
+      "lon": 7.4493528,
+      "height": 338.91,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 30,
+        "card": "airflow",
+        "instrument_type": "Air Flow Sensor",
+        "node": "a8610a3539387205"
+       },
+       {
+        "instrument_id": 34,
+        "card": "light_uv",
+        "instrument_type": "Pyranometer Sensor",
+        "node": "149361"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0810667,
+      "lon": 7.4496389,
+      "height": 340.09,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 31,
+        "card": "air_quality",
+        "instrument_type": "Gas Sensor",
+        "node": "a8610a3338359111"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0811778,
+      "lon": 7.4498722,
+      "height": 339.11,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 33,
+        "card": "camera",
+        "instrument_type": "Multispectral Camera Sensor",
+        "node": "svy 324160033"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0811778,
+      "lon": 7.4498472,
+      "height": 340.12,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 36,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "a8610a34363d6617"
+       },
+       {
+        "instrument_id": 37,
+        "card": "soil_moisture",
+        "instrument_type": "Soil Moisture Sensor",
+        "node": "a8610a333526680f"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.0811639,
+      "lon": 7.4499111,
+      "height": 339.23,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 38,
+        "card": "tiltmeter",
+        "instrument_type": "Tiltmeter Sensor",
+        "node": "143276"
+       }
+      ],
+      "flags": []
+     },
+     {
+      "lat": 45.08119,
+      "lon": 7.44984,
+      "height": 339.11,
+      "label": null,
+      "instruments": [
+       {
+        "instrument_id": 135,
+        "card": "weather_station",
+        "instrument_type": "Weather Station Sensor",
+        "node": "2cf7f1c0734001e8"
+       }
+      ],
+      "flags": [
+       "temporary_position"
+      ]
+     }
+    ],
+    "unplaced": [
+     {
+      "instrument_id": 130,
+      "card": "satellite",
+      "instrument_type": "Earth Observation Layer Instrument",
+      "node": "ranverso",
+      "reason": "virtual"
+     }
     ]
    },
    "alarms": [
@@ -2421,7 +2771,9 @@
        "instrument_id": 37,
        "name": "Installed Instrument Soil Moisture - A8610A333526680F",
        "instrument_type": "Soil Moisture Sensor",
-       "card": "soil_moisture"
+       "card": "soil_moisture",
+       "lat": 45.0811778,
+       "lon": 7.4498472
       }
      ],
      "quality_flags": [
@@ -2472,7 +2824,9 @@
        "instrument_id": 35,
        "name": "Installed Instrument Rain Gauge - 177315",
        "instrument_type": "Rain Gauge Sensor",
-       "card": "rain_gauge"
+       "card": "rain_gauge",
+       "lat": 45.081225,
+       "lon": 7.4493528
       }
      ],
      "quality_flags": [],
@@ -2526,7 +2880,9 @@
        "instrument_id": 37,
        "name": "Installed Instrument Soil Moisture - A8610A333526680F",
        "instrument_type": "Soil Moisture Sensor",
-       "card": "soil_moisture"
+       "card": "soil_moisture",
+       "lat": 45.0811778,
+       "lon": 7.4498472
       }
      ],
      "quality_flags": [
@@ -2578,7 +2934,9 @@
        "instrument_id": 35,
        "name": "Installed Instrument Rain Gauge - 177315",
        "instrument_type": "Rain Gauge Sensor",
-       "card": "rain_gauge"
+       "card": "rain_gauge",
+       "lat": 45.081225,
+       "lon": 7.4493528
       }
      ],
      "quality_flags": [],
@@ -2629,7 +2987,9 @@
        "instrument_id": 37,
        "name": "Installed Instrument Soil Moisture - A8610A333526680F",
        "instrument_type": "Soil Moisture Sensor",
-       "card": "soil_moisture"
+       "card": "soil_moisture",
+       "lat": 45.0811778,
+       "lon": 7.4498472
       }
      ],
      "quality_flags": [
@@ -2696,7 +3056,8 @@
      "needs_review": false,
      "authored": true
     }
-   ]
+   ],
+   "backdrop": "data/backdrops/ranverso.json"
   },
   {
    "pilot_key": "schenkenberg",
@@ -2744,6 +3105,22 @@
     "distinct_instruments": 9,
     "physical_instruments": 9
    },
+   "map": {
+    "center": [
+     47.4421306,
+     8.1010528
+    ],
+    "bounds": [
+     [
+      47.4421194,
+      8.1010167
+     ],
+     [
+      47.4421528,
+      8.1010778
+     ]
+    ]
+   },
    "display_name": {
     "en": "Schenkenberg Castle",
     "el": "Κάστρο Σένκενμπεργκ"
@@ -2751,7 +3128,8 @@
    "place": {
     "en": "Aargau, Switzerland",
     "el": "Αργκάου, Ελβετία"
-   }
+   },
+   "backdrop": null
   }
  ]
 }

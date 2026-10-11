@@ -1,8 +1,10 @@
 # Guardian for a Day · Φύλακας για μια μέρα
 
 A plain-language web game for the ARGUS Open Innovation Challenge 2026, Track A (Heritage and Citizen Science).
-The player designs the sensor network of a real monument on a small budget, sees what ARGUS really installed,
-replays a real ARGUS alarm from August–September 2026, and gets a score with a short explanation of each danger.
+The game is played on an interactive satellite map. The player picks a monument on a map of Europe, flies in, and
+places sensors on the real building on a small budget. Then the real ARGUS sensors appear on the map at their real
+positions, a real ARGUS alarm from August–September 2026 lights up the sensor that raised it, and the player gets a
+score with a short explanation of each danger.
 
 Status (11 Oct 2026): playable vertical slice for **Sant'Antonio di Ranverso**, in Greek and English.
 The other four monuments are listed as "coming soon" and become playable by adding data only.
@@ -15,6 +17,7 @@ You need Python 3.9+ (standard library only) and Node 20+.
 # 1. Build the data pack from the ARGUS snapshot (reads snapshot/, never writes to it)
 python3 -I tools/build_game_data.py            # writes web/public/data/game_data.json and docs/data_notes.md
 python3 -I tools/build_game_data.py --check    # validate only
+python3 -I tools/fetch_backdrops.py            # once per new monument (needs internet): drawn-plan outlines
 
 # 2. Data tests (counts, plausibility, mappings)
 python3 -I -m unittest discover -s tools/tests -t tools -v
@@ -29,6 +32,8 @@ npm run screenshots  # needs a build: plays the game in Edge, saves docs/screens
 ```
 
 `web/dist` is a static site with relative paths: upload it to GitHub Pages, Netlify or Vercel as is.
+`npm run screenshots` saves what each screen shows (`*.png`) and, for phones, the whole scrolling panel
+(`*-panel.png`; the sticky map cannot appear in full-page captures).
 Add `?review` to the URL to outline every authored text that still needs human review.
 
 Windows note: the npm scripts call `node node_modules/...` directly because the usual `.bin` shims break when the
@@ -49,12 +54,29 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `content/rule_sensor_map.json` | AD-RT rule → sensor cards that detect it, keyed `pilot:rule`, all 37 policies | authored |
 | `content/threat_sensor_map.json` | threat → sensor cards that can warn about it (for the score) | authored |
 | `content/monuments/<pilot>.json` | story, budget, missions per level, plain threat texts, alarm explanations, discussion prompts | authored |
+| `content/map.json` | base maps for the board (satellite and street map, no API key) with attribution | authored |
 | `tools/build_game_data.py` | joins snapshot + content, de-duplicates and filters alarms, validates everything | code |
-| `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison (pure, tested) | code |
+| `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison, map distances (pure, tested) | code |
+| `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws | code |
 | `web/src/community/store.ts` | anonymous aggregated choices; `CommunityStore` interface + localStorage fallback | code |
 | `web/src/i18n/{el,en}.json` | every UI string; Greek is the default | authored |
 
-The browser loads only `game_data.json` (about 60 KB). It never loads `asset-states.json`.
+The browser loads only `game_data.json` (about 65 KB). It never loads `asset-states.json`.
+
+### The map
+
+- **Positions are real.** Sensor positions are the ARGUS installed-device coordinates (Ranverso: 19 of 20
+  instruments, at 11 points within 30 m; the 20th is the satellite layer). Site pins on the overview are the median
+  of each monument's sensor positions. ARGUS points closer than 2.5 m share one numbered marker on screen.
+- **No API key.** Leaflet with Esri World Imagery (satellite) and OpenStreetMap (street map), set in
+  `content/map.json`. Google Maps would need a Google Cloud key with billing; the base maps can be swapped there.
+- **Tiles are only a backdrop.** If no picture loads (offline, or a page that blocks outside images, such as a
+  sandboxed preview page), the game switches by itself to a drawn **plan**: OpenStreetMap outlines around the monument
+  (ODbL, includes the real church outline) and Natural Earth coastlines (public domain), stored in
+  `content/backdrops/` by `tools/fetch_backdrops.py` and shipped with the game.
+- **Placing:** move the map so the reticle is where you want the sensor, then press + on a card (tap the map to move
+  the reticle; drag pins to adjust; tap a pin to remove it). The reticle's centre dot is the exact spot; it sits
+  under the pins, lifts while the map moves and "drops" when a sensor is placed. Satellite images get no pin.
 
 ### Add a monument (data only)
 
@@ -75,7 +97,9 @@ to replay there yet; the game shows a polite message instead. See next steps.
 - **Score:** 25 points per threat covered by at least one capable card (75) + up to 25 for the share of coins spent
   on cards that help with a mission threat or the replayed alarm. The replayed alarm itself is not scored.
 - **Detection:** the network detects an alarm if it has a card from every group in the rule's `detect_with`.
-  Placement (which wall, inside or outside) is ignored.
+- **Placement on the map is not scored.** It is used for discussion ("your humidity sensor is 12 m from the
+  nearest ARGUS one: why did they put it there?"). There is no real building outline to judge inside/outside:
+  the only footprint in the data is a test shape for Baltanás.
 - **Reveal:** counts distinct ARGUS instruments (Ranverso: 26 records but 20 instruments), grouped by card.
   Differences become discussion prompts, never penalties.
 - **Alarms shown:** expert-rule alarms only, de-duplicated, with plausible values (humidity and soil moisture
@@ -95,10 +119,16 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 5. **Ranverso data:** soil moisture flat at about 2.47 for three weeks (stuck sensor?), all indoor humidity values
    above 100, double-registered instruments, the weather station marked `verification_required`.
 6. **Game balance:** budget 10, scoring weights, verdict thresholds (85 / 60 / 30). Check in the playtest.
+7. **Base-map licences:** Esri World Imagery terms for a free public game (or get a free ArcGIS key); the OSM tile
+   policy allows light use only. Open national orthophotos exist for CH (swisstopo), ES (PNOA) and some IT/GR regions.
+8. **Ranverso weather station position** is marked temporary by ARGUS (dashed marker in the game).
 
 ## Accessibility (WCAG 2.1 AA target)
 
 - Native controls only (radio groups, buttons, a real `<table>`); every step is keyboard-only playable.
+- The map is optional for playing: every map action also exists in the panel. The map itself is keyboard
+  focusable (arrows pan, +/- zoom), pins are labelled buttons, controls are 44 px, the sticky map never covers the
+  focused element (`scroll-padding`), and the camera jumps instead of flying when reduced motion is on.
 - Focus moves to each new screen's heading; a polite live region announces sensor changes and budget problems.
 - Disabled-looking steppers stay focusable (`aria-disabled`) and say why they cannot be used.
 - Colour is never the only signal: icons, words, solid vs dashed borders, circles (you) vs squares (ARGUS).
@@ -118,6 +148,7 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 | 20–21 Oct | Delos and Baltanás packs; decide the alarm step for DL-only sites (e.g. map top DL features to cards, flagged) |
 | 21 Oct | Community stats behind `CommunityStore` (Supabase or Firebase optional, local fallback stays); class code (teacher creates a 6-character code, players join, teacher sees the group's choices next to ARGUS) |
 | 21 Oct | Pre/post quiz (5 questions, same before and after, stored anonymously with the play record) |
+| 21 Oct | Map: community heat-map of where players put each sensor; decide base-map licences; ask ARGUS for real footprints (then "inside/outside" can teach placement) |
 | 22 Oct | **Playtest** with a class or visitors; manual screen-reader and keyboard audit |
 | 23 Oct | Fixes, final screenshots, short video, submission text |
 | 24 Oct | Submit (deadline 25 Oct, 23:59 Athens) |

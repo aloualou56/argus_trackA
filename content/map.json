@@ -1,0 +1,35 @@
+{
+  "_about": "AUTHORED by the game team. Base maps for the game board. None needs an API key. Layers are raster tiles unless type is vector (drawn from content/backdrops). Licences need review before a public launch. Sensor positions on the map come from ARGUS (installed-devices coordinates); nothing here changes them.",
+  "default": "satellite",
+  "layers": [
+    {
+      "id": "satellite",
+      "name": { "en": "Satellite", "el": "Δορυφόρος" },
+      "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "attribution": "Imagery © Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+      "attribution_url": "https://www.esri.com/en-us/legal/terms/full-master-agreement",
+      "max_native_zoom": 19,
+      "needs_review": true,
+      "review_note": "Esri World Imagery: confirm that a free, public educational game may use these tiles without an ArcGIS key, or get a free ArcGIS Location Platform key. Alternatives with open licences: swisstopo SWISSIMAGE (CH), PNOA (ES), regional orthophotos (IT, GR)."
+    },
+    {
+      "id": "streets",
+      "name": { "en": "Map", "el": "Χάρτης" },
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "attribution": "© OpenStreetMap contributors",
+      "attribution_url": "https://www.openstreetmap.org/copyright",
+      "max_native_zoom": 19,
+      "needs_review": true,
+      "review_note": "OpenStreetMap tile usage policy allows light use with attribution and no offline caching. For a large public launch, switch to a tile provider."
+    },
+    {
+      "id": "plan",
+      "type": "vector",
+      "name": { "en": "Plan", "el": "Σχέδιο" },
+      "attribution": "© OpenStreetMap contributors (ODbL) · Natural Earth",
+      "attribution_url": "https://www.openstreetmap.org/copyright",
+      "needs_review": false,
+      "review_note": "Drawn from content/backdrops (tools/fetch_backdrops.py). Works offline and wherever outside images are blocked; the game switches to it by itself when map pictures fail."
+    }
+  ]
+}

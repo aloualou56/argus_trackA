@@ -5,6 +5,15 @@ export type Lang = "el" | "en";
 export type Text = Record<Lang, string>;
 export type LevelId = "low" | "medium" | "high" | "extreme" | "catastrophic";
 export type Picks = Record<string, number>;
+export type LatLng = [number, number];
+
+/** One sensor the player put in their network. lat/lng are null for cards with on_map=false. */
+export interface Placement {
+  id: string;
+  card: string;
+  lat: number | null;
+  lng: number | null;
+}
 
 export interface Card {
   id: string;
@@ -14,6 +23,8 @@ export interface Card {
   tells: Text;
   instrument_types: string[];
   needs_review: boolean;
+  /** false: covers the whole area (satellite), so it gets no pin on the map. */
+  on_map: boolean;
 }
 
 export interface CardGroup {
@@ -64,6 +75,8 @@ export interface AlarmInstrument {
   name: string;
   instrument_type: string;
   card: string | null;
+  lat: number | null;
+  lon: number | null;
 }
 
 export interface Alarm {
@@ -95,6 +108,24 @@ export interface InstalledByCard {
   nodes: string[];
 }
 
+export interface PointInstrument {
+  instrument_id: number;
+  card: string | null;
+  instrument_type: string;
+  node: string;
+}
+
+/** ARGUS instruments that share one position (installed-devices coordinates). */
+export interface MapPoint {
+  lat: number;
+  lon: number;
+  height: number | null;
+  label: string | null;
+  instruments: PointInstrument[];
+  /** "temporary_position" | "position_from_sibling_sensor" */
+  flags: string[];
+}
+
 export interface Installed {
   asset_state_ids: number[];
   records: number;
@@ -102,6 +133,25 @@ export interface Installed {
   physical_instruments: number;
   by_card: InstalledByCard[];
   other: { instrument_type: string; count: number }[];
+  points: MapPoint[];
+  unplaced: (PointInstrument & { reason: string })[];
+}
+
+export interface MapView {
+  center: LatLng;
+  bounds: [LatLng, LatLng];
+}
+
+export interface Basemap {
+  id: string;
+  /** "vector" = the drawn plan from data/backdrops; otherwise raster tiles from `url`. */
+  type?: "raster" | "vector";
+  name: Text;
+  url?: string;
+  attribution: string;
+  attribution_url?: string;
+  max_native_zoom: number;
+  needs_review: boolean;
 }
 
 export interface Prompt extends Text {
@@ -121,6 +171,10 @@ interface MonumentBase {
   place?: Text;
   scenario_count: number;
   installed_summary: { records: number; distinct_instruments: number; physical_instruments: number };
+  /** From the ARGUS sensor positions; null if none have coordinates. */
+  map: MapView | null;
+  /** OpenStreetMap outlines around the monument for the drawn plan (relative URL), if fetched. */
+  backdrop: string | null;
 }
 
 export interface MonumentStub extends MonumentBase {
@@ -148,5 +202,6 @@ export interface GameData {
   mission_size: number;
   cards: { currency: string; groups: CardGroup[]; cards: Card[] };
   rule_sensor_map: Record<string, RuleEntry>;
+  basemaps: { default: string; layers: Basemap[]; world: string | null };
   monuments: (Monument | MonumentStub)[];
 }
