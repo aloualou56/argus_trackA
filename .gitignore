@@ -1,6 +1,6 @@
-# ARGUS API snapshot: 43 MB, challenge data, read-only input. Keep it out of git and share it
-# the way the challenge allows. The game only needs web/public/data/game_data.json (committed).
-snapshot/
+# ARGUS API snapshot: snapshot/ IS committed (private repository) so both of us build from the
+# same data. It is read-only input; the game itself only loads web/public/data/game_data.json.
+# Do not make this repository public without checking the challenge's data terms.
 snapshot.zip
 
 # Never commit API scripts or credentials.

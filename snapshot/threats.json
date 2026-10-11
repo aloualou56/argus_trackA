@@ -1,0 +1,1256 @@
+{
+ "resource": "threats",
+ "count": 156,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 11,
+   "name": "Katastrofh",
+   "description": "katestrefh ta panta",
+   "metadata": null,
+   "created_at": "2026-02-16T23:54:32.000000Z",
+   "updated_at": "2026-02-16T23:54:32.000000Z"
+  },
+  {
+   "id": 12,
+   "name": "MoistureRelatedMaterialStabilityThreat",
+   "description": "Sustained high humidity may accelerate corrosion, biological growth, salt activity, or other moisture-driven degradation processes depending on the asset material.",
+   "metadata": "{\"type\": \"MoistureRelatedMaterialStabilityThreat\", \"level\": \"High\", \"description\": \"Sustained high humidity may accelerate corrosion, biological growth, salt activity, or other moisture-driven degradation processes depending on the asset material.\"}",
+   "created_at": "2026-06-30T11:17:15.000000Z",
+   "updated_at": "2026-06-30T11:17:15.000000Z"
+  },
+  {
+   "id": 13,
+   "name": "MicroclimaticStressThreat",
+   "description": "Repeated low temperature may contribute to condensation risk, freeze-thaw stress, or unstable conservation conditions depending on material and humidity context.",
+   "metadata": "{\"type\": \"MicroclimaticStressThreat\", \"level\": \"Medium\", \"description\": \"Repeated low temperature may contribute to condensation risk, freeze-thaw stress, or unstable conservation conditions depending on material and humidity context.\"}",
+   "created_at": "2026-06-30T11:17:17.000000Z",
+   "updated_at": "2026-06-30T11:17:17.000000Z"
+  },
+  {
+   "id": 14,
+   "name": "AD-RT humidity threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R1_hum_inside\"}",
+   "created_at": "2026-08-28T12:19:50.000000Z",
+   "updated_at": "2026-08-28T12:19:50.000000Z"
+  },
+  {
+   "id": 15,
+   "name": "AD-RT soil moisture threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R4b_soil_low\"}",
+   "created_at": "2026-08-28T12:19:51.000000Z",
+   "updated_at": "2026-08-28T12:19:51.000000Z"
+  },
+  {
+   "id": 16,
+   "name": "AD-RT crack movement threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R2_crack_step\"}",
+   "created_at": "2026-08-28T12:20:02.000000Z",
+   "updated_at": "2026-08-28T12:20:02.000000Z"
+  },
+  {
+   "id": 17,
+   "name": "AD-RT tilt movement threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R2a_tilt_step\"}",
+   "created_at": "2026-08-28T12:22:56.000000Z",
+   "updated_at": "2026-08-28T12:22:56.000000Z"
+  },
+  {
+   "id": 18,
+   "name": "AD-RT humidity instability threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R4c_hum_rapid_1h\"}",
+   "created_at": "2026-08-28T12:22:57.000000Z",
+   "updated_at": "2026-08-28T12:22:57.000000Z"
+  },
+  {
+   "id": 19,
+   "name": "AD-RT temperature threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R9a_temp_lt\"}",
+   "created_at": "2026-08-28T12:22:57.000000Z",
+   "updated_at": "2026-08-28T12:22:57.000000Z"
+  },
+  {
+   "id": 20,
+   "name": "AD-RT temperature instability threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R9b_temp_st\"}",
+   "created_at": "2026-08-28T12:22:58.000000Z",
+   "updated_at": "2026-08-28T12:22:58.000000Z"
+  },
+  {
+   "id": 21,
+   "name": "ABC risk scenario: baltanas.subsidence.cellar-ensemble v1",
+   "description": "Subsidence or partial collapse of historic cellars",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.subsidence.cellar-ensemble\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Hill landscape and network of 374 underground cellars\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.5, \"b\": 4.5, \"c\": 2.5, \"mr\": 11.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Physical Forces / Subsidence\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 22,
+   "name": "ABC risk scenario: baltanas.relative-humidity.structural-wood v1",
+   "description": "Decay of structural timber caused by persistently high relative humidity",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.relative-humidity.structural-wood\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"Structural timber in cellar ceilings\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 1.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Incorrect Relative Humidity / Structural wood\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 23,
+   "name": "ABC risk scenario: baltanas.relative-humidity.wine-elements v1",
+   "description": "Decay of wine-production wooden elements caused by persistently high relative humidity",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.relative-humidity.wine-elements\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"Wine presses and wine barrels\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 2.0, \"mr\": 10.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Incorrect Relative Humidity / Wooden elements\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 24,
+   "name": "ABC risk scenario: baltanas.flooding.structural-wood v1",
+   "description": "Cellar flooding affecting structural timber",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.flooding.structural-wood\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"water\", \"heritage_asset\": \"Structural timber in cellar ceilings\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 1.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Water / Flooding / Structural wood\"}, \"notes\": \"\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_soil_range\", \"updates\": \"A\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R6_rain_1h\", \"updates\": \"A\"}, {\"type\": \"earth_observation_product\", \"id\": \"floods-baltanas\", \"updates\": \"C\"}]}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T16:52:19.000000Z"
+  },
+  {
+   "id": 25,
+   "name": "ABC risk scenario: baltanas.flooding.wine-elements v1",
+   "description": "Cellar flooding affecting historic wine-production elements",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.flooding.wine-elements\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"water\", \"heritage_asset\": \"Wine presses and wine barrels\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 2.0, \"mr\": 10.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Water / Flooding / Wooden elements\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 26,
+   "name": "ABC risk scenario: lucretili-conventillo.subsidence.site v1",
+   "description": "Subsidence affecting the rock-cut building and cave complex",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.subsidence.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Sant’Angelo al Morra complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 5.0, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Physical Forces / Subsidence\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "ABC risk scenario: lucretili-conventillo.landslide.site v1",
+   "description": "Landslide or gravitational slope movement affecting the complex",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.landslide.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Sant’Angelo al Morra complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 5.0, \"c\": 5.0, \"mr\": 13.5, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Physical Forces / Landslide\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 28,
+   "name": "ABC risk scenario: lucretili-conventillo.earthquake.site v1",
+   "description": "Severe earthquake affecting the external and internal complex",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.earthquake.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Sant’Angelo al Morra complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.5, \"b\": 4.0, \"c\": 5.0, \"mr\": 11.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Physical Forces / Earthquake\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "ABC risk scenario: lucretili-conventillo.dissociation.site v1",
+   "description": "Abandonment, absence of maintenance and loss of local knowledge",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.dissociation.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"Sant’Angelo al Morra complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 5.0, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Dissociation / Anthropogenic risks\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 30,
+   "name": "ABC risk scenario: lucretili-conventillo.forest-management.site v1",
+   "description": "Deterioration caused by a deficient or absent forest management plan",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.forest-management.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"External parts of Sant’Angelo al Morra\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.0, \"c\": 4.0, \"mr\": 11.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Dissociation / Deficient forest management\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 31,
+   "name": "ABC risk scenario: lucretili-conventillo.relative-humidity.mural-paintings v1",
+   "description": "Mould and fungal deterioration caused by persistently high relative humidity",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.relative-humidity.mural-paintings\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"Medieval mural paintings\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 4.5, \"c\": 3.0, \"mr\": 12.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Incorrect RH / Relative Humidity\"}, \"notes\": \"\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_hum_spike_6h\", \"updates\": \"A\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_hum_persist_7d\", \"updates\": \"A\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R4c_hum_rapid_1h\", \"updates\": \"A\"}]}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 32,
+   "name": "ABC risk scenario: lucretili-conventillo.uv.mural-paintings v1",
+   "description": "Fading of exposed mural paintings caused by solar and UV radiation",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.uv.mural-paintings\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"risk_category\": \"light_uv\", \"heritage_asset\": \"Medieval mural paintings\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 4.5, \"c\": 2.0, \"mr\": 11.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssesment_Conventillo.docx\", \"section\": \"Light / UV / Solar radiation\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 33,
+   "name": "ABC risk scenario: lucretili-villa-orazio.abandonment.structures v1",
+   "description": "Deterioration caused by abandonment and absence of maintenance",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-villa-orazio.abandonment.structures\", \"site_key\": \"lucretili-villa-orazio\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"Walls and structures of Horace’s Roman villa\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 4.0, \"c\": 4.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC RiskAssessment Horace Roman villa.docx\", \"section\": \"Anthropogenic risks\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 34,
+   "name": "ABC risk scenario: lucretili-villa-orazio.forest-management.structures v1",
+   "description": "Structural deterioration caused by deficient vegetation management",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-villa-orazio.forest-management.structures\", \"site_key\": \"lucretili-villa-orazio\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"Entire structure of Horace’s Roman villa\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 3.0, \"c\": 5.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC RiskAssessment Horace Roman villa.docx\", \"section\": \"Deficient forest management\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:12.000000Z",
+   "updated_at": "2026-09-01T15:20:12.000000Z"
+  },
+  {
+   "id": 35,
+   "name": "ABC risk scenario: lucretili-montefalco.subsidence.castle v1",
+   "description": "Subsidence affecting standing castle walls",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.subsidence.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Montefalco Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.5, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Montefalco Castle.docx\", \"section\": \"Physical Forces / Subsidence\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 36,
+   "name": "ABC risk scenario: lucretili-montefalco.landslide.castle v1",
+   "description": "Landslide or gravitational slope movement affecting the castle",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.landslide.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Montefalco Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.5, \"c\": 4.5, \"mr\": 12.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Montefalco Castle.docx\", \"section\": \"Physical Forces / Landslide\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 37,
+   "name": "ABC risk scenario: lucretili-montefalco.earthquake.castle v1",
+   "description": "Severe earthquake affecting standing castle walls",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.earthquake.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Montefalco Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.5, \"b\": 5.0, \"c\": 5.0, \"mr\": 12.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Montefalco Castle.docx\", \"section\": \"Physical Forces / Earthquake\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 38,
+   "name": "ABC risk scenario: lucretili-montefalco.abandonment.castle v1",
+   "description": "Abandonment, absence of maintenance and loss of memory",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.abandonment.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"Montefalco Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.5, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Montefalco Castle.docx\", \"section\": \"Anthropogenic risks\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 39,
+   "name": "ABC risk scenario: lucretili-montefalco.forest-management.castle v1",
+   "description": "Loss of accessibility and visibility caused by deficient forest management",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.forest-management.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"External walls of Montefalco Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 5.0, \"c\": 4.0, \"mr\": 12.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Montefalco Castle.docx\", \"section\": \"Deficient forest management\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 40,
+   "name": "ABC risk scenario: lucretili-landscape.subsidence.dry-stone-walls v1",
+   "description": "Subsidence affecting historic dry-stone walls",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.subsidence.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Dry-stone walls in Monti Lucretili\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.5, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Muretti_a_secco.docx\", \"section\": \"Physical Forces / Subsidence\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 41,
+   "name": "ABC risk scenario: lucretili-landscape.landslide.dry-stone-walls v1",
+   "description": "Landslide and slope movement affecting dry-stone walls",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.landslide.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Dry-stone walls in Monti Lucretili\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 5.0, \"c\": 5.0, \"mr\": 13.5, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Muretti_a_secco.docx\", \"section\": \"Physical Forces / Landslide\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 42,
+   "name": "ABC risk scenario: lucretili-landscape.earthquake.dry-stone-walls v1",
+   "description": "Earthquake damage to dry-stone walls",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.earthquake.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Dry-stone walls in Monti Lucretili\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.5, \"b\": 4.0, \"c\": 5.0, \"mr\": 11.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Muretti_a_secco.docx\", \"section\": \"Physical Forces / Earthquake\"}, \"notes\": \"The source explicitly marks this assessment for review.\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-10-05T15:55:42.000000Z"
+  },
+  {
+   "id": 43,
+   "name": "ABC risk scenario: lucretili-landscape.dissociation.dry-stone-walls v1",
+   "description": "Loss of dry-stone wall knowledge and fabric through abandonment",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.dissociation.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"Dry-stone walls in Monti Lucretili\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 5.0, \"c\": 5.0, \"mr\": 13.5, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Muretti_a_secco.docx\", \"section\": \"Dissociation / Anthropogenic risks\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 44,
+   "name": "ABC risk scenario: lucretili-landscape.forest-management.dry-stone-walls v1",
+   "description": "Structural damage from roots and invasive vegetation",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.forest-management.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"risk_category\": \"dissociation\", \"heritage_asset\": \"Dry-stone walls in wooded areas\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.0, \"c\": 4.0, \"mr\": 11.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC RiskAssessment_Muretti_a_secco.docx\", \"section\": \"Deficient forest management\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 45,
+   "name": "ABC risk scenario: schenkenberg.plant-growth.untreated-30y v1",
+   "description": "Plant growth left untreated between major conservation events",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.plant-growth.untreated-30y\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"plant_growth\", \"heritage_asset\": \"Schenkenberg Castle ruins\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.5, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Plant growth / Scenario 1\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 46,
+   "name": "ABC risk scenario: schenkenberg.plant-growth.treated-3y v1",
+   "description": "Plant growth treated every three years",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.plant-growth.treated-3y\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"plant_growth\", \"heritage_asset\": \"Schenkenberg Castle ruins\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.5, \"b\": 3.0, \"c\": 5.0, \"mr\": 12.5, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Plant growth / Scenario 2\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 47,
+   "name": "ABC risk scenario: schenkenberg.plant-growth.treated-annually v1",
+   "description": "Plant growth treated annually",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.plant-growth.treated-annually\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"plant_growth\", \"heritage_asset\": \"Schenkenberg Castle ruins\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 2.0, \"c\": 5.0, \"mr\": 12.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Plant growth / Scenario 3\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 48,
+   "name": "ABC risk scenario: schenkenberg.freeze-thaw.masonry v1",
+   "description": "Cumulative freeze-thaw damage in water-bearing masonry discontinuities",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.freeze-thaw.masonry\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"freeze_thaw\", \"heritage_asset\": \"Exposed masonry walls\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.5, \"c\": 5.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Freeze-thaw cycles\"}, \"notes\": \"\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_temp_hum\", \"updates\": \"A\"}]}",
+   "created_at": "2026-09-01T15:20:13.000000Z",
+   "updated_at": "2026-09-01T15:20:13.000000Z"
+  },
+  {
+   "id": 49,
+   "name": "ABC risk scenario: schenkenberg.temperature-variation.walls v1",
+   "description": "Cumulative damage caused by extreme temperature variation",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.temperature-variation.walls\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"temperature\", \"heritage_asset\": \"Free-standing walls and towers\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 4.0, \"c\": 4.5, \"mr\": 12.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"High-low temperature\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 50,
+   "name": "ABC risk scenario: schenkenberg.earthquake.475y v1",
+   "description": "Earthquake with a 475-year return period",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.earthquake.475y\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Free-standing walls of Schenkenberg Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.5, \"b\": 5.0, \"c\": 4.5, \"mr\": 12.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Earthquake\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 51,
+   "name": "ABC risk scenario: schenkenberg.wind-storm.walls v1",
+   "description": "Wind or storm damage to free-standing walls",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.wind-storm.walls\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"wind_storm\", \"heritage_asset\": \"Free-standing walls of Schenkenberg Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 4.0, \"c\": 4.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Wind loads / storm\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 52,
+   "name": "ABC risk scenario: schenkenberg.fire.small-30y v1",
+   "description": "Small fire event every 30 years",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.fire.small-30y\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"fire\", \"heritage_asset\": \"Stone surfaces of Schenkenberg Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 1.0, \"c\": 1.0, \"mr\": 5.5, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Fires / Scenario 1\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 53,
+   "name": "ABC risk scenario: schenkenberg.fire.large-100y v1",
+   "description": "Large fire event every 100 years",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.fire.large-100y\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"fire\", \"heritage_asset\": \"Schenkenberg Castle\", \"version\": 1, \"status\": \"draft\", \"abc\": {\"a\": 3.0, \"b\": 4.0, \"c\": 5.0, \"mr\": 12.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Fires / Scenario 2\"}, \"notes\": \"The source reports A+B+C=11 although the listed values sum to 12; expert clarification is required.\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 54,
+   "name": "ABC risk scenario: schenkenberg.air-pollution.surfaces v1",
+   "description": "Accumulated air-pollution effects between conservation events",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.air-pollution.surfaces\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"air_pollution\", \"heritage_asset\": \"Wall surfaces of Schenkenberg Castle\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 2.5, \"c\": 2.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Air pollution\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 55,
+   "name": "ABC risk scenario: schenkenberg.vandalism.graffiti v1",
+   "description": "Local damage and graffiti accumulated over 30 years",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.vandalism.graffiti\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"risk_category\": \"vandalism\", \"heritage_asset\": \"Schenkenberg Castle ruins\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.5, \"b\": 2.0, \"c\": 1.0, \"mr\": 6.5, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_Risk_assessment_Swiss_pilot.docx\", \"section\": \"Vandalism\"}, \"notes\": \"\", \"evidence\": []}",
+   "created_at": "2026-09-01T15:20:14.000000Z",
+   "updated_at": "2026-09-01T15:20:14.000000Z"
+  },
+  {
+   "id": 56,
+   "name": "ABC risk scenario: baltanas.flooding.structural-wood v2",
+   "description": "Cellar flooding affecting structural timber",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.flooding.structural-wood\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"water\", \"heritage_asset\": \"Structural timber in cellar ceilings\", \"version\": 2, \"status\": \"superseded\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 1.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Water / Flooding / Structural wood\"}, \"notes\": \"\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_soil_range\", \"updates\": \"A\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R6_rain_1h\", \"updates\": \"A\"}, {\"type\": \"earth_observation_product\", \"id\": \"floods-baltanas\", \"updates\": \"C\"}]}",
+   "created_at": "2026-09-01T16:37:14.000000Z",
+   "updated_at": "2026-09-01T16:52:19.000000Z"
+  },
+  {
+   "id": 57,
+   "name": "ABC risk scenario: baltanas.flooding.structural-wood v3",
+   "description": "Cellar flooding affecting structural timber",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.flooding.structural-wood\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"risk_category\": \"water\", \"heritage_asset\": \"Structural timber in cellar ceilings\", \"version\": 3, \"status\": \"superseded\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 1.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"RiskAssesment_ICCROM_Baltanas_FINAL.docx\", \"section\": \"Water / Flooding / Structural wood\"}, \"notes\": \"\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_soil_range\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6_rain_1h\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-baltanas\", \"updates\": \"C\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-baltanas\", \"updates\": \"C\", \"result_id\": \"rusle_baltanas-generated-20260811T104934Z\", \"generated_at\": \"2026-08-27T11:36:36Z\", \"result_url\": \"/layers/generated/rusle_baltanas_classes_no_speckle.tif\"}, {\"type\": \"ad_rt_rule\", \"id\": \"R5b_airflow_range\", \"updates\": \"C\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}]}",
+   "created_at": "2026-09-01T16:51:02.000000Z",
+   "updated_at": "2026-09-01T16:52:04.000000Z"
+  },
+  {
+   "id": 58,
+   "name": "IRA fusion policy: baltanas.flooding.structural-wood v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.flooding.structural-wood\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_soil_range\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6_rain_1h\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-baltanas\", \"updates\": \"C\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}], \"notes\": \"Migrated from legacy ABC scenario v1; source record retained for audit.\"}",
+   "created_at": "2026-09-01T17:09:44.000000Z",
+   "updated_at": "2026-09-01T17:09:44.000000Z"
+  },
+  {
+   "id": 59,
+   "name": "IRA fusion policy: lucretili-conventillo.relative-humidity.mural-paintings v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.relative-humidity.mural-paintings\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_hum_spike_6h\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_hum_persist_7d\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4c_hum_rapid_1h\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}], \"notes\": \"Migrated from legacy ABC scenario v1; source record retained for audit.\"}",
+   "created_at": "2026-09-01T17:09:44.000000Z",
+   "updated_at": "2026-09-01T17:09:44.000000Z"
+  },
+  {
+   "id": 60,
+   "name": "IRA fusion policy: schenkenberg.freeze-thaw.masonry v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.freeze-thaw.masonry\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_temp_hum\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}], \"notes\": \"Migrated from legacy ABC scenario v1; source record retained for audit.\"}",
+   "created_at": "2026-09-01T17:09:44.000000Z",
+   "updated_at": "2026-09-01T17:09:44.000000Z"
+  },
+  {
+   "id": 61,
+   "name": "IRA fusion policy: baltanas.flooding.wine-elements v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.flooding.wine-elements\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_ppv\", \"updates\": \"A\", \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-baltanas\", \"updates\": \"C\", \"result_id\": \"floods_baltanas-generated-20260811T105053Z\", \"generated_at\": \"2026-08-27T11:36:36Z\", \"result_url\": \"/layers/generated/floods_baltanas_classes.tif\"}], \"notes\": \"\"}",
+   "created_at": "2026-09-01T17:19:13.000000Z",
+   "updated_at": "2026-09-01T17:19:15.000000Z"
+  },
+  {
+   "id": 62,
+   "name": "IRA fusion policy: lucretili-conventillo.uv.mural-paintings v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.uv.mural-paintings\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4b_hum_persist_7d\", \"updates\": \"A\", \"observes\": \"exposure\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4.0, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R9b_temp_st\", \"updates\": \"A\", \"observes\": \"vulnerability\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4.0, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"expert_assessment\", \"id\": \"lucretili-conventillo.uv.mural-paintings\", \"updates\": \"B\", \"observes\": \"consequence\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 5.0, \"bayes_inactive_likelihood_ratio\": 1.0, \"ds_active_support\": 0.0, \"ds_inactive_support\": 0.0, \"result_id\": null, \"generated_at\": null, \"result_url\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-lucretili\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4.0, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": \"rusle_lucretili-generated-20260814T133129Z\", \"generated_at\": \"2026-08-27T11:36:36Z\", \"result_url\": \"/layers/generated/rusle_lucretili_classes.tif\"}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"\"}",
+   "created_at": "2026-09-01T18:01:59.000000Z",
+   "updated_at": "2026-09-01T18:02:03.000000Z"
+  },
+  {
+   "id": 63,
+   "name": "AD-RT wind threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R7_wind\"}",
+   "created_at": "2026-09-07T18:29:15.000000Z",
+   "updated_at": "2026-09-07T18:29:15.000000Z"
+  },
+  {
+   "id": 64,
+   "name": "ABC risk scenario: delos-fournoi.air-pollution.site v1",
+   "description": "Air pollution",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.air-pollution.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"pollutants\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 2.0, \"mr\": 10.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Air pollution\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 31.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 65,
+   "name": "ABC risk scenario: delos-fournoi.architectural-stability.site v1",
+   "description": "Architectural Stability",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.architectural-stability.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 1.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Architectural Stability\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 28.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 66,
+   "name": "ABC risk scenario: delos-fournoi.flooding.site v1",
+   "description": "Flooding",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.flooding.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"water\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Flooding\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 38.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 67,
+   "name": "ABC risk scenario: delos-fournoi.freeze-thaw-cycles.site v1",
+   "description": "Freeze-thaw cycles",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.freeze-thaw-cycles.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 1.0, \"c\": 1.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Freeze-thaw cycles\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 39.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 68,
+   "name": "ABC risk scenario: delos-fournoi.gravitational-slope-movements.site v1",
+   "description": "Gravitational slope movements",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.gravitational-slope-movements.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 2.0, \"c\": 1.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Gravitational slope movements\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 37.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 69,
+   "name": "ABC risk scenario: delos-fournoi.heatwaves.site v1",
+   "description": "Heatwaves",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.heatwaves.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 3.0, \"c\": 3.0, \"mr\": 10.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Heatwaves\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 33.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 70,
+   "name": "ABC risk scenario: delos-fournoi.high-temperature.site v1",
+   "description": "High Temperature",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.high-temperature.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 4.0, \"c\": 4.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"High Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 29.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 71,
+   "name": "ABC risk scenario: delos-fournoi.low-temperature.site v1",
+   "description": "Low Temperature",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.low-temperature.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 5.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Low Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 40.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 72,
+   "name": "ABC risk scenario: delos-fournoi.prolonged-dry-periods.site v1",
+   "description": "Prolonged dry periods",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.prolonged-dry-periods.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"drought\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 1.5, \"c\": 1.0, \"mr\": 7.5, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Prolonged dry periods\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 36.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 73,
+   "name": "ABC risk scenario: delos-fournoi.rainfall.site v1",
+   "description": "Rainfall",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.rainfall.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"water\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 2.0, \"c\": 3.0, \"mr\": 10.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Rainfall\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 32.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 74,
+   "name": "ABC risk scenario: delos-fournoi.rh-fluctuations.site v1",
+   "description": "RH Fluctuations",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.rh-fluctuations.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 4.0, \"mr\": 14.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"RH Fluctuations\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 26.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 75,
+   "name": "ABC risk scenario: delos-fournoi.salinity.site v1",
+   "description": "Salinity",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.salinity.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"salts\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 5.0, \"mr\": 15.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Salinity\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 25.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 76,
+   "name": "ABC risk scenario: delos-fournoi.seismic.site v1",
+   "description": "Seismic",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.seismic.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 0.3, \"b\": 4.0, \"c\": 0.5, \"mr\": 4.8, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Seismic\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 41.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 77,
+   "name": "ABC risk scenario: delos-fournoi.soil-erosion.site v1",
+   "description": "Soil erosion",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.soil-erosion.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 1.5, \"c\": 1.5, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Soil-Erosion\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 35.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 78,
+   "name": "ABC risk scenario: delos-fournoi.storm.site v1",
+   "description": "Storm",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.storm.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.5, \"b\": 3.0, \"c\": 3.5, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Storm\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 30.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 79,
+   "name": "ABC risk scenario: delos-fournoi.subsidence.site v1",
+   "description": "Subsidence",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.subsidence.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 2.0, \"c\": 0.3, \"mr\": 4.3, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Subsidence\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 42.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 80,
+   "name": "ABC risk scenario: delos-fournoi.water-rise.site v1",
+   "description": "Water Rise",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.water-rise.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"water\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 1.5, \"c\": 1.5, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Water Rise\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 34.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 81,
+   "name": "ABC risk scenario: delos-fournoi.wind-erosion.site v1",
+   "description": "Wind Erosion",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.wind-erosion.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Fournoi\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 4.0, \"mr\": 14.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Wind Erosion\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 27.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 82,
+   "name": "ABC risk scenario: delos-masks.air-pollution.site v1",
+   "description": "Air pollution",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.air-pollution.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"pollutants\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 2.0, \"mr\": 10.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Air pollution\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 6.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 83,
+   "name": "ABC risk scenario: delos-masks.architectural-stability.site v1",
+   "description": "Architectural Stability",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.architectural-stability.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 4.0, \"mr\": 14.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Architectural Stability\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 3.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 84,
+   "name": "ABC risk scenario: delos-masks.flooding.site v1",
+   "description": "Flooding",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.flooding.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"water\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Flooding\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 14.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 85,
+   "name": "ABC risk scenario: delos-masks.freeze-thaw-cycles.site v1",
+   "description": "Freeze-thaw cycles",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.freeze-thaw-cycles.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 5.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Freeze-thaw cycles\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 20.\"}",
+   "created_at": "2026-09-09T09:56:47.000000Z",
+   "updated_at": "2026-09-09T09:56:47.000000Z"
+  },
+  {
+   "id": 86,
+   "name": "ABC risk scenario: delos-masks.gravitational-slope-movements.site v1",
+   "description": "Gravitational slope movements",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.gravitational-slope-movements.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 1.0, \"c\": 0.5, \"mr\": 5.5, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Gravitational slope movements\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 17.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 87,
+   "name": "ABC risk scenario: delos-masks.heatwaves.site v1",
+   "description": "Heatwaves",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.heatwaves.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 3.0, \"c\": 1.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Heatwaves\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 11, 13.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 88,
+   "name": "ABC risk scenario: delos-masks.high-temperature.site v1",
+   "description": "High Temperature",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.high-temperature.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 2.0, \"c\": 3.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"High Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 9.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 89,
+   "name": "ABC risk scenario: delos-masks.low-temperature.site v1",
+   "description": "Low Temperature",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.low-temperature.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 5.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Low Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 19.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 90,
+   "name": "ABC risk scenario: delos-masks.prolonged-dry-periods.site v1",
+   "description": "Prolonged dry periods",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.prolonged-dry-periods.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"drought\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Prolonged dry periods\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 15.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 91,
+   "name": "ABC risk scenario: delos-masks.rainfall.site v1",
+   "description": "Rainfall",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.rainfall.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"water\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 2.0, \"c\": 1.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Rainfall\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 8, 12.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 92,
+   "name": "ABC risk scenario: delos-masks.rh-fluctuations.site v1",
+   "description": "RH Fluctuations",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.rh-fluctuations.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 4.0, \"mr\": 14.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"RH Fluctuations\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 4.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 93,
+   "name": "ABC risk scenario: delos-masks.salinity.site v1",
+   "description": "Salinity",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.salinity.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"salts\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 5.0, \"mr\": 15.0, \"priority_label\": \"Catastrophic priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Salinity\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 2.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 94,
+   "name": "ABC risk scenario: delos-masks.seismic.site v1",
+   "description": "Seismic",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.seismic.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 0.3, \"b\": 4.0, \"c\": 1.0, \"mr\": 5.3, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Seismic\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 18.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 95,
+   "name": "ABC risk scenario: delos-masks.soil-erosion.site v1",
+   "description": "Soil erosion",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.soil-erosion.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 0.5, \"c\": 0.5, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Soil-Erosion\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 16.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 96,
+   "name": "ABC risk scenario: delos-masks.storm.site v1",
+   "description": "Storm",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.storm.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.5, \"b\": 3.0, \"c\": 2.0, \"mr\": 9.5, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Storm\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 7.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 97,
+   "name": "ABC risk scenario: delos-masks.subsidence.site v1",
+   "description": "Subsidence",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.subsidence.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 2.0, \"c\": 0.3, \"mr\": 4.3, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Subsidence\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 21.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 98,
+   "name": "ABC risk scenario: delos-masks.water-rise.site v1",
+   "description": "Water Rise",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.water-rise.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"water\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 2.0, \"c\": 1.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Water Rise\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 10.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 99,
+   "name": "ABC risk scenario: delos-masks.wind-erosion.site v1",
+   "description": "Wind Erosion",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.wind-erosion.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"House of Masks\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 2.0, \"mr\": 12.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ABC_HOUSE OF MASKS_HOUSE OF FOURNOI.xlsx\", \"section\": \"Wind Erosion\"}, \"notes\": \"Expert-provided ICCROM ABC baseline. Duplicate source rows are consolidated when values are identical. Source worksheet rows: 5.\"}",
+   "created_at": "2026-09-09T09:56:48.000000Z",
+   "updated_at": "2026-09-09T09:56:48.000000Z"
+  },
+  {
+   "id": 100,
+   "name": "AD-RT rainfall threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R2_rain_7d\"}",
+   "created_at": "2026-09-11T00:02:08.000000Z",
+   "updated_at": "2026-09-11T00:02:08.000000Z"
+  },
+  {
+   "id": 101,
+   "name": "AD-RT pressure instability threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R8_baro\"}",
+   "created_at": "2026-09-12T00:01:21.000000Z",
+   "updated_at": "2026-09-12T00:01:21.000000Z"
+  },
+  {
+   "id": 102,
+   "name": "ABC risk scenario: ranverso.physical-forces.earthquake v1",
+   "description": "earthquake",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.earthquake\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 1.0, \"b\": 2.0, \"c\": 4.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 8: Physical forces\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 103,
+   "name": "ABC risk scenario: ranverso.physical-forces.freeze-thaw-cycles v1",
+   "description": "freeze-thaw cycles",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.freeze-thaw-cycles\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 2.0, \"c\": 3.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 8: Physical forces\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 104,
+   "name": "ABC risk scenario: ranverso.physical-forces.storm v1",
+   "description": "storm",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.storm\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 1.0, \"b\": 3.0, \"c\": 4.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 8: Physical forces\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 105,
+   "name": "ABC risk scenario: ranverso.physical-forces.biohazard v1",
+   "description": "biohazard",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.biohazard\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pests\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 1.0, \"b\": 1.0, \"c\": 1.0, \"mr\": 3.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 8: Physical forces\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 106,
+   "name": "ABC risk scenario: ranverso.physical-forces.wind-erosion v1",
+   "description": "wind erosion",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.wind-erosion\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"physical_forces\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 2.0, \"c\": 3.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 8: Physical forces\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 107,
+   "name": "ABC risk scenario: ranverso.incorrect-rh.prolonged-dry-periods v1",
+   "description": "Prolonged dry periods",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-rh.prolonged-dry-periods\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 4.0, \"c\": 1.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 10: Incorrect RH\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 108,
+   "name": "ABC risk scenario: ranverso.incorrect-rh.prolonged-wet-periods v1",
+   "description": "Prolonged wet periods",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-rh.prolonged-wet-periods\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 4.0, \"c\": 4.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 10: Incorrect RH\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:40.000000Z",
+   "updated_at": "2026-09-16T15:03:40.000000Z"
+  },
+  {
+   "id": 109,
+   "name": "ABC risk scenario: ranverso.incorrect-rh.groundwater-pollution v1",
+   "description": "groundwater pollution",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-rh.groundwater-pollution\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_relative_humidity\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 1.0, \"c\": 3.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 10: Incorrect RH\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 110,
+   "name": "ABC risk scenario: ranverso.incorrect-temperature.freeze-thaw-cycles v1",
+   "description": "freeze-thaw cycles",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.freeze-thaw-cycles\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 2.0, \"c\": 4.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 11: Incorrect Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 111,
+   "name": "ABC risk scenario: ranverso.incorrect-temperature.high-temperature v1",
+   "description": "High Temperature",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.high-temperature\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 1.0, \"c\": 3.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 11: Incorrect Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 112,
+   "name": "ABC risk scenario: ranverso.incorrect-temperature.low-temperature v1",
+   "description": "Low Temperature",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.low-temperature\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"incorrect_temperature\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 1.0, \"c\": 3.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 11: Incorrect Temperature\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 113,
+   "name": "ABC risk scenario: ranverso.light-uv.solar-radiation-uv v1",
+   "description": "Solar radiation/ UV",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.light-uv.solar-radiation-uv\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"light_uv\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 3.0, \"c\": 3.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 12: Light / UV\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 114,
+   "name": "ABC risk scenario: ranverso.pollutants.air-pollution v1",
+   "description": "air pollution",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pollutants.air-pollution\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pollutants\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 2.0, \"c\": 5.0, \"mr\": 11.0, \"priority_label\": \"High priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 13: Pollutants\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 115,
+   "name": "ABC risk scenario: ranverso.pollutants.acid-rain v1",
+   "description": "acid rain",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pollutants.acid-rain\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pollutants\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 2.0, \"c\": 3.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 13: Pollutants\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 116,
+   "name": "ABC risk scenario: ranverso.pollutants.overloading-road-traffic v1",
+   "description": "Overloading (road traffic)",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pollutants.overloading-road-traffic\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pollutants\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 2.0, \"c\": 2.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 13: Pollutants\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 117,
+   "name": "ABC risk scenario: ranverso.pollutants.visitors v1",
+   "description": "visitors",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pollutants.visitors\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pollutants\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 1.0, \"c\": 3.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 13: Pollutants\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 118,
+   "name": "ABC risk scenario: ranverso.pests.biohazard v1",
+   "description": "biohazard",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pests.biohazard\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pests\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 1.0, \"b\": 1.0, \"c\": 1.0, \"mr\": 3.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 14: Pests\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 119,
+   "name": "ABC risk scenario: ranverso.pests.insect-infestation v1",
+   "description": "Insect infestation",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pests.insect-infestation\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pests\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 2.0, \"c\": 4.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 14: Pests\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 120,
+   "name": "ABC risk scenario: ranverso.pests.local-fauna v1",
+   "description": "local fauna",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pests.local-fauna\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pests\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 3.0, \"b\": 2.0, \"c\": 4.0, \"mr\": 9.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 14: Pests\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 121,
+   "name": "ABC risk scenario: ranverso.pests.woodworms v1",
+   "description": "woodworms",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.pests.woodworms\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"pests\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 5.0, \"b\": 5.0, \"c\": 3.0, \"mr\": 13.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 14: Pests\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 122,
+   "name": "ABC risk scenario: ranverso.water.flooding v1",
+   "description": "flooding",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.water.flooding\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"water\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 3.0, \"c\": 3.0, \"mr\": 8.0, \"priority_label\": \"Medium priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 15: Water\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:41.000000Z",
+   "updated_at": "2026-09-16T15:03:41.000000Z"
+  },
+  {
+   "id": 123,
+   "name": "ABC risk scenario: ranverso.water.groundwater v1",
+   "description": "groundwater",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.water.groundwater\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"water\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 4.0, \"b\": 5.0, \"c\": 5.0, \"mr\": 14.0, \"priority_label\": \"Extreme priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 15: Water\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:42.000000Z",
+   "updated_at": "2026-09-16T15:03:42.000000Z"
+  },
+  {
+   "id": 124,
+   "name": "ABC risk scenario: ranverso.fire.forest-fire v1",
+   "description": "forest fire",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.fire.forest-fire\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"fire\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 1.0, \"b\": 3.0, \"c\": 3.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 16: Fire\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:42.000000Z",
+   "updated_at": "2026-09-16T15:03:42.000000Z"
+  },
+  {
+   "id": 125,
+   "name": "ABC risk scenario: ranverso.fire.building-fire v1",
+   "description": "building fire",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.fire.building-fire\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"fire\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 1.0, \"b\": 4.0, \"c\": 2.0, \"mr\": 7.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 16: Fire\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:42.000000Z",
+   "updated_at": "2026-09-16T15:03:42.000000Z"
+  },
+  {
+   "id": 126,
+   "name": "ABC risk scenario: ranverso.criminals.illegal-landfill v1",
+   "description": "illegal landfill",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.criminals.illegal-landfill\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"criminals\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 3.0, \"c\": 1.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 17: Criminals\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:42.000000Z",
+   "updated_at": "2026-09-16T15:03:42.000000Z"
+  },
+  {
+   "id": 127,
+   "name": "ABC risk scenario: ranverso.criminals.vandalism-abandonment-lack-of-maintenance v1",
+   "description": "Vandalism (abandonment – lack of maintenance)",
+   "metadata": "{\"kind\": \"abc_risk_scenario\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.criminals.vandalism-abandonment-lack-of-maintenance\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"risk_category\": \"criminals\", \"heritage_asset\": \"Sant’Antonio di Ranverso Abbey complex\", \"version\": 1, \"status\": \"active\", \"abc\": {\"a\": 2.0, \"b\": 2.0, \"c\": 2.0, \"mr\": 6.0, \"priority_label\": \"Low priority\"}, \"source\": {\"document\": \"ranverso Threats (1).xlsx\", \"section\": \"evaluation row 17: Criminals\"}, \"notes\": \"Expert-provided ICCROM ABC baseline for Sant’Antonio di Ranverso. Normalized from the partner workbook; evidence mappings are intentionally left empty until AD-RT/EOP observability is configured.\"}",
+   "created_at": "2026-09-16T15:03:42.000000Z",
+   "updated_at": "2026-09-16T15:03:42.000000Z"
+  },
+  {
+   "id": 128,
+   "name": "IRA fusion policy: delos-fournoi.rh-fluctuations.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.rh-fluctuations.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R3_hum_cross\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational humidity policy for Delos House of Fournoi. Uses configured AD-RT humidity-crossing warnings only; no EOP product is assumed for current RH.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 129,
+   "name": "IRA fusion policy: delos-masks.rh-fluctuations.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.rh-fluctuations.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R3_hum_cross\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational humidity policy for Delos House of Masks. Uses configured AD-RT humidity-crossing warnings only; no EOP product is assumed for current RH.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 130,
+   "name": "IRA fusion policy: delos-fournoi.rainfall.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.rainfall.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational rainfall policy using configured Delos rainfall warning rules.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 131,
+   "name": "IRA fusion policy: delos-masks.rainfall.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.rainfall.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational rainfall policy using configured Delos rainfall warning rules.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 132,
+   "name": "IRA fusion policy: delos-fournoi.flooding.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.flooding.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational flooding policy using Delos rainfall warnings and flood-susceptibility EOP context. EOP remains contextual unless spatially evaluated over the asset footprint.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 133,
+   "name": "IRA fusion policy: delos-masks.flooding.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.flooding.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational flooding policy using Delos rainfall warnings and flood-susceptibility EOP context. EOP remains contextual unless spatially evaluated over the asset footprint.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 134,
+   "name": "IRA fusion policy: delos-fournoi.storm.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.storm.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2_wind\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational storm policy using rainfall and wind AD-RT warnings. No single storm EOP product is assumed.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 135,
+   "name": "IRA fusion policy: delos-masks.storm.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.storm.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2_wind\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational storm policy using rainfall and wind AD-RT warnings. No single storm EOP product is assumed.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 136,
+   "name": "IRA fusion policy: delos-fournoi.wind-erosion.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.wind-erosion.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R2_wind\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational wind/erosion policy using Delos wind warning evidence plus soil-erosion susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 137,
+   "name": "IRA fusion policy: delos-masks.wind-erosion.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.wind-erosion.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R2_wind\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational wind/erosion policy using Delos wind warning evidence plus soil-erosion susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 138,
+   "name": "IRA fusion policy: delos-fournoi.soil-erosion.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.soil-erosion.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational soil-erosion policy using rainfall warnings and RUSLE susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 139,
+   "name": "IRA fusion policy: delos-masks.soil-erosion.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.soil-erosion.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_rain_1h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_rain_3h\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational soil-erosion policy using rainfall warnings and RUSLE susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 140,
+   "name": "IRA fusion policy: delos-fournoi.water-rise.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.water-rise.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"earth_observation_product\", \"id\": \"cvi\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational water-rise policy using coastal-vulnerability and flood-susceptibility EOP context. It should create threat transitions only after asset-footprint spatial evaluation.\"}",
+   "created_at": "2026-09-16T15:03:43.000000Z",
+   "updated_at": "2026-09-16T15:03:43.000000Z"
+  },
+  {
+   "id": 141,
+   "name": "IRA fusion policy: delos-masks.water-rise.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.water-rise.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"earth_observation_product\", \"id\": \"cvi\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational water-rise policy using coastal-vulnerability and flood-susceptibility EOP context. It should create threat transitions only after asset-footprint spatial evaluation.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 142,
+   "name": "IRA fusion policy: delos-fournoi.seismic.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-fournoi.seismic.site\", \"site_key\": \"delos-fournoi\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"earth_observation_product\", \"id\": \"seismic-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Seismic policy uses EOP/static hazard context only. It should not be treated as a current event without a policy-evaluated transition.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 143,
+   "name": "IRA fusion policy: delos-masks.seismic.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"delos-masks.seismic.site\", \"site_key\": \"delos-masks\", \"pilot_key\": \"delos\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"earth_observation_product\", \"id\": \"seismic-delos\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Seismic policy uses EOP/static hazard context only. It should not be treated as a current event without a policy-evaluated transition.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 144,
+   "name": "IRA fusion policy: ranverso.incorrect-rh.prolonged-wet-periods v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-rh.prolonged-wet-periods\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_hum_inside\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Ranverso wet-period policy using indoor humidity and high soil-moisture AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 145,
+   "name": "IRA fusion policy: ranverso.incorrect-rh.prolonged-dry-periods v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-rh.prolonged-dry-periods\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_hum_inside\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4b_soil_low\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Ranverso dry-period policy using indoor humidity and low soil-moisture AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 146,
+   "name": "IRA fusion policy: ranverso.water.flooding v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.water.flooding\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R2_rain_7d\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-ranverso\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Ranverso flooding policy using rainfall, high soil moisture and flood-susceptibility EOP context.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 147,
+   "name": "IRA fusion policy: ranverso.water.groundwater v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.water.groundwater\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R4a_soil_high\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"floods-ranverso\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Ranverso groundwater policy using high soil moisture and flood-susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 148,
+   "name": "IRA fusion policy: ranverso.incorrect-temperature.freeze-thaw-cycles v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.freeze-thaw-cycles\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R3_temp_nodiff\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Ranverso freeze-thaw proxy policy using the configured soil/air temperature-coupling AD-RT rule.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 149,
+   "name": "IRA fusion policy: ranverso.physical-forces.earthquake v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.earthquake\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"earth_observation_product\", \"id\": \"seismic-ranverso\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Seismic policy uses EOP/static hazard context only. It should not be treated as a current event without a policy-evaluated transition.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 150,
+   "name": "IRA fusion policy: ranverso.physical-forces.wind-erosion v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.wind-erosion\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"earth_observation_product\", \"id\": \"rusle-ranverso\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Ranverso erosion policy using RUSLE susceptibility context. It should create threat transitions only after asset-footprint spatial evaluation.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 151,
+   "name": "IRA fusion policy: ranverso.physical-forces.storm v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.physical-forces.storm\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R2_rain_7d\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Ranverso storm proxy using the configured 7-day rainfall AD-RT rule. No wind sensor rule is currently exposed for Ranverso.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 152,
+   "name": "IRA fusion policy: baltanas.relative-humidity.structural-wood v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.relative-humidity.structural-wood\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R2_hum_daily_range\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R5a_airflow_const\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R5b_airflow_range\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Baltanás humidity policy using humidity-range and airflow AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 153,
+   "name": "IRA fusion policy: baltanas.relative-humidity.wine-elements v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.relative-humidity.wine-elements\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R2_hum_daily_range\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R5a_airflow_const\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R5b_airflow_range\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Baltanás humidity policy using humidity-range and airflow AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 154,
+   "name": "IRA fusion policy: baltanas.subsidence.cellar-ensemble v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"baltanas.subsidence.cellar-ensemble\", \"site_key\": \"baltanas\", \"pilot_key\": \"baltanas\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_ppv\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R3_gnss_change\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Baltanás subsidence/collapse proxy using vibration and GNSS-displacement AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 155,
+   "name": "IRA fusion policy: lucretili-landscape.landslide.dry-stone-walls v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.landslide.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_crack_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_crack_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2a_tilt_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2b_tilt_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6a_rain\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6b_rain_cum7d\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-lucretili\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Lucretili landscape landslide policy using movement/rainfall AD-RT warnings and RUSLE susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:44.000000Z",
+   "updated_at": "2026-09-16T15:03:44.000000Z"
+  },
+  {
+   "id": 156,
+   "name": "IRA fusion policy: lucretili-landscape.subsidence.dry-stone-walls v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-landscape.subsidence.dry-stone-walls\", \"site_key\": \"lucretili-landscape\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_crack_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_crack_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2a_tilt_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2b_tilt_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Lucretili landscape subsidence proxy using crack and tilt AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:45.000000Z",
+   "updated_at": "2026-09-16T15:03:45.000000Z"
+  },
+  {
+   "id": 157,
+   "name": "IRA fusion policy: lucretili-montefalco.landslide.castle v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.landslide.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_crack_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_crack_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2a_tilt_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2b_tilt_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6a_rain\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6b_rain_cum7d\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-lucretili\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Montefalco landslide policy using movement/rainfall AD-RT warnings and RUSLE susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:45.000000Z",
+   "updated_at": "2026-09-16T15:03:45.000000Z"
+  },
+  {
+   "id": 158,
+   "name": "IRA fusion policy: lucretili-montefalco.subsidence.castle v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-montefalco.subsidence.castle\", \"site_key\": \"lucretili-montefalco\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_crack_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_crack_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2a_tilt_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2b_tilt_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Montefalco subsidence proxy using crack and tilt AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:45.000000Z",
+   "updated_at": "2026-09-16T15:03:45.000000Z"
+  },
+  {
+   "id": 159,
+   "name": "IRA fusion policy: lucretili-conventillo.landslide.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.landslide.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_crack_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_crack_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2a_tilt_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2b_tilt_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6a_rain\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R6b_rain_cum7d\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"earth_observation_product\", \"id\": \"rusle-lucretili\", \"updates\": \"C\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Conventillo landslide policy using movement/rainfall AD-RT warnings and RUSLE susceptibility context.\"}",
+   "created_at": "2026-09-16T15:03:45.000000Z",
+   "updated_at": "2026-09-16T15:03:45.000000Z"
+  },
+  {
+   "id": 160,
+   "name": "IRA fusion policy: lucretili-conventillo.subsidence.site v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"lucretili-conventillo.subsidence.site\", \"site_key\": \"lucretili-conventillo\", \"pilot_key\": \"lucretili\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1a_crack_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R1b_crack_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2a_tilt_step\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}, {\"type\": \"ad_rt_rule\", \"id\": \"R2b_tilt_offset\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Conventillo subsidence proxy using crack and tilt AD-RT warnings.\"}",
+   "created_at": "2026-09-16T15:03:45.000000Z",
+   "updated_at": "2026-09-16T15:03:45.000000Z"
+  },
+  {
+   "id": 161,
+   "name": "IRA fusion policy: schenkenberg.temperature-variation.walls v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"schenkenberg.temperature-variation.walls\", \"site_key\": \"schenkenberg\", \"pilot_key\": \"schenkenberg\", \"version\": 1, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R1_temp_hum\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.7, \"bayes_active_likelihood_ratio\": 4, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Operational Schenkenberg temperature-variation proxy using the configured low-temperature/high-humidity AD-RT rule.\"}",
+   "created_at": "2026-09-16T15:03:45.000000Z",
+   "updated_at": "2026-09-16T15:03:45.000000Z"
+  },
+  {
+   "id": 162,
+   "name": "AD-RT vibration threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R3_vib_zscore\"}",
+   "created_at": "2026-09-17T00:02:42.000000Z",
+   "updated_at": "2026-09-17T00:02:42.000000Z"
+  },
+  {
+   "id": 163,
+   "name": "IRA fusion policy: ranverso.incorrect-temperature.high-temperature v1",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.high-temperature\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 1, \"status\": \"superseded\", \"evidence\": [], \"evidence_level\": \"direct\", \"evidence_level_label\": \"Direct operational evidence\", \"evidence_level_note\": \"The policy is linked to observations that directly monitor the hazard or condition used by the risk scenario.\", \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"\"}",
+   "created_at": "2026-09-25T15:24:53.000000Z",
+   "updated_at": "2026-09-25T15:25:02.000000Z"
+  },
+  {
+   "id": 164,
+   "name": "IRA fusion policy: ranverso.incorrect-temperature.high-temperature v2",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.high-temperature\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 2, \"status\": \"superseded\", \"evidence\": [], \"evidence_level\": \"direct\", \"evidence_level_label\": \"Direct operational evidence\", \"evidence_level_note\": \"The policy is linked to observations that directly monitor the hazard or condition used by the risk scenario.\", \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Development proxy IRA policy for the High Temperature scenario. The linked soil-and-air temperature coupling rule is used as indirect temperature-related evidence, not as a calibrated high-temperature threshold. Conservative weights are used pending a dedicated high-temperature AD-RT rule or expert calibration.\"}",
+   "created_at": "2026-09-25T15:24:58.000000Z",
+   "updated_at": "2026-09-25T15:27:33.000000Z"
+  },
+  {
+   "id": 165,
+   "name": "IRA fusion policy: ranverso.incorrect-temperature.high-temperature v3",
+   "description": "Versioned evidence configuration for Integrated Risk Assessment.",
+   "metadata": "{\"kind\": \"ira_fusion_policy\", \"schema_version\": \"1.0.0\", \"scenario_key\": \"ranverso.incorrect-temperature.high-temperature\", \"site_key\": \"ranverso\", \"pilot_key\": \"ranverso\", \"version\": 3, \"status\": \"active\", \"evidence\": [{\"type\": \"ad_rt_rule\", \"id\": \"R3_temp_nodiff\", \"updates\": \"A\", \"observes\": \"hazard\", \"reliability\": 0.5, \"bayes_active_likelihood_ratio\": 4.0, \"bayes_inactive_likelihood_ratio\": 0.75, \"ds_active_support\": 0.7, \"ds_inactive_support\": 0.2, \"result_id\": null, \"generated_at\": null, \"result_url\": null, \"spatial_evaluation\": null}], \"evidence_level\": \"proxy\", \"evidence_level_label\": \"Proxy evidence\", \"evidence_level_note\": \"The policy uses indirect evidence that is relevant but does not directly observe the risk scenario.\", \"fusion_model\": {\"method\": \"dual_evidence_preview_v1\", \"horizon_days\": 30, \"prior_reliability\": 0.7}, \"notes\": \"Development proxy IRA policy for the High Temperature scenario. The linked soil-and-air temperature coupling rule is used as indirect temperature-related evidence, not as a calibrated high-temperature threshold. Conservative weights are used pending a dedicated high-temperature AD-RT rule or expert calibration.\"}",
+   "created_at": "2026-09-25T15:27:31.000000Z",
+   "updated_at": "2026-09-25T15:27:34.000000Z"
+  },
+  {
+   "id": 166,
+   "name": "AD-RT visitor load threat",
+   "description": "Threat category inferred by the AD-RT expert-rule pipeline.",
+   "metadata": "{\"kind\": \"ad_rt_threat\", \"alarm_type\": \"EK\", \"rule\": \"R5_visitors\"}",
+   "created_at": "2026-10-02T21:01:39.000000Z",
+   "updated_at": "2026-10-02T21:01:39.000000Z"
+  }
+ ]
+}

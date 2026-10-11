@@ -1,0 +1,16 @@
+{
+ "resource": "reference-systems",
+ "count": 1,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 5,
+   "name": "WGS84",
+   "description": "World Geodetic System 1984 geographic coordinate reference system.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:41:49.000000Z",
+   "updated_at": "2026-07-07T15:41:49.000000Z"
+  }
+ ]
+}

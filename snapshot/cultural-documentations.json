@@ -1,0 +1,28 @@
+{
+ "resource": "cultural-documentations",
+ "count": 2,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 16,
+   "name": "Visual condition assessment of wall surfaces",
+   "description": "Visual inspection of the wall surfaces was carried out as part of a development validation exercise. Localised moisture staining and minor surface deterioration were recorded. This is a realistic test record and does not constitute an approved conservation diagnosis.",
+   "metadata": "{\"schema\": \"argus_cultural_documentation_v1\", \"schema_version\": \"1.0.0\", \"cidoc_crm\": {\"primary_class\": \"E14 Condition Assessment\", \"documents\": \"E3 Condition State\", \"documented_asset_state_id\": 139}, \"documentation_type\": \"condition_assessment\", \"site_key\": \"delos-masks\", \"revision\": 1, \"supersedes_documentation_id\": null, \"activity\": {\"responsible_actor\": \"ARGUS conservation team\", \"time_span\": {\"begin\": null, \"end\": null}}, \"condition\": {\"summary\": \"Localised moisture staining, minor loss of surface cohesion and small areas of biological growth near the lower wall sections.\", \"severity\": \"none\"}, \"intervention\": {\"method\": \"No intervention performed. Visual inspection and photographic documentation only.\", \"materials\": null}, \"source_references\": [\"ARGUS development validation record, 02/09/2026\"]}",
+   "uri": null,
+   "asset_state_id": 139,
+   "created_at": "2026-09-02T16:47:36.000000Z",
+   "updated_at": "2026-09-02T16:47:36.000000Z"
+  },
+  {
+   "id": 17,
+   "name": "Visual condition assessment of wall surfaces",
+   "description": "Visual inspection of the wall surfaces was carried out as part of a development validation exercise. Localised moisture staining and minor surface deterioration were recorded. This is a realistic test record and does not constitute an approved conservation diagnosis.",
+   "metadata": "{\"schema\": \"argus_cultural_documentation_v1\", \"schema_version\": \"1.0.0\", \"cidoc_crm\": {\"primary_class\": \"E14 Condition Assessment\", \"documents\": \"E3 Condition State\", \"documented_asset_state_id\": 139}, \"documentation_type\": \"condition_assessment\", \"site_key\": \"delos-masks\", \"revision\": 2, \"supersedes_documentation_id\": 16, \"activity\": {\"responsible_actor\": \"ARGUS conservation team\", \"time_span\": {\"begin\": null, \"end\": null}}, \"condition\": {\"summary\": \"Localised moisture staining, minor loss of surface cohesion and small areas of biological growth near the lower wall sections.\", \"severity\": \"moderate\"}, \"intervention\": {\"method\": \"No intervention performed. Visual inspection and photographic documentation only.\", \"materials\": null}, \"source_references\": [\"ARGUS development validation record, 02/09/2026\"]}",
+   "uri": null,
+   "asset_state_id": 139,
+   "created_at": "2026-09-02T16:53:28.000000Z",
+   "updated_at": "2026-09-02T16:53:28.000000Z"
+  }
+ ]
+}

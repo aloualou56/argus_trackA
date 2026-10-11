@@ -1,0 +1,368 @@
+{
+ "resource": "instrument-types",
+ "count": 40,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 2,
+   "name": "Humidity Sensor",
+   "description": "Instrument type for air humidity measurements.",
+   "metadata": null,
+   "physical_quantity_id": 3,
+   "created_at": "2026-07-07T15:38:10.000000Z",
+   "updated_at": "2026-07-07T15:38:10.000000Z"
+  },
+  {
+   "id": 3,
+   "name": "Temperature Sensor",
+   "description": "Instrument type for air temperature measurements.",
+   "metadata": null,
+   "physical_quantity_id": 4,
+   "created_at": "2026-07-07T15:38:10.000000Z",
+   "updated_at": "2026-07-07T15:38:10.000000Z"
+  },
+  {
+   "id": 4,
+   "name": "Vibration Sensor",
+   "description": "Instrument type for vibration measurements.",
+   "metadata": null,
+   "physical_quantity_id": 5,
+   "created_at": "2026-07-07T15:38:10.000000Z",
+   "updated_at": "2026-07-07T15:38:10.000000Z"
+  },
+  {
+   "id": 5,
+   "name": "Acoustic Sensor",
+   "description": "Instrument type for Acoustic Emission measurements.",
+   "metadata": null,
+   "physical_quantity_id": 6,
+   "created_at": "2026-07-07T15:50:35.000000Z",
+   "updated_at": "2026-07-07T15:50:35.000000Z"
+  },
+  {
+   "id": 6,
+   "name": "Air Flow Sensor",
+   "description": "Instrument type for Air Flow measurements.",
+   "metadata": null,
+   "physical_quantity_id": 7,
+   "created_at": "2026-07-07T15:50:36.000000Z",
+   "updated_at": "2026-07-07T15:50:36.000000Z"
+  },
+  {
+   "id": 7,
+   "name": "Gas Sensor",
+   "description": "Instrument type for Gas Concentration measurements.",
+   "metadata": null,
+   "physical_quantity_id": 8,
+   "created_at": "2026-07-07T15:50:40.000000Z",
+   "updated_at": "2026-07-07T15:50:40.000000Z"
+  },
+  {
+   "id": 8,
+   "name": "Lux Meter Sensor",
+   "description": "Instrument type for Visible Radiation measurements.",
+   "metadata": null,
+   "physical_quantity_id": 9,
+   "created_at": "2026-07-07T15:50:41.000000Z",
+   "updated_at": "2026-07-07T15:50:41.000000Z"
+  },
+  {
+   "id": 9,
+   "name": "Multispectral Camera Sensor",
+   "description": "Instrument type for Multispectral Imaging measurements.",
+   "metadata": null,
+   "physical_quantity_id": 10,
+   "created_at": "2026-07-07T15:50:43.000000Z",
+   "updated_at": "2026-07-07T15:50:43.000000Z"
+  },
+  {
+   "id": 10,
+   "name": "Pyranometer Sensor",
+   "description": "Instrument type for Solar Irradiance measurements.",
+   "metadata": null,
+   "physical_quantity_id": 11,
+   "created_at": "2026-07-07T15:50:45.000000Z",
+   "updated_at": "2026-07-07T15:50:45.000000Z"
+  },
+  {
+   "id": 11,
+   "name": "Rain Gauge Sensor",
+   "description": "Instrument type for Rainfall measurements.",
+   "metadata": null,
+   "physical_quantity_id": 12,
+   "created_at": "2026-07-07T15:50:47.000000Z",
+   "updated_at": "2026-07-07T15:50:47.000000Z"
+  },
+  {
+   "id": 12,
+   "name": "Soil Moisture Sensor",
+   "description": "Instrument type for Soil Moisture measurements.",
+   "metadata": null,
+   "physical_quantity_id": 13,
+   "created_at": "2026-07-07T15:50:48.000000Z",
+   "updated_at": "2026-07-07T15:50:48.000000Z"
+  },
+  {
+   "id": 13,
+   "name": "Tiltmeter Sensor",
+   "description": "Instrument type for Tilt measurements.",
+   "metadata": null,
+   "physical_quantity_id": 14,
+   "created_at": "2026-07-07T15:50:52.000000Z",
+   "updated_at": "2026-07-07T15:50:52.000000Z"
+  },
+  {
+   "id": 14,
+   "name": "UV Meter Sensor",
+   "description": "Instrument type for UV Radiation measurements.",
+   "metadata": null,
+   "physical_quantity_id": 15,
+   "created_at": "2026-07-07T15:50:54.000000Z",
+   "updated_at": "2026-07-07T15:50:54.000000Z"
+  },
+  {
+   "id": 15,
+   "name": "Accelerometer Sensor",
+   "description": "Instrument type for Acceleration measurements.",
+   "metadata": null,
+   "physical_quantity_id": 16,
+   "created_at": "2026-07-07T15:50:56.000000Z",
+   "updated_at": "2026-07-07T15:50:56.000000Z"
+  },
+  {
+   "id": 16,
+   "name": "Barometer Sensor",
+   "description": "Instrument type for Atmospheric Pressure measurements.",
+   "metadata": null,
+   "physical_quantity_id": 17,
+   "created_at": "2026-07-07T15:51:06.000000Z",
+   "updated_at": "2026-07-07T15:51:06.000000Z"
+  },
+  {
+   "id": 17,
+   "name": "Barrier Sensor",
+   "description": "Instrument type for Barrier Event measurements.",
+   "metadata": null,
+   "physical_quantity_id": 18,
+   "created_at": "2026-07-07T15:51:07.000000Z",
+   "updated_at": "2026-07-07T15:51:07.000000Z"
+  },
+  {
+   "id": 18,
+   "name": "Barrier Sensor",
+   "description": "Instrument type for Barrier Event measurements.",
+   "metadata": null,
+   "physical_quantity_id": 18,
+   "created_at": "2026-07-07T15:51:09.000000Z",
+   "updated_at": "2026-08-10T13:53:00.000000Z"
+  },
+  {
+   "id": 19,
+   "name": "GNSS Sensor",
+   "description": "Instrument type for GNSS Position measurements.",
+   "metadata": null,
+   "physical_quantity_id": 20,
+   "created_at": "2026-07-07T15:51:14.000000Z",
+   "updated_at": "2026-07-07T15:51:14.000000Z"
+  },
+  {
+   "id": 20,
+   "name": "Pir-Airflow Sensor",
+   "description": "Instrument type for PIR Airflow measurements.",
+   "metadata": null,
+   "physical_quantity_id": 21,
+   "created_at": "2026-07-07T15:51:20.000000Z",
+   "updated_at": "2026-07-07T15:51:20.000000Z"
+  },
+  {
+   "id": 21,
+   "name": "Water Potential Sensor",
+   "description": "Instrument type for Water Potential measurements.",
+   "metadata": null,
+   "physical_quantity_id": 22,
+   "created_at": "2026-07-07T15:51:31.000000Z",
+   "updated_at": "2026-07-07T15:51:31.000000Z"
+  },
+  {
+   "id": 22,
+   "name": "Water Potential Sensor",
+   "description": "Instrument type for Water Potential measurements.",
+   "metadata": null,
+   "physical_quantity_id": 22,
+   "created_at": "2026-07-07T15:51:33.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 23,
+   "name": "Weather Station Sensor",
+   "description": "Instrument type for Weather Station Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "created_at": "2026-07-07T15:51:35.000000Z",
+   "updated_at": "2026-07-07T15:51:35.000000Z"
+  },
+  {
+   "id": 24,
+   "name": "Composite sensor 1 Sensor",
+   "description": "Instrument type for Composite Sensor 1 Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 25,
+   "created_at": "2026-07-07T15:51:41.000000Z",
+   "updated_at": "2026-07-07T15:51:41.000000Z"
+  },
+  {
+   "id": 25,
+   "name": "Composite sensor 2 Sensor",
+   "description": "Instrument type for Composite Sensor 2 Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 26,
+   "created_at": "2026-07-07T15:51:43.000000Z",
+   "updated_at": "2026-07-07T15:51:43.000000Z"
+  },
+  {
+   "id": 26,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:51:45.000000Z",
+   "updated_at": "2026-07-07T15:51:45.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "Weather Station Sensor",
+   "description": "Instrument type for Weather Station Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "created_at": "2026-07-07T15:51:50.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 28,
+   "name": "People Counter Sensor",
+   "description": "Instrument type for People Count measurements.",
+   "metadata": null,
+   "physical_quantity_id": 29,
+   "created_at": "2026-07-07T15:52:06.000000Z",
+   "updated_at": "2026-07-07T15:52:06.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "Weather Station Sensor",
+   "description": "Instrument type for Weather Station Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "created_at": "2026-07-07T15:52:26.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 30,
+   "name": "Weather Station Sensor",
+   "description": "Instrument type for Weather Station Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "created_at": "2026-07-07T15:52:29.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 31,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:30.000000Z",
+   "updated_at": "2026-08-10T13:53:00.000000Z"
+  },
+  {
+   "id": 32,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:32.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 33,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:33.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 34,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:35.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 35,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:37.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 36,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:39.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 37,
+   "name": "Crackmeter Sensor",
+   "description": "Instrument type for Crack Displacement measurements.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "created_at": "2026-07-07T15:52:40.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 38,
+   "name": "People Counter Sensor",
+   "description": "Instrument type for People Count measurements.",
+   "metadata": null,
+   "physical_quantity_id": 29,
+   "created_at": "2026-07-07T15:52:45.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 39,
+   "name": "People Counter Sensor",
+   "description": "Instrument type for People Count measurements.",
+   "metadata": null,
+   "physical_quantity_id": 29,
+   "created_at": "2026-07-07T15:52:46.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 40,
+   "name": "Weather Station Sensor",
+   "description": "Instrument type for Weather Station Measurements measurements.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "created_at": "2026-07-07T15:52:56.000000Z",
+   "updated_at": "2026-08-10T13:53:01.000000Z"
+  },
+  {
+   "id": 41,
+   "name": "Earth Observation Layer Instrument",
+   "description": "Virtual instrument representing derived Earth Observation imagery or raster layers.",
+   "metadata": null,
+   "physical_quantity_id": 42,
+   "created_at": "2026-07-08T00:33:55.000000Z",
+   "updated_at": "2026-07-08T00:33:55.000000Z"
+  }
+ ]
+}

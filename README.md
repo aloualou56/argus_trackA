@@ -42,7 +42,7 @@ project path contains `&` (as in `Projects & code`). Use `BROWSER_CHANNEL=chrome
 ## How it fits together
 
 ```
-snapshot/*.json  ──┐                                   (ARGUS data, read-only, not in git)
+snapshot/*.json  ──┐                                   (ARGUS data, read-only, in this private repo)
 content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data/game_data.json  ─► web app
                    │                             └► docs/data_notes.md (counts, quirks, assumptions)
                    └─ everything the team writes: cards, costs, mappings, stories, prompts
@@ -155,6 +155,8 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 
 ## Data and credentials
 
-- `snapshot/` is ARGUS challenge data: read-only and git-ignored. `game_data.json` holds only the fields the game needs.
+- `snapshot/` is ARGUS challenge data (43 MB, fetched 11 Oct 2026), committed so the whole team builds from the same
+  data. It is read-only input, and the repository must stay private unless the challenge's data terms allow
+  publishing it. `game_data.json` holds only the fields the game needs.
 - The API spec (`specs.json`) and `test_api.py` live outside this folder. Never copy tokens or credentials into this
   repository; `.gitignore` excludes `test_api.py`, `.env` and `*.token` as a safety net.

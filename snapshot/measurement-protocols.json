@@ -1,0 +1,408 @@
+{
+ "resource": "measurement-protocols",
+ "count": 40,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 11,
+   "name": "ARGUS Readings API - Air Humidity",
+   "description": "Humidity measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 3,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:38:43.000000Z",
+   "updated_at": "2026-07-07T15:38:43.000000Z"
+  },
+  {
+   "id": 12,
+   "name": "ARGUS Readings API - Air Temperature",
+   "description": "Temperature measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 4,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:38:43.000000Z",
+   "updated_at": "2026-07-07T15:38:43.000000Z"
+  },
+  {
+   "id": 13,
+   "name": "ARGUS Readings API - Vibration",
+   "description": "Vibration measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 5,
+   "instrument_type_id": 4,
+   "created_at": "2026-07-07T15:38:43.000000Z",
+   "updated_at": "2026-07-07T15:38:43.000000Z"
+  },
+  {
+   "id": 14,
+   "name": "ARGUS Readings API - Acoustic Emission",
+   "description": "Acoustic Emission measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 6,
+   "instrument_type_id": 5,
+   "created_at": "2026-07-07T15:50:35.000000Z",
+   "updated_at": "2026-07-07T15:50:35.000000Z"
+  },
+  {
+   "id": 15,
+   "name": "ARGUS Readings API - Air Flow",
+   "description": "Air Flow measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 7,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:50:37.000000Z",
+   "updated_at": "2026-07-07T15:50:37.000000Z"
+  },
+  {
+   "id": 16,
+   "name": "ARGUS Readings API - Gas Concentration",
+   "description": "Gas Concentration measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 8,
+   "instrument_type_id": 7,
+   "created_at": "2026-07-07T15:50:40.000000Z",
+   "updated_at": "2026-07-07T15:50:40.000000Z"
+  },
+  {
+   "id": 17,
+   "name": "ARGUS Readings API - Visible Radiation",
+   "description": "Visible Radiation measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 9,
+   "instrument_type_id": 8,
+   "created_at": "2026-07-07T15:50:41.000000Z",
+   "updated_at": "2026-07-07T15:50:41.000000Z"
+  },
+  {
+   "id": 18,
+   "name": "ARGUS Readings API - Multispectral Imaging",
+   "description": "Multispectral Imaging measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 10,
+   "instrument_type_id": 9,
+   "created_at": "2026-07-07T15:50:43.000000Z",
+   "updated_at": "2026-07-07T15:50:43.000000Z"
+  },
+  {
+   "id": 19,
+   "name": "ARGUS Readings API - Solar Irradiance",
+   "description": "Solar Irradiance measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 11,
+   "instrument_type_id": 10,
+   "created_at": "2026-07-07T15:50:45.000000Z",
+   "updated_at": "2026-07-07T15:50:45.000000Z"
+  },
+  {
+   "id": 20,
+   "name": "ARGUS Readings API - Rainfall",
+   "description": "Rainfall measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 12,
+   "instrument_type_id": 11,
+   "created_at": "2026-07-07T15:50:47.000000Z",
+   "updated_at": "2026-07-07T15:50:47.000000Z"
+  },
+  {
+   "id": 21,
+   "name": "ARGUS Readings API - Soil Moisture",
+   "description": "Soil Moisture measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 13,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:50:49.000000Z",
+   "updated_at": "2026-07-07T15:50:49.000000Z"
+  },
+  {
+   "id": 22,
+   "name": "ARGUS Readings API - Tilt",
+   "description": "Tilt measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 14,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:50:52.000000Z",
+   "updated_at": "2026-07-07T15:50:52.000000Z"
+  },
+  {
+   "id": 23,
+   "name": "ARGUS Readings API - UV Radiation",
+   "description": "UV Radiation measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 15,
+   "instrument_type_id": 14,
+   "created_at": "2026-07-07T15:50:54.000000Z",
+   "updated_at": "2026-07-07T15:50:54.000000Z"
+  },
+  {
+   "id": 24,
+   "name": "ARGUS Readings API - Acceleration",
+   "description": "Acceleration measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 16,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:50:56.000000Z",
+   "updated_at": "2026-07-07T15:50:56.000000Z"
+  },
+  {
+   "id": 25,
+   "name": "ARGUS Readings API - Atmospheric Pressure",
+   "description": "Atmospheric Pressure measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 17,
+   "instrument_type_id": 16,
+   "created_at": "2026-07-07T15:51:06.000000Z",
+   "updated_at": "2026-07-07T15:51:06.000000Z"
+  },
+  {
+   "id": 26,
+   "name": "ARGUS Readings API - Barrier Event",
+   "description": "Barrier Event measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 18,
+   "instrument_type_id": 17,
+   "created_at": "2026-07-07T15:51:08.000000Z",
+   "updated_at": "2026-07-07T15:51:08.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "ARGUS Readings API - Barrier Event",
+   "description": "Barrier Event measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 18,
+   "instrument_type_id": 18,
+   "created_at": "2026-07-07T15:51:09.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 28,
+   "name": "ARGUS Readings API - GNSS Position",
+   "description": "GNSS Position measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 20,
+   "instrument_type_id": 19,
+   "created_at": "2026-07-07T15:51:15.000000Z",
+   "updated_at": "2026-07-07T15:51:15.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "ARGUS Readings API - PIR Airflow",
+   "description": "PIR Airflow measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 21,
+   "instrument_type_id": 20,
+   "created_at": "2026-07-07T15:51:21.000000Z",
+   "updated_at": "2026-07-07T15:51:21.000000Z"
+  },
+  {
+   "id": 30,
+   "name": "ARGUS Readings API - Water Potential",
+   "description": "Water Potential measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 22,
+   "instrument_type_id": 21,
+   "created_at": "2026-07-07T15:51:31.000000Z",
+   "updated_at": "2026-07-07T15:51:31.000000Z"
+  },
+  {
+   "id": 31,
+   "name": "ARGUS Readings API - Water Potential",
+   "description": "Water Potential measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 22,
+   "instrument_type_id": 22,
+   "created_at": "2026-07-07T15:51:33.000000Z",
+   "updated_at": "2026-08-10T13:51:10.000000Z"
+  },
+  {
+   "id": 32,
+   "name": "ARGUS Readings API - Weather Station Measurements",
+   "description": "Weather Station Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "instrument_type_id": 23,
+   "created_at": "2026-07-07T15:51:35.000000Z",
+   "updated_at": "2026-07-07T15:51:35.000000Z"
+  },
+  {
+   "id": 33,
+   "name": "ARGUS Readings API - Composite Sensor 1 Measurements",
+   "description": "Composite Sensor 1 Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 25,
+   "instrument_type_id": 24,
+   "created_at": "2026-07-07T15:51:42.000000Z",
+   "updated_at": "2026-07-07T15:51:42.000000Z"
+  },
+  {
+   "id": 34,
+   "name": "ARGUS Readings API - Composite Sensor 2 Measurements",
+   "description": "Composite Sensor 2 Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 26,
+   "instrument_type_id": 25,
+   "created_at": "2026-07-07T15:51:43.000000Z",
+   "updated_at": "2026-07-07T15:51:43.000000Z"
+  },
+  {
+   "id": 35,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 26,
+   "created_at": "2026-07-07T15:51:46.000000Z",
+   "updated_at": "2026-07-07T15:51:46.000000Z"
+  },
+  {
+   "id": 36,
+   "name": "ARGUS Readings API - Weather Station Measurements",
+   "description": "Weather Station Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "instrument_type_id": 27,
+   "created_at": "2026-07-07T15:51:50.000000Z",
+   "updated_at": "2026-08-10T13:51:10.000000Z"
+  },
+  {
+   "id": 37,
+   "name": "ARGUS Readings API - People Count",
+   "description": "People Count measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 29,
+   "instrument_type_id": 28,
+   "created_at": "2026-07-07T15:52:06.000000Z",
+   "updated_at": "2026-07-07T15:52:06.000000Z"
+  },
+  {
+   "id": 38,
+   "name": "ARGUS Readings API - Weather Station Measurements",
+   "description": "Weather Station Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "instrument_type_id": 29,
+   "created_at": "2026-07-07T15:52:26.000000Z",
+   "updated_at": "2026-08-10T13:51:10.000000Z"
+  },
+  {
+   "id": 39,
+   "name": "ARGUS Readings API - Weather Station Measurements",
+   "description": "Weather Station Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "instrument_type_id": 30,
+   "created_at": "2026-07-07T15:52:29.000000Z",
+   "updated_at": "2026-08-10T13:51:10.000000Z"
+  },
+  {
+   "id": 40,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 31,
+   "created_at": "2026-07-07T15:52:30.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 41,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 32,
+   "created_at": "2026-07-07T15:52:32.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 42,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 33,
+   "created_at": "2026-07-07T15:52:34.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 43,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 34,
+   "created_at": "2026-07-07T15:52:36.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 44,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 35,
+   "created_at": "2026-07-07T15:52:37.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 45,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 36,
+   "created_at": "2026-07-07T15:52:39.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 46,
+   "name": "ARGUS Readings API - Crack Displacement",
+   "description": "Crack Displacement measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 27,
+   "instrument_type_id": 37,
+   "created_at": "2026-07-07T15:52:40.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 47,
+   "name": "ARGUS Readings API - People Count",
+   "description": "People Count measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 29,
+   "instrument_type_id": 38,
+   "created_at": "2026-07-07T15:52:45.000000Z",
+   "updated_at": "2026-08-10T13:51:09.000000Z"
+  },
+  {
+   "id": 48,
+   "name": "ARGUS Readings API - People Count",
+   "description": "People Count measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 29,
+   "instrument_type_id": 39,
+   "created_at": "2026-07-07T15:52:47.000000Z",
+   "updated_at": "2026-08-10T13:51:10.000000Z"
+  },
+  {
+   "id": 49,
+   "name": "ARGUS Readings API - Weather Station Measurements",
+   "description": "Weather Station Measurements measurements retrieved from ARGUS readings API using stored MQTT topic base paths.",
+   "metadata": null,
+   "physical_quantity_id": 24,
+   "instrument_type_id": 40,
+   "created_at": "2026-07-07T15:52:56.000000Z",
+   "updated_at": "2026-08-10T13:51:10.000000Z"
+  },
+  {
+   "id": 50,
+   "name": "Earth Observation Raster Layer Protocol",
+   "description": "Protocol for associating satellite-derived or EO raster products with an asset state as multi-dimensional measurements.",
+   "metadata": null,
+   "physical_quantity_id": 42,
+   "instrument_type_id": 41,
+   "created_at": "2026-07-08T00:33:55.000000Z",
+   "updated_at": "2026-07-08T00:33:55.000000Z"
+  }
+ ]
+}

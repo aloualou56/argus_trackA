@@ -1,0 +1,24 @@
+{
+ "resource": "asset-types",
+ "count": 2,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 5,
+   "name": "Monument",
+   "description": "A classification concept for Assets (e.g., movable heritage, monument, site, region), enabling grouping, filtering, and type-specific rules or policies.",
+   "metadata": "{}",
+   "created_at": "2026-06-03T17:09:56.000000Z",
+   "updated_at": "2026-06-03T17:09:56.000000Z"
+  },
+  {
+   "id": 6,
+   "name": "Heritage Site",
+   "description": "A classification concept for Assets (e.g., movable heritage, monument, site, region), enabling grouping, filtering, and type-specific rules or policies.",
+   "metadata": "{}",
+   "created_at": "2026-06-03T17:09:56.000000Z",
+   "updated_at": "2026-06-03T17:09:56.000000Z"
+  }
+ ]
+}

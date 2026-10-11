@@ -1,0 +1,1058 @@
+{
+ "resource": "locations",
+ "count": 105,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 24,
+   "name": "Ranverso sensor installation location",
+   "description": "Location for Ranverso minimal seed sensors.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:42:08.000000Z",
+   "updated_at": "2026-07-07T15:42:08.000000Z"
+  },
+  {
+   "id": 25,
+   "name": "Location - Acoustic - raspi-100000007a1083f5",
+   "description": "Sensor installation location for Acoustic - raspi-100000007a1083f5.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:35.000000Z",
+   "updated_at": "2026-07-07T15:50:35.000000Z"
+  },
+  {
+   "id": 26,
+   "name": "Location - Air Flow - 149248",
+   "description": "Sensor installation location for Air Flow - 149248.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:37.000000Z",
+   "updated_at": "2026-07-07T15:50:37.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "Location - Air Flow - A8610A3539387205",
+   "description": "Sensor installation location for Air Flow - A8610A3539387205.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:38.000000Z",
+   "updated_at": "2026-07-07T15:50:38.000000Z"
+  },
+  {
+   "id": 28,
+   "name": "Location - Gas - A8610A3338359111",
+   "description": "Sensor installation location for Gas - A8610A3338359111.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:40.000000Z",
+   "updated_at": "2026-07-07T15:50:40.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "Location - Lux Meter - 168442",
+   "description": "Sensor installation location for Lux Meter - 168442.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:42.000000Z",
+   "updated_at": "2026-07-07T15:50:42.000000Z"
+  },
+  {
+   "id": 30,
+   "name": "Location - Multispectral Camera - Svy 324160033",
+   "description": "Sensor installation location for Multispectral Camera - Svy 324160033.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:44.000000Z",
+   "updated_at": "2026-07-07T15:50:44.000000Z"
+  },
+  {
+   "id": 31,
+   "name": "Location - Pyranometer - 149361",
+   "description": "Sensor installation location for Pyranometer - 149361.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:46.000000Z",
+   "updated_at": "2026-07-07T15:50:46.000000Z"
+  },
+  {
+   "id": 32,
+   "name": "Location - Rain Gauge - 177315",
+   "description": "Sensor installation location for Rain Gauge - 177315.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:47.000000Z",
+   "updated_at": "2026-07-07T15:50:47.000000Z"
+  },
+  {
+   "id": 33,
+   "name": "Location - Soil Moisture - A8610A34363D6617",
+   "description": "Sensor installation location for Soil Moisture - A8610A34363D6617.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:49.000000Z",
+   "updated_at": "2026-07-07T15:50:49.000000Z"
+  },
+  {
+   "id": 34,
+   "name": "Location - Soil Moisture - A8610A333526680F",
+   "description": "Sensor installation location for Soil Moisture - A8610A333526680F.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:50.000000Z",
+   "updated_at": "2026-07-07T15:50:50.000000Z"
+  },
+  {
+   "id": 35,
+   "name": "Location - Tiltmeter - 143276",
+   "description": "Sensor installation location for Tiltmeter - 143276.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:52.000000Z",
+   "updated_at": "2026-07-07T15:50:52.000000Z"
+  },
+  {
+   "id": 36,
+   "name": "Location - UV Meter - 168442",
+   "description": "Sensor installation location for UV Meter - 168442.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:55.000000Z",
+   "updated_at": "2026-07-07T15:50:55.000000Z"
+  },
+  {
+   "id": 37,
+   "name": "Location - Accelerometer - A1-159164 (Cellar 88 - Outside - car path)",
+   "description": "Sensor installation location for Accelerometer - A1-159164 (Cellar 88 - Outside - car path).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:57.000000Z",
+   "updated_at": "2026-07-07T15:50:57.000000Z"
+  },
+  {
+   "id": 38,
+   "name": "Location - Accelerometer - A2-159347 (Cellar 88 - Inside - Sisa)",
+   "description": "Sensor installation location for Accelerometer - A2-159347 (Cellar 88 - Inside - Sisa).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:50:59.000000Z",
+   "updated_at": "2026-07-07T15:50:59.000000Z"
+  },
+  {
+   "id": 39,
+   "name": "Location - Accelerometer - 159313 (Cellar 364 - Outside - car path)",
+   "description": "Sensor installation location for Accelerometer - 159313 (Cellar 364 - Outside - car path).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:00.000000Z",
+   "updated_at": "2026-07-07T15:51:00.000000Z"
+  },
+  {
+   "id": 40,
+   "name": "Location - Air flow - AF1-149367 (Cellar 88 - Chimney 1 Kitchen)",
+   "description": "Sensor installation location for Air flow - AF1-149367 (Cellar 88 - Chimney 1 Kitchen).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:01.000000Z",
+   "updated_at": "2026-07-07T15:51:01.000000Z"
+  },
+  {
+   "id": 41,
+   "name": "Location - Air flow - AF2-149780 (Cellar 88 - Chimney 2 Lagar)",
+   "description": "Sensor installation location for Air flow - AF2-149780 (Cellar 88 - Chimney 2 Lagar).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:03.000000Z",
+   "updated_at": "2026-07-07T15:51:03.000000Z"
+  },
+  {
+   "id": 42,
+   "name": "Location - Air flow - AF3-149402 (Cellar 88 - Chimney 3 Sisa 4)",
+   "description": "Sensor installation location for Air flow - AF3-149402 (Cellar 88 - Chimney 3 Sisa 4).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:04.000000Z",
+   "updated_at": "2026-07-07T15:51:04.000000Z"
+  },
+  {
+   "id": 43,
+   "name": "Location - Air flow - AF4-149421 (Cellar 88 - Chimney 4 Pasillo sisa3-sisa4)",
+   "description": "Sensor installation location for Air flow - AF4-149421 (Cellar 88 - Chimney 4 Pasillo sisa3-sisa4).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:05.000000Z",
+   "updated_at": "2026-07-07T15:51:05.000000Z"
+  },
+  {
+   "id": 44,
+   "name": "Location - Barometer - 149443 (Cellar 88 - Sisa2)",
+   "description": "Sensor installation location for Barometer - 149443 (Cellar 88 - Sisa2).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:06.000000Z",
+   "updated_at": "2026-07-07T15:51:06.000000Z"
+  },
+  {
+   "id": 45,
+   "name": "Location - Barrier - A8610A343345720D (Cellar 88 - Outside)",
+   "description": "Sensor installation location for Barrier - A8610A343345720D (Cellar 88 - Outside).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:08.000000Z",
+   "updated_at": "2026-07-07T15:51:08.000000Z"
+  },
+  {
+   "id": 46,
+   "name": "Location - Barrier - A8610A34324D7F09 (Cellar 364 - Outside - car path)",
+   "description": "Sensor installation location for Barrier - A8610A34324D7F09 (Cellar 364 - Outside - car path).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:10.000000Z",
+   "updated_at": "2026-07-07T15:51:10.000000Z"
+  },
+  {
+   "id": 47,
+   "name": "Location - Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810]",
+   "description": "Sensor installation location for Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810].",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:11.000000Z",
+   "updated_at": "2026-07-07T15:51:11.000000Z"
+  },
+  {
+   "id": 48,
+   "name": "Location - Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-2]",
+   "description": "Sensor installation location for Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-2].",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:12.000000Z",
+   "updated_at": "2026-07-07T15:51:12.000000Z"
+  },
+  {
+   "id": 49,
+   "name": "Location - Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-3]",
+   "description": "Sensor installation location for Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-3].",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:13.000000Z",
+   "updated_at": "2026-07-07T15:51:13.000000Z"
+  },
+  {
+   "id": 50,
+   "name": "Location - GNSS - 168762 (Cellar 88 - Chimney 1)",
+   "description": "Sensor installation location for GNSS - 168762 (Cellar 88 - Chimney 1).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:15.000000Z",
+   "updated_at": "2026-07-07T15:51:15.000000Z"
+  },
+  {
+   "id": 51,
+   "name": "Location - Humidity - 7347939-H (Cellar 88 - Outside)",
+   "description": "Sensor installation location for Humidity - 7347939-H (Cellar 88 - Outside).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:16.000000Z",
+   "updated_at": "2026-07-07T15:51:16.000000Z"
+  },
+  {
+   "id": 52,
+   "name": "Location - Humidity - 13280523-H (Cellar 88 - Kitchen)",
+   "description": "Sensor installation location for Humidity - 13280523-H (Cellar 88 - Kitchen).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:17.000000Z",
+   "updated_at": "2026-07-07T15:51:17.000000Z"
+  },
+  {
+   "id": 53,
+   "name": "Location - Humidity - 7348424-H (Cellar 88 - Sisa)",
+   "description": "Sensor installation location for Humidity - 7348424-H (Cellar 88 - Sisa).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:18.000000Z",
+   "updated_at": "2026-07-07T15:51:18.000000Z"
+  },
+  {
+   "id": 54,
+   "name": "Location - Humidity - 13280278-H (Cellar 88 - Lagar)",
+   "description": "Sensor installation location for Humidity - 13280278-H (Cellar 88 - Lagar).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:20.000000Z",
+   "updated_at": "2026-07-07T15:51:20.000000Z"
+  },
+  {
+   "id": 55,
+   "name": "Location - Pir-Airflow - A8610A3230467704 (Cellar 193 - Entry)",
+   "description": "Sensor installation location for Pir-Airflow - A8610A3230467704 (Cellar 193 - Entry).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:21.000000Z",
+   "updated_at": "2026-07-07T15:51:21.000000Z"
+  },
+  {
+   "id": 56,
+   "name": "Location - Soil moisture - 115666 (Cellar 88 - Kitchen)",
+   "description": "Sensor installation location for Soil moisture - 115666 (Cellar 88 - Kitchen).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:22.000000Z",
+   "updated_at": "2026-07-07T15:51:22.000000Z"
+  },
+  {
+   "id": 57,
+   "name": "Location - Soil moisture - 1-149265 (Cellar 88 - Paso1)",
+   "description": "Sensor installation location for Soil moisture - 1-149265 (Cellar 88 - Paso1).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:23.000000Z",
+   "updated_at": "2026-07-07T15:51:23.000000Z"
+  },
+  {
+   "id": 58,
+   "name": "Location - Soil moisture - 2-177322 (Cellar 88 - Nicho 1 de Sisa2)",
+   "description": "Sensor installation location for Soil moisture - 2-177322 (Cellar 88 - Nicho 1 de Sisa2).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:24.000000Z",
+   "updated_at": "2026-07-07T15:51:24.000000Z"
+  },
+  {
+   "id": 59,
+   "name": "Location - Soil moisture - 151810 (Cellar 193 - Lagar)",
+   "description": "Sensor installation location for Soil moisture - 151810 (Cellar 193 - Lagar).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:26.000000Z",
+   "updated_at": "2026-07-07T15:51:26.000000Z"
+  },
+  {
+   "id": 60,
+   "name": "Location - Temperature - 7347939-T (Cellar 88 - Outside)",
+   "description": "Sensor installation location for Temperature - 7347939-T (Cellar 88 - Outside).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:27.000000Z",
+   "updated_at": "2026-07-07T15:51:27.000000Z"
+  },
+  {
+   "id": 61,
+   "name": "Location - Temperature - 13280523-T (Cellar 88 - Kitchen)",
+   "description": "Sensor installation location for Temperature - 13280523-T (Cellar 88 - Kitchen).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:28.000000Z",
+   "updated_at": "2026-07-07T15:51:28.000000Z"
+  },
+  {
+   "id": 62,
+   "name": "Location - Temperature - 7348424-T (Cellar 88 - Sisa)",
+   "description": "Sensor installation location for Temperature - 7348424-T (Cellar 88 - Sisa).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:29.000000Z",
+   "updated_at": "2026-07-07T15:51:29.000000Z"
+  },
+  {
+   "id": 63,
+   "name": "Location - Temperature - 13280278-T (Cellar 88 - Lagar)",
+   "description": "Sensor installation location for Temperature - 13280278-T (Cellar 88 - Lagar).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:30.000000Z",
+   "updated_at": "2026-07-07T15:51:30.000000Z"
+  },
+  {
+   "id": 64,
+   "name": "Location - Water pottential - WP1-130432 (Cellar 88 - Paso1)",
+   "description": "Sensor installation location for Water pottential - WP1-130432 (Cellar 88 - Paso1).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:32.000000Z",
+   "updated_at": "2026-07-07T15:51:32.000000Z"
+  },
+  {
+   "id": 65,
+   "name": "Location - Water pottential - WP2-130314 (Cellar 88 - Nicho 1 de Sisa2)",
+   "description": "Sensor installation location for Water pottential - WP2-130314 (Cellar 88 - Nicho 1 de Sisa2).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:34.000000Z",
+   "updated_at": "2026-07-07T15:51:34.000000Z"
+  },
+  {
+   "id": 66,
+   "name": "Location - Weather station - 2CF7F1C073400212 (Outside - Church tower)",
+   "description": "Sensor installation location for Weather station - 2CF7F1C073400212 (Outside - Church tower).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:35.000000Z",
+   "updated_at": "2026-07-07T15:51:35.000000Z"
+  },
+  {
+   "id": 67,
+   "name": "Location - Accelerometer - 159070 (Schenkenberg tower - North wall)",
+   "description": "Sensor installation location for Accelerometer - 159070 (Schenkenberg tower - North wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:36.000000Z",
+   "updated_at": "2026-07-07T15:51:36.000000Z"
+  },
+  {
+   "id": 68,
+   "name": "Location - Accelerometer - 152555 (Schenkenberg tower - North wall)",
+   "description": "Sensor installation location for Accelerometer - 152555 (Schenkenberg tower - North wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:38.000000Z",
+   "updated_at": "2026-07-07T15:51:38.000000Z"
+  },
+  {
+   "id": 69,
+   "name": "Location - Accelerometer - 152479 (Schenkenberg tower - South wall)",
+   "description": "Sensor installation location for Accelerometer - 152479 (Schenkenberg tower - South wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:39.000000Z",
+   "updated_at": "2026-07-07T15:51:39.000000Z"
+  },
+  {
+   "id": 70,
+   "name": "Location - Accelerometer - 175480 (Schenkenberg tower - South wall)",
+   "description": "Sensor installation location for Accelerometer - 175480 (Schenkenberg tower - South wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:41.000000Z",
+   "updated_at": "2026-07-07T15:51:41.000000Z"
+  },
+  {
+   "id": 71,
+   "name": "Location - Composite sensor 1 - A8610A32304A8304",
+   "description": "Sensor installation location for Composite sensor 1 - A8610A32304A8304.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:42.000000Z",
+   "updated_at": "2026-07-07T15:51:42.000000Z"
+  },
+  {
+   "id": 72,
+   "name": "Location - Composite sensor 2 - 2CF7F1C072600345",
+   "description": "Sensor installation location for Composite sensor 2 - 2CF7F1C072600345.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:44.000000Z",
+   "updated_at": "2026-07-07T15:51:44.000000Z"
+  },
+  {
+   "id": 73,
+   "name": "Location - Crackmeter - 149796",
+   "description": "Sensor installation location for Crackmeter - 149796.",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:46.000000Z",
+   "updated_at": "2026-07-07T15:51:46.000000Z"
+  },
+  {
+   "id": 74,
+   "name": "Location - Tiltmeter - 152914 (North face)",
+   "description": "Sensor installation location for Tiltmeter - 152914 (North face).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:47.000000Z",
+   "updated_at": "2026-07-07T15:51:47.000000Z"
+  },
+  {
+   "id": 75,
+   "name": "Location - Tiltmeter - 152899 (South face)",
+   "description": "Sensor installation location for Tiltmeter - 152899 (South face).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:48.000000Z",
+   "updated_at": "2026-07-07T15:51:48.000000Z"
+  },
+  {
+   "id": 76,
+   "name": "Location - Weather station - 2CF7F1C072300226 (Top of the tower)",
+   "description": "Sensor installation location for Weather station - 2CF7F1C072300226 (Top of the tower).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:50.000000Z",
+   "updated_at": "2026-07-07T15:51:50.000000Z"
+  },
+  {
+   "id": 77,
+   "name": "Location - Air flow - 109315 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Sensor installation location for Air flow - 109315 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:52.000000Z",
+   "updated_at": "2026-07-07T15:51:52.000000Z"
+  },
+  {
+   "id": 78,
+   "name": "Location - Air flow - 149405 (Room 214 - Dionysus mosaic)",
+   "description": "Sensor installation location for Air flow - 149405 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:53.000000Z",
+   "updated_at": "2026-07-07T15:51:53.000000Z"
+  },
+  {
+   "id": 79,
+   "name": "Location - Gas - 0004A30B0050C42F (Close to the coastline (NE of the island) facing Mykonos)",
+   "description": "Sensor installation location for Gas - 0004A30B0050C42F (Close to the coastline (NE of the island) facing Mykonos).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:54.000000Z",
+   "updated_at": "2026-07-07T15:51:54.000000Z"
+  },
+  {
+   "id": 80,
+   "name": "Location - Humidity - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "Sensor installation location for Humidity - 151805 (Room 217 - Dolphins mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:55.000000Z",
+   "updated_at": "2026-07-07T15:51:55.000000Z"
+  },
+  {
+   "id": 81,
+   "name": "Location - Humidity - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "Sensor installation location for Humidity - 151809 (Room 216 - Seilinos mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:57.000000Z",
+   "updated_at": "2026-07-07T15:51:57.000000Z"
+  },
+  {
+   "id": 82,
+   "name": "Location - Humidity - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Sensor installation location for Humidity - 151836 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:58.000000Z",
+   "updated_at": "2026-07-07T15:51:58.000000Z"
+  },
+  {
+   "id": 83,
+   "name": "Location - Humidity - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "Sensor installation location for Humidity - 168439 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:51:59.000000Z",
+   "updated_at": "2026-07-07T15:51:59.000000Z"
+  },
+  {
+   "id": 84,
+   "name": "Location - Humidity - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Sensor installation location for Humidity - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:00.000000Z",
+   "updated_at": "2026-07-07T15:52:00.000000Z"
+  },
+  {
+   "id": 85,
+   "name": "Location - Lux Meter - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "Sensor installation location for Lux Meter - 151805 (Room 217 - Dolphins mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:01.000000Z",
+   "updated_at": "2026-07-07T15:52:01.000000Z"
+  },
+  {
+   "id": 86,
+   "name": "Location - Lux Meter - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "Sensor installation location for Lux Meter - 151809 (Room 216 - Seilinos mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:02.000000Z",
+   "updated_at": "2026-07-07T15:52:02.000000Z"
+  },
+  {
+   "id": 87,
+   "name": "Location - Lux Meter - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Sensor installation location for Lux Meter - 151836 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:03.000000Z",
+   "updated_at": "2026-07-07T15:52:03.000000Z"
+  },
+  {
+   "id": 88,
+   "name": "Location - Lux Meter - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "Sensor installation location for Lux Meter - 168439 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:05.000000Z",
+   "updated_at": "2026-07-07T15:52:05.000000Z"
+  },
+  {
+   "id": 89,
+   "name": "Location - People Counter - 2CF7F1C062800035 (Above door of room 214 - Dionysus mosaic)",
+   "description": "Sensor installation location for People Counter - 2CF7F1C062800035 (Above door of room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:06.000000Z",
+   "updated_at": "2026-07-07T15:52:06.000000Z"
+  },
+  {
+   "id": 90,
+   "name": "Location - Pyranometer - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Sensor installation location for Pyranometer - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:08.000000Z",
+   "updated_at": "2026-07-07T15:52:08.000000Z"
+  },
+  {
+   "id": 91,
+   "name": "Location - Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Sensor installation location for Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:09.000000Z",
+   "updated_at": "2026-07-07T15:52:09.000000Z"
+  },
+  {
+   "id": 92,
+   "name": "Location - Soil Moisture - 149423 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Sensor installation location for Soil Moisture - 149423 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:10.000000Z",
+   "updated_at": "2026-07-07T15:52:10.000000Z"
+  },
+  {
+   "id": 93,
+   "name": "Location - Soil Moisture - 149460 (Few meters away from the House of the Masks)",
+   "description": "Sensor installation location for Soil Moisture - 149460 (Few meters away from the House of the Masks).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:11.000000Z",
+   "updated_at": "2026-07-07T15:52:11.000000Z"
+  },
+  {
+   "id": 94,
+   "name": "Location - Soil Moisture - 149678 (Sensor placed on a plastered wall at the House of Fournoi)",
+   "description": "Sensor installation location for Soil Moisture - 149678 (Sensor placed on a plastered wall at the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:12.000000Z",
+   "updated_at": "2026-07-07T15:52:12.000000Z"
+  },
+  {
+   "id": 95,
+   "name": "Location - Soil Moisture - 149529 (Sensor placed on a plastered wall at the House of Fournoi)",
+   "description": "Sensor installation location for Soil Moisture - 149529 (Sensor placed on a plastered wall at the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:14.000000Z",
+   "updated_at": "2026-07-07T15:52:14.000000Z"
+  },
+  {
+   "id": 96,
+   "name": "Location - Soil Moisture - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Sensor installation location for Soil Moisture - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:15.000000Z",
+   "updated_at": "2026-07-07T15:52:15.000000Z"
+  },
+  {
+   "id": 97,
+   "name": "Location - Temperature - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "Sensor installation location for Temperature - 151805 (Room 217 - Dolphins mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:16.000000Z",
+   "updated_at": "2026-07-07T15:52:16.000000Z"
+  },
+  {
+   "id": 98,
+   "name": "Location - Temperature - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "Sensor installation location for Temperature - 151809 (Room 216 - Seilinos mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:17.000000Z",
+   "updated_at": "2026-07-07T15:52:17.000000Z"
+  },
+  {
+   "id": 99,
+   "name": "Location - Temperature - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Sensor installation location for Temperature - 151836 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:18.000000Z",
+   "updated_at": "2026-07-07T15:52:18.000000Z"
+  },
+  {
+   "id": 100,
+   "name": "Location - Temperature - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "Sensor installation location for Temperature - 168439 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:19.000000Z",
+   "updated_at": "2026-07-07T15:52:19.000000Z"
+  },
+  {
+   "id": 101,
+   "name": "Location - Temperature - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Sensor installation location for Temperature - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:20.000000Z",
+   "updated_at": "2026-07-07T15:52:20.000000Z"
+  },
+  {
+   "id": 102,
+   "name": "Location - Tiltmeter - 153157 (Leaning wall in Skardanas district)",
+   "description": "Sensor installation location for Tiltmeter - 153157 (Leaning wall in Skardanas district).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:21.000000Z",
+   "updated_at": "2026-07-07T15:52:21.000000Z"
+  },
+  {
+   "id": 103,
+   "name": "Location - Tiltmeter - 150900 (Theater district)",
+   "description": "Sensor installation location for Tiltmeter - 150900 (Theater district).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:22.000000Z",
+   "updated_at": "2026-07-07T15:52:22.000000Z"
+  },
+  {
+   "id": 104,
+   "name": "Location - Tiltmeter - 153242 (Close to the Temple of Isis)",
+   "description": "Sensor installation location for Tiltmeter - 153242 (Close to the Temple of Isis).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:23.000000Z",
+   "updated_at": "2026-07-07T15:52:23.000000Z"
+  },
+  {
+   "id": 105,
+   "name": "Location - Tiltmeter - 153295 (Place in Inopos district)",
+   "description": "Sensor installation location for Tiltmeter - 153295 (Place in Inopos district).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:25.000000Z",
+   "updated_at": "2026-07-07T15:52:25.000000Z"
+  },
+  {
+   "id": 106,
+   "name": "Location - Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks)",
+   "description": "Sensor installation location for Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:26.000000Z",
+   "updated_at": "2026-07-07T15:52:26.000000Z"
+  },
+  {
+   "id": 107,
+   "name": "Location - Weather Station - 2CF7F1C0723001F4 (Few meters away from the House of Fournoi)",
+   "description": "Sensor installation location for Weather Station - 2CF7F1C0723001F4 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:29.000000Z",
+   "updated_at": "2026-07-07T15:52:29.000000Z"
+  },
+  {
+   "id": 108,
+   "name": "Location - Crackmeter - 177266 (Conventillo - Staircase access façade)",
+   "description": "Sensor installation location for Crackmeter - 177266 (Conventillo - Staircase access façade).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:31.000000Z",
+   "updated_at": "2026-07-07T15:52:31.000000Z"
+  },
+  {
+   "id": 109,
+   "name": "Location - Crackmeter - 177253 (Conventillo - First-storey crack)",
+   "description": "Sensor installation location for Crackmeter - 177253 (Conventillo - First-storey crack).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:32.000000Z",
+   "updated_at": "2026-07-07T15:52:32.000000Z"
+  },
+  {
+   "id": 110,
+   "name": "Location - Crackmeter - 177320 (Conventillo - Sensor and logger on the same wall)",
+   "description": "Sensor installation location for Crackmeter - 177320 (Conventillo - Sensor and logger on the same wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:34.000000Z",
+   "updated_at": "2026-07-07T15:52:34.000000Z"
+  },
+  {
+   "id": 111,
+   "name": "Location - Crackmeter - 174156 (Villa di Orazio - Close to a mosaic)",
+   "description": "Sensor installation location for Crackmeter - 174156 (Villa di Orazio - Close to a mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:36.000000Z",
+   "updated_at": "2026-07-07T15:52:36.000000Z"
+  },
+  {
+   "id": 112,
+   "name": "Location - Crackmeter - 177287 (Villa di Orazio - Perimetral wall enclosing a mosaic)",
+   "description": "Sensor installation location for Crackmeter - 177287 (Villa di Orazio - Perimetral wall enclosing a mosaic).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:38.000000Z",
+   "updated_at": "2026-07-07T15:52:38.000000Z"
+  },
+  {
+   "id": 113,
+   "name": "Location - Crackmeter - 177310 (Montefalco Castle - External wall)",
+   "description": "Sensor installation location for Crackmeter - 177310 (Montefalco Castle - External wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:39.000000Z",
+   "updated_at": "2026-07-07T15:52:39.000000Z"
+  },
+  {
+   "id": 114,
+   "name": "Location - Crackmeter - 177325 (Montefalco Castle - External wall)",
+   "description": "Sensor installation location for Crackmeter - 177325 (Montefalco Castle - External wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:41.000000Z",
+   "updated_at": "2026-07-07T15:52:41.000000Z"
+  },
+  {
+   "id": 115,
+   "name": "Location - Humidity - 177239 (Conventillo - Main room, second floor)",
+   "description": "Sensor installation location for Humidity - 177239 (Conventillo - Main room, second floor).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:42.000000Z",
+   "updated_at": "2026-07-07T15:52:42.000000Z"
+  },
+  {
+   "id": 116,
+   "name": "Location - Humidity - 177281 (Montefalco Castle - Exterior wall pole)",
+   "description": "Sensor installation location for Humidity - 177281 (Montefalco Castle - Exterior wall pole).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:43.000000Z",
+   "updated_at": "2026-07-07T15:52:43.000000Z"
+  },
+  {
+   "id": 117,
+   "name": "Location - People Counter - 2CF7F1C062800056 (Conventillo - Main entrance)",
+   "description": "Sensor installation location for People Counter - 2CF7F1C062800056 (Conventillo - Main entrance).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:46.000000Z",
+   "updated_at": "2026-07-07T15:52:46.000000Z"
+  },
+  {
+   "id": 118,
+   "name": "Location - People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar)",
+   "description": "Sensor installation location for People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:47.000000Z",
+   "updated_at": "2026-07-07T15:52:47.000000Z"
+  },
+  {
+   "id": 119,
+   "name": "Location - Pyranometer - 177237 (Villa di Orazio - Gateway pole)",
+   "description": "Sensor installation location for Pyranometer - 177237 (Villa di Orazio - Gateway pole).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:48.000000Z",
+   "updated_at": "2026-07-07T15:52:48.000000Z"
+  },
+  {
+   "id": 120,
+   "name": "Location - Temperature - 177239 (Conventillo - Main room, second floor)",
+   "description": "Sensor installation location for Temperature - 177239 (Conventillo - Main room, second floor).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:49.000000Z",
+   "updated_at": "2026-07-07T15:52:49.000000Z"
+  },
+  {
+   "id": 121,
+   "name": "Location - Temperature - 177281 (Montefalco Castle - Exterior wall pole)",
+   "description": "Sensor installation location for Temperature - 177281 (Montefalco Castle - Exterior wall pole).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:50.000000Z",
+   "updated_at": "2026-07-07T15:52:50.000000Z"
+  },
+  {
+   "id": 122,
+   "name": "Location - Tiltmeter - 152931 (Conventillo - Staircase access façade)",
+   "description": "Sensor installation location for Tiltmeter - 152931 (Conventillo - Staircase access façade).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:51.000000Z",
+   "updated_at": "2026-07-07T15:52:51.000000Z"
+  },
+  {
+   "id": 123,
+   "name": "Location - Tiltmeter - 153061 (Conventillo - First floor, close to a window)",
+   "description": "Sensor installation location for Tiltmeter - 153061 (Conventillo - First floor, close to a window).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:53.000000Z",
+   "updated_at": "2026-07-07T15:52:53.000000Z"
+  },
+  {
+   "id": 124,
+   "name": "Location - Tiltmeter - 152816 (Conventillo - Third floor, close to a window)",
+   "description": "Sensor installation location for Tiltmeter - 152816 (Conventillo - Third floor, close to a window).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:54.000000Z",
+   "updated_at": "2026-07-07T15:52:54.000000Z"
+  },
+  {
+   "id": 125,
+   "name": "Location - Vibration - 152608 (Montefalco Castle - External wall)",
+   "description": "Sensor installation location for Vibration - 152608 (Montefalco Castle - External wall).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:55.000000Z",
+   "updated_at": "2026-07-07T15:52:55.000000Z"
+  },
+  {
+   "id": 126,
+   "name": "Location - Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+   "description": "Sensor installation location for Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar).",
+   "metadata": null,
+   "reference_system_id": 5,
+   "location_type_id": 5,
+   "created_at": "2026-07-07T15:52:57.000000Z",
+   "updated_at": "2026-07-07T15:52:57.000000Z"
+  },
+  {
+   "id": 127,
+   "name": "Baltanás, Spain · Historic Cellar Town footprint [footprint v1]",
+   "description": "Immutable heritage-asset footprint used for ARGUS spatial evidence evaluation.",
+   "metadata": "{\"kind\": \"heritage_asset_footprint\", \"schema_version\": \"1.0.0\", \"site_key\": \"baltanas\", \"asset_id\": 27, \"version\": 1, \"supersedes_location_id\": null, \"valid_from\": \"2026-09-09T09:31:00+00:00\", \"source_reference\": \"Asset footprint testing\", \"geojson\": {\"type\": \"Polygon\", \"coordinates\": [[[-4.242360553383853, 41.939824096246014], [-4.244724361022564, 41.93796879466882], [-4.242946880568597, 41.93803383018958], [-4.242360553383853, 41.939824096246014]]]}, \"producer_recorded_at\": \"2026-09-09T09:31:39.464049+00:00\", \"producer_clock\": \"argus-computation-service-utc\"}",
+   "reference_system_id": 5,
+   "location_type_id": 6,
+   "created_at": "2026-09-09T12:32:39.000000Z",
+   "updated_at": "2026-09-09T12:32:39.000000Z"
+  },
+  {
+   "id": 128,
+   "name": "Baltanás, Spain · Historic Cellar Town footprint [footprint v2]",
+   "description": "Immutable heritage-asset footprint used for ARGUS spatial evidence evaluation.",
+   "metadata": "{\"kind\": \"heritage_asset_footprint\", \"schema_version\": \"1.0.0\", \"site_key\": \"baltanas\", \"asset_id\": 27, \"version\": 2, \"supersedes_location_id\": 127, \"valid_from\": \"2026-09-09T09:58:00+00:00\", \"source_reference\": \"Asset footprint testing\", \"geojson\": {\"type\": \"Polygon\", \"coordinates\": [[[-4.2441991493444355, 41.93877106786911], [-4.242509663212252, 41.93987117840588], [-4.243392074819669, 41.93818084008396], [-4.244026164671823, 41.93796736436082], [-4.2441991493444355, 41.93877106786911]]]}, \"producer_recorded_at\": \"2026-09-09T09:57:23.053317+00:00\", \"producer_clock\": \"argus-computation-service-utc\"}",
+   "reference_system_id": 5,
+   "location_type_id": 6,
+   "created_at": "2026-09-09T12:58:23.000000Z",
+   "updated_at": "2026-09-09T12:58:23.000000Z"
+  }
+ ]
+}

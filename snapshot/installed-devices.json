@@ -1,0 +1,1178 @@
+{
+ "resource": "installed-devices",
+ "count": 117,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 26,
+   "name": "Installed Humidity - 168442",
+   "description": "Humidity device installed at Ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08118055555556, \"height\": 339.11}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 16,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:43:04.000000Z",
+   "updated_at": "2026-07-07T16:46:59.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "Installed Humidity - 174188",
+   "description": "Humidity device installed at Ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08117777777778, \"height\": 339.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 17,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:43:04.000000Z",
+   "updated_at": "2026-07-07T16:47:28.000000Z"
+  },
+  {
+   "id": 28,
+   "name": "Installed Humidity - 177315",
+   "description": "Humidity device installed at Ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449352777777778, \"latitude\": 45.081225, \"height\": 338.89}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 18,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:43:04.000000Z",
+   "updated_at": "2026-07-07T16:47:28.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "Installed Temperature - 168442",
+   "description": "Temperature device installed at Ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08118055555556, \"height\": 339.11}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 19,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:43:04.000000Z",
+   "updated_at": "2026-07-07T16:47:28.000000Z"
+  },
+  {
+   "id": 30,
+   "name": "Installed Temperature - 174188",
+   "description": "Temperature device installed at Ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08117777777778, \"height\": 339.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 20,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:43:04.000000Z",
+   "updated_at": "2026-07-07T16:47:28.000000Z"
+  },
+  {
+   "id": 32,
+   "name": "Installed Vibration - 170894",
+   "description": "Vibration device installed at Ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449913888888889, \"latitude\": 45.081133333333334, \"height\": 339.42}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 22,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:43:04.000000Z",
+   "updated_at": "2026-07-07T16:47:28.000000Z"
+  },
+  {
+   "id": 33,
+   "name": "Installed Acoustic - raspi-100000007a1083f5",
+   "description": "Acoustic - raspi-100000007a1083f5 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.4496472222222225, \"latitude\": 45.08105833333334, \"height\": 340.16}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 23,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:36.000000Z",
+   "updated_at": "2026-07-07T23:54:43.000000Z"
+  },
+  {
+   "id": 34,
+   "name": "Installed Air Flow - 149248",
+   "description": "Air Flow - 149248 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08118055555556, \"height\": 339.11}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 24,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:38.000000Z",
+   "updated_at": "2026-07-07T23:54:43.000000Z"
+  },
+  {
+   "id": 35,
+   "name": "Installed Air Flow - A8610A3539387205",
+   "description": "Air Flow - A8610A3539387205 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449352777777778, \"latitude\": 45.08121666666667, \"height\": 338.91}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 25,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:39.000000Z",
+   "updated_at": "2026-07-07T23:54:43.000000Z"
+  },
+  {
+   "id": 36,
+   "name": "Installed Gas - A8610A3338359111",
+   "description": "Gas - A8610A3338359111 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449638888888889, \"latitude\": 45.08106666666667, \"height\": 340.09}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 26,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:40.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 37,
+   "name": "Installed Lux Meter - 168442",
+   "description": "Lux Meter - 168442 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08118055555556, \"height\": 339.11}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 27,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:42.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 38,
+   "name": "Installed Multispectral Camera - Svy 324160033",
+   "description": "Multispectral Camera - Svy 324160033 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449872222222223, \"latitude\": 45.08117777777778, \"height\": 339.11}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 28,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:44.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 39,
+   "name": "Installed Pyranometer - 149361",
+   "description": "Pyranometer - 149361 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449352777777778, \"latitude\": 45.08121666666667, \"height\": 338.91}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 29,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:46.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 40,
+   "name": "Installed Rain Gauge - 177315",
+   "description": "Rain Gauge - 177315 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449352777777778, \"latitude\": 45.081225, \"height\": 338.89}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 30,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:48.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 41,
+   "name": "Installed Soil Moisture - A8610A34363D6617",
+   "description": "Soil Moisture - A8610A34363D6617 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449847222222222, \"latitude\": 45.08117777777778, \"height\": 340.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 31,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:50.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 42,
+   "name": "Installed Soil Moisture - A8610A333526680F",
+   "description": "Soil Moisture - A8610A333526680F installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449847222222222, \"latitude\": 45.08117777777778, \"height\": 339.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 32,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:51.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 43,
+   "name": "Installed Tiltmeter - 143276",
+   "description": "Tiltmeter - 143276 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449911111111112, \"latitude\": 45.081163888888895, \"height\": 339.23}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 33,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:53.000000Z",
+   "updated_at": "2026-07-07T23:54:44.000000Z"
+  },
+  {
+   "id": 44,
+   "name": "Installed UV Meter - 168442",
+   "description": "UV Meter - 168442 installed at ranverso.",
+   "metadata": "{\"coordinates\": {\"longitude\": 7.449825000000001, \"latitude\": 45.08118055555556, \"height\": 339.11}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 34,
+   "asset_state_id": 32,
+   "created_at": "2026-07-07T15:50:55.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 45,
+   "name": "Installed Accelerometer - A1-159164 (Cellar 88 - Outside - car path)",
+   "description": "Accelerometer - A1-159164 (Cellar 88 - Outside - car path) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243769444444444, \"latitude\": 41.938380555555554, \"height\": 797.16}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 35,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:50:57.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 46,
+   "name": "Installed Accelerometer - A2-159347 (Cellar 88 - Inside - Sisa)",
+   "description": "Accelerometer - A2-159347 (Cellar 88 - Inside - Sisa) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.2438666666666665, \"latitude\": 41.938430555555556, \"height\": 797.51}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 36,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:50:59.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 47,
+   "name": "Installed Accelerometer - 159313 (Cellar 364 - Outside - car path)",
+   "description": "Accelerometer - 159313 (Cellar 364 - Outside - car path) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243311111111111, \"latitude\": 41.93793055555555, \"height\": 796.85}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 37,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:00.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 48,
+   "name": "Installed Air flow - AF1-149367 (Cellar 88 - Chimney 1 Kitchen)",
+   "description": "Air flow - AF1-149367 (Cellar 88 - Chimney 1 Kitchen) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243819444444444, \"latitude\": 41.938405555555555, \"height\": 797.33}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 38,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:02.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 49,
+   "name": "Installed Air flow - AF2-149780 (Cellar 88 - Chimney 2 Lagar)",
+   "description": "Air flow - AF2-149780 (Cellar 88 - Chimney 2 Lagar) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243797222222223, \"latitude\": 41.938449999999996, \"height\": 797.52}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 39,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:03.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 50,
+   "name": "Installed Air flow - AF3-149402 (Cellar 88 - Chimney 3 Sisa 4)",
+   "description": "Air flow - AF3-149402 (Cellar 88 - Chimney 3 Sisa 4) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243897222222222, \"latitude\": 41.93847222222222, \"height\": 797.81}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 40,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:04.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 51,
+   "name": "Installed Air flow - AF4-149421 (Cellar 88 - Chimney 4 Pasillo sisa3-sisa4)",
+   "description": "Air flow - AF4-149421 (Cellar 88 - Chimney 4 Pasillo sisa3-sisa4) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243938888888889, \"latitude\": 41.938541666666666, \"height\": 798.38}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 41,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:05.000000Z",
+   "updated_at": "2026-07-07T23:54:45.000000Z"
+  },
+  {
+   "id": 52,
+   "name": "Installed Barometer - 149443 (Cellar 88 - Sisa2)",
+   "description": "Barometer - 149443 (Cellar 88 - Sisa2) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243855555555555, \"latitude\": 41.93843333333333, \"height\": 797.52}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 42,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:07.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 53,
+   "name": "Installed Barrier - A8610A343345720D (Cellar 88 - Outside)",
+   "description": "Barrier - A8610A343345720D (Cellar 88 - Outside) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243777777777778, \"latitude\": 41.93839444444444, \"height\": 797.22}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 43,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:08.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 54,
+   "name": "Installed Barrier - A8610A34324D7F09 (Cellar 364 - Outside - car path)",
+   "description": "Barrier - A8610A34324D7F09 (Cellar 364 - Outside - car path) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243313888888889, \"latitude\": 41.937925, \"height\": 796.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 44,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:10.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 55,
+   "name": "Installed Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810]",
+   "description": "Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810] installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243311111111111, \"latitude\": 41.938536111111105, \"height\": 797.07}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 45,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:12.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 56,
+   "name": "Installed Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-2]",
+   "description": "Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-2] installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243311111111111, \"latitude\": 41.938536111111105, \"height\": 797.07}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 46,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:13.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 57,
+   "name": "Installed Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-3]",
+   "description": "Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-3] installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243311111111111, \"latitude\": 41.938536111111105, \"height\": 797.07}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 47,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:14.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 58,
+   "name": "Installed GNSS - 168762 (Cellar 88 - Chimney 1)",
+   "description": "GNSS - 168762 (Cellar 88 - Chimney 1) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243838888888889, \"latitude\": 41.93838333333333, \"height\": 797.22}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 48,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:15.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 59,
+   "name": "Installed Humidity - 7347939-H (Cellar 88 - Outside)",
+   "description": "Humidity - 7347939-H (Cellar 88 - Outside) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243788888888889, \"latitude\": 41.93839722222222, \"height\": 797.26}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 49,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:16.000000Z",
+   "updated_at": "2026-07-07T23:54:46.000000Z"
+  },
+  {
+   "id": 60,
+   "name": "Installed Humidity - 13280523-H (Cellar 88 - Kitchen)",
+   "description": "Humidity - 13280523-H (Cellar 88 - Kitchen) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243830555555555, \"latitude\": 41.93841111111111, \"height\": 797.36}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 50,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:18.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 61,
+   "name": "Installed Humidity - 7348424-H (Cellar 88 - Sisa)",
+   "description": "Humidity - 7348424-H (Cellar 88 - Sisa) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243858333333334, \"latitude\": 41.938424999999995, \"height\": 797.46}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 51,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:19.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 62,
+   "name": "Installed Humidity - 13280278-H (Cellar 88 - Lagar)",
+   "description": "Humidity - 13280278-H (Cellar 88 - Lagar) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.2438, \"latitude\": 41.93844444444444, \"height\": 797.49}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 52,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:20.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 63,
+   "name": "Installed Pir-Airflow - A8610A3230467704 (Cellar 193 - Entry)",
+   "description": "Pir-Airflow - A8610A3230467704 (Cellar 193 - Entry) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243291666666667, \"latitude\": 41.93853333333333, \"height\": 797.09}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 53,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:21.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 64,
+   "name": "Installed Soil moisture - 115666 (Cellar 88 - Kitchen)",
+   "description": "Soil moisture - 115666 (Cellar 88 - Kitchen) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243827777777778, \"latitude\": 41.938402777777775, \"height\": 797.32}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 54,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:23.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 65,
+   "name": "Installed Soil moisture - 1-149265 (Cellar 88 - Paso1)",
+   "description": "Soil moisture - 1-149265 (Cellar 88 - Paso1) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243833333333334, \"latitude\": 41.93848333333333, \"height\": 797.75}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 55,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:24.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 66,
+   "name": "Installed Soil moisture - 2-177322 (Cellar 88 - Nicho 1 de Sisa2)",
+   "description": "Soil moisture - 2-177322 (Cellar 88 - Nicho 1 de Sisa2) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243838888888889, \"latitude\": 41.93845555555555, \"height\": 797.61}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 56,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:25.000000Z",
+   "updated_at": "2026-07-07T23:54:47.000000Z"
+  },
+  {
+   "id": 67,
+   "name": "Installed Soil moisture - 151810 (Cellar 193 - Lagar)",
+   "description": "Soil moisture - 151810 (Cellar 193 - Lagar) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243311111111111, \"latitude\": 41.938536111111105, \"height\": 797.07}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 57,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:26.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 68,
+   "name": "Installed Temperature - 7347939-T (Cellar 88 - Outside)",
+   "description": "Temperature - 7347939-T (Cellar 88 - Outside) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243788888888889, \"latitude\": 41.93839722222222, \"height\": 797.26}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 58,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:27.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 69,
+   "name": "Installed Temperature - 13280523-T (Cellar 88 - Kitchen)",
+   "description": "Temperature - 13280523-T (Cellar 88 - Kitchen) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243830555555555, \"latitude\": 41.93841111111111, \"height\": 797.36}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 59,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:28.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 70,
+   "name": "Installed Temperature - 7348424-T (Cellar 88 - Sisa)",
+   "description": "Temperature - 7348424-T (Cellar 88 - Sisa) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243858333333334, \"latitude\": 41.938424999999995, \"height\": 797.46}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 60,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:29.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 71,
+   "name": "Installed Temperature - 13280278-T (Cellar 88 - Lagar)",
+   "description": "Temperature - 13280278-T (Cellar 88 - Lagar) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.2438, \"latitude\": 41.93844444444444, \"height\": 797.49}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 61,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:31.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 72,
+   "name": "Installed Water pottential - WP1-130432 (Cellar 88 - Paso1)",
+   "description": "Water pottential - WP1-130432 (Cellar 88 - Paso1) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243836111111111, \"latitude\": 41.93848055555555, \"height\": 797.75}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 62,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:32.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 73,
+   "name": "Installed Water pottential - WP2-130314 (Cellar 88 - Nicho 1 de Sisa2)",
+   "description": "Water pottential - WP2-130314 (Cellar 88 - Nicho 1 de Sisa2) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.243844444444444, \"latitude\": 41.938452777777776, \"height\": 797.6}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 63,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:34.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 74,
+   "name": "Installed Weather station - 2CF7F1C073400212 (Outside - Church tower)",
+   "description": "Weather station - 2CF7F1C073400212 (Outside - Church tower) installed at baltanas.",
+   "metadata": "{\"coordinates\": {\"longitude\": -4.246580555555556, \"latitude\": 41.939097222222216, \"height\": 789.85}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 64,
+   "asset_state_id": 136,
+   "created_at": "2026-07-07T15:51:35.000000Z",
+   "updated_at": "2026-07-07T23:54:48.000000Z"
+  },
+  {
+   "id": 75,
+   "name": "Installed Accelerometer - 159070 (Schenkenberg tower - North wall)",
+   "description": "Accelerometer - 159070 (Schenkenberg tower - North wall) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101019444444445, \"latitude\": 47.442141666666664, \"height\": 640.99}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 65,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:37.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 76,
+   "name": "Installed Accelerometer - 152555 (Schenkenberg tower - North wall)",
+   "description": "Accelerometer - 152555 (Schenkenberg tower - North wall) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101077777777778, \"latitude\": 47.44215277777777, \"height\": 643.52}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 66,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:38.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 77,
+   "name": "Installed Accelerometer - 152479 (Schenkenberg tower - South wall)",
+   "description": "Accelerometer - 152479 (Schenkenberg tower - South wall) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101058333333333, \"latitude\": 47.442119444444444, \"height\": 643.18}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 67,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:40.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 78,
+   "name": "Installed Accelerometer - 175480 (Schenkenberg tower - South wall)",
+   "description": "Accelerometer - 175480 (Schenkenberg tower - South wall) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101016666666666, \"latitude\": 47.442125, \"height\": 642.77}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 68,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:41.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 80,
+   "name": "Installed Composite sensor 2 - 2CF7F1C072600345",
+   "description": "Composite sensor 2 - 2CF7F1C072600345 installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101044444444444, \"latitude\": 47.44213055555555, \"height\": 637.9}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 70,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:44.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 81,
+   "name": "Installed Crackmeter - 149796",
+   "description": "Crackmeter - 149796 installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101044444444444, \"latitude\": 47.44213055555555, \"height\": 637.9}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 71,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:47.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 82,
+   "name": "Installed Tiltmeter - 152914 (North face)",
+   "description": "Tiltmeter - 152914 (North face) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101025, \"latitude\": 47.442141666666664, \"height\": 643.53}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 72,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:48.000000Z",
+   "updated_at": "2026-07-07T23:54:49.000000Z"
+  },
+  {
+   "id": 83,
+   "name": "Installed Tiltmeter - 152899 (South face)",
+   "description": "Tiltmeter - 152899 (South face) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101069444444445, \"latitude\": 47.44212222222222, \"height\": 642.68}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 73,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:49.000000Z",
+   "updated_at": "2026-07-07T23:54:50.000000Z"
+  },
+  {
+   "id": 84,
+   "name": "Installed Weather station - 2CF7F1C072300226 (Top of the tower)",
+   "description": "Weather station - 2CF7F1C072300226 (Top of the tower) installed at schenkenberg.",
+   "metadata": "{\"coordinates\": {\"longitude\": 8.101052777777777, \"latitude\": 47.442119444444444, \"height\": 646.02}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 74,
+   "asset_state_id": 138,
+   "created_at": "2026-07-07T15:51:51.000000Z",
+   "updated_at": "2026-07-07T23:54:50.000000Z"
+  },
+  {
+   "id": 85,
+   "name": "Installed Air flow - 109315 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Air flow - 109315 (Room 215 - Theatrical Masks mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269383333333334, \"latitude\": 37.396344444444445, \"height\": 35.25}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 75,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:51:52.000000Z",
+   "updated_at": "2026-07-07T23:54:50.000000Z"
+  },
+  {
+   "id": 86,
+   "name": "Installed Air flow - 149405 (Room 214 - Dionysus mosaic)",
+   "description": "Air flow - 149405 (Room 214 - Dionysus mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269483333333334, \"latitude\": 37.39633888888889, \"height\": 35.37}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 76,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:51:53.000000Z",
+   "updated_at": "2026-07-07T23:54:50.000000Z"
+  },
+  {
+   "id": 88,
+   "name": "Installed Humidity - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "Humidity - 151805 (Room 217 - Dolphins mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269313888888888, \"latitude\": 37.396275, \"height\": 34.14}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 78,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:51:56.000000Z",
+   "updated_at": "2026-07-07T23:54:50.000000Z"
+  },
+  {
+   "id": 89,
+   "name": "Installed Humidity - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "Humidity - 151809 (Room 216 - Seilinos mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269352777777776, \"latitude\": 37.396344444444445, \"height\": 35.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 79,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:51:57.000000Z",
+   "updated_at": "2026-07-07T23:54:50.000000Z"
+  },
+  {
+   "id": 90,
+   "name": "Installed Humidity - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Humidity - 151836 (Room 215 - Theatrical Masks mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.26953888888889, \"latitude\": 37.39629722222222, \"height\": 35.22}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 80,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:51:58.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 91,
+   "name": "Installed Humidity - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "Humidity - 168439 (Room 214 - Dionysus mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269383333333334, \"latitude\": 37.396344444444445, \"height\": 35.25}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 81,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:51:59.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 92,
+   "name": "Installed Humidity - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Humidity - 151815 (Few meters away from the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269255555555553, \"latitude\": 37.39205555555556, \"height\": 30.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 82,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:00.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 93,
+   "name": "Installed Lux Meter - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "Lux Meter - 151805 (Room 217 - Dolphins mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269313888888888, \"latitude\": 37.396275, \"height\": 34.14}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 83,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:01.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 94,
+   "name": "Installed Lux Meter - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "Lux Meter - 151809 (Room 216 - Seilinos mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269352777777776, \"latitude\": 37.396344444444445, \"height\": 35.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 84,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:03.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 95,
+   "name": "Installed Lux Meter - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Lux Meter - 151836 (Room 215 - Theatrical Masks mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.26953888888889, \"latitude\": 37.39629722222222, \"height\": 35.22}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 85,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:04.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 96,
+   "name": "Installed Lux Meter - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "Lux Meter - 168439 (Room 214 - Dionysus mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269383333333334, \"latitude\": 37.396344444444445, \"height\": 35.25}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 86,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:05.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 97,
+   "name": "Installed People Counter - 2CF7F1C062800035 (Above door of room 214 - Dionysus mosaic)",
+   "description": "People Counter - 2CF7F1C062800035 (Above door of room 214 - Dionysus mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269383333333334, \"latitude\": 37.39630833333333, \"height\": 35.34}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 87,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:07.000000Z",
+   "updated_at": "2026-07-07T23:54:51.000000Z"
+  },
+  {
+   "id": 98,
+   "name": "Installed Pyranometer - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Pyranometer - 151815 (Few meters away from the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269255555555553, \"latitude\": 37.39205555555556, \"height\": 30.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 88,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:08.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 99,
+   "name": "Installed Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269466666666666, \"latitude\": 37.39633888888889, \"height\": 35.34}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 89,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:09.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 100,
+   "name": "Installed Soil Moisture - 149423 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Soil Moisture - 149423 (Room 215 - Theatrical Masks mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269494444444444, \"latitude\": 37.396319444444444, \"height\": 35.31}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 90,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:10.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 101,
+   "name": "Installed Soil Moisture - 149460 (Few meters away from the House of the Masks)",
+   "description": "Soil Moisture - 149460 (Few meters away from the House of the Masks) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269824999999997, \"latitude\": 37.396255555555555, \"height\": 36.99}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 91,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:11.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 102,
+   "name": "Installed Soil Moisture - 149678 (Sensor placed on a plastered wall at the House of Fournoi)",
+   "description": "Soil Moisture - 149678 (Sensor placed on a plastered wall at the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.267916666666665, \"latitude\": 37.391438888888885, \"height\": 26.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 92,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:13.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 103,
+   "name": "Installed Soil Moisture - 149529 (Sensor placed on a plastered wall at the House of Fournoi)",
+   "description": "Soil Moisture - 149529 (Sensor placed on a plastered wall at the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.267916666666665, \"latitude\": 37.391438888888885, \"height\": 26.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 93,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:14.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 104,
+   "name": "Installed Soil Moisture - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Soil Moisture - 151815 (Few meters away from the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269255555555553, \"latitude\": 37.39205555555556, \"height\": 30.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 94,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:15.000000Z",
+   "updated_at": "2026-07-07T23:54:52.000000Z"
+  },
+  {
+   "id": 105,
+   "name": "Installed Temperature - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "Temperature - 151805 (Room 217 - Dolphins mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269313888888888, \"latitude\": 37.396275, \"height\": 34.14}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 95,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:17.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 106,
+   "name": "Installed Temperature - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "Temperature - 151809 (Room 216 - Seilinos mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269352777777776, \"latitude\": 37.396344444444445, \"height\": 35.12}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 96,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:18.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 107,
+   "name": "Installed Temperature - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "Temperature - 151836 (Room 215 - Theatrical Masks mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.26953888888889, \"latitude\": 37.39629722222222, \"height\": 35.22}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 97,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:19.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 108,
+   "name": "Installed Temperature - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "Temperature - 168439 (Room 214 - Dionysus mosaic) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269383333333334, \"latitude\": 37.396344444444445, \"height\": 35.25}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 98,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:20.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 109,
+   "name": "Installed Temperature - 151815 (Few meters away from the House of Fournoi)",
+   "description": "Temperature - 151815 (Few meters away from the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269255555555553, \"latitude\": 37.39205555555556, \"height\": 30.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 99,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:21.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 110,
+   "name": "Installed Tiltmeter - 153157 (Leaning wall in Skardanas district)",
+   "description": "Tiltmeter - 153157 (Leaning wall in Skardanas district) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.266225, \"latitude\": 37.403327777777776, \"height\": 12.32}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 100,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:22.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 111,
+   "name": "Installed Tiltmeter - 150900 (Theater district)",
+   "description": "Tiltmeter - 150900 (Theater district) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.267516666666666, \"latitude\": 37.397, \"height\": 17.92}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 101,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:23.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 112,
+   "name": "Installed Tiltmeter - 153242 (Close to the Temple of Isis)",
+   "description": "Tiltmeter - 153242 (Close to the Temple of Isis) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.27092777777778, \"latitude\": 37.39765833333333, \"height\": 43.48}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 102,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:24.000000Z",
+   "updated_at": "2026-07-07T23:54:53.000000Z"
+  },
+  {
+   "id": 113,
+   "name": "Installed Tiltmeter - 153295 (Place in Inopos district)",
+   "description": "Tiltmeter - 153295 (Place in Inopos district) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269919444444444, \"latitude\": 37.398352777777774, \"height\": 26.45}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 103,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:25.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 114,
+   "name": "Installed Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks)",
+   "description": "Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269824999999997, \"latitude\": 37.396255555555555, \"height\": 36.99}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 104,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:28.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 115,
+   "name": "Installed Weather Station - 2CF7F1C0723001F4 (Few meters away from the House of Fournoi)",
+   "description": "Weather Station - 2CF7F1C0723001F4 (Few meters away from the House of Fournoi) installed at delos.",
+   "metadata": "{\"coordinates\": {\"longitude\": 25.269255555555553, \"latitude\": 37.39205555555556, \"height\": 30.84}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 105,
+   "asset_state_id": 135,
+   "created_at": "2026-07-07T15:52:30.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 116,
+   "name": "Installed Crackmeter - 177266 (Conventillo - Staircase access façade)",
+   "description": "Crackmeter - 177266 (Conventillo - Staircase access façade) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827369444444445, \"latitude\": 42.023666666666664, \"height\": 723.76}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 106,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:31.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 117,
+   "name": "Installed Crackmeter - 177253 (Conventillo - First-storey crack)",
+   "description": "Crackmeter - 177253 (Conventillo - First-storey crack) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827433333333333, \"latitude\": 42.023649999999996, \"height\": 719.24}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 107,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:33.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 118,
+   "name": "Installed Crackmeter - 177320 (Conventillo - Sensor and logger on the same wall)",
+   "description": "Crackmeter - 177320 (Conventillo - Sensor and logger on the same wall) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827338888888889, \"latitude\": 42.02369722222222, \"height\": 731.62}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 108,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:35.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 119,
+   "name": "Installed Crackmeter - 174156 (Villa di Orazio - Close to a mosaic)",
+   "description": "Crackmeter - 174156 (Villa di Orazio - Close to a mosaic) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.901255555555556, \"latitude\": 42.06645555555555, \"height\": 425.63}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 109,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:36.000000Z",
+   "updated_at": "2026-07-07T23:54:54.000000Z"
+  },
+  {
+   "id": 120,
+   "name": "Installed Crackmeter - 177287 (Villa di Orazio - Perimetral wall enclosing a mosaic)",
+   "description": "Crackmeter - 177287 (Villa di Orazio - Perimetral wall enclosing a mosaic) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.90131388888889, \"latitude\": 42.06635277777777, \"height\": 426.1}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 110,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:38.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 121,
+   "name": "Installed Crackmeter - 177310 (Montefalco Castle - External wall)",
+   "description": "Crackmeter - 177310 (Montefalco Castle - External wall) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.819555555555555, \"latitude\": 42.10124444444445, \"height\": 896.06}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 111,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:39.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 122,
+   "name": "Installed Crackmeter - 177325 (Montefalco Castle - External wall)",
+   "description": "Crackmeter - 177325 (Montefalco Castle - External wall) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.81965, \"latitude\": 42.10136666666667, \"height\": 894.85}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 112,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:41.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 123,
+   "name": "Installed Humidity - 177239 (Conventillo - Main room, second floor)",
+   "description": "Humidity - 177239 (Conventillo - Main room, second floor) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827380555555555, \"latitude\": 42.02368888888889, \"height\": 730.14}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 113,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:42.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 124,
+   "name": "Installed Humidity - 177281 (Montefalco Castle - Exterior wall pole)",
+   "description": "Humidity - 177281 (Montefalco Castle - Exterior wall pole) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.819630555555555, \"latitude\": 42.10124166666667, \"height\": 895.55}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 114,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:44.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 125,
+   "name": "Installed People Counter - 2CF7F1C062800056 (Conventillo - Main entrance)",
+   "description": "People Counter - 2CF7F1C062800056 (Conventillo - Main entrance) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827363888888888, \"latitude\": 42.02367777777778, \"height\": 726.74}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 115,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:46.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 126,
+   "name": "Installed People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar)",
+   "description": "People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.901597222222222, \"latitude\": 42.06625277777778, \"height\": 429.69}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 116,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:47.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 127,
+   "name": "Installed Pyranometer - 177237 (Villa di Orazio - Gateway pole)",
+   "description": "Pyranometer - 177237 (Villa di Orazio - Gateway pole) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.901083333333334, \"latitude\": 42.06635833333333, \"height\": 424.63}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 117,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:48.000000Z",
+   "updated_at": "2026-07-07T23:54:55.000000Z"
+  },
+  {
+   "id": 128,
+   "name": "Installed Temperature - 177239 (Conventillo - Main room, second floor)",
+   "description": "Temperature - 177239 (Conventillo - Main room, second floor) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827380555555555, \"latitude\": 42.02368888888889, \"height\": 730.14}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 118,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:49.000000Z",
+   "updated_at": "2026-07-07T23:54:56.000000Z"
+  },
+  {
+   "id": 130,
+   "name": "Installed Tiltmeter - 152931 (Conventillo - Staircase access façade)",
+   "description": "Tiltmeter - 152931 (Conventillo - Staircase access façade) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827366666666666, \"latitude\": 42.023666666666664, \"height\": 723.22}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 120,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:52.000000Z",
+   "updated_at": "2026-07-07T23:54:56.000000Z"
+  },
+  {
+   "id": 131,
+   "name": "Installed Tiltmeter - 153061 (Conventillo - First floor, close to a window)",
+   "description": "Tiltmeter - 153061 (Conventillo - First floor, close to a window) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827405555555556, \"latitude\": 42.02364166666666, \"height\": 717.33}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 121,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:53.000000Z",
+   "updated_at": "2026-07-07T23:54:56.000000Z"
+  },
+  {
+   "id": 132,
+   "name": "Installed Tiltmeter - 152816 (Conventillo - Third floor, close to a window)",
+   "description": "Tiltmeter - 152816 (Conventillo - Third floor, close to a window) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827358333333333, \"latitude\": 42.02368888888889, \"height\": 729.17}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 122,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:55.000000Z",
+   "updated_at": "2026-07-07T23:54:56.000000Z"
+  },
+  {
+   "id": 133,
+   "name": "Installed Vibration - 152608 (Montefalco Castle - External wall)",
+   "description": "Vibration - 152608 (Montefalco Castle - External wall) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.827416666666666, \"latitude\": 42.02368055555556, \"height\": 727.94}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 123,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:56.000000Z",
+   "updated_at": "2026-07-07T23:54:56.000000Z"
+  },
+  {
+   "id": 134,
+   "name": "Installed Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+   "description": "Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar) installed at lucretili.",
+   "metadata": "{\"coordinates\": {\"longitude\": 12.901605555555555, \"latitude\": 42.066377777777774, \"height\": 429.36}, \"source\": {\"coordinates_from\": \"sensors.json\"}}",
+   "device_id": 124,
+   "asset_state_id": 137,
+   "created_at": "2026-07-07T15:52:57.000000Z",
+   "updated_at": "2026-07-07T23:54:56.000000Z"
+  },
+  {
+   "id": 135,
+   "name": "Installed EO Products - Ranverso",
+   "description": null,
+   "metadata": "{\"kind\": \"virtual_earth_observation_installation\", \"pilot\": \"ranverso\"}",
+   "device_id": 125,
+   "asset_state_id": 32,
+   "created_at": "2026-07-08T00:39:16.000000Z",
+   "updated_at": "2026-07-08T00:39:16.000000Z"
+  },
+  {
+   "id": 136,
+   "name": "Installed Rain Gauge - 177281 (Montefalco Castle - Exterior wall pole)",
+   "description": "Rain Gauge - 177281 (Montefalco Castle - Exterior wall pole) installed at lucretili.",
+   "metadata": "{\"source\": {\"sensor_id\": \"8250dd80-8269-11f0-9283-e956b63ef652\", \"node_id\": \"5ad094f0-81b8-11f0-9283-e956b63ef652\", \"coordinates_from\": \"sibling sensor on same node\"}, \"coordinates\": {\"longitude\": 12.819630555555555, \"latitude\": 42.10124166666667, \"height\": 895.55}}",
+   "device_id": 126,
+   "asset_state_id": 137,
+   "created_at": "2026-08-10T12:25:38.000000Z",
+   "updated_at": "2026-08-10T12:25:38.000000Z"
+  },
+  {
+   "id": 137,
+   "name": "Installed Tiltmeter - 82e0d400-784e-11f0-9283-e956b63ef652 (Cellar 88 - Chimney 1)",
+   "description": "Tiltmeter - 82e0d400-784e-11f0-9283-e956b63ef652 (Cellar 88 - Chimney 1) installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"82e0d400-784e-11f0-9283-e956b63ef652\", \"node_id\": \"19f44200-7845-11f0-9283-e956b63ef652\", \"coordinates_from\": \"sibling sensor on same node\"}, \"coordinates\": {\"longitude\": -4.243838888888889, \"latitude\": 41.93838333333333, \"height\": 797.22}}",
+   "device_id": 127,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T12:25:38.000000Z",
+   "updated_at": "2026-08-10T12:25:38.000000Z"
+  },
+  {
+   "id": 138,
+   "name": "Installed Humidity - shellyht-CAAE03",
+   "description": "Humidity - shellyht-CAAE03 installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellyht-CAAE03-humidity\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 128,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T12:25:39.000000Z",
+   "updated_at": "2026-08-10T12:25:39.000000Z"
+  },
+  {
+   "id": 139,
+   "name": "Installed Temperature - shellyht-CAAE03",
+   "description": "Temperature - shellyht-CAAE03 installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellyht-CAAE03-temperature\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 129,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T12:25:39.000000Z",
+   "updated_at": "2026-08-10T12:25:39.000000Z"
+  },
+  {
+   "id": 140,
+   "name": "Installed Weather station - 2CF7F1C0734001E8",
+   "description": "Weather station - 2CF7F1C0734001E8 installed at ranverso. Temporary coordinates near existing Ranverso sensors; pilot partner verification required.",
+   "metadata": "{\"coordinates\":{\"longitude\":7.44984,\"latitude\":45.08119,\"height\":339.11},\"source\":{\"sensor_id\":\"2CF7F1C0734001E8\",\"node_id\":\"2CF7F1C0734001E8\",\"coordinates_from\":\"temporary_near_ranverso_sensors\",\"verification_required\":true,\"corrected_site\":\"ranverso\",\"previous_asset_state_id\":136}}",
+   "device_id": 130,
+   "asset_state_id": 32,
+   "created_at": "2026-08-10T12:25:39.000000Z",
+   "updated_at": "2026-08-21T13:22:59.000000Z"
+  },
+  {
+   "id": 141,
+   "name": "Installed Humidity - shellyht-6B6DEE",
+   "description": "Humidity - shellyht-6B6DEE installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellyht-6B6DEE-humidity\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 131,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T12:33:42.000000Z",
+   "updated_at": "2026-08-10T12:33:42.000000Z"
+  },
+  {
+   "id": 142,
+   "name": "Installed Temperature - shellyht-6B6DEE",
+   "description": "Temperature - shellyht-6B6DEE installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellyht-6B6DEE-temperature\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 132,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T12:33:42.000000Z",
+   "updated_at": "2026-08-10T12:33:42.000000Z"
+  },
+  {
+   "id": 143,
+   "name": "Installed Temperature - shellydw2-AAB1AC",
+   "description": "Temperature - shellydw2-AAB1AC installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellydw2-AAB1AC-temperature\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 133,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  },
+  {
+   "id": 144,
+   "name": "Installed Vibration - shellydw2-AAB1AC",
+   "description": "Vibration - shellydw2-AAB1AC installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellydw2-AAB1AC-vibration\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 134,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  },
+  {
+   "id": 145,
+   "name": "Installed Visible Radiation - shellydw2-AAB1AC",
+   "description": "Visible Radiation - shellydw2-AAB1AC installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellydw2-AAB1AC-lux\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 135,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  },
+  {
+   "id": 146,
+   "name": "Installed Tilt - shellydw2-AAB1AC",
+   "description": "Tilt - shellydw2-AAB1AC installed at baltanas.",
+   "metadata": "{\"source\": {\"sensor_id\": \"shellydw2-AAB1AC-tilt\", \"node_id\": \"sensor\", \"coordinates_from\": \"unavailable\"}}",
+   "device_id": 136,
+   "asset_state_id": 136,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  }
+ ]
+}

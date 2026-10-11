@@ -1,0 +1,40 @@
+{
+ "resource": "execution-input-types",
+ "count": 4,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 2,
+   "name": "integer_list",
+   "description": "List of integers",
+   "metadata": "{}",
+   "created_at": "2026-01-21T16:38:15.000000Z",
+   "updated_at": "2026-01-21T16:38:15.000000Z"
+  },
+  {
+   "id": 3,
+   "name": "Raster Dataset",
+   "description": "Raster or geospatial dataset used as computational model input.",
+   "metadata": "{\"kind\": \"raster_input_type\"}",
+   "created_at": "2026-07-08T11:56:04.000000Z",
+   "updated_at": "2026-07-08T11:56:04.000000Z"
+  },
+  {
+   "id": 4,
+   "name": "ARGUS API Observation Window",
+   "description": "Observation window fetched from the ARGUS ontology/API for AD-RT inference.",
+   "metadata": "{\"kind\": \"ad_rt_observation_window_input_type\"}",
+   "created_at": "2026-08-18T15:16:45.000000Z",
+   "updated_at": "2026-08-18T15:16:45.000000Z"
+  },
+  {
+   "id": 5,
+   "name": "IRA Evidence Bundle",
+   "description": "Versioned ABC baseline, IRA policy, and linked assessment evidence.",
+   "metadata": "{\"kind\": \"ira_evidence_bundle\"}",
+   "created_at": "2026-09-08T18:38:04.000000Z",
+   "updated_at": "2026-09-08T18:38:04.000000Z"
+  }
+ ]
+}

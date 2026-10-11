@@ -1,0 +1,544 @@
+{
+ "resource": "physical-quantities",
+ "count": 67,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 3,
+   "name": "Air Humidity",
+   "description": "Relative humidity measurements from Ranverso humidity sensors.",
+   "metadata": "{\"unit\": \"%\"}",
+   "created_at": "2026-07-07T15:37:50.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 4,
+   "name": "Air Temperature",
+   "description": "Air temperature measurements from Ranverso temperature sensors.",
+   "metadata": "{\"unit\":\"°C\"}",
+   "created_at": "2026-07-07T15:37:50.000000Z",
+   "updated_at": "2026-08-26T12:21:40.000000Z"
+  },
+  {
+   "id": 5,
+   "name": "Vibration",
+   "description": "Vibration measurements from Ranverso vibration sensors.",
+   "metadata": "{\"unit\": \"mm/s\"}",
+   "created_at": "2026-07-07T15:37:50.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 6,
+   "name": "Acoustic Emission",
+   "description": "Acoustic Emission measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:50:35.000000Z",
+   "updated_at": "2026-07-07T15:50:35.000000Z"
+  },
+  {
+   "id": 7,
+   "name": "Air Flow",
+   "description": "Air Flow measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"m/s\"}",
+   "created_at": "2026-07-07T15:50:36.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 8,
+   "name": "Gas Concentration",
+   "description": "Gas Concentration measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-07-07T15:50:39.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 9,
+   "name": "Visible Radiation",
+   "description": "Visible Radiation measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"lx\"}",
+   "created_at": "2026-07-07T15:50:41.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 10,
+   "name": "Vegetation Fraction",
+   "description": "Dimensionless vegetation fraction derived from the Ranverso Multimodal Imager.",
+   "metadata": "{\"dimensionless\":true}",
+   "created_at": "2026-07-07T15:50:43.000000Z",
+   "updated_at": "2026-08-26T13:45:24.000000Z"
+  },
+  {
+   "id": 11,
+   "name": "Solar Irradiance",
+   "description": "Solar Irradiance measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"W/m²\"}",
+   "created_at": "2026-07-07T15:50:45.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 12,
+   "name": "Rainfall",
+   "description": "Rainfall measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"mm\"}",
+   "created_at": "2026-07-07T15:50:47.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 13,
+   "name": "Soil Moisture",
+   "description": "Soil Moisture measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"%\"}",
+   "created_at": "2026-07-07T15:50:48.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 14,
+   "name": "Tilt",
+   "description": "Tilt measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-07-07T15:50:52.000000Z",
+   "updated_at": "2026-08-26T12:23:11.000000Z"
+  },
+  {
+   "id": 15,
+   "name": "UV Radiation",
+   "description": "UV Radiation measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"W/m²\"}",
+   "created_at": "2026-07-07T15:50:54.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 16,
+   "name": "Acceleration",
+   "description": "Acceleration measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"m/s²\"}",
+   "created_at": "2026-07-07T15:50:56.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 17,
+   "name": "Atmospheric Pressure",
+   "description": "Atmospheric Pressure measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"kPa\"}",
+   "created_at": "2026-07-07T15:51:05.000000Z",
+   "updated_at": "2026-08-26T12:26:45.000000Z"
+  },
+  {
+   "id": 18,
+   "name": "Barrier Event",
+   "description": "Barrier Event measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:51:07.000000Z",
+   "updated_at": "2026-07-07T15:51:07.000000Z"
+  },
+  {
+   "id": 20,
+   "name": "GNSS Position",
+   "description": "GNSS Position measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:51:14.000000Z",
+   "updated_at": "2026-07-07T15:51:14.000000Z"
+  },
+  {
+   "id": 21,
+   "name": "PIR Airflow",
+   "description": "PIR Airflow measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:51:20.000000Z",
+   "updated_at": "2026-07-07T15:51:20.000000Z"
+  },
+  {
+   "id": 22,
+   "name": "Water Potential",
+   "description": "Water Potential measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"kPa\"}",
+   "created_at": "2026-07-07T15:51:31.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 24,
+   "name": "Weather Station Measurements",
+   "description": "Weather Station Measurements measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:51:34.000000Z",
+   "updated_at": "2026-07-07T15:51:34.000000Z"
+  },
+  {
+   "id": 25,
+   "name": "Composite Sensor 1 Measurements",
+   "description": "Composite Sensor 1 Measurements measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:51:41.000000Z",
+   "updated_at": "2026-07-07T15:51:41.000000Z"
+  },
+  {
+   "id": 26,
+   "name": "Composite Sensor 2 Measurements",
+   "description": "Composite Sensor 2 Measurements measurements for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:51:43.000000Z",
+   "updated_at": "2026-07-07T15:51:43.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "Crack Displacement",
+   "description": "Crack Displacement measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"mm\"}",
+   "created_at": "2026-07-07T15:51:45.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "People Count",
+   "description": "People Count measurements for ARGUS monitoring sensors.",
+   "metadata": "{\"unit\": \"count\"}",
+   "created_at": "2026-07-07T15:52:06.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 42,
+   "name": "Earth Observation Product",
+   "description": "Satellite-derived or remote-sensing multi-dimensional measurement product, such as raster imagery, built-up surface layers, urbanization maps, or other EO-derived layers.",
+   "metadata": null,
+   "created_at": "2026-07-08T00:33:55.000000Z",
+   "updated_at": "2026-07-08T00:33:55.000000Z"
+  },
+  {
+   "id": 43,
+   "name": "Wind Speed",
+   "description": "Wind Speed measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m/s\"}",
+   "created_at": "2026-08-10T13:04:52.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 44,
+   "name": "Wind Direction",
+   "description": "Wind Direction measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-08-10T13:04:52.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 45,
+   "name": "Illuminance",
+   "description": "Illuminance measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"lx\"}",
+   "created_at": "2026-08-10T13:04:52.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 46,
+   "name": "UV Index",
+   "description": "UV Index measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"index\"}",
+   "created_at": "2026-08-10T13:04:52.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 47,
+   "name": "Wind Gust",
+   "description": "Wind Gust measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m/s\"}",
+   "created_at": "2026-08-10T13:04:53.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 48,
+   "name": "Accumulated Rainfall",
+   "description": "Accumulated Rainfall measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"mm\"}",
+   "created_at": "2026-08-10T13:04:53.000000Z",
+   "updated_at": "2026-08-26T12:23:12.000000Z"
+  },
+  {
+   "id": 49,
+   "name": "Acceleration X Axis",
+   "description": "Acceleration X Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m/s²\"}",
+   "created_at": "2026-08-10T13:33:45.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 50,
+   "name": "Acceleration Y Axis",
+   "description": "Acceleration Y Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m/s²\"}",
+   "created_at": "2026-08-10T13:33:46.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 51,
+   "name": "Acceleration Z Axis",
+   "description": "Acceleration Z Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m/s²\"}",
+   "created_at": "2026-08-10T13:33:47.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 52,
+   "name": "Acceleration Magnitude",
+   "description": "Acceleration Magnitude measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m/s²\"}",
+   "created_at": "2026-08-10T13:33:47.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 53,
+   "name": "Vibration X Axis",
+   "description": "Vibration X Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"mm/s\"}",
+   "created_at": "2026-08-10T13:33:47.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 54,
+   "name": "Vibration Y Axis",
+   "description": "Vibration Y Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"mm/s\"}",
+   "created_at": "2026-08-10T13:33:47.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 55,
+   "name": "Vibration Z Axis",
+   "description": "Vibration Z Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"mm/s\"}",
+   "created_at": "2026-08-10T13:33:48.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 56,
+   "name": "Vibration Magnitude",
+   "description": "Vibration Magnitude measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"mm/s\"}",
+   "created_at": "2026-08-10T13:33:48.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 57,
+   "name": "Tilt X Axis",
+   "description": "Tilt X Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-08-10T13:33:48.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 58,
+   "name": "Tilt Y Axis",
+   "description": "Tilt Y Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-08-10T13:33:48.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 59,
+   "name": "Tilt Z Axis",
+   "description": "Tilt Z Axis measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-08-10T13:33:48.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 60,
+   "name": "Electrical Conductivity",
+   "description": "Electrical Conductivity measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"dS/m\"}",
+   "created_at": "2026-08-10T13:33:49.000000Z",
+   "updated_at": "2026-08-28T11:35:59.000000Z"
+  },
+  {
+   "id": 61,
+   "name": "Vehicle Count",
+   "description": "Vehicle Count measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"count\"}",
+   "created_at": "2026-08-10T13:53:42.000000Z",
+   "updated_at": "2026-08-26T12:23:13.000000Z"
+  },
+  {
+   "id": 62,
+   "name": "Duration",
+   "description": "Duration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"s\"}",
+   "created_at": "2026-08-10T13:53:42.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 63,
+   "name": "Alarm State",
+   "description": "Alarm State measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"boolean\"}",
+   "created_at": "2026-08-10T13:53:42.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 64,
+   "name": "PIR Motion",
+   "description": "PIR Motion measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"boolean\"}",
+   "created_at": "2026-08-10T13:53:43.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 65,
+   "name": "GNSS Latitude",
+   "description": "GNSS Latitude measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-08-10T13:53:43.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 66,
+   "name": "GNSS Longitude",
+   "description": "GNSS Longitude measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"°\"}",
+   "created_at": "2026-08-10T13:53:43.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 67,
+   "name": "GNSS Altitude",
+   "description": "GNSS Altitude measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"m\"}",
+   "created_at": "2026-08-10T13:53:43.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 68,
+   "name": "Acoustic Cumulative Counts",
+   "description": "Acoustic Cumulative Counts measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"count\"}",
+   "created_at": "2026-08-10T16:32:34.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 69,
+   "name": "Acoustic Cumulative Energy",
+   "description": "Acoustic Cumulative Energy measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"aJ\"}",
+   "created_at": "2026-08-10T16:32:34.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 70,
+   "name": "Acoustic Hit Count",
+   "description": "Acoustic Hit Count measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"count\"}",
+   "created_at": "2026-08-10T16:32:34.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 71,
+   "name": "Carbon Monoxide Concentration",
+   "description": "Carbon Monoxide Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:33.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 72,
+   "name": "Carbon Dioxide Concentration",
+   "description": "Carbon Dioxide Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:33.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 73,
+   "name": "Nitrogen Dioxide Concentration",
+   "description": "Nitrogen Dioxide Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:34.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 74,
+   "name": "Sulfur Dioxide Concentration",
+   "description": "Sulfur Dioxide Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:34.000000Z",
+   "updated_at": "2026-08-26T12:23:14.000000Z"
+  },
+  {
+   "id": 75,
+   "name": "Ammonia Concentration",
+   "description": "Ammonia Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:34.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 76,
+   "name": "Nitrogen Oxides Concentration",
+   "description": "Nitrogen Oxides Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:34.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 77,
+   "name": "Volatile Organic Compounds Concentration",
+   "description": "Volatile Organic Compounds Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"ppm\"}",
+   "created_at": "2026-08-10T21:24:34.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 78,
+   "name": "PM1 Concentration",
+   "description": "PM1 Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"µg/m³\"}",
+   "created_at": "2026-08-10T21:24:35.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 79,
+   "name": "PM2.5 Concentration",
+   "description": "PM2.5 Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"µg/m³\"}",
+   "created_at": "2026-08-10T21:24:35.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 80,
+   "name": "PM4 Concentration",
+   "description": "PM4 Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"µg/m³\"}",
+   "created_at": "2026-08-10T21:24:35.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 81,
+   "name": "PM10 Concentration",
+   "description": "PM10 Concentration measurements normalized from ARGUS readings.",
+   "metadata": "{\"unit\": \"µg/m³\"}",
+   "created_at": "2026-08-10T21:24:35.000000Z",
+   "updated_at": "2026-08-26T12:23:15.000000Z"
+  },
+  {
+   "id": 82,
+   "name": "Cumulative Entries",
+   "description": "Cumulative Entries measurements normalized from ARGUS readings.",
+   "metadata": null,
+   "created_at": "2026-08-27T10:53:18.000000Z",
+   "updated_at": "2026-08-27T10:53:18.000000Z"
+  },
+  {
+   "id": 83,
+   "name": "Cumulative Exits",
+   "description": "Cumulative Exits measurements normalized from ARGUS readings.",
+   "metadata": null,
+   "created_at": "2026-08-27T10:53:18.000000Z",
+   "updated_at": "2026-08-27T10:53:18.000000Z"
+  },
+  {
+   "id": 84,
+   "name": "Dominant Frequency Z Axis",
+   "description": "Dominant Frequency Z Axis measurements normalized from ARGUS readings.",
+   "metadata": null,
+   "created_at": "2026-09-07T18:11:53.000000Z",
+   "updated_at": "2026-09-07T18:11:53.000000Z"
+  }
+ ]
+}

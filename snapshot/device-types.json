@@ -1,0 +1,24 @@
+{
+ "resource": "device-types",
+ "count": 2,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 2,
+   "name": "Sensor Device",
+   "description": "Generic sensor device type for ARGUS monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:37:19.000000Z",
+   "updated_at": "2026-07-07T15:37:19.000000Z"
+  },
+  {
+   "id": 3,
+   "name": "Earth Observation Product Device",
+   "description": "Virtual device grouping Earth Observation products and raster layers for a cultural heritage asset state.",
+   "metadata": null,
+   "created_at": "2026-07-08T00:33:55.000000Z",
+   "updated_at": "2026-07-08T00:33:55.000000Z"
+  }
+ ]
+}

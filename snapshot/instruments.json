@@ -1,0 +1,1061 @@
+{
+ "resource": "instruments",
+ "count": 117,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 21,
+   "name": "Humidity - 168442",
+   "description": "Ranverso humidity instrument 168442.",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:39:24.000000Z",
+   "updated_at": "2026-07-07T15:39:24.000000Z"
+  },
+  {
+   "id": 22,
+   "name": "Humidity - 174188",
+   "description": "Ranverso humidity instrument 174188.",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:39:24.000000Z",
+   "updated_at": "2026-07-07T15:39:24.000000Z"
+  },
+  {
+   "id": 23,
+   "name": "Humidity - 177315",
+   "description": "Ranverso humidity instrument 177315.",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:39:24.000000Z",
+   "updated_at": "2026-07-07T15:39:24.000000Z"
+  },
+  {
+   "id": 24,
+   "name": "Temperature - 168442",
+   "description": "Ranverso temperature instrument 168442.",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:39:24.000000Z",
+   "updated_at": "2026-07-07T15:39:24.000000Z"
+  },
+  {
+   "id": 25,
+   "name": "Temperature - 174188",
+   "description": "Ranverso temperature instrument 174188.",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:39:24.000000Z",
+   "updated_at": "2026-07-07T15:39:24.000000Z"
+  },
+  {
+   "id": 27,
+   "name": "Vibration - 170894",
+   "description": "Ranverso vibration instrument 170894.",
+   "metadata": null,
+   "instrument_type_id": 4,
+   "created_at": "2026-07-07T15:39:24.000000Z",
+   "updated_at": "2026-07-07T15:39:24.000000Z"
+  },
+  {
+   "id": 28,
+   "name": "Acoustic - raspi-100000007a1083f5",
+   "description": "ranverso instrument: Acoustic - raspi-100000007a1083f5.",
+   "metadata": null,
+   "instrument_type_id": 5,
+   "created_at": "2026-07-07T15:50:35.000000Z",
+   "updated_at": "2026-07-07T15:50:35.000000Z"
+  },
+  {
+   "id": 29,
+   "name": "Air Flow - 149248",
+   "description": "ranverso instrument: Air Flow - 149248.",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:50:37.000000Z",
+   "updated_at": "2026-07-07T15:50:37.000000Z"
+  },
+  {
+   "id": 30,
+   "name": "Air Flow - A8610A3539387205",
+   "description": "ranverso instrument: Air Flow - A8610A3539387205.",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:50:38.000000Z",
+   "updated_at": "2026-07-07T15:50:38.000000Z"
+  },
+  {
+   "id": 31,
+   "name": "Gas - A8610A3338359111",
+   "description": "ranverso instrument: Gas - A8610A3338359111.",
+   "metadata": null,
+   "instrument_type_id": 7,
+   "created_at": "2026-07-07T15:50:40.000000Z",
+   "updated_at": "2026-07-07T15:50:40.000000Z"
+  },
+  {
+   "id": 32,
+   "name": "Lux Meter - 168442",
+   "description": "ranverso instrument: Lux Meter - 168442.",
+   "metadata": null,
+   "instrument_type_id": 8,
+   "created_at": "2026-07-07T15:50:42.000000Z",
+   "updated_at": "2026-07-07T15:50:42.000000Z"
+  },
+  {
+   "id": 33,
+   "name": "Multispectral Camera - Svy 324160033",
+   "description": "ranverso instrument: Multispectral Camera - Svy 324160033.",
+   "metadata": null,
+   "instrument_type_id": 9,
+   "created_at": "2026-07-07T15:50:44.000000Z",
+   "updated_at": "2026-07-07T15:50:44.000000Z"
+  },
+  {
+   "id": 34,
+   "name": "Pyranometer - 149361",
+   "description": "ranverso instrument: Pyranometer - 149361.",
+   "metadata": null,
+   "instrument_type_id": 10,
+   "created_at": "2026-07-07T15:50:45.000000Z",
+   "updated_at": "2026-07-07T15:50:45.000000Z"
+  },
+  {
+   "id": 35,
+   "name": "Rain Gauge - 177315",
+   "description": "ranverso instrument: Rain Gauge - 177315.",
+   "metadata": null,
+   "instrument_type_id": 11,
+   "created_at": "2026-07-07T15:50:47.000000Z",
+   "updated_at": "2026-07-07T15:50:47.000000Z"
+  },
+  {
+   "id": 36,
+   "name": "Soil Moisture - A8610A34363D6617",
+   "description": "ranverso instrument: Soil Moisture - A8610A34363D6617.",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:50:49.000000Z",
+   "updated_at": "2026-07-07T15:50:49.000000Z"
+  },
+  {
+   "id": 37,
+   "name": "Soil Moisture - A8610A333526680F",
+   "description": "ranverso instrument: Soil Moisture - A8610A333526680F.",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:50:50.000000Z",
+   "updated_at": "2026-07-07T15:50:50.000000Z"
+  },
+  {
+   "id": 38,
+   "name": "Tiltmeter - 143276",
+   "description": "ranverso instrument: Tiltmeter - 143276.",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:50:52.000000Z",
+   "updated_at": "2026-07-07T15:50:52.000000Z"
+  },
+  {
+   "id": 39,
+   "name": "UV Meter - 168442",
+   "description": "ranverso instrument: UV Meter - 168442.",
+   "metadata": null,
+   "instrument_type_id": 14,
+   "created_at": "2026-07-07T15:50:55.000000Z",
+   "updated_at": "2026-07-07T15:50:55.000000Z"
+  },
+  {
+   "id": 40,
+   "name": "Accelerometer - A1-159164 (Cellar 88 - Outside - car path)",
+   "description": "baltanas instrument: Accelerometer - A1-159164 (Cellar 88 - Outside - car path).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:50:57.000000Z",
+   "updated_at": "2026-07-07T15:50:57.000000Z"
+  },
+  {
+   "id": 41,
+   "name": "Accelerometer - A2-159347 (Cellar 88 - Inside - Sisa)",
+   "description": "baltanas instrument: Accelerometer - A2-159347 (Cellar 88 - Inside - Sisa).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:50:58.000000Z",
+   "updated_at": "2026-07-07T15:50:58.000000Z"
+  },
+  {
+   "id": 42,
+   "name": "Accelerometer - 159313 (Cellar 364 - Outside - car path)",
+   "description": "baltanas instrument: Accelerometer - 159313 (Cellar 364 - Outside - car path).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:51:00.000000Z",
+   "updated_at": "2026-07-07T15:51:00.000000Z"
+  },
+  {
+   "id": 43,
+   "name": "Air flow - AF1-149367 (Cellar 88 - Chimney 1 Kitchen)",
+   "description": "baltanas instrument: Air flow - AF1-149367 (Cellar 88 - Chimney 1 Kitchen).",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:51:01.000000Z",
+   "updated_at": "2026-07-07T15:51:01.000000Z"
+  },
+  {
+   "id": 44,
+   "name": "Air flow - AF2-149780 (Cellar 88 - Chimney 2 Lagar)",
+   "description": "baltanas instrument: Air flow - AF2-149780 (Cellar 88 - Chimney 2 Lagar).",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:51:02.000000Z",
+   "updated_at": "2026-07-07T15:51:02.000000Z"
+  },
+  {
+   "id": 45,
+   "name": "Air flow - AF3-149402 (Cellar 88 - Chimney 3 Sisa 4)",
+   "description": "baltanas instrument: Air flow - AF3-149402 (Cellar 88 - Chimney 3 Sisa 4).",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:51:03.000000Z",
+   "updated_at": "2026-07-07T15:51:03.000000Z"
+  },
+  {
+   "id": 46,
+   "name": "Air flow - AF4-149421 (Cellar 88 - Chimney 4 Pasillo sisa3-sisa4)",
+   "description": "baltanas instrument: Air flow - AF4-149421 (Cellar 88 - Chimney 4 Pasillo sisa3-sisa4).",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:51:04.000000Z",
+   "updated_at": "2026-07-07T15:51:04.000000Z"
+  },
+  {
+   "id": 47,
+   "name": "Barometer - 149443 (Cellar 88 - Sisa2)",
+   "description": "baltanas instrument: Barometer - 149443 (Cellar 88 - Sisa2).",
+   "metadata": null,
+   "instrument_type_id": 16,
+   "created_at": "2026-07-07T15:51:06.000000Z",
+   "updated_at": "2026-07-07T15:51:06.000000Z"
+  },
+  {
+   "id": 48,
+   "name": "Barrier - A8610A343345720D (Cellar 88 - Outside)",
+   "description": "baltanas instrument: Barrier - A8610A343345720D (Cellar 88 - Outside).",
+   "metadata": null,
+   "instrument_type_id": 17,
+   "created_at": "2026-07-07T15:51:08.000000Z",
+   "updated_at": "2026-07-07T15:51:08.000000Z"
+  },
+  {
+   "id": 49,
+   "name": "Barrier - A8610A34324D7F09 (Cellar 364 - Outside - car path)",
+   "description": "baltanas instrument: Barrier - A8610A34324D7F09 (Cellar 364 - Outside - car path).",
+   "metadata": null,
+   "instrument_type_id": 18,
+   "created_at": "2026-07-07T15:51:10.000000Z",
+   "updated_at": "2026-07-07T15:51:10.000000Z"
+  },
+  {
+   "id": 50,
+   "name": "Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810]",
+   "description": "baltanas instrument: Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810].",
+   "metadata": null,
+   "instrument_type_id": 7,
+   "created_at": "2026-07-07T15:51:11.000000Z",
+   "updated_at": "2026-07-07T15:51:11.000000Z"
+  },
+  {
+   "id": 51,
+   "name": "Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-2]",
+   "description": "baltanas instrument: Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-2].",
+   "metadata": null,
+   "instrument_type_id": 7,
+   "created_at": "2026-07-07T15:51:12.000000Z",
+   "updated_at": "2026-07-07T15:51:12.000000Z"
+  },
+  {
+   "id": 52,
+   "name": "Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-3]",
+   "description": "baltanas instrument: Gas - 151810 (Cellar 193 - Lagar) [baltanas-gas-151810-3].",
+   "metadata": null,
+   "instrument_type_id": 7,
+   "created_at": "2026-07-07T15:51:13.000000Z",
+   "updated_at": "2026-07-07T15:51:13.000000Z"
+  },
+  {
+   "id": 53,
+   "name": "GNSS - 168762 (Cellar 88 - Chimney 1)",
+   "description": "baltanas instrument: GNSS - 168762 (Cellar 88 - Chimney 1).",
+   "metadata": null,
+   "instrument_type_id": 19,
+   "created_at": "2026-07-07T15:51:15.000000Z",
+   "updated_at": "2026-07-07T15:51:15.000000Z"
+  },
+  {
+   "id": 54,
+   "name": "Humidity - 7347939-H (Cellar 88 - Outside)",
+   "description": "baltanas instrument: Humidity - 7347939-H (Cellar 88 - Outside).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:16.000000Z",
+   "updated_at": "2026-07-07T15:51:16.000000Z"
+  },
+  {
+   "id": 55,
+   "name": "Humidity - 13280523-H (Cellar 88 - Kitchen)",
+   "description": "baltanas instrument: Humidity - 13280523-H (Cellar 88 - Kitchen).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:17.000000Z",
+   "updated_at": "2026-07-07T15:51:17.000000Z"
+  },
+  {
+   "id": 56,
+   "name": "Humidity - 7348424-H (Cellar 88 - Sisa)",
+   "description": "baltanas instrument: Humidity - 7348424-H (Cellar 88 - Sisa).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:18.000000Z",
+   "updated_at": "2026-07-07T15:51:18.000000Z"
+  },
+  {
+   "id": 57,
+   "name": "Humidity - 13280278-H (Cellar 88 - Lagar)",
+   "description": "baltanas instrument: Humidity - 13280278-H (Cellar 88 - Lagar).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:19.000000Z",
+   "updated_at": "2026-07-07T15:51:19.000000Z"
+  },
+  {
+   "id": 58,
+   "name": "Pir-Airflow - A8610A3230467704 (Cellar 193 - Entry)",
+   "description": "baltanas instrument: Pir-Airflow - A8610A3230467704 (Cellar 193 - Entry).",
+   "metadata": null,
+   "instrument_type_id": 20,
+   "created_at": "2026-07-07T15:51:21.000000Z",
+   "updated_at": "2026-07-07T15:51:21.000000Z"
+  },
+  {
+   "id": 59,
+   "name": "Soil moisture - 115666 (Cellar 88 - Kitchen)",
+   "description": "baltanas instrument: Soil moisture - 115666 (Cellar 88 - Kitchen).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:51:22.000000Z",
+   "updated_at": "2026-07-07T15:51:22.000000Z"
+  },
+  {
+   "id": 60,
+   "name": "Soil moisture - 1-149265 (Cellar 88 - Paso1)",
+   "description": "baltanas instrument: Soil moisture - 1-149265 (Cellar 88 - Paso1).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:51:23.000000Z",
+   "updated_at": "2026-07-07T15:51:23.000000Z"
+  },
+  {
+   "id": 61,
+   "name": "Soil moisture - 2-177322 (Cellar 88 - Nicho 1 de Sisa2)",
+   "description": "baltanas instrument: Soil moisture - 2-177322 (Cellar 88 - Nicho 1 de Sisa2).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:51:24.000000Z",
+   "updated_at": "2026-07-07T15:51:24.000000Z"
+  },
+  {
+   "id": 62,
+   "name": "Soil moisture - 151810 (Cellar 193 - Lagar)",
+   "description": "baltanas instrument: Soil moisture - 151810 (Cellar 193 - Lagar).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:51:25.000000Z",
+   "updated_at": "2026-07-07T15:51:25.000000Z"
+  },
+  {
+   "id": 63,
+   "name": "Temperature - 7347939-T (Cellar 88 - Outside)",
+   "description": "baltanas instrument: Temperature - 7347939-T (Cellar 88 - Outside).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:51:27.000000Z",
+   "updated_at": "2026-07-07T15:51:27.000000Z"
+  },
+  {
+   "id": 64,
+   "name": "Temperature - 13280523-T (Cellar 88 - Kitchen)",
+   "description": "baltanas instrument: Temperature - 13280523-T (Cellar 88 - Kitchen).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:51:28.000000Z",
+   "updated_at": "2026-07-07T15:51:28.000000Z"
+  },
+  {
+   "id": 65,
+   "name": "Temperature - 7348424-T (Cellar 88 - Sisa)",
+   "description": "baltanas instrument: Temperature - 7348424-T (Cellar 88 - Sisa).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:51:29.000000Z",
+   "updated_at": "2026-07-07T15:51:29.000000Z"
+  },
+  {
+   "id": 66,
+   "name": "Temperature - 13280278-T (Cellar 88 - Lagar)",
+   "description": "baltanas instrument: Temperature - 13280278-T (Cellar 88 - Lagar).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:51:30.000000Z",
+   "updated_at": "2026-07-07T15:51:30.000000Z"
+  },
+  {
+   "id": 67,
+   "name": "Water pottential - WP1-130432 (Cellar 88 - Paso1)",
+   "description": "baltanas instrument: Water pottential - WP1-130432 (Cellar 88 - Paso1).",
+   "metadata": null,
+   "instrument_type_id": 21,
+   "created_at": "2026-07-07T15:51:32.000000Z",
+   "updated_at": "2026-07-07T15:51:32.000000Z"
+  },
+  {
+   "id": 68,
+   "name": "Water pottential - WP2-130314 (Cellar 88 - Nicho 1 de Sisa2)",
+   "description": "baltanas instrument: Water pottential - WP2-130314 (Cellar 88 - Nicho 1 de Sisa2).",
+   "metadata": null,
+   "instrument_type_id": 22,
+   "created_at": "2026-07-07T15:51:33.000000Z",
+   "updated_at": "2026-07-07T15:51:33.000000Z"
+  },
+  {
+   "id": 69,
+   "name": "Weather station - 2CF7F1C073400212 (Outside - Church tower)",
+   "description": "baltanas instrument: Weather station - 2CF7F1C073400212 (Outside - Church tower).",
+   "metadata": null,
+   "instrument_type_id": 23,
+   "created_at": "2026-07-07T15:51:35.000000Z",
+   "updated_at": "2026-07-07T15:51:35.000000Z"
+  },
+  {
+   "id": 70,
+   "name": "Accelerometer - 159070 (Schenkenberg tower - North wall)",
+   "description": "schenkenberg instrument: Accelerometer - 159070 (Schenkenberg tower - North wall).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:51:36.000000Z",
+   "updated_at": "2026-07-07T15:51:36.000000Z"
+  },
+  {
+   "id": 71,
+   "name": "Accelerometer - 152555 (Schenkenberg tower - North wall)",
+   "description": "schenkenberg instrument: Accelerometer - 152555 (Schenkenberg tower - North wall).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:51:37.000000Z",
+   "updated_at": "2026-07-07T15:51:37.000000Z"
+  },
+  {
+   "id": 72,
+   "name": "Accelerometer - 152479 (Schenkenberg tower - South wall)",
+   "description": "schenkenberg instrument: Accelerometer - 152479 (Schenkenberg tower - South wall).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:51:39.000000Z",
+   "updated_at": "2026-07-07T15:51:39.000000Z"
+  },
+  {
+   "id": 73,
+   "name": "Accelerometer - 175480 (Schenkenberg tower - South wall)",
+   "description": "schenkenberg instrument: Accelerometer - 175480 (Schenkenberg tower - South wall).",
+   "metadata": null,
+   "instrument_type_id": 15,
+   "created_at": "2026-07-07T15:51:40.000000Z",
+   "updated_at": "2026-07-07T15:51:40.000000Z"
+  },
+  {
+   "id": 75,
+   "name": "Composite sensor 2 - 2CF7F1C072600345",
+   "description": "schenkenberg instrument: Composite sensor 2 - 2CF7F1C072600345.",
+   "metadata": null,
+   "instrument_type_id": 25,
+   "created_at": "2026-07-07T15:51:44.000000Z",
+   "updated_at": "2026-07-07T15:51:44.000000Z"
+  },
+  {
+   "id": 76,
+   "name": "Crackmeter - 149796",
+   "description": "schenkenberg instrument: Crackmeter - 149796.",
+   "metadata": null,
+   "instrument_type_id": 26,
+   "created_at": "2026-07-07T15:51:46.000000Z",
+   "updated_at": "2026-07-07T15:51:46.000000Z"
+  },
+  {
+   "id": 77,
+   "name": "Tiltmeter - 152914 (North face)",
+   "description": "schenkenberg instrument: Tiltmeter - 152914 (North face).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:51:47.000000Z",
+   "updated_at": "2026-07-07T15:51:47.000000Z"
+  },
+  {
+   "id": 78,
+   "name": "Tiltmeter - 152899 (South face)",
+   "description": "schenkenberg instrument: Tiltmeter - 152899 (South face).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:51:48.000000Z",
+   "updated_at": "2026-07-07T15:51:48.000000Z"
+  },
+  {
+   "id": 79,
+   "name": "Weather station - 2CF7F1C072300226 (Top of the tower)",
+   "description": "schenkenberg instrument: Weather station - 2CF7F1C072300226 (Top of the tower).",
+   "metadata": null,
+   "instrument_type_id": 27,
+   "created_at": "2026-07-07T15:51:50.000000Z",
+   "updated_at": "2026-07-07T15:51:50.000000Z"
+  },
+  {
+   "id": 80,
+   "name": "Air flow - 109315 (Room 215 - Theatrical Masks mosaic)",
+   "description": "delos instrument: Air flow - 109315 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:51:51.000000Z",
+   "updated_at": "2026-07-07T15:51:51.000000Z"
+  },
+  {
+   "id": 81,
+   "name": "Air flow - 149405 (Room 214 - Dionysus mosaic)",
+   "description": "delos instrument: Air flow - 149405 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "instrument_type_id": 6,
+   "created_at": "2026-07-07T15:51:53.000000Z",
+   "updated_at": "2026-07-07T15:51:53.000000Z"
+  },
+  {
+   "id": 83,
+   "name": "Humidity - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "delos instrument: Humidity - 151805 (Room 217 - Dolphins mosaic).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:55.000000Z",
+   "updated_at": "2026-07-07T15:51:55.000000Z"
+  },
+  {
+   "id": 84,
+   "name": "Humidity - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "delos instrument: Humidity - 151809 (Room 216 - Seilinos mosaic).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:56.000000Z",
+   "updated_at": "2026-07-07T15:51:56.000000Z"
+  },
+  {
+   "id": 85,
+   "name": "Humidity - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "delos instrument: Humidity - 151836 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:58.000000Z",
+   "updated_at": "2026-07-07T15:51:58.000000Z"
+  },
+  {
+   "id": 86,
+   "name": "Humidity - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "delos instrument: Humidity - 168439 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:51:59.000000Z",
+   "updated_at": "2026-07-07T15:51:59.000000Z"
+  },
+  {
+   "id": 87,
+   "name": "Humidity - 151815 (Few meters away from the House of Fournoi)",
+   "description": "delos instrument: Humidity - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:52:00.000000Z",
+   "updated_at": "2026-07-07T15:52:00.000000Z"
+  },
+  {
+   "id": 88,
+   "name": "Lux Meter - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "delos instrument: Lux Meter - 151805 (Room 217 - Dolphins mosaic).",
+   "metadata": null,
+   "instrument_type_id": 8,
+   "created_at": "2026-07-07T15:52:01.000000Z",
+   "updated_at": "2026-07-07T15:52:01.000000Z"
+  },
+  {
+   "id": 89,
+   "name": "Lux Meter - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "delos instrument: Lux Meter - 151809 (Room 216 - Seilinos mosaic).",
+   "metadata": null,
+   "instrument_type_id": 8,
+   "created_at": "2026-07-07T15:52:02.000000Z",
+   "updated_at": "2026-07-07T15:52:02.000000Z"
+  },
+  {
+   "id": 90,
+   "name": "Lux Meter - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "delos instrument: Lux Meter - 151836 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "instrument_type_id": 8,
+   "created_at": "2026-07-07T15:52:03.000000Z",
+   "updated_at": "2026-07-07T15:52:03.000000Z"
+  },
+  {
+   "id": 91,
+   "name": "Lux Meter - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "delos instrument: Lux Meter - 168439 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "instrument_type_id": 8,
+   "created_at": "2026-07-07T15:52:04.000000Z",
+   "updated_at": "2026-07-07T15:52:04.000000Z"
+  },
+  {
+   "id": 92,
+   "name": "People Counter - 2CF7F1C062800035 (Above door of room 214 - Dionysus mosaic)",
+   "description": "delos instrument: People Counter - 2CF7F1C062800035 (Above door of room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "instrument_type_id": 28,
+   "created_at": "2026-07-07T15:52:06.000000Z",
+   "updated_at": "2026-07-07T15:52:06.000000Z"
+  },
+  {
+   "id": 93,
+   "name": "Pyranometer - 151815 (Few meters away from the House of Fournoi)",
+   "description": "delos instrument: Pyranometer - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 10,
+   "created_at": "2026-07-07T15:52:08.000000Z",
+   "updated_at": "2026-07-07T15:52:08.000000Z"
+  },
+  {
+   "id": 94,
+   "name": "Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+   "description": "delos instrument: Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:52:09.000000Z",
+   "updated_at": "2026-07-07T15:52:09.000000Z"
+  },
+  {
+   "id": 95,
+   "name": "Soil Moisture - 149423 (Room 215 - Theatrical Masks mosaic)",
+   "description": "delos instrument: Soil Moisture - 149423 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:52:10.000000Z",
+   "updated_at": "2026-07-07T15:52:10.000000Z"
+  },
+  {
+   "id": 96,
+   "name": "Soil Moisture - 149460 (Few meters away from the House of the Masks)",
+   "description": "delos instrument: Soil Moisture - 149460 (Few meters away from the House of the Masks).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:52:11.000000Z",
+   "updated_at": "2026-07-07T15:52:11.000000Z"
+  },
+  {
+   "id": 97,
+   "name": "Soil Moisture - 149678 (Sensor placed on a plastered wall at the House of Fournoi)",
+   "description": "delos instrument: Soil Moisture - 149678 (Sensor placed on a plastered wall at the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:52:12.000000Z",
+   "updated_at": "2026-07-07T15:52:12.000000Z"
+  },
+  {
+   "id": 98,
+   "name": "Soil Moisture - 149529 (Sensor placed on a plastered wall at the House of Fournoi)",
+   "description": "delos instrument: Soil Moisture - 149529 (Sensor placed on a plastered wall at the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:52:14.000000Z",
+   "updated_at": "2026-07-07T15:52:14.000000Z"
+  },
+  {
+   "id": 99,
+   "name": "Soil Moisture - 151815 (Few meters away from the House of Fournoi)",
+   "description": "delos instrument: Soil Moisture - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 12,
+   "created_at": "2026-07-07T15:52:15.000000Z",
+   "updated_at": "2026-07-07T15:52:15.000000Z"
+  },
+  {
+   "id": 100,
+   "name": "Temperature - 151805 (Room 217 - Dolphins mosaic)",
+   "description": "delos instrument: Temperature - 151805 (Room 217 - Dolphins mosaic).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:52:16.000000Z",
+   "updated_at": "2026-07-07T15:52:16.000000Z"
+  },
+  {
+   "id": 101,
+   "name": "Temperature - 151809 (Room 216 - Seilinos mosaic)",
+   "description": "delos instrument: Temperature - 151809 (Room 216 - Seilinos mosaic).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:52:17.000000Z",
+   "updated_at": "2026-07-07T15:52:17.000000Z"
+  },
+  {
+   "id": 102,
+   "name": "Temperature - 151836 (Room 215 - Theatrical Masks mosaic)",
+   "description": "delos instrument: Temperature - 151836 (Room 215 - Theatrical Masks mosaic).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:52:18.000000Z",
+   "updated_at": "2026-07-07T15:52:18.000000Z"
+  },
+  {
+   "id": 103,
+   "name": "Temperature - 168439 (Room 214 - Dionysus mosaic)",
+   "description": "delos instrument: Temperature - 168439 (Room 214 - Dionysus mosaic).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:52:19.000000Z",
+   "updated_at": "2026-07-07T15:52:19.000000Z"
+  },
+  {
+   "id": 104,
+   "name": "Temperature - 151815 (Few meters away from the House of Fournoi)",
+   "description": "delos instrument: Temperature - 151815 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:52:20.000000Z",
+   "updated_at": "2026-07-07T15:52:20.000000Z"
+  },
+  {
+   "id": 105,
+   "name": "Tiltmeter - 153157 (Leaning wall in Skardanas district)",
+   "description": "delos instrument: Tiltmeter - 153157 (Leaning wall in Skardanas district).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:21.000000Z",
+   "updated_at": "2026-07-07T15:52:21.000000Z"
+  },
+  {
+   "id": 106,
+   "name": "Tiltmeter - 150900 (Theater district)",
+   "description": "delos instrument: Tiltmeter - 150900 (Theater district).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:22.000000Z",
+   "updated_at": "2026-07-07T15:52:22.000000Z"
+  },
+  {
+   "id": 107,
+   "name": "Tiltmeter - 153242 (Close to the Temple of Isis)",
+   "description": "delos instrument: Tiltmeter - 153242 (Close to the Temple of Isis).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:23.000000Z",
+   "updated_at": "2026-07-07T15:52:23.000000Z"
+  },
+  {
+   "id": 108,
+   "name": "Tiltmeter - 153295 (Place in Inopos district)",
+   "description": "delos instrument: Tiltmeter - 153295 (Place in Inopos district).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:24.000000Z",
+   "updated_at": "2026-07-07T15:52:24.000000Z"
+  },
+  {
+   "id": 109,
+   "name": "Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks)",
+   "description": "delos instrument: Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks).",
+   "metadata": null,
+   "instrument_type_id": 29,
+   "created_at": "2026-07-07T15:52:26.000000Z",
+   "updated_at": "2026-07-07T15:52:26.000000Z"
+  },
+  {
+   "id": 110,
+   "name": "Weather Station - 2CF7F1C0723001F4 (Few meters away from the House of Fournoi)",
+   "description": "delos instrument: Weather Station - 2CF7F1C0723001F4 (Few meters away from the House of Fournoi).",
+   "metadata": null,
+   "instrument_type_id": 30,
+   "created_at": "2026-07-07T15:52:29.000000Z",
+   "updated_at": "2026-07-07T15:52:29.000000Z"
+  },
+  {
+   "id": 111,
+   "name": "Crackmeter - 177266 (Conventillo - Staircase access façade)",
+   "description": "lucretili instrument: Crackmeter - 177266 (Conventillo - Staircase access façade).",
+   "metadata": null,
+   "instrument_type_id": 31,
+   "created_at": "2026-07-07T15:52:31.000000Z",
+   "updated_at": "2026-07-07T15:52:31.000000Z"
+  },
+  {
+   "id": 112,
+   "name": "Crackmeter - 177253 (Conventillo - First-storey crack)",
+   "description": "lucretili instrument: Crackmeter - 177253 (Conventillo - First-storey crack).",
+   "metadata": null,
+   "instrument_type_id": 32,
+   "created_at": "2026-07-07T15:52:32.000000Z",
+   "updated_at": "2026-07-07T15:52:32.000000Z"
+  },
+  {
+   "id": 113,
+   "name": "Crackmeter - 177320 (Conventillo - Sensor and logger on the same wall)",
+   "description": "lucretili instrument: Crackmeter - 177320 (Conventillo - Sensor and logger on the same wall).",
+   "metadata": null,
+   "instrument_type_id": 33,
+   "created_at": "2026-07-07T15:52:34.000000Z",
+   "updated_at": "2026-07-07T15:52:34.000000Z"
+  },
+  {
+   "id": 114,
+   "name": "Crackmeter - 174156 (Villa di Orazio - Close to a mosaic)",
+   "description": "lucretili instrument: Crackmeter - 174156 (Villa di Orazio - Close to a mosaic).",
+   "metadata": null,
+   "instrument_type_id": 34,
+   "created_at": "2026-07-07T15:52:36.000000Z",
+   "updated_at": "2026-07-07T15:52:36.000000Z"
+  },
+  {
+   "id": 115,
+   "name": "Crackmeter - 177287 (Villa di Orazio - Perimetral wall enclosing a mosaic)",
+   "description": "lucretili instrument: Crackmeter - 177287 (Villa di Orazio - Perimetral wall enclosing a mosaic).",
+   "metadata": null,
+   "instrument_type_id": 35,
+   "created_at": "2026-07-07T15:52:38.000000Z",
+   "updated_at": "2026-07-07T15:52:38.000000Z"
+  },
+  {
+   "id": 116,
+   "name": "Crackmeter - 177310 (Montefalco Castle - External wall)",
+   "description": "lucretili instrument: Crackmeter - 177310 (Montefalco Castle - External wall).",
+   "metadata": null,
+   "instrument_type_id": 36,
+   "created_at": "2026-07-07T15:52:39.000000Z",
+   "updated_at": "2026-07-07T15:52:39.000000Z"
+  },
+  {
+   "id": 117,
+   "name": "Crackmeter - 177325 (Montefalco Castle - External wall)",
+   "description": "lucretili instrument: Crackmeter - 177325 (Montefalco Castle - External wall).",
+   "metadata": null,
+   "instrument_type_id": 37,
+   "created_at": "2026-07-07T15:52:40.000000Z",
+   "updated_at": "2026-07-07T15:52:40.000000Z"
+  },
+  {
+   "id": 118,
+   "name": "Humidity - 177239 (Conventillo - Main room, second floor)",
+   "description": "lucretili instrument: Humidity - 177239 (Conventillo - Main room, second floor).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:52:41.000000Z",
+   "updated_at": "2026-07-07T15:52:41.000000Z"
+  },
+  {
+   "id": 119,
+   "name": "Humidity - 177281 (Montefalco Castle - Exterior wall pole)",
+   "description": "lucretili instrument: Humidity - 177281 (Montefalco Castle - Exterior wall pole).",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-07-07T15:52:43.000000Z",
+   "updated_at": "2026-07-07T15:52:43.000000Z"
+  },
+  {
+   "id": 120,
+   "name": "People Counter - 2CF7F1C062800056 (Conventillo - Main entrance)",
+   "description": "lucretili instrument: People Counter - 2CF7F1C062800056 (Conventillo - Main entrance).",
+   "metadata": null,
+   "instrument_type_id": 38,
+   "created_at": "2026-07-07T15:52:45.000000Z",
+   "updated_at": "2026-07-07T15:52:45.000000Z"
+  },
+  {
+   "id": 121,
+   "name": "People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar)",
+   "description": "lucretili instrument: People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar).",
+   "metadata": null,
+   "instrument_type_id": 39,
+   "created_at": "2026-07-07T15:52:47.000000Z",
+   "updated_at": "2026-07-07T15:52:47.000000Z"
+  },
+  {
+   "id": 122,
+   "name": "Pyranometer - 177237 (Villa di Orazio - Gateway pole)",
+   "description": "lucretili instrument: Pyranometer - 177237 (Villa di Orazio - Gateway pole).",
+   "metadata": null,
+   "instrument_type_id": 10,
+   "created_at": "2026-07-07T15:52:48.000000Z",
+   "updated_at": "2026-07-07T15:52:48.000000Z"
+  },
+  {
+   "id": 123,
+   "name": "Temperature - 177239 (Conventillo - Main room, second floor)",
+   "description": "lucretili instrument: Temperature - 177239 (Conventillo - Main room, second floor).",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-07-07T15:52:49.000000Z",
+   "updated_at": "2026-07-07T15:52:49.000000Z"
+  },
+  {
+   "id": 125,
+   "name": "Tiltmeter - 152931 (Conventillo - Staircase access façade)",
+   "description": "lucretili instrument: Tiltmeter - 152931 (Conventillo - Staircase access façade).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:51.000000Z",
+   "updated_at": "2026-07-07T15:52:51.000000Z"
+  },
+  {
+   "id": 126,
+   "name": "Tiltmeter - 153061 (Conventillo - First floor, close to a window)",
+   "description": "lucretili instrument: Tiltmeter - 153061 (Conventillo - First floor, close to a window).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:52.000000Z",
+   "updated_at": "2026-07-07T15:52:52.000000Z"
+  },
+  {
+   "id": 127,
+   "name": "Tiltmeter - 152816 (Conventillo - Third floor, close to a window)",
+   "description": "lucretili instrument: Tiltmeter - 152816 (Conventillo - Third floor, close to a window).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-07-07T15:52:54.000000Z",
+   "updated_at": "2026-07-07T15:52:54.000000Z"
+  },
+  {
+   "id": 128,
+   "name": "Vibration - 152608 (Montefalco Castle - External wall)",
+   "description": "lucretili instrument: Vibration - 152608 (Montefalco Castle - External wall).",
+   "metadata": null,
+   "instrument_type_id": 4,
+   "created_at": "2026-07-07T15:52:55.000000Z",
+   "updated_at": "2026-07-07T15:52:55.000000Z"
+  },
+  {
+   "id": 129,
+   "name": "Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+   "description": "lucretili instrument: Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar).",
+   "metadata": null,
+   "instrument_type_id": 40,
+   "created_at": "2026-07-07T15:52:57.000000Z",
+   "updated_at": "2026-07-07T15:52:57.000000Z"
+  },
+  {
+   "id": 130,
+   "name": "EO Imagery Layer Instrument - Ranverso",
+   "description": null,
+   "metadata": "{\"kind\": \"virtual_earth_observation_instrument\", \"pilot\": \"ranverso\", \"description\": \"Virtual instrument representing derived EO imagery/raster layers.\"}",
+   "instrument_type_id": 41,
+   "created_at": "2026-07-08T00:38:33.000000Z",
+   "updated_at": "2026-07-08T00:38:33.000000Z"
+  },
+  {
+   "id": 131,
+   "name": "Rain Gauge - 177281 (Montefalco Castle - Exterior wall pole)",
+   "description": "lucretili instrument: Rain Gauge - 177281 (Montefalco Castle - Exterior wall pole).",
+   "metadata": null,
+   "instrument_type_id": 11,
+   "created_at": "2026-08-10T12:25:38.000000Z",
+   "updated_at": "2026-08-10T12:25:38.000000Z"
+  },
+  {
+   "id": 132,
+   "name": "Tiltmeter - 82e0d400-784e-11f0-9283-e956b63ef652 (Cellar 88 - Chimney 1)",
+   "description": "baltanas instrument: Tiltmeter - 82e0d400-784e-11f0-9283-e956b63ef652 (Cellar 88 - Chimney 1).",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-08-10T12:25:38.000000Z",
+   "updated_at": "2026-08-10T12:25:38.000000Z"
+  },
+  {
+   "id": 133,
+   "name": "Humidity - shellyht-CAAE03",
+   "description": "baltanas instrument: Humidity - shellyht-CAAE03.",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-08-10T12:25:39.000000Z",
+   "updated_at": "2026-08-10T12:25:39.000000Z"
+  },
+  {
+   "id": 134,
+   "name": "Temperature - shellyht-CAAE03",
+   "description": "baltanas instrument: Temperature - shellyht-CAAE03.",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-08-10T12:25:39.000000Z",
+   "updated_at": "2026-08-10T12:25:39.000000Z"
+  },
+  {
+   "id": 135,
+   "name": "Weather station - 2CF7F1C0734001E8",
+   "description": "ranverso instrument: Weather station - 2CF7F1C0734001E8.",
+   "metadata": null,
+   "instrument_type_id": 23,
+   "created_at": "2026-08-10T12:25:39.000000Z",
+   "updated_at": "2026-08-13T10:06:47.000000Z"
+  },
+  {
+   "id": 136,
+   "name": "Humidity - shellyht-6B6DEE",
+   "description": "baltanas instrument: Humidity - shellyht-6B6DEE.",
+   "metadata": null,
+   "instrument_type_id": 2,
+   "created_at": "2026-08-10T12:33:42.000000Z",
+   "updated_at": "2026-08-10T12:33:42.000000Z"
+  },
+  {
+   "id": 137,
+   "name": "Temperature - shellyht-6B6DEE",
+   "description": "baltanas instrument: Temperature - shellyht-6B6DEE.",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-08-10T12:33:42.000000Z",
+   "updated_at": "2026-08-10T12:33:42.000000Z"
+  },
+  {
+   "id": 138,
+   "name": "Temperature - shellydw2-AAB1AC",
+   "description": "baltanas instrument: Temperature - shellydw2-AAB1AC.",
+   "metadata": null,
+   "instrument_type_id": 3,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  },
+  {
+   "id": 139,
+   "name": "Vibration - shellydw2-AAB1AC",
+   "description": "baltanas instrument: Vibration - shellydw2-AAB1AC.",
+   "metadata": null,
+   "instrument_type_id": 4,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  },
+  {
+   "id": 140,
+   "name": "Visible Radiation - shellydw2-AAB1AC",
+   "description": "baltanas instrument: Visible Radiation - shellydw2-AAB1AC.",
+   "metadata": null,
+   "instrument_type_id": 8,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  },
+  {
+   "id": 141,
+   "name": "Tilt - shellydw2-AAB1AC",
+   "description": "baltanas instrument: Tilt - shellydw2-AAB1AC.",
+   "metadata": null,
+   "instrument_type_id": 13,
+   "created_at": "2026-08-10T23:49:19.000000Z",
+   "updated_at": "2026-08-10T23:49:19.000000Z"
+  }
+ ]
+}

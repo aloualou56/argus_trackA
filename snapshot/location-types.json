@@ -1,0 +1,24 @@
+{
+ "resource": "location-types",
+ "count": 2,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 5,
+   "name": "Sensor installation location",
+   "description": "Location type for installed monitoring sensors.",
+   "metadata": null,
+   "created_at": "2026-07-07T15:41:49.000000Z",
+   "updated_at": "2026-07-07T15:41:49.000000Z"
+  },
+  {
+   "id": 6,
+   "name": "Heritage asset footprint",
+   "description": "Versioned WGS84 footprint used for asset-level spatial evidence evaluation.",
+   "metadata": "{\"kind\": \"heritage_asset_footprint_type\"}",
+   "created_at": "2026-09-09T12:32:39.000000Z",
+   "updated_at": "2026-09-09T12:32:39.000000Z"
+  }
+ ]
+}

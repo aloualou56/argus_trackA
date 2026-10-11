@@ -1,0 +1,40 @@
+{
+ "resource": "computational-model-types",
+ "count": 4,
+ "complete": true,
+ "fetched_at": "2026-10-11T21:32:59+03:00",
+ "records": [
+  {
+   "id": 2,
+   "name": "MeanModelType",
+   "description": "Takes integers and returns mean",
+   "metadata": "{}",
+   "created_at": "2026-01-21T16:38:15.000000Z",
+   "updated_at": "2026-01-21T16:38:15.000000Z"
+  },
+  {
+   "id": 3,
+   "name": "Earth Observation Analysis Workflow",
+   "description": "Computational workflow for Earth Observation analysis and derived raster products.",
+   "metadata": "{\"kind\": \"earth_observation_analysis_workflow_type\", \"pilot\": \"ranverso\"}",
+   "created_at": "2026-07-08T11:56:04.000000Z",
+   "updated_at": "2026-07-08T11:56:04.000000Z"
+  },
+  {
+   "id": 4,
+   "name": "Abnormality Detection and Threat Recognition",
+   "description": "ARGUS abnormality detection and threat recognition models.",
+   "metadata": "{\"kind\": \"ad_rt_model_type\", \"runtime\": \"api_native\", \"ingestion\": \"argus_api_observations\"}",
+   "created_at": "2026-08-18T15:16:45.000000Z",
+   "updated_at": "2026-08-18T15:16:45.000000Z"
+  },
+  {
+   "id": 5,
+   "name": "Integrated Risk Assessment",
+   "description": "Late fusion of expert ABC baselines, AD-RT evidence, and calibrated Earth observation evidence.",
+   "metadata": "{\"kind\": \"ira_model_type\", \"methods\": [\"Bayesian\", \"Dempster-Shafer\"]}",
+   "created_at": "2026-09-08T18:38:04.000000Z",
+   "updated_at": "2026-09-08T18:38:04.000000Z"
+  }
+ ]
+}
