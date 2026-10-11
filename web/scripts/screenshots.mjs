@@ -364,6 +364,41 @@ async function playClassAndTeacher(browser, lang) {
   await context.close();
 }
 
+// Offline after one visit: the service worker serves the game, the data and the drawn plan.
+async function playOffline(browser, lang) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const prefix = `${lang}-phone-offline`;
+  console.log(`\n${prefix}`);
+  await page.goto(URL_BASE);
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  const ready = await page
+    .evaluate(() => navigator.serviceWorker.ready.then(() => true))
+    .catch(() => false);
+  if (!ready) {
+    note(`${prefix}: no service worker`);
+    await context.close();
+    return;
+  }
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller, null, { timeout: 15000 }).catch(() => {});
+  await context.setOffline(true);
+  try {
+    await page.goto(`${URL_BASE}?class=ABC234`);
+    await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor({ timeout: 15000 });
+    await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+    await page.getByRole("button", { name: t["home.start"] }).click();
+    await preQuiz(page, t);
+    await page.getByRole("heading", { level: 1, name: ranverso.display_name[lang] }).waitFor();
+    await page.waitForSelector(".bd-heritage", { timeout: 15000 }).catch(() => note(`${prefix}: drawn plan missing offline`));
+    await shot(page, `${prefix}-2-story`);
+  } catch (e) {
+    note(`${prefix}: the game does not load offline (${String(e).split("\n")[0]})`);
+  }
+  await context.close();
+}
+
 // Map pictures blocked (offline, or a sandbox that only allows its own files): the game must
 // switch to the drawn plan by itself, say so, and stay fully playable.
 async function playWithoutMapPictures(browser, lang) {
@@ -416,6 +451,7 @@ try {
   if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);
+  if (!only || only === "offline") await playOffline(browser, "el");
   if (!only) for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);
 } finally {
   await browser.close();
