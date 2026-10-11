@@ -4,10 +4,21 @@ A plain-language web game for the ARGUS Open Innovation Challenge 2026, Track A 
 The game is played on an interactive satellite map. The player picks a monument on a map of Europe, flies in, and
 places sensors on the real building on a small budget. Then the real ARGUS sensors appear on the map at their real
 positions, a real ARGUS alarm from August–September 2026 lights up the sensor that raised it, and the player gets a
-score with a short explanation of each danger.
+score with a short explanation of each danger. Five questions before and after the game show what was learned, a
+checklist turns the player into an observer on their next visit, and a class code lets a teacher see the class's
+choices next to what ARGUS really installed.
 
-Status (11 Oct 2026): playable vertical slice for **Sant'Antonio di Ranverso**, in Greek and English.
-The other four monuments are listed as "coming soon" and become playable by adding data only.
+Status (11 Oct 2026): **all five ARGUS monuments are playable** (Delos, Baltanás, Monti Lucretili, Sant'Antonio di
+Ranverso, Schenkenberg), in Greek and English, offline after the first visit. All authored text still needs human
+review (see below). For teachers: [docs/teacher_guide.md](docs/teacher_guide.md).
+
+| Monument | Levels | Real alarm replayed |
+|---|---|---|
+| Delos (GR) | all five | AI alarm: soil moisture under the Theatrical Masks mosaic, daily 31 Aug – 24 Sep |
+| Baltanás (ES) | Medium, High, Extreme | none usable (AI alarms with no clear cause); the game says why and does not score that step |
+| Monti Lucretili (IT) | High, Extreme, Catastrophic | tilt meter at Sant'Angelo al Morra (31 Aug); wind at Horace's villa (7 Sep) |
+| Sant'Antonio di Ranverso (IT) | Low to Extreme | 7-day rain (10 and 16 Sep) |
+| Schenkenberg (CH) | Low to Extreme | crack meter (20 Sep); vibration (16 Sep) |
 
 ## Run it
 
@@ -31,6 +42,12 @@ npm run build        # static site in web/dist
 npm run screenshots  # needs a build: plays the game in Edge, saves docs/screenshots, runs axe a11y checks
 ```
 
+`npm run screenshots` plays the Ranverso walk-through (with the quiz) on phone and desktop in both languages, every
+level of every monument, the class-code and teacher flow, the game offline, and the game with map pictures blocked,
+and runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|class|offline` (one part). It also reports when map
+tiles cannot load, which is expected in sandboxes without internet.
+
 `web/dist` is a static site with relative paths: upload it to GitHub Pages, Netlify or Vercel as is.
 `npm run screenshots` saves what each screen shows (`*.png`) and, for phones, the whole scrolling panel
 (`*-panel.png`; the sticky map cannot appear in full-page captures).
@@ -50,18 +67,22 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 
 | Path | What it is | Source |
 |---|---|---|
-| `content/sensor_cards.json` | 16 sensor cards: plain names, one sentence, coin cost, ARGUS instrument types | authored |
+| `content/sensor_cards.json` | 17 cards (16 instruments + the human observer): plain names, one sentence, coin cost, ARGUS instrument types | authored |
 | `content/rule_sensor_map.json` | AD-RT rule → sensor cards that detect it, keyed `pilot:rule`, all 37 policies | authored |
 | `content/threat_sensor_map.json` | threat → sensor cards that can warn about it (for the score) | authored |
-| `content/monuments/<pilot>.json` | story, budget, missions per level, plain threat texts, alarm explanations, discussion prompts | authored |
+| `content/monuments/<pilot>.json` | story, budget, missions per level, plain threat texts, alarm explanations, discussion prompts, `no_alarm_note` | authored |
+| `content/quiz.json` | the 5 pre/post questions, answers and explanations | authored |
+| `content/citizen_checklist.json` | what visitors can watch for and how to report it | authored |
 | `content/map.json` | base maps for the board (satellite and street map, no API key) with attribution | authored |
 | `tools/build_game_data.py` | joins snapshot + content, de-duplicates and filters alarms, validates everything | code |
 | `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison, map distances (pure, tested) | code |
 | `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws | code |
-| `web/src/community/store.ts` | anonymous aggregated choices; `CommunityStore` interface + localStorage fallback | code |
+| `web/src/community/` | anonymous records: device store, optional Supabase store with offline queue, class codes | code |
+| `supabase/schema.sql` | tables and security rules for the optional shared store | code |
+| `web/sw-template.js` | offline service worker; `vite.config.ts` writes `dist/sw.js` with the file list | code |
 | `web/src/i18n/{el,en}.json` | every UI string; Greek is the default | authored |
 
-The browser loads only `game_data.json` (about 65 KB). It never loads `asset-states.json`.
+The browser loads only `game_data.json` (about 220 KB, 42 KB compressed). It never loads `asset-states.json`.
 
 ### The map
 
@@ -80,45 +101,67 @@ The browser loads only `game_data.json` (about 65 KB). It never loads `asset-sta
 
 ### Add a monument (data only)
 
-1. Copy `content/monuments/ranverso.json` over the draft `content/monuments/<pilot>.json` and remove `"draft": true`.
+All five ARGUS monuments are already playable; this is how a sixth would be added.
+
+1. Copy `content/monuments/ranverso.json` to `content/monuments/<pilot>.json` (or start from `"draft": true` with names only).
 2. Fill in `display_name`, `place`, `story` (with `hook_scenario`), `budget`, `missions` (3 scenario keys per level;
    omit a level to let the script pick by ABC magnitude), `plain_threats` for every scenario, `featured_alarm`,
    `alarm_context` for each featured rule, and `discussion_prompts`.
-3. Add scenario overrides to `content/threat_sensor_map.json` if the category defaults do not fit.
-4. Run `python3 -I tools/build_game_data.py`. It refuses to build if a text, mapping or mission is missing.
+3. Add scenario overrides to `content/threat_sensor_map.json` if the category defaults do not fit (each entry lists
+   `cards` that help and the `primary` ones that watch the threat directly).
+4. Run `python3 -I tools/fetch_backdrops.py` (needs internet) for the drawn offline plan, then
+   `python3 -I tools/build_game_data.py`. It refuses to build if a text, mapping, mission or alarm pick is missing.
 
-Delos and Baltanás have only deep-learning alarms in the sample (no rule names), so the "real alarm" step has nothing
-to replay there yet; the game shows a polite message instead. See next steps.
+**AI alarms.** Delos and Baltanás have only deep-learning (AI) alarms in the sample. An AI alarm is replayed only
+when one signal has at least 30% of the model's top feature contributions and `content/rule_sensor_map.json`
+(`dl_features`) maps that signal to a card. Wind-direction signals are deliberately not mapped. The alarm screen then
+shows the main signal and its share, not the anomaly score against its limit.
+
+**Drawn offline plans** exist for Ranverso only: this environment could not reach the OpenStreetMap API. Run
+`python3 -I tools/fetch_backdrops.py` on a machine with internet, then rebuild, to add them for the other four.
 
 ## Game rules (assumptions, need review)
 
 - **Levels** are the ABC priority labels. Only labels the monument has are offered (Ranverso has no Catastrophic).
-- **Mission:** 3 real threats per level; budget 10 coins; cards cost 1–4 coins (game coins, not real prices).
-- **Score:** 25 points per threat covered by at least one capable card (75) + up to 25 for the share of coins spent
-  on cards that help with a mission threat or the replayed alarm. The replayed alarm itself is not scored.
+- **Mission:** 3 real threats per level; budget 8 coins; 17 cards cost 1–4 coins (game coins, not real prices).
+  A perfect network costs 2–8 coins depending on the level; buying every helpful card (9–24) never fits (tested).
+- **Score (out of 100):** per threat 20 points with a *primary* card (it watches the threat directly), 8 with only
+  supporting cards; 25 if the network would have caught the replayed real alarm; up to 15 for the share of coins
+  spent on helpful cards. Parts that do not apply (no replayable alarm, a threat no card can warn about) are left out
+  and the total is scaled to 100. One cheap humidity sensor no longer scores 100.
+- **Human observer card** (1 coin): stands for guards and volunteers. Watches pests, mould, plants and vandalism
+  directly; never detects an alarm (people do not measure day and night); not shown in the ARGUS comparison.
+- **Quiz:** the same 5 questions before the first game of a visit (skippable, no feedback) and after a game (with
+  feedback and "before X, now Y").
 - **Detection:** the network detects an alarm if it has a card from every group in the rule's `detect_with`.
 - **Placement on the map is not scored.** It is used for discussion ("your humidity sensor is 12 m from the
   nearest ARGUS one: why did they put it there?"). There is no real building outline to judge inside/outside:
   the only footprint in the data is a test shape for Baltanás.
 - **Reveal:** counts distinct ARGUS instruments (Ranverso: 26 records but 20 instruments), grouped by card.
   Differences become discussion prompts, never penalties.
-- **Alarms shown:** expert-rule alarms only, de-duplicated, with plausible values (humidity and soil moisture
+- **Alarms never replayed:** a flat signal (probably a stuck sensor, e.g. Ranverso soil moisture, now a discussion
+  question instead), implausible values (per-quantity ranges, plus per-rule ranges such as Lucretili's daily
+  temperature range of 55–60 °C), and AI alarms without a clear, mapped main signal.
+- **Alarms shown:** de-duplicated, with plausible values (humidity and soil moisture
   0–100, no exact zeros). For each episode: first, strongest and last alarm, 5–10 per monument.
 
 The full, generated list of assumptions and data quirks is in [docs/data_notes.md](docs/data_notes.md).
 
 ## Assumptions that need a human
 
-1. **History and science text:** Ranverso story (facts not in the ARGUS data), all 26 plain-language threat texts,
+1. **History and science text:** the five stories (facts not in the ARGUS data: e.g. the Delos myth, Greek names of
+   the Delos houses), all 99 plain-language threat texts, the quiz, the citizen checklist,
    alarm explanations, discussion prompts. Native-speaker check of all Greek.
 2. **Sensor cards:** names, sentences and costs; merged types (lux + UV + pyranometer; vibration + accelerometer;
    soil moisture + water potential; people counter + barrier sensor).
-3. **Mappings:** threat → cards (most entries flagged), rule → cards (8 flagged, e.g. `lucretili:R10_solar_zscore`,
+3. **Mappings:** threat → cards and which are *primary* (52 of 66 entries flagged), rule → cards (12 of 39 flagged,
+   including the AI pseudo-rules for Delos and e.g. `lucretili:R10_solar_zscore`,
    whose name says "solar" but whose description says "GNSS").
 4. **Units:** not in the alarm data. We assume mm for rain and % for humidity and soil moisture. Ask ARGUS.
 5. **Ranverso data:** soil moisture flat at about 2.47 for three weeks (stuck sensor?), all indoor humidity values
    above 100, double-registered instruments, the weather station marked `verification_required`.
-6. **Game balance:** budget 10, scoring weights, verdict thresholds (85 / 60 / 30). Check in the playtest.
+6. **Game balance:** budget 8, scoring weights (20 / 8 / 25 / 15), observer cost, verdict thresholds (85 / 60 / 30).
+   Check in the playtest.
 7. **Base-map licences:** Esri World Imagery terms for a free public game (or get a free ArcGIS key); the OSM tile
    policy allows light use only. Open national orthophotos exist for CH (swisstopo), ES (PNOA) and some IT/GR regions.
 8. **Ranverso weather station position** is marked temporary by ARGUS (dashed marker in the game).
@@ -138,19 +181,39 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 - `npm run screenshots` runs axe-core (WCAG 2.1 A/AA) on every screen, in both languages, on phone and desktop.
   It catches about a third of real issues: a manual screen-reader pass (NVDA, VoiceOver, TalkBack) is still needed.
 
+## Community stats and class codes
+
+Without any setup, choices and quiz answers stay on each device (and a class can take turns on one device). To share
+them across devices:
+
+1. Create a free project at supabase.com and run [supabase/schema.sql](supabase/schema.sql) in its SQL editor.
+   It creates two tables and security rules that let the public key add and read anonymous rows, never change or
+   delete them.
+2. Build with the project's URL and public *anon* key (Project settings → API):
+   `VITE_SUPABASE_URL=https://xxxx.supabase.co VITE_SUPABASE_ANON_KEY=... npm run build`
+   (or set them as environment variables on Netlify / Vercel / GitHub Actions). The anon key is meant to be public;
+   never put the *service_role* key in the build.
+3. When the shared store cannot be reached, the game keeps working on the device and sends what it saved later.
+
+Anyone with the public key can add rows, so a public launch should watch for spam (Supabase rate limits, or a small
+edge function). Records hold no names, times or device ids.
+
+## Offline
+
+`npm run build` writes `dist/sw.js`, a small service worker with the list of built files. After one visit the game,
+its data and the drawn plan work without internet. Map pictures are never stored (their providers do not allow
+offline copies). A new build replaces the stored copy on the next visit.
+
 ## Next steps (to 24 October)
 
 | By | Task |
 |---|---|
-| 14 Oct | Review authored content (story facts, Greek, mappings, units); fix from feedback |
-| 18 Oct | **Slice done:** Ranverso polished; offline support (service worker / PWA) |
-| 19–20 Oct | Lucretili and Schenkenberg packs (both have rule alarms: crack, tilt, temperature, vibration) |
-| 20–21 Oct | Delos and Baltanás packs; decide the alarm step for DL-only sites (e.g. map top DL features to cards, flagged) |
-| 21 Oct | Community stats behind `CommunityStore` (Supabase or Firebase optional, local fallback stays); class code (teacher creates a 6-character code, players join, teacher sees the group's choices next to ARGUS) |
-| 21 Oct | Pre/post quiz (5 questions, same before and after, stored anonymously with the play record) |
-| 21 Oct | Map: community heat-map of where players put each sensor; decide base-map licences; ask ARGUS for real footprints (then "inside/outside" can teach placement) |
-| 22 Oct | **Playtest** with a class or visitors; manual screen-reader and keyboard audit |
-| 23 Oct | Fixes, final screenshots, short video, submission text |
+| 14 Oct | Review authored content (stories, Greek, threat texts, primary cards, quiz, checklist, units); fix from feedback |
+| 15 Oct | `python3 -I tools/fetch_backdrops.py` with internet (drawn plans for the four new monuments); refresh `docs/screenshots` with `npm run screenshots` on a machine with internet |
+| 16 Oct | Set up Supabase (optional) and publish the site (GitHub Pages / Netlify); test a class code across two devices |
+| 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor and the meaning of the AI alarms |
+| 22 Oct | **Playtest** with a class or visitors (pre/post quiz gives the evidence); manual screen-reader and keyboard audit |
+| 23 Oct | Fixes, short video, submission text |
 | 24 Oct | Submit (deadline 25 Oct, 23:59 Athens) |
 
 ## Data and credentials

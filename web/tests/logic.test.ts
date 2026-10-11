@@ -36,7 +36,7 @@ describe("data pack", () => {
     for (const m of data.monuments.filter(isPlayable)) expect(m.budget, m.pilot_key).toBeGreaterThan(0);
   });
 
-  it("lets every level of every monument reach a full score within the budget", () => {
+  it("lets every level of every monument reach a full score within the budget, but not buy everything", () => {
     for (const mon of data.monuments.filter(isPlayable)) {
       for (const lv of mon.levels.filter((l) => l.available)) {
         const threats = missionScenarios(mon, lv.id);
@@ -51,6 +51,10 @@ describe("data pack", () => {
           if (s.total === 100) perfect = Math.min(perfect, s.spentCoins);
         }
         expect(perfect, `${mon.pilot_key} ${lv.id}`).toBeLessThanOrEqual(mon.budget);
+        // ...but buying every card that helps does not fit, so the player has to choose.
+        const everything = new Set([...threats.flatMap((s) => s.capable_cards), ...(rule?.detect_with.flat() ?? [])]);
+        const all = [...everything].reduce((sum, c) => sum + cards.get(c)!.cost, 0);
+        expect(all, `${mon.pilot_key} ${lv.id}`).toBeGreaterThan(mon.budget);
       }
     }
   });
