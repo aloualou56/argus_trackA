@@ -43,40 +43,40 @@ Snapshot fetched at: 2026-10-11T21:32:59+03:00
 
 ### Scenarios
 
-| threat id | scenario key | category | MR | label | capable cards |
+| threat id | scenario key | category | MR | label | capable cards (* = primary) |
 |---|---|---|---|---|---|
-| 123 | ranverso.water.groundwater | water | 14.0 | Extreme priority | soil_moisture, humidity |
-| 121 | ranverso.pests.woodworms | pests | 13.0 | Extreme priority | acoustic, humidity, temperature |
-| 108 | ranverso.incorrect-rh.prolonged-wet-periods | incorrect_relative_humidity | 11.0 | High priority | humidity |
-| 113 | ranverso.light-uv.solar-radiation-uv | light_uv | 11.0 | High priority | light_uv |
-| 114 | ranverso.pollutants.air-pollution | pollutants | 11.0 | High priority | air_quality |
-| 110 | ranverso.incorrect-temperature.freeze-thaw-cycles | incorrect_temperature | 9.0 | Medium priority | temperature, humidity, weather_station |
-| 115 | ranverso.pollutants.acid-rain | pollutants | 9.0 | Medium priority | rain_gauge, air_quality |
-| 119 | ranverso.pests.insect-infestation | pests | 9.0 | Medium priority | acoustic, humidity, temperature |
-| 120 | ranverso.pests.local-fauna | pests | 9.0 | Medium priority | camera |
-| 104 | ranverso.physical-forces.storm | physical_forces | 8.0 | Medium priority | weather_station, rain_gauge |
-| 116 | ranverso.pollutants.overloading-road-traffic | pollutants | 8.0 | Medium priority | vibration, air_quality |
-| 122 | ranverso.water.flooding | water | 8.0 | Medium priority | rain_gauge, weather_station, satellite, soil_moisture |
-| 102 | ranverso.physical-forces.earthquake | physical_forces | 7.0 | Low priority | vibration, crackmeter, tiltmeter |
-| 103 | ranverso.physical-forces.freeze-thaw-cycles | incorrect_temperature | 7.0 | Low priority | temperature, humidity, weather_station |
-| 106 | ranverso.physical-forces.wind-erosion | physical_forces | 7.0 | Low priority | weather_station |
-| 107 | ranverso.incorrect-rh.prolonged-dry-periods | incorrect_relative_humidity | 7.0 | Low priority | humidity |
-| 124 | ranverso.fire.forest-fire | fire | 7.0 | Low priority | satellite, weather_station |
-| 125 | ranverso.fire.building-fire | fire | 7.0 | Low priority | temperature |
+| 123 | ranverso.water.groundwater | water | 14.0 | Extreme priority | soil_moisture*, humidity |
+| 121 | ranverso.pests.woodworms | pests | 13.0 | Extreme priority | acoustic*, observer*, humidity, temperature |
+| 108 | ranverso.incorrect-rh.prolonged-wet-periods | incorrect_relative_humidity | 11.0 | High priority | humidity* |
+| 113 | ranverso.light-uv.solar-radiation-uv | light_uv | 11.0 | High priority | light_uv* |
+| 114 | ranverso.pollutants.air-pollution | pollutants | 11.0 | High priority | air_quality* |
+| 110 | ranverso.incorrect-temperature.freeze-thaw-cycles | incorrect_temperature | 9.0 | Medium priority | temperature*, humidity, weather_station* |
+| 115 | ranverso.pollutants.acid-rain | pollutants | 9.0 | Medium priority | rain_gauge, air_quality* |
+| 119 | ranverso.pests.insect-infestation | pests | 9.0 | Medium priority | acoustic*, observer*, humidity, temperature |
+| 120 | ranverso.pests.local-fauna | pests | 9.0 | Medium priority | observer*, camera |
+| 104 | ranverso.physical-forces.storm | physical_forces | 8.0 | Medium priority | weather_station*, rain_gauge |
+| 116 | ranverso.pollutants.overloading-road-traffic | pollutants | 8.0 | Medium priority | vibration*, air_quality* |
+| 122 | ranverso.water.flooding | water | 8.0 | Medium priority | rain_gauge*, weather_station*, satellite*, soil_moisture |
+| 102 | ranverso.physical-forces.earthquake | physical_forces | 7.0 | Low priority | vibration*, crackmeter*, tiltmeter*, observer |
+| 103 | ranverso.physical-forces.freeze-thaw-cycles | incorrect_temperature | 7.0 | Low priority | temperature*, humidity, weather_station* |
+| 106 | ranverso.physical-forces.wind-erosion | physical_forces | 7.0 | Low priority | weather_station* |
+| 107 | ranverso.incorrect-rh.prolonged-dry-periods | incorrect_relative_humidity | 7.0 | Low priority | humidity* |
+| 124 | ranverso.fire.forest-fire | fire | 7.0 | Low priority | satellite*, weather_station |
+| 125 | ranverso.fire.building-fire | fire | 7.0 | Low priority | temperature*, observer |
 | 109 | ranverso.incorrect-rh.groundwater-pollution | incorrect_relative_humidity | 6.0 | Low priority | (none) |
-| 111 | ranverso.incorrect-temperature.high-temperature | incorrect_temperature | 6.0 | Low priority | temperature, weather_station |
-| 112 | ranverso.incorrect-temperature.low-temperature | incorrect_temperature | 6.0 | Low priority | temperature, weather_station |
-| 117 | ranverso.pollutants.visitors | pollutants | 6.0 | Low priority | visitor_counter |
-| 126 | ranverso.criminals.illegal-landfill | criminals | 6.0 | Low priority | satellite, camera |
-| 127 | ranverso.criminals.vandalism-abandonment-lack-of-maintenance | criminals | 6.0 | Low priority | visitor_counter, camera |
-| 105 | ranverso.physical-forces.biohazard | pests | 3.0 | Low priority | humidity, camera |
-| 118 | ranverso.pests.biohazard | pests | 3.0 | Low priority | humidity, camera |
+| 111 | ranverso.incorrect-temperature.high-temperature | incorrect_temperature | 6.0 | Low priority | temperature*, weather_station* |
+| 112 | ranverso.incorrect-temperature.low-temperature | incorrect_temperature | 6.0 | Low priority | temperature*, weather_station* |
+| 117 | ranverso.pollutants.visitors | pollutants | 6.0 | Low priority | visitor_counter*, observer |
+| 126 | ranverso.criminals.illegal-landfill | criminals | 6.0 | Low priority | satellite*, observer*, camera |
+| 127 | ranverso.criminals.vandalism-abandonment-lack-of-maintenance | criminals | 6.0 | Low priority | observer*, visitor_counter, camera |
+| 105 | ranverso.physical-forces.biohazard | pests | 3.0 | Low priority | humidity*, observer*, camera |
+| 118 | ranverso.pests.biohazard | pests | 3.0 | Low priority | humidity*, observer*, camera |
 
 ### Levels
 
 | level | scenarios | mission | source | featured alarm |
 |---|---|---|---|---|
-| Low priority | 14 | ranverso.physical-forces.earthquake, ranverso.incorrect-rh.prolonged-dry-periods, ranverso.pollutants.visitors | curated | ranverso:R4b_soil_low:2026-09-15T20:30:00 |
+| Low priority | 14 | ranverso.physical-forces.earthquake, ranverso.incorrect-rh.prolonged-dry-periods, ranverso.pollutants.visitors | curated | ranverso:R2_rain_7d:2026-09-16T15:30:00 |
 | Medium priority | 7 | ranverso.water.flooding, ranverso.incorrect-temperature.freeze-thaw-cycles, ranverso.pollutants.overloading-road-traffic | curated | ranverso:R2_rain_7d:2026-09-10T20:30:00 |
 | High priority | 3 | ranverso.incorrect-rh.prolonged-wet-periods, ranverso.light-uv.solar-radiation-uv, ranverso.pollutants.air-pollution | curated | ranverso:R2_rain_7d:2026-09-10T20:30:00 |
 | Extreme priority | 2 | ranverso.water.groundwater, ranverso.pests.woodworms, ranverso.incorrect-rh.prolonged-wet-periods | curated | ranverso:R2_rain_7d:2026-09-10T20:30:00 |
@@ -161,7 +161,9 @@ Game-design rules (in code):
 - Levels = ABC priority labels. A level is offered only if the monument has at least one scenario with that label. Missions have 3 threats; when a level has fewer, we borrow from the next lower level, then higher.
 - Alarm plausibility: humidity and soil moisture must be 0 to 100, rain 0 to 1000, temperature -50 to 60. An exact 0 for humidity or soil moisture is treated as a sensor dropout.
 - Alarm episodes: alarms of one rule less than 48 hours apart form one episode; the game features the first, the strongest (largest multiple of the threshold) and the last alarm of each episode, at most 10.
-- Score: 25 points per mission threat covered by at least one capable card (75) plus up to 25 for budget efficiency (share of coins spent on cards that cover a mission threat or the replayed alarm). The historical alarm is shown but not scored.
+- Score (web/src/game/logic.ts): per mission threat 20 points with a primary card, 8 with only supporting cards (60); 25 if the network detects the replayed real alarm; up to 15 for the share of coins spent on cards that help with a mission threat or the alarm. The total is scaled to 100 when a part does not apply (no replayable alarm, or a threat no card can warn about).
+- Replayed alarms never come from a flat signal (a probably stuck sensor); the build refuses such a pick.
+- The human-observer card stands for regular visual inspection by people. It helps with threats people can see (pests, mould, vandalism, new cracks) but never detects an AD-RT alarm, and it is left out of the ARGUS comparison because ARGUS lists instruments only.
 - Detection: the player's network detects an alarm if, for every group in the rule's detect_with, it has at least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level without a usable alarm (e.g. DL-only sites) skips the replay with a short message.
 - Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.
 - Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.
@@ -173,6 +175,7 @@ Authored content flagged `needs_review`:
 - Card `soil_moisture`: Water Potential Sensor (Baltanas) grouped here; it measures soil water tension rather than water content.
 - Card `weather_station`: Assumes every ARGUS weather station includes wind, rain, temperature and pressure. Barometer Sensor grouped here.
 - Card `acoustic`: ARGUS lists it as 'Acoustic Emission'. Confirm the plain description with the Ranverso team.
+- Card `observer`: Not an ARGUS instrument: stands for regular visual inspection by guards, staff or trained volunteers (citizen science). Cost and the threats it helps with are game-design choices. It never counts for AD-RT alarm detection, because people do not measure day and night.
 - Card `visitor_counter`: Barrier Sensor (Baltanas, 'Barrier Event') grouped here by guess; confirm.
 - Card `camera`: Multispectral camera; confirm what ARGUS uses it for at Ranverso.
 - Card `satellite`: ARGUS lists this as a virtual 'Earth Observation Layer Instrument', not a physical sensor on site.
@@ -187,37 +190,44 @@ Authored content flagged `needs_review`:
 - Units are not in the ARGUS alarm data; these are our guesses: `baltanas:R1_ppv` (mm/s), `baltanas:R2_hum_daily_range` (%), `baltanas:R3_gnss_change` (mm), `baltanas:R4a_soil_high` (%), `baltanas:R4b_soil_range` (%), `baltanas:R6_rain_1h` (mm), `delos:R1a_rain_1h` (mm), `delos:R1b_rain_3h` (mm), `delos:R2_wind` (m/s), `lucretili:R4a_hum_spike_6h` (%), `lucretili:R4b_hum_persist_7d` (%), `lucretili:R4c_hum_rapid_1h` (%), `lucretili:R6a_rain` (mm), `lucretili:R6b_rain_cum7d` (mm), `lucretili:R9a_temp_lt` (°C), `lucretili:R9b_temp_st` (°C), `ranverso:R1_hum_inside` (%), `ranverso:R2_rain_7d` (mm), `ranverso:R3_temp_nodiff` (°C), `ranverso:R4a_soil_high` (%), `ranverso:R4b_soil_low` (%)
 - Base map `satellite`: Esri World Imagery: confirm that a free, public educational game may use these tiles without an ArcGIS key, or get a free ArcGIS Location Platform key. Alternatives with open licences: swisstopo SWISSIMAGE (CH), PNOA (ES), regional orthophotos (IT, GR).
 - Base map `streets`: OpenStreetMap tile usage policy allows light use with attribution and no offline caching. For a large public launch, switch to a tile provider.
-- Threat category `criminals` -> ['visitor_counter', 'camera']
-- Threat category `dissociation` -> []: ICCROM 'dissociation' (loss of objects, records or knowledge) cannot be sensed.
-- Threat category `drought` -> ['soil_moisture', 'rain_gauge', 'weather_station', 'satellite']
-- Threat category `fire` -> ['satellite', 'temperature']: The deck has no smoke or flame detector.
-- Threat category `pests` -> ['acoustic', 'humidity', 'temperature', 'camera']
-- Threat category `physical_forces` -> ['crackmeter', 'tiltmeter', 'vibration', 'gnss']
-- Threat category `plant_growth` -> ['camera', 'satellite', 'soil_moisture', 'humidity']
-- Threat category `salts` -> ['humidity', 'soil_moisture', 'camera']
-- Threat category `vandalism` -> ['visitor_counter', 'camera']
-- Threat category `water` -> ['rain_gauge', 'soil_moisture', 'weather_station', 'satellite']
-- Scenario `ranverso.criminals.illegal-landfill` -> ['satellite', 'camera']
-- Scenario `ranverso.criminals.vandalism-abandonment-lack-of-maintenance` -> ['visitor_counter', 'camera']
-- Scenario `ranverso.fire.building-fire` -> ['temperature']: Weak match: no smoke detector in the deck.
-- Scenario `ranverso.fire.forest-fire` -> ['satellite', 'weather_station']
-- Scenario `ranverso.incorrect-rh.groundwater-pollution` -> []: No card measures water chemistry; needs lab tests.
-- Scenario `ranverso.pests.biohazard` -> ['humidity', 'camera']: 'biohazard' is ambiguous in the source; we read it as mould/biological growth.
-- Scenario `ranverso.pests.insect-infestation` -> ['acoustic', 'humidity', 'temperature']
-- Scenario `ranverso.pests.local-fauna` -> ['camera']
-- Scenario `ranverso.pests.woodworms` -> ['acoustic', 'humidity', 'temperature']: Acoustic emission may hear larvae; damp and warm conditions favour them.
-- Scenario `ranverso.physical-forces.biohazard` -> ['humidity', 'camera']: Same as ranverso.pests.biohazard.
-- Scenario `ranverso.pollutants.acid-rain` -> ['rain_gauge', 'air_quality']
-- Scenario `ranverso.pollutants.overloading-road-traffic` -> ['vibration', 'air_quality']: Traffic shakes the building and brings exhaust gases.
-- Scenario `ranverso.pollutants.visitors` -> ['visitor_counter']
-- Scenario `ranverso.water.groundwater` -> ['soil_moisture', 'humidity']: Rising damp: wet ground and damp walls.
+- Threat category `criminals` -> ['observer', 'visitor_counter', 'camera'], primary ['observer']
+- Threat category `dissociation` -> [], primary []: ICCROM 'dissociation' (loss of objects, records or knowledge) cannot be sensed.
+- Threat category `drought` -> ['soil_moisture', 'rain_gauge', 'weather_station', 'satellite'], primary ['soil_moisture', 'rain_gauge']
+- Threat category `fire` -> ['satellite', 'temperature'], primary ['satellite']: The deck has no smoke or flame detector.
+- Threat category `freeze_thaw` -> ['temperature', 'humidity', 'weather_station'], primary ['temperature', 'weather_station']
+- Threat category `pests` -> ['acoustic', 'observer', 'humidity', 'temperature', 'camera'], primary ['acoustic', 'observer']
+- Threat category `physical_forces` -> ['crackmeter', 'tiltmeter', 'vibration', 'gnss', 'observer'], primary ['crackmeter', 'tiltmeter', 'vibration', 'gnss']
+- Threat category `plant_growth` -> ['camera', 'satellite', 'observer', 'soil_moisture', 'humidity'], primary ['camera', 'satellite', 'observer']
+- Threat category `salts` -> ['humidity', 'soil_moisture', 'camera', 'observer'], primary ['humidity']
+- Threat category `vandalism` -> ['observer', 'visitor_counter', 'camera'], primary ['observer']
+- Threat category `water` -> ['rain_gauge', 'soil_moisture', 'weather_station', 'satellite'], primary ['rain_gauge', 'soil_moisture']
+- Scenario `ranverso.criminals.illegal-landfill` -> ['satellite', 'observer', 'camera'], primary ['satellite', 'observer']
+- Scenario `ranverso.criminals.vandalism-abandonment-lack-of-maintenance` -> ['observer', 'visitor_counter', 'camera'], primary ['observer']
+- Scenario `ranverso.fire.building-fire` -> ['temperature', 'observer'], primary ['temperature']: Weak match: no smoke detector in the deck.
+- Scenario `ranverso.fire.forest-fire` -> ['satellite', 'weather_station'], primary ['satellite']
+- Scenario `ranverso.incorrect-rh.groundwater-pollution` -> [], primary []: No card measures water chemistry; needs lab tests.
+- Scenario `ranverso.incorrect-temperature.freeze-thaw-cycles` -> ['temperature', 'humidity', 'weather_station'], primary ['temperature', 'weather_station']
+- Scenario `ranverso.pests.biohazard` -> ['humidity', 'observer', 'camera'], primary ['humidity', 'observer']: 'biohazard' is ambiguous in the source; we read it as mould/biological growth.
+- Scenario `ranverso.pests.insect-infestation` -> ['acoustic', 'observer', 'humidity', 'temperature'], primary ['acoustic', 'observer']
+- Scenario `ranverso.pests.local-fauna` -> ['observer', 'camera'], primary ['observer']
+- Scenario `ranverso.pests.woodworms` -> ['acoustic', 'observer', 'humidity', 'temperature'], primary ['acoustic', 'observer']: Acoustic emission may hear larvae; people find fresh exit holes and wood dust. Damp and warm conditions only favour them.
+- Scenario `ranverso.physical-forces.biohazard` -> ['humidity', 'observer', 'camera'], primary ['humidity', 'observer']: Same as ranverso.pests.biohazard.
+- Scenario `ranverso.physical-forces.earthquake` -> ['vibration', 'crackmeter', 'tiltmeter', 'observer'], primary ['vibration', 'crackmeter', 'tiltmeter']: Vibration records the shaking; crack and tilt meters show damage; people can spot new cracks afterwards.
+- Scenario `ranverso.physical-forces.freeze-thaw-cycles` -> ['temperature', 'humidity', 'weather_station'], primary ['temperature', 'weather_station']
+- Scenario `ranverso.physical-forces.storm` -> ['weather_station', 'rain_gauge'], primary ['weather_station']
+- Scenario `ranverso.pollutants.acid-rain` -> ['rain_gauge', 'air_quality'], primary ['air_quality']
+- Scenario `ranverso.pollutants.overloading-road-traffic` -> ['vibration', 'air_quality'], primary ['vibration', 'air_quality']: Traffic shakes the building and brings exhaust gases.
+- Scenario `ranverso.pollutants.visitors` -> ['visitor_counter', 'observer'], primary ['visitor_counter']
+- Scenario `ranverso.water.flooding` -> ['rain_gauge', 'weather_station', 'satellite', 'soil_moisture'], primary ['rain_gauge', 'weather_station', 'satellite']
+- Scenario `ranverso.water.groundwater` -> ['soil_moisture', 'humidity'], primary ['soil_moisture']: Rising damp: the ground probe watches the cause directly; air humidity only shows the effect.
 - `content/monuments/baltanas.json` (draft): monument name and place in Greek and English
 - `content/monuments/delos.json` (draft): monument name and place in Greek and English
 - `content/monuments/lucretili.json` (draft): monument name and place in Greek and English
 - `content/monuments/ranverso.json` story: History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).
 - `content/monuments/ranverso.json`: all 26 plain-language threat texts are placeholders (check science and Greek)
+- `ranverso` discussion prompt "One ARGUS soil-moisture sensor here showed almost the same v...": From the R4b_soil_low alarms (values 2.457 to 2.476 against a limit of 5, sensor A8610A333526680F). A stuck sensor is our reading, not confirmed by ARGUS, so the prompt asks rather than states. It replaces replaying this alarm in the Low level.
 - `ranverso` discussion prompt "Several ARGUS sensors sit next to the left altar inside the ...": Based on alarm variable names ('in_left_altar_hum', 'altar_tilt_z'). Check with the Ranverso team; 'Αγία Τράπεζα' for a Catholic side altar may need a better word.
 - `ranverso` alarm explanation for `R2_rain_7d` and its linked threats ['ranverso.water.groundwater', 'ranverso.water.flooding', 'ranverso.incorrect-rh.prolonged-wet-periods', 'ranverso.physical-forces.storm']
 - `ranverso` alarm explanation for `R4b_soil_low` and its linked threats ['ranverso.water.groundwater', 'ranverso.incorrect-rh.prolonged-dry-periods']
-- `ranverso` mission picks per level and budget (10 coins)
+- `ranverso` mission picks per level and budget (8 coins)
 - `content/monuments/schenkenberg.json` (draft): monument name and place in Greek and English
