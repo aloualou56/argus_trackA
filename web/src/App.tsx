@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { LocalCommunityStore } from "./community/store";
+import { createCommunityStore } from "./community";
+import { classCodeFromUrl, loadClassCode, saveClassCode } from "./community/classCode";
+import { quizSummaryOf } from "./community/store";
 import { GameMap, type MapApi } from "./components/GameMap";
 import { Icon } from "./components/Icon";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
@@ -14,8 +16,9 @@ import { Quiz } from "./screens/Quiz";
 import { Reveal } from "./screens/Reveal";
 import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
+import { Teacher } from "./screens/Teacher";
 
-type Screen = "home" | Step | "quizPre" | "quizPost";
+type Screen = "home" | "teacher" | Step | "quizPre" | "quizPost";
 
 const isStep = (screen: Screen): screen is Step => (STEPS as readonly string[]).includes(screen);
 /** What the map shows behind the quiz screens. */
@@ -33,6 +36,8 @@ export interface ScreenProps {
   data: GameData;
   mon: Monument;
   session: Session;
+  /** Class the player joined, if any: stored with every record so a teacher can see the group. */
+  classCode: string | null;
   go: (screen: Screen) => void;
   announce: (message: string) => void;
 }
@@ -51,7 +56,17 @@ export default function App() {
   // The quiz before a game is asked once per visit; its marks are compared with the quiz after each game.
   const [preQuiz, setPreQuiz] = useState<{ asked: boolean; marks: boolean[] | null }>({ asked: false, marks: null });
   const [message, setMessage] = useState("");
-  const community = useMemo(() => new LocalCommunityStore(), []);
+  const community = useMemo(() => createCommunityStore(), []);
+  // A class link (?class=ABC234) wins over the code remembered on this device.
+  const [classCode, setClassCodeState] = useState<string | null>(() => {
+    const fromLink = classCodeFromUrl(window.location.search);
+    if (fromLink) saveClassCode(fromLink);
+    return fromLink ?? loadClassCode();
+  });
+  const setClassCode = useCallback((code: string | null) => {
+    saveClassCode(code);
+    setClassCodeState(code);
+  }, []);
   const mapApi = useRef<MapApi | null>(null);
   const mainRef = useRef<HTMLElement>(null);
   const firstScreen = useRef(true);
@@ -74,7 +89,14 @@ export default function App() {
 
   // Move focus to the new screen's heading so keyboard and screen-reader users start there.
   useEffect(() => {
-    const heading = screen === "quizPre" ? t("quiz.preTitle") : screen === "quizPost" ? t("quiz.postTitle") : null;
+    const heading =
+      screen === "quizPre"
+        ? t("quiz.preTitle")
+        : screen === "quizPost"
+          ? t("quiz.postTitle")
+          : screen === "teacher"
+            ? t("teacher.title")
+            : null;
     document.title =
       screen === "home" ? t("app.title") : `${heading ?? t(stepKey(screen as Step))} · ${t("app.title")}`;
     if (firstScreen.current) {
@@ -91,7 +113,7 @@ export default function App() {
   const mon = data && game ? data.monuments.find((m) => m.pilot_key === game.pilot) : undefined;
   const playable = mon && isPlayable(mon) ? mon : null;
   const session: Session | null = game && { ...game, picks: countPicks(game.placements) };
-  const inGame = screen !== "home" && session && playable;
+  const inGame = screen !== "home" && screen !== "teacher" && session && playable;
 
   const setPlacements = useCallback((update: (prev: Placement[]) => Placement[]) => {
     setGame((g) => (g ? { ...g, placements: update(g.placements) } : g));
@@ -117,9 +139,25 @@ export default function App() {
         </button>
       </div>
     );
+  } else if (screen === "teacher") {
+    body = (
+      <Teacher
+        data={data}
+        community={community}
+        classCode={classCode}
+        setClassCode={setClassCode}
+        onBack={() => setScreen("home")}
+      />
+    );
   } else if (!inGame) {
     body = (
       <Home
+        classCode={classCode}
+        setClassCode={(code) => {
+          setClassCode(code);
+          announce(code ? t("class.joined", { code }) : t("class.left"));
+        }}
+        onTeacher={() => setScreen("teacher")}
         data={data}
         pilot={homePilot}
         setPilot={setHomePilot}
@@ -131,7 +169,7 @@ export default function App() {
       />
     );
   } else {
-    const props: ScreenProps = { data, mon: playable, session, go, announce };
+    const props: ScreenProps = { data, mon: playable, session, classCode, go, announce };
     const replay = () => {
       setPlacements(() => []);
       setScreen(STEPS[0]);
@@ -159,6 +197,7 @@ export default function App() {
             questions={data.quiz.questions}
             phase="post"
             before={preQuiz.marks}
+            savedNote={t(community.kind === "shared" ? "quiz.savedShared" : "quiz.saved")}
             announce={announce}
             onDone={async (marks) => {
               try {
@@ -168,8 +207,17 @@ export default function App() {
                   pre: preQuiz.marks,
                   post: marks,
                   day: new Date().toISOString().slice(0, 10),
+                  ...(classCode ? { classCode } : {}),
                 });
-                return await community.quizSummary();
+                const summary = await quizSummaryOf(community, classCode ?? undefined);
+                if (summary.withPre < 2) return null;
+                const key = classCode ? "quiz.class" : community.kind === "shared" ? "quiz.everyone" : "quiz.device";
+                return t(key, {
+                  n: summary.withPre,
+                  pre: i18n.number(summary.averagePre),
+                  post: i18n.number(summary.averagePost),
+                  total: data.quiz.questions.length,
+                });
               } catch {
                 return null;
               }

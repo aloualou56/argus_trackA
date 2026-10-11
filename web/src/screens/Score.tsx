@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
-import { topCard, type CommunityStore, type Summary } from "../community/store";
+import { summaryOf, topCard, type CommunityStore, type Summary } from "../community/store";
 import { Icon } from "../components/Icon";
 import { cardById, featuredAlarm, humanCards, missionScenarios, ruleFor, score, type CoverLevel } from "../game/logic";
 import { useI18n, type MessageKey } from "../i18n";
@@ -19,7 +19,7 @@ const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: 
   unscored: { cls: "learn is-info", icon: "talk", key: "score.noSensorTag" },
 };
 
-export function Score({ data, mon, session, go, community, onReplay, onQuiz }: Props) {
+export function Score({ data, mon, session, classCode, go, community, onReplay, onQuiz }: Props) {
   const { t, pick, list, number } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level);
@@ -42,14 +42,17 @@ export function Score({ data, mon, session, go, community, onReplay, onQuiz }: P
         score: result.total,
         detected,
         day: new Date().toISOString().slice(0, 10),
+        ...(classCode ? { classCode } : {}),
       })
-      .then(() => community.summary(mon.pilot_key, session.level))
+      .then(() => summaryOf(community, { monument: mon.pilot_key, level: session.level, classCode: classCode ?? undefined }))
       .then(setSummary)
       .catch(() => setSummary(null));
-  }, [community, mon.pilot_key, session, result.total, detected]);
+  }, [community, mon.pilot_key, session, result.total, detected, classCode]);
 
   const names = (ids: string[]) => list(ids.map((id) => pick(cards.get(id)?.name)));
   const top = summary && topCard(summary, humanCards(data));
+  // Read after the summary arrived, so it says where that summary came from.
+  const shared = summary !== null && community.kind === "shared";
   const argusCount = (card: string) => mon.installed.by_card.find((r) => r.card === card)?.count ?? 0;
 
   return (
@@ -117,10 +120,10 @@ export function Score({ data, mon, session, go, community, onReplay, onQuiz }: P
       </section>
 
       <section className="panel community" aria-labelledby="community-title">
-        <h2 id="community-title">{t("score.community")}</h2>
+        <h2 id="community-title">{classCode ? t("score.communityClass", { code: classCode }) : t("score.community")}</h2>
         {summary && summary.games > 1 && top ? (
           <>
-            <p>{t("score.communityCount", { n: summary.games })}</p>
+            <p>{t(shared ? "score.communityCountShared" : "score.communityCount", { n: summary.games })}</p>
             <p>
               {t("score.communityTop", {
                 name: pick(cards.get(top.card)?.name),
@@ -132,7 +135,7 @@ export function Score({ data, mon, session, go, community, onReplay, onQuiz }: P
         ) : (
           <p>{t("score.communityFirst")}</p>
         )}
-        <p className="small">{t("score.communityLocal")}</p>
+        <p className="small">{t(shared ? "score.communityShared" : "score.communityLocal")}</p>
       </section>
 
       <section className="panel quiz-invite" aria-labelledby="quiz-invite-title">

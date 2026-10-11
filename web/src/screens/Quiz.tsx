@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import type { QuizSummary } from "../community/store";
 import { Icon } from "../components/Icon";
 import { countRight, markQuiz } from "../game/logic";
 import type { QuizQuestion } from "../game/types";
@@ -11,19 +10,21 @@ interface Props {
   phase: "pre" | "post";
   /** Marks from the quiz before the game, if the player did it (post only). */
   before?: boolean[] | null;
-  /** Called with right/wrong per question once the player is done. */
-  onDone: (marks: boolean[]) => Promise<QuizSummary | null> | void;
+  /** Called with right/wrong per question once the player is done; may return a sentence about the group. */
+  onDone: (marks: boolean[]) => Promise<string | null> | void;
+  /** Where answers are kept (post only). */
+  savedNote?: string;
   onSkip?: () => void;
   announce: (message: string) => void;
   /** Buttons shown under the post-quiz results. */
   after?: ReactNode;
 }
 
-export function Quiz({ questions, phase, before, onDone, onSkip, announce, after }: Props) {
-  const { t, pick, number } = useI18n();
+export function Quiz({ questions, phase, before, onDone, onSkip, announce, after, savedNote }: Props) {
+  const { t, pick } = useI18n();
   const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
   const [marks, setMarks] = useState<boolean[] | null>(null);
-  const [summary, setSummary] = useState<QuizSummary | null>(null);
+  const [groupNote, setGroupNote] = useState<string | null>(null);
   const [hint, setHint] = useState("");
   const resultsRef = useRef<HTMLHeadingElement>(null);
 
@@ -45,7 +46,7 @@ export function Quiz({ questions, phase, before, onDone, onSkip, announce, after
     const done = onDone(result);
     if (phase === "post") {
       setMarks(result);
-      setSummary((await done) ?? null);
+      setGroupNote((await done) ?? null);
     }
   };
 
@@ -74,17 +75,8 @@ export function Quiz({ questions, phase, before, onDone, onSkip, announce, after
             </li>
           ))}
         </ol>
-        {summary && summary.withPre > 1 && (
-          <p className="note">
-            {t("quiz.device", {
-              n: summary.withPre,
-              pre: number(summary.averagePre),
-              post: number(summary.averagePost),
-              total,
-            })}
-          </p>
-        )}
-        <p className="small">{t("quiz.saved")}</p>
+        {groupNote && <p className="note">{groupNote}</p>}
+        {savedNote && <p className="small">{savedNote}</p>}
         {after}
       </div>
     );

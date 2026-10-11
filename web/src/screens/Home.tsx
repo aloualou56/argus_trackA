@@ -1,4 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
+import { normalizeClassCode } from "../community/classCode";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
 import type { GameData, LevelId, LevelSummary } from "../game/types";
@@ -11,6 +12,83 @@ interface Props {
   setPilot: (pilot: string) => void;
   initialLevel?: LevelId;
   onStart: (pilot: string, level: LevelId) => void;
+  classCode: string | null;
+  setClassCode: (code: string | null) => void;
+  onTeacher: () => void;
+}
+
+/** Join or leave a class. Lives inside the home form, so Enter here joins instead of starting the game. */
+function ClassPanel({ classCode, setClassCode, onTeacher }: Pick<Props, "classCode" | "setClassCode" | "onTeacher">) {
+  const { t } = useI18n();
+  const [typed, setTyped] = useState("");
+  const [error, setError] = useState(false);
+  const join = () => {
+    const code = normalizeClassCode(typed);
+    setError(!code);
+    if (code) {
+      setClassCode(code);
+      setTyped("");
+    }
+  };
+  const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      join();
+    }
+  };
+  return (
+    <section className="panel class-panel" aria-labelledby="class-title">
+      <h2 id="class-title">{t("class.title")}</h2>
+      {classCode ? (
+        <>
+          <p>{t("class.in", { code: classCode })}</p>
+          <button type="button" className="btn btn-quiet" onClick={() => setClassCode(null)}>
+            {t("class.leave")}
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="hint">{t("class.help")}</p>
+          <label className="field-label" htmlFor="class-code">
+            {t("class.label")}
+          </label>
+          <div className="field-row">
+            <input
+              id="class-code"
+              className="field"
+              type="text"
+              inputMode="text"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              maxLength={8}
+              value={typed}
+              aria-invalid={error}
+              aria-describedby={error ? "class-error" : undefined}
+              onChange={(e) => {
+                setTyped(e.target.value);
+                setError(false);
+              }}
+              onKeyDown={onKey}
+            />
+            <button type="button" className="btn btn-secondary" onClick={join}>
+              {t("class.join")}
+            </button>
+          </div>
+          {error && (
+            <p id="class-error" className="field-error">
+              {t("class.invalid")}
+            </p>
+          )}
+        </>
+      )}
+      <p className="teacher-link">
+        <button type="button" className="btn btn-quiet" onClick={onTeacher}>
+          {t("class.teacher")}
+        </button>
+      </p>
+    </section>
+  );
 }
 
 /** Highest available level: it carries the monument's story hook. */
@@ -18,7 +96,7 @@ function defaultLevel(levels: LevelSummary[]): LevelId | undefined {
   return [...levels].reverse().find((l) => l.available)?.id;
 }
 
-export function Home({ data, pilot, setPilot, initialLevel, onStart }: Props) {
+export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, setClassCode, onTeacher }: Props) {
   const { t, pick } = useI18n();
   const mon = data.monuments.find((m) => m.pilot_key === pilot);
   const [level, setLevel] = useState<LevelId | undefined>(initialLevel ?? (mon && defaultLevel(mon.levels)));
@@ -106,6 +184,8 @@ export function Home({ data, pilot, setPilot, initialLevel, onStart }: Props) {
           ))}
         </fieldset>
       )}
+
+      <ClassPanel classCode={classCode} setClassCode={setClassCode} onTeacher={onTeacher} />
 
       <div className="actions">
         <button type="submit" className="btn btn-primary btn-big" disabled={!mon?.playable || !level}>

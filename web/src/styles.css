@@ -325,6 +325,57 @@ main {
   margin-top: 0;
 }
 
+/* ------------------------------------------------------------------ class code and teacher page */
+
+.class-panel {
+  margin-top: 1.5rem;
+}
+.field-label {
+  display: block;
+  margin: 0.5rem 0 0.35rem;
+  font-weight: 650;
+}
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.field {
+  flex: 1 1 10rem;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--edge);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.15rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.field[aria-invalid="true"] {
+  border-color: var(--no);
+  border-style: dashed;
+}
+.field-error {
+  margin: 0.5rem 0 0;
+  color: var(--no);
+  font-weight: 650;
+}
+.teacher-link {
+  margin: 0.75rem 0 0;
+}
+.class-code {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--primary);
+}
+.class-link {
+  overflow-wrap: anywhere;
+}
+
 /* ------------------------------------------------------------------ quiz */
 
 .quiz-question legend {

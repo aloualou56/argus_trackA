@@ -323,6 +323,47 @@ async function playEveryMonument(browser, lang) {
   await context.close();
 }
 
+// Class code: a wrong code is refused, a right one is joined, the score shows the class, and the
+// teacher page lists the class's game.
+async function playClassAndTeacher(browser, lang) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const prefix = `${lang}-phone-class`;
+  console.log(`\n${prefix}`);
+  await page.goto(URL_BASE);
+  const field = page.getByLabel(t["class.label"]);
+  await field.fill("ab-10");
+  await field.press("Enter"); // must join (and fail), not start the game
+  if (!(await page.getByText(t["class.invalid"]).isVisible())) note(`${prefix}: wrong class code accepted`);
+  await field.fill("abc 234");
+  await page.getByRole("button", { name: t["class.join"] }).click();
+  if (!(await page.locator("#main").getByText(fill(t["class.in"], { code: "ABC234" })).isVisible())) note(`${prefix}: class not joined`);
+  await checkPage(page, `${prefix} home`);
+  await shot(page, `${prefix}-1-home`);
+
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
+  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("button", { name: t["reveal.continue"] }).click();
+  await page.getByRole("button", { name: t["event.continue"] }).click();
+  if (!(await page.getByRole("heading", { name: fill(t["score.communityClass"], { code: "ABC234" }) }).isVisible())) {
+    note(`${prefix}: score does not show the class`);
+  }
+  await page.getByRole("button", { name: t["score.otherLevel"] }).click();
+  await page.getByRole("button", { name: t["class.teacher"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["teacher.title"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} teacher`);
+  if (!(await page.getByText(fill(t["teacher.games"], { n: 1 })).isVisible())) note(`${prefix}: teacher page misses the game`);
+  await checkPage(page, `${prefix} teacher`);
+  await shot(page, `${prefix}-2-teacher`);
+  await context.close();
+}
+
 // Map pictures blocked (offline, or a sandbox that only allows its own files): the game must
 // switch to the drawn plan by itself, say so, and stay fully playable.
 async function playWithoutMapPictures(browser, lang) {
@@ -374,6 +415,7 @@ try {
   if (!only) for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
+  if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);
   if (!only) for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);
 } finally {
   await browser.close();
