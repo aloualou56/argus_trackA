@@ -210,6 +210,41 @@ class GameData(unittest.TestCase):
         centre = self.ranverso["map"]["center"]
         self.assertTrue(min(lat) - 0.001 < centre[0] < max(lat) + 0.001 and min(lon) - 0.001 < centre[1] < max(lon) + 0.001)
 
+    def test_satellite_zoom_stops_where_real_imagery_stops(self):
+        """Above this zoom the imagery provider returns a 'not yet available' picture (probe_imagery.py)."""
+        probed = json.loads((b.CONTENT_DIR / "imagery_zoom.json").read_text(encoding="utf-8"))["layers"]
+        self.assertIn("satellite", probed)
+        for mon in self.data["monuments"]:
+            zoom = mon["map"]["max_native_zoom"]["satellite"]
+            self.assertIsInstance(zoom, int)
+            self.assertTrue(14 <= zoom <= 21, (mon["pilot_key"], zoom))
+        for layer in self.data["basemaps"]["layers"]:
+            self.assertNotIn("probe_zoom", layer)
+
+    def test_site_guide_places(self):
+        """Every playable monument has a numbered site guide with real positions and both languages."""
+        for mon in self.data["monuments"]:
+            if not mon["playable"]:
+                continue
+            places = mon["places"]
+            self.assertTrue(places, mon["pilot_key"])
+            self.assertEqual([p["n"] for p in places], list(range(1, len(places) + 1)))
+            for place in places:
+                for field in ("name", "note"):
+                    self.assertTrue(place[field]["en"] and place[field]["el"], (mon["pilot_key"], place["id"]))
+                self.assertTrue(place["sources"])
+                if place["outline"]:
+                    self.assertGreaterEqual(len(place["outline"]), 3)
+        # Lucretili's three places are kilometres apart: that is why the guide is needed
+        luc = next(m for m in self.data["monuments"] if m["pilot_key"] == "lucretili")
+        pts = [(p["lat"], p["lon"]) for p in luc["places"]]
+        for i in range(len(pts)):
+            for j in range(i + 1, len(pts)):
+                self.assertGreater(b.metres_between(list(pts[i]), list(pts[j])), 1000)
+        tips = self.data["site_guide"]["where"]
+        self.assertEqual([t["id"] for t in tips], ["inside", "walls", "ground", "open"])
+        self.assertTrue(all(set(t["cards"]) <= self.card_ids for t in tips))
+
     def test_alarm_sensors_have_positions(self):
         for alarm in self.ranverso["alarms"]:
             for instrument in alarm["instruments"]:

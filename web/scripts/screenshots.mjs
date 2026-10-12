@@ -72,6 +72,18 @@ async function expectFocusOnHeading(page, label) {
 
 const ranverso = data.monuments.find((m) => m.pilot_key === "ranverso");
 
+/** Windows sometimes locks a screenshot file for a moment (antivirus, an open preview): retry. */
+async function retryWrite(action) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await action();
+    } catch (e) {
+      if (attempt >= 4 || !/UNKNOWN|EBUSY|EPERM|EACCES/.test(String(e))) throw e;
+      await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+    }
+  }
+}
+
 /** The quiz before the game: skipped, or answered with the given choice per question (an index). */
 async function preQuiz(page, t, answer = null) {
   await page.getByRole("heading", { level: 1, name: t["quiz.preTitle"] }).waitFor();
@@ -103,9 +115,9 @@ async function shot(page, name) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(300);
   if (name.includes("-phone-")) {
-    await page.screenshot({ path: join(outDir, `${name}-panel.png`), fullPage: true });
+    await retryWrite(() => page.screenshot({ path: join(outDir, `${name}-panel.png`), fullPage: true }));
   }
-  await page.screenshot({ path: join(outDir, `${name}.png`) });
+  await retryWrite(() => page.screenshot({ path: join(outDir, `${name}.png`) }));
   console.log(`  saved ${name}.png`);
 }
 
@@ -152,7 +164,7 @@ async function play(browser, lang, vpName) {
   await expectFocusOnHeading(page, `${prefix} mission`);
 
   if (!(await page.locator(".crosshair-label").isVisible())) note(`${prefix}: no "sensors go here" label before the first pin`);
-  await page.locator(".board-map").screenshot({ path: join(outDir, `${prefix}-3-reticle.png`) });
+  await retryWrite(() => page.locator(".board-map").screenshot({ path: join(outDir, `${prefix}-3-reticle.png`) }));
 
   // "Done" with no sensors must explain itself instead of moving on. It is aria-disabled
   // (still focusable and clickable for assistive tech), so Playwright needs force.
@@ -274,6 +286,72 @@ ${prefix}`);
 
 // Every level of every monument: reaches the alarm and score screens without errors or axe problems.
 // The default level of each monument is also saved as a picture.
+// Esri sends a grey "Map data not yet available" picture (not an error) where it has no imagery.
+// At full zoom on every monument's mission map, no satellite tile may be requested deeper than the
+// measured real imagery (content/imagery_zoom.json) and no tile may be that picture.
+const SATELLITE_TILE = /World_Imagery\/MapServer\/tile\/(\d+)\/(\d+)\/(\d+)/;
+
+async function checkImageryDepth(browser) {
+  const t = dict.en;
+  const satellite = data.basemaps.layers.find((l) => l.id === "satellite");
+  const nowhere = await fetch(satellite.url.replace("{z}", "21").replace("{y}", "1048576").replace("{x}", "873813"));
+  const placeholder = Buffer.from(await nowhere.arrayBuffer());
+  console.log(`
+imagery depth (placeholder ${placeholder.length} B)`);
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript(() => localStorage.setItem("guardian.lang", "en"));
+  const page = await context.newPage();
+  let depths = [];
+  let placeholders = 0;
+  page.on("request", (r) => {
+    const m = SATELLITE_TILE.exec(r.url());
+    if (m) depths.push(Number(m[1]));
+  });
+  page.on("response", async (r) => {
+    if (!SATELLITE_TILE.test(r.url())) return;
+    const body = await r.body().catch(() => null);
+    if (body && body.equals(placeholder)) placeholders += 1;
+  });
+  for (const mon of data.monuments.filter((m) => m.playable)) {
+    const native = mon.map.max_native_zoom.satellite;
+    // Count the whole visit: tiles loaded on the story screen are reused (not re-requested) later.
+    depths = [];
+    placeholders = 0;
+    await page.goto(URL_BASE);
+    await page.getByRole("radio", { name: new RegExp(mon.display_name.en) }).check();
+    await page.getByRole("button", { name: t["home.start"] }).click();
+    await preQuiz(page, t);
+    await page.getByRole("button", { name: t["story.continue"] }).click();
+    await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
+
+    // Site guide: one numbered marker per place, a list in the panel, and "Show on map" moves there.
+    await checkMap(page, `${mon.pilot_key} site guide`, ".place-pin", mon.places.length);
+    await checkPage(page, `${mon.pilot_key} site guide`);
+    await shot(page, `en-phone-${mon.pilot_key}-3-guide`);
+    const last = mon.places[mon.places.length - 1];
+    await page.getByRole("button", { name: `${t["mission.showOnMap"]}: ${last.name.en}`, exact: true }).click();
+    await page.waitForTimeout(1600);
+    const said = await page.locator("[aria-live=polite]").innerText();
+    if (!said.includes(last.name.en)) note(`${mon.pilot_key}: "Show on map" for ${last.name.en} was not announced (${said})`);
+    await retryWrite(() => page.locator(".board-map").screenshot({ path: join(outDir, `en-phone-${mon.pilot_key}-3-guide-focus.png`) }));
+
+    const zoomIn = page.getByRole("button", { name: t["map.zoomIn"] });
+    for (let i = 0; i < 10 && !(await zoomIn.evaluate((el) => el.classList.contains("leaflet-disabled"))); i++) {
+      await zoomIn.click();
+      await page.waitForTimeout(250);
+    }
+    await page.waitForLoadState("networkidle").catch(() => {});
+    await page.waitForTimeout(800);
+    const deepest = Math.max(...depths);
+    console.log(`  ${mon.pilot_key}: real imagery to ${native}, deepest requested ${deepest}, "not available" tiles ${placeholders}`);
+    if (deepest > native) note(`${mon.pilot_key}: satellite tiles requested at zoom ${deepest}, real imagery stops at ${native}`);
+    if (deepest < native) note(`${mon.pilot_key}: full zoom never reached the real imagery depth ${native} (got ${deepest})`);
+    if (placeholders) note(`${mon.pilot_key}: ${placeholders} "Map data not yet available" tile(s) shown`);
+    await retryWrite(() => page.locator(".board-map").screenshot({ path: join(outDir, `en-phone-${mon.pilot_key}-3-fullzoom.png`) }));
+  }
+  await context.close();
+}
+
 async function playEveryMonument(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -450,6 +528,7 @@ try {
   if (!only) for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
+  if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);
   if (!only || only === "offline") await playOffline(browser, "el");
   if (!only) for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);

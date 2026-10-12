@@ -9,6 +9,7 @@ import {
   coinsLeft,
   compareMix,
   clusterPoints,
+  nativeZoom,
   countPicks,
   coverage,
   distanceMeters,
@@ -284,6 +285,19 @@ describe("map", () => {
     for (let i = 0; i < clusters.length; i++)
       for (let j = i + 1; j < clusters.length; j++)
         expect(distanceMeters([clusters[i].lat, clusters[i].lon], [clusters[j].lat, clusters[j].lon])).toBeGreaterThan(2.5);
+  });
+
+  it("never asks for satellite tiles deeper than the real imagery at a monument", () => {
+    const satellite = data.basemaps.layers.find((l) => l.id === "satellite")!;
+    for (const mon of data.monuments) {
+      const measured = mon.map?.max_native_zoom?.satellite;
+      expect(measured, mon.pilot_key).toBeDefined();
+      expect(nativeZoom(satellite, mon)).toBe(measured);
+    }
+    const delos = data.monuments.find((m) => m.pilot_key === "delos")!;
+    expect(nativeZoom(satellite, delos)).toBeLessThan(19); // Esri has no zoom-19 imagery there
+    expect(nativeZoom(satellite, null)).toBe(satellite.max_native_zoom); // Europe overview
+    expect(nativeZoom(satellite, { map: null })).toBe(satellite.max_native_zoom);
   });
 
   it("has a map view and real sensor positions for the playable monument", () => {

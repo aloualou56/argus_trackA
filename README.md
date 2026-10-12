@@ -29,6 +29,7 @@ You need Python 3.9+ (standard library only) and Node 20+.
 python3 -I tools/build_game_data.py            # writes web/public/data/game_data.json and docs/data_notes.md
 python3 -I tools/build_game_data.py --check    # validate only
 python3 -I tools/fetch_backdrops.py            # once per new monument (needs internet): drawn-plan outlines
+python3 -I tools/probe_imagery.py              # once per new monument (needs internet): satellite depth per site
 
 # 2. Data tests (counts, plausibility, mappings)
 python3 -I -m unittest discover -s tools/tests -t tools -v
@@ -95,6 +96,17 @@ The browser loads only `game_data.json` (about 220 KB, 42 KB compressed). It nev
   sandboxed preview page), the game switches by itself to a drawn **plan**: OpenStreetMap outlines around the monument
   (ODbL, includes the real church outline) and Natural Earth coastlines (public domain), stored in
   `content/backdrops/` by `tools/fetch_backdrops.py` and shipped with the game.
+- **Site guide.** During the story and the mission, numbered markers name the main parts of each site (dashed
+  outlines where OpenStreetMap has the shape), and the mission panel lists them with "Show on map" buttons that move
+  the map and the placement cross there, plus general tips on where each kind of sensor usually goes. Places are
+  `places` in `content/monuments/<pilot>.json`: names and notes are authored (need review), positions are real
+  (`"osm"`: an outline in `content/backdrops/`, `"sensors"`: the ARGUS sensors whose description contains that text).
+  Tips are in `content/site_guide.json`. Labels that would overlap hide until you zoom in; the numbers stay.
+- **Satellite depth per site.** Esri has no high-resolution imagery everywhere, and where it has none it sends a
+  grey "Map data not yet available" picture instead of an error. `tools/probe_imagery.py` measures the deepest real
+  zoom at every ARGUS sensor (Delos 18, Ranverso and Lucretili 19, Baltanás 20, Schenkenberg 21) into
+  `content/imagery_zoom.json`. The map never asks deeper than that; it stretches the last real level, and you can
+  zoom at most two levels past it. `npm run screenshots` zooms in fully at every site and fails on any such picture.
 - **Placing:** move the map so the reticle is where you want the sensor, then press + on a card (tap the map to move
   the reticle; drag pins to adjust; tap a pin to remove it). The reticle's centre dot is the exact spot; it sits
   under the pins, lifts while the map moves and "drops" when a sensor is placed. Satellite images get no pin.
@@ -109,16 +121,16 @@ All five ARGUS monuments are already playable; this is how a sixth would be adde
    `alarm_context` for each featured rule, and `discussion_prompts`.
 3. Add scenario overrides to `content/threat_sensor_map.json` if the category defaults do not fit (each entry lists
    `cards` that help and the `primary` ones that watch the threat directly).
-4. Run `python3 -I tools/fetch_backdrops.py` (needs internet) for the drawn offline plan, then
-   `python3 -I tools/build_game_data.py`. It refuses to build if a text, mapping, mission or alarm pick is missing.
+4. Run `python3 -I tools/fetch_backdrops.py` and `python3 -I tools/probe_imagery.py` (both need internet) for the
+   drawn offline plan and the satellite depth, then `python3 -I tools/build_game_data.py`. It refuses to build if a text, mapping, mission or alarm pick is missing.
 
 **AI alarms.** Delos and Baltanás have only deep-learning (AI) alarms in the sample. An AI alarm is replayed only
 when one signal has at least 30% of the model's top feature contributions and `content/rule_sensor_map.json`
 (`dl_features`) maps that signal to a card. Wind-direction signals are deliberately not mapped. The alarm screen then
 shows the main signal and its share, not the anomaly score against its limit.
 
-**Drawn offline plans** exist for Ranverso only: this environment could not reach the OpenStreetMap API. Run
-`python3 -I tools/fetch_backdrops.py` on a machine with internet, then rebuild, to add them for the other four.
+**Drawn offline plans** exist for all five monuments (`content/backdrops/`). Monuments spread over several sites
+(Lucretili) get one OpenStreetMap request per group of sensors within 500 m.
 
 ## Game rules (assumptions, need review)
 
@@ -209,7 +221,7 @@ offline copies). A new build replaces the stored copy on the next visit.
 | By | Task |
 |---|---|
 | 14 Oct | Review authored content (stories, Greek, threat texts, primary cards, quiz, checklist, units); fix from feedback |
-| 15 Oct | `python3 -I tools/fetch_backdrops.py` with internet (drawn plans for the four new monuments); refresh `docs/screenshots` with `npm run screenshots` on a machine with internet |
+| 15 Oct | Fix the offline check (`npm run screenshots`: "drawn plan missing offline"; already failing on the pulled code) |
 | 16 Oct | Set up Supabase (optional) and publish the site (GitHub Pages / Netlify); test a class code across two devices |
 | 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor and the meaning of the AI alarms |
 | 22 Oct | **Playtest** with a class or visitors (pre/post quiz gives the evidence); manual screen-reader and keyboard audit |

@@ -1237,6 +1237,12 @@ main {
   font-weight: 700;
   color: var(--ink);
 }
+/* long names (Greek especially) wrap instead of running off the map */
+.leaflet-tooltip.alarm-label {
+  width: max-content;
+  max-width: 11rem;
+  white-space: normal;
+}
 .site-label.is-soon {
   color: var(--muted);
   font-weight: 500;
@@ -1355,6 +1361,99 @@ main {
   font: inherit;
   font-size: 0.8rem;
   font-weight: 700;
+  color: var(--primary);
+}
+
+/* ------------------------------------------------------------------ site guide */
+
+/* white with a dark halo: reads on satellite imagery and on the light plan alike */
+.place-outline {
+  fill: #fff;
+  fill-opacity: 0.12;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+  filter: drop-shadow(0 0 1.5px rgb(0 0 0 / 0.9));
+}
+.place-pin,
+.place-num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.place-pin {
+  box-shadow: 0 0 0 2px #fff, 0 2px 6px rgb(0 0 0 / 0.4);
+}
+.place-label.is-hidden {
+  visibility: hidden;
+}
+.place-label {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.place-list,
+.where-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.place-list {
+  display: grid;
+  gap: 0.5rem;
+}
+.place {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "num text"
+    "num go";
+  column-gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.place-num {
+  grid-area: num;
+}
+.place-text {
+  grid-area: text;
+  min-width: 0;
+}
+.place-text h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.place-text p {
+  margin: 0.1rem 0 0.35rem;
+  color: var(--muted);
+}
+.place-go {
+  grid-area: go;
+  justify-self: start;
+  min-height: 44px;
+}
+.where-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+}
+.where-icons {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  min-width: 5.5rem;
   color: var(--primary);
 }
 

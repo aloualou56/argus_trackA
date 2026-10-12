@@ -8,7 +8,7 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
-import { clusterPoints } from "../game/logic";
+import { clusterPoints, nativeZoom } from "../game/logic";
 import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
 import { useI18n } from "../i18n";
 import { iconSvg } from "./Icon";
@@ -18,6 +18,8 @@ export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "s
 export interface MapApi {
   /** Centre of the current view: where the crosshair is. */
   center(): LatLng;
+  /** Move the view (and so the crosshair) to a place. */
+  focus(at: LatLng): void;
 }
 
 interface Props {
@@ -63,6 +65,7 @@ function loadBackdrop(path: string): Promise<Backdrop> {
 // Imagery stops at zoom 19; one step of over-zoom keeps sensors a few metres apart readable.
 const MONUMENT_MAX_ZOOM = 20;
 const PIN = 30;
+const MAP_MAX_ZOOM = 21;
 
 function prefersReducedMotion(): boolean {
   try {
@@ -114,7 +117,7 @@ export function GameMap(props: Props) {
   const { t, pick, lang } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const layersRef = useRef<{ sites: L.LayerGroup; argus: L.LayerGroup; player: L.LayerGroup; alarm: L.LayerGroup } | null>(null);
+  const layersRef = useRef<{ sites: L.LayerGroup; places: L.LayerGroup; argus: L.LayerGroup; player: L.LayerGroup; alarm: L.LayerGroup } | null>(null);
   const tilesRef = useRef<L.TileLayer | null>(null);
   const zoomRef = useRef<L.Control.Zoom | null>(null);
   const latest = useRef(props);
@@ -126,6 +129,7 @@ export function GameMap(props: Props) {
   const [noticeClosed, setNoticeClosed] = useState(false);
   const [moving, setMoving] = useState(false);
   const reticleRef = useRef<L.Marker | null>(null);
+  const declutterRef = useRef<() => void>(() => {});
   const pinned = placements.filter((p) => p.lat !== null).length;
   const planLayer = data.basemaps.layers.find((l) => l.type === "vector");
   const activeLayer = data.basemaps.layers.find((l) => l.id === basemap) ?? data.basemaps.layers[0];
@@ -133,6 +137,8 @@ export function GameMap(props: Props) {
   const backdropRef = useRef<L.LayerGroup | null>(null);
   const cards = useMemo(() => new Map(data.cards.cards.map((c) => [c.id, c])), [data]);
   const mon = data.monuments.find((m) => m.pilot_key === pilot) ?? null;
+  // Real imagery runs out at different zooms per site (Delos: 18); never ask deeper than that.
+  const imageryZoom = nativeZoom(activeLayer, mode === "overview" ? null : mon);
   const playable = mon && mon.playable ? (mon as Monument) : null;
   const cardName = (id: string | null, fallback = "") => (id ? pick(cards.get(id)?.name) : fallback);
 
@@ -140,7 +146,7 @@ export function GameMap(props: Props) {
   useEffect(() => {
     const map = L.map(containerRef.current!, {
       zoomControl: false,
-      maxZoom: 21,
+      maxZoom: MAP_MAX_ZOOM,
       zoomSnap: 0.5,
       keyboard: true,
       zoomAnimation: !reduced,
@@ -154,6 +160,7 @@ export function GameMap(props: Props) {
     backdropRef.current = L.layerGroup().addTo(map);
     layersRef.current = {
       sites: L.layerGroup().addTo(map),
+      places: L.layerGroup().addTo(map),
       alarm: L.layerGroup().addTo(map),
       argus: L.layerGroup().addTo(map),
       player: L.layerGroup().addTo(map),
@@ -162,6 +169,7 @@ export function GameMap(props: Props) {
     map.on("movestart", () => setMoving(true));
     map.on("moveend", () => setMoving(false));
     map.on("move", () => reticleRef.current?.setLatLng(map.getCenter()));
+    map.on("zoomend moveend resize", () => declutterRef.current());
     map.on("click", (e: L.LeafletMouseEvent) => {
       if (latest.current.mode === "mission") map.panTo(e.latlng, { animate: !reduced });
     });
@@ -170,6 +178,7 @@ export function GameMap(props: Props) {
         const c = map.getCenter();
         return [c.lat, c.lng];
       },
+      focus: (at) => map.flyTo(at, Math.max(map.getZoom(), 18), { animate: !reduced, duration: 1.2 }),
     };
     const resize = new ResizeObserver(() => map.invalidateSize());
     resize.observe(containerRef.current!);
@@ -192,6 +201,8 @@ export function GameMap(props: Props) {
     tilesRef.current?.remove();
     tilesRef.current = null;
     setTilesFailed(false);
+    // At most two levels of stretching past the real imagery (4x); beyond that it is only blur.
+    map.setMaxZoom(Math.min(MAP_MAX_ZOOM, (layer.type === "vector" ? MAP_MAX_ZOOM : imageryZoom ?? MAP_MAX_ZOOM) + 2));
     if (layer.type === "vector" || !layer.url) {
       map.attributionControl.addAttribution(attributionHtml(layer));
       return () => {
@@ -200,8 +211,8 @@ export function GameMap(props: Props) {
     }
     let loaded = 0;
     const tiles = L.tileLayer(layer.url, {
-      maxNativeZoom: layer.max_native_zoom,
-      maxZoom: 21,
+      maxNativeZoom: imageryZoom,
+      maxZoom: MAP_MAX_ZOOM,
       attribution: attributionHtml(layer),
     })
       .on("tileload", () => {
@@ -227,7 +238,7 @@ export function GameMap(props: Props) {
       // not remembered, still works
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [basemap, data]);
+  }, [basemap, data, imageryZoom]);
 
   // ---------------------------------------------------------------- placement reticle (mission only)
   useEffect(() => {
@@ -280,7 +291,7 @@ export function GameMap(props: Props) {
             style: (feature) => ({ className: `bd bd-${feature?.properties.kind ?? "other"}` }),
             onEachFeature: (feature, layer) => {
               // Name the monument while the story is told; later its label would hide sensors.
-              if (mode === "story" && feature.properties.kind === "heritage" && feature.properties.name) {
+              if (mode === "story" && !mon?.playable && feature.properties.kind === "heritage" && feature.properties.name) {
                 layer.bindTooltip(el("span", "", feature.properties.name), {
                   permanent: true,
                   direction: "center",
@@ -325,7 +336,7 @@ export function GameMap(props: Props) {
       animate: !reduced,
       duration: 1.6,
       paddingTopLeft: L.point(70, 90),
-      paddingBottomRight: L.point(48, 56),
+      paddingBottomRight: L.point(48, 84), // clear of the legend and attribution
       maxZoom: MONUMENT_MAX_ZOOM,
     };
     if (mode === "overview" || !mon?.map) {
@@ -388,12 +399,50 @@ export function GameMap(props: Props) {
     }
     if (!playable) return;
 
+    if (mode === "story" || mode === "mission") drawPlaces(playable, layers.places);
     const showArgus = mode === "reveal" || mode === "score" || mode === "event";
     if (showArgus) drawArgus(clusterPoints(playable.installed.points), layers.argus);
     if (mode === "event" && alarm) drawAlarm(alarm, layers.alarm);
     drawPlayer(layers.player, map);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, pilot, placements, alarm, lang, data]);
+
+  /** Site guide: dashed outlines and numbered markers for the main parts of the site. */
+  function drawPlaces(monument: Monument, group: L.LayerGroup) {
+    for (const place of monument.places ?? []) {
+      if (place.outline) {
+        L.polygon(place.outline, { className: "place-outline", interactive: false }).addTo(group);
+      }
+      L.marker([place.lat, place.lon], {
+        interactive: false,
+        keyboard: false,
+        icon: L.divIcon({ className: "", html: `<span class="place-pin">${place.n}</span>`, iconSize: [26, 26], iconAnchor: [13, 13] }),
+      })
+        .bindTooltip(el("span", "", pick(place.name)), {
+          permanent: true,
+          direction: "auto", // the side with room, so labels are not cut at the map edge
+          offset: [12, 0],
+          className: "place-label",
+        })
+        .addTo(group);
+    }
+    requestAnimationFrame(() => declutterRef.current());
+  }
+
+  /** Hide a place label that would overlap a lower-numbered one; the numbers stay, and the
+   * mission panel lists every name. Runs again after each zoom or move. */
+  declutterRef.current = () => {
+    const node = containerRef.current;
+    if (!node) return;
+    const kept: DOMRect[] = [];
+    for (const label of node.querySelectorAll<HTMLElement>(".place-label")) {
+      label.classList.remove("is-hidden");
+      const r = label.getBoundingClientRect();
+      const clash = kept.some((k) => r.left < k.right + 4 && r.right > k.left - 4 && r.top < k.bottom + 2 && r.bottom > k.top - 2);
+      if (clash) label.classList.add("is-hidden");
+      else kept.push(r);
+    }
+  };
 
   function pointNames(point: MapPoint): string {
     const counts = new Map<string, number>();
@@ -439,12 +488,18 @@ export function GameMap(props: Props) {
       interactive: false,
       keyboard: false,
       zIndexOffset: -500,
-      icon: L.divIcon({ className: "", html: '<span class="alarm-ring"></span>', iconSize: [72, 72], iconAnchor: [36, 36] }),
+      icon: L.divIcon({
+        className: "",
+        html: '<span class="alarm-ring"></span>',
+        iconSize: [72, 72],
+        iconAnchor: [36, 36],
+        tooltipAnchor: [30, 0], // Leaflet applies this on whichever side the label goes
+      }),
     })
       .bindTooltip(el("span", "", t("map.alarmHere", { name: cardName(at.card, at.instrument_type) })), {
         permanent: true,
-        direction: "right",
-        offset: [30, 0],
+        direction: "auto", // right of the ring in the left half of the map, left of it in the right half
+        offset: [0, 0],
         className: "alarm-label",
       })
       .addTo(group);

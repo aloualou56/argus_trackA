@@ -213,5 +213,10 @@
   "share.button": "Share your result",
   "share.text": "I was a guardian for a day at {name} and scored {score} out of 100. Want to try?",
   "share.copied": "The text and the link were copied.",
-  "share.failed": "Could not share. Copy the address from the address bar instead."
+  "share.failed": "Could not share. Copy the address from the address bar instead.",
+  "mission.guideTitle": "Where things are",
+  "mission.guideHelp": "The numbers on the map show the main parts of the site. Choose one to move the map there, then add sensors with +.",
+  "mission.showOnMap": "Show on map",
+  "mission.whereTitle": "Where sensors usually go",
+  "map.movedTo": "Map moved to {name}. New sensors go there."
 }

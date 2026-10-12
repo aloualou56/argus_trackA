@@ -472,5 +472,106 @@
         "el": "Αν το έδαφος κάτω από το σπίτι βουλιάξει, οι τοίχοι και τα δάπεδα ραγίζουν."
       }
     }
+  },
+  "places": {
+    "_about": "Site guide: the main parts of the site, numbered on the map so players know where things are. AUTHORED names and notes (from OpenStreetMap names and ARGUS sensor descriptions), need review. Positions come from real data: 'osm' = an outline in content/backdrops, 'sensors' = ARGUS sensor places whose description contains that text.",
+    "list": [
+      {
+        "id": "masks",
+        "at": {
+          "osm": 568688263,
+          "sensors": "Room 21"
+        },
+        "name": {
+          "en": "House of the Masks",
+          "el": "Οικία με τα Προσωπεία"
+        },
+        "note": {
+          "en": "Rooms with floor mosaics: theatre masks, Dionysus, dolphins.",
+          "el": "Δωμάτια με ψηφιδωτά δάπεδα: θεατρικά προσωπεία, Διόνυσος, δελφίνια."
+        },
+        "needs_review": true,
+        "review_note": "Mosaic names from the ARGUS sensor descriptions (rooms 214-217)."
+      },
+      {
+        "id": "theatre",
+        "at": {
+          "osm": 384671012,
+          "sensors": "Theater"
+        },
+        "name": {
+          "en": "Theatre",
+          "el": "Θέατρο"
+        },
+        "note": {
+          "en": "The ancient theatre and the houses around it.",
+          "el": "Το αρχαίο θέατρο και τα σπίτια γύρω του."
+        },
+        "needs_review": true
+      },
+      {
+        "id": "isis",
+        "at": {
+          "osm": 562249279,
+          "sensors": "Temple of Isis"
+        },
+        "name": {
+          "en": "Temple of Isis",
+          "el": "Ναός της Ίσιδος"
+        },
+        "note": {
+          "en": "A temple of the Egyptian goddess Isis.",
+          "el": "Ναός της αιγυπτιακής θεάς Ίσιδας."
+        },
+        "needs_review": true
+      },
+      {
+        "id": "fournoi",
+        "at": {
+          "sensors": "House of Fournoi"
+        },
+        "name": {
+          "en": "House of Fournoi",
+          "el": "Οικία των Φούρνων"
+        },
+        "note": {
+          "en": "A house with plastered walls.",
+          "el": "Ένα σπίτι με σοβατισμένους τοίχους."
+        },
+        "needs_review": true,
+        "review_note": "Greek name of the house to be checked."
+      },
+      {
+        "id": "inopos",
+        "at": {
+          "sensors": "Inopos"
+        },
+        "name": {
+          "en": "Inopos district",
+          "el": "Συνοικία του Ινωπού"
+        },
+        "note": {
+          "en": "A district of ancient houses.",
+          "el": "Μια συνοικία με αρχαία σπίτια."
+        },
+        "needs_review": true
+      },
+      {
+        "id": "skardanas",
+        "at": {
+          "sensors": "Skardanas"
+        },
+        "name": {
+          "en": "Skardanas district",
+          "el": "Συνοικία Σκαρδανά"
+        },
+        "note": {
+          "en": "Here a wall is leaning.",
+          "el": "Εδώ ένας τοίχος γέρνει."
+        },
+        "needs_review": true,
+        "review_note": "From the ARGUS description 'Leaning wall in Skardanas district'."
+      }
+    ]
   }
 }

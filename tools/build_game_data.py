@@ -20,6 +20,7 @@ import argparse
 import collections
 import datetime as dt
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -131,6 +132,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "quiz": load_json(content_dir / "quiz.json"),
         "checklist": load_json(content_dir / "citizen_checklist.json"),
         "map": load_json(content_dir / "map.json"),
+        "site_guide": load_json(content_dir / "site_guide.json"),
         "monuments": monuments,
     }
 
@@ -774,6 +776,13 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
     if not checklist["report"].get("en") or not checklist["report"].get("el"):
         problems.append("content/citizen_checklist.json: report text missing a language")
 
+    for tip in content.raw["site_guide"].get("where", []):
+        for card in tip.get("cards", []):
+            if card not in card_ids:
+                problems.append(f"content/site_guide.json {tip.get('id')}: unknown card '{card}'")
+        if not tip.get("text", {}).get("en") or not tip.get("text", {}).get("el"):
+            problems.append(f"content/site_guide.json {tip.get('id')}: text needs en and el")
+
     layer_ids = [layer["id"] for layer in content.basemaps.get("layers", [])]
     if content.basemaps.get("default") not in layer_ids:
         problems.append("content/map.json: 'default' is not one of the layers")
@@ -872,7 +881,7 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
         "checklist": {"items": content.raw["checklist"]["items"], "report": content.raw["checklist"]["report"],
                       "authored": True, "needs_review": bool(content.raw["checklist"].get("needs_review"))},
         "basemaps": {"default": content.basemaps["default"],
-                     "layers": [{k: v for k, v in layer.items() if k != "review_note"}
+                     "layers": [{k: v for k, v in layer.items() if k not in ("review_note", "probe_zoom")}
                                 for layer in content.basemaps["layers"]],
                      "world": BACKDROP_URL.format(name="world_land.json")
                      if (content_dir / "backdrops" / "world_land.json").exists() else None},
@@ -881,8 +890,96 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
     for mon in monuments:
         mon["backdrop"] = (BACKDROP_URL.format(name=f"{mon['pilot_key']}.json")
                            if (content_dir / "backdrops" / f"{mon['pilot_key']}.json").exists() else None)
+    attach_imagery_zoom(monuments, content, content_dir)
+    for mon in monuments:
+        if mon["playable"]:
+            mon["places"] = resolve_places(mon, content.monuments[mon["pilot_key"]], content_dir)
+    data["site_guide"] = {"where": content.raw["site_guide"]["where"], "authored": True,
+                          "needs_review": bool(content.raw["site_guide"].get("needs_review"))}
     notes = render_notes(snap, content, stats)
     return data, notes
+
+
+PLACE_MAX_DISTANCE_M = 3000  # a place further than this from the monument's sensors is a typo
+
+
+def metres_between(a: List[float], b: List[float]) -> float:
+    dx = (b[1] - a[1]) * math.cos(math.radians((a[0] + b[0]) / 2))
+    return math.hypot(dx, b[0] - a[0]) * 111_320
+
+
+def resolve_places(mon: Dict[str, Any], pack: Dict[str, Any], content_dir: Path) -> List[Dict[str, Any]]:
+    """Site guide: number each place in the pack and give it a real position. 'osm' takes the outline
+    (and its centre) from content/backdrops/<pilot>.json; 'sensors' takes the centre of the ARGUS sensor
+    places whose description contains that text. Names and notes are authored."""
+    specs = (pack.get("places") or {}).get("list", [])
+    backdrop_path = content_dir / "backdrops" / f"{mon['pilot_key']}.json"
+    features = load_json(backdrop_path)["features"] if backdrop_path.exists() else []
+    by_osm = {f["properties"].get("osm_id"): f for f in features}
+    out = []
+    for n, spec in enumerate(specs, 1):
+        where = f"{mon['pilot_key']} place '{spec.get('id')}'"
+        for field in ("name", "note"):
+            if not (spec.get(field) or {}).get("en") or not (spec.get(field) or {}).get("el"):
+                raise BuildError(f"{where}: {field} needs both en and el")
+        at = spec.get("at") or {}
+        lat = lon = None
+        outline = None
+        sources = []
+        if "osm" in at:
+            feature = by_osm.get(at["osm"])
+            if feature is None:
+                raise BuildError(f"{where}: OpenStreetMap way {at['osm']} is not in {backdrop_path.name} "
+                                 "(run tools/fetch_backdrops.py)")
+            geometry = feature["geometry"]
+            ring = geometry["coordinates"][0] if geometry["type"] == "Polygon" else geometry["coordinates"]
+            outline = [[round(c[1], 7), round(c[0], 7)] for c in ring]
+            body = ring[:-1] if ring[0] == ring[-1] and len(ring) > 1 else ring
+            lat = sum(c[1] for c in body) / len(body)
+            lon = sum(c[0] for c in body) / len(body)
+            sources.append(f"OpenStreetMap way {at['osm']} ({feature['properties'].get('name', 'unnamed')})")
+        if "sensors" in at:
+            text = at["sensors"].lower()
+            points = [pt for pt in mon["installed"]["points"] if pt.get("label") and text in pt["label"].lower()]
+            if not points:
+                raise BuildError(f"{where}: no ARGUS sensor description contains '{at['sensors']}'")
+            if lat is None:
+                lat = sum(pt["lat"] for pt in points) / len(points)
+                lon = sum(pt["lon"] for pt in points) / len(points)
+            sources.append(f"{len(points)} ARGUS sensor place(s) described with '{at['sensors']}'")
+        if lat is None:
+            raise BuildError(f"{where}: 'at' needs 'osm' or 'sensors'")
+        if mon.get("map") and metres_between([lat, lon], mon["map"]["center"]) > PLACE_MAX_DISTANCE_M + \
+                max(metres_between(mon["map"]["center"], corner) for corner in mon["map"]["bounds"]):
+            raise BuildError(f"{where}: more than {PLACE_MAX_DISTANCE_M} m outside the monument")
+        out.append({"id": spec["id"], "n": n, "name": spec["name"], "note": spec["note"],
+                    "lat": round(lat, 7), "lon": round(lon, 7), "outline": outline, "sources": sources,
+                    "authored": True, "needs_review": bool(spec.get("needs_review", True))})
+    if len({p["id"] for p in out}) != len(out):
+        raise BuildError(f"{mon['pilot_key']}: place ids must be unique")
+    return out
+
+
+def attach_imagery_zoom(monuments: List[Dict[str, Any]], content: Content, content_dir: Path) -> None:
+    """Deepest zoom with real satellite imagery per monument (content/imagery_zoom.json, written by
+    tools/probe_imagery.py). Deeper, the provider sends a 'Map data not yet available' picture, so the
+    game stretches this level instead (map.max_native_zoom)."""
+    path = content_dir / "imagery_zoom.json"
+    if not path.exists():
+        return
+    probed = load_json(path).get("layers") or {}
+    raster = {l["id"] for l in content.basemaps.get("layers", []) if l.get("type") != "vector"}
+    for layer_id, by_pilot in probed.items():
+        if layer_id not in raster:
+            raise BuildError(f"imagery_zoom.json: '{layer_id}' is not a raster layer in content/map.json")
+        for pilot, zoom in by_pilot.items():
+            if not isinstance(zoom, int) or not 0 <= zoom <= 23:
+                raise BuildError(f"imagery_zoom.json: {layer_id}/{pilot} zoom {zoom!r} is not 0..23")
+    for mon in monuments:
+        zooms = {lid: by_pilot[mon["pilot_key"]] for lid, by_pilot in sorted(probed.items())
+                 if mon["pilot_key"] in by_pilot}
+        if mon.get("map") and zooms:
+            mon["map"]["max_native_zoom"] = zooms
 
 
 def md_table(headers: List[str], rows: List[List[Any]]) -> str:
@@ -893,6 +990,13 @@ def md_table(headers: List[str], rows: List[List[Any]]) -> str:
 
 def collect_review_items(content: Content) -> List[str]:
     items = []
+    if content.raw["site_guide"].get("needs_review"):
+        items.append("`content/site_guide.json`: where each kind of sensor usually goes (general guidance)")
+    for pilot, pack in sorted(content.monuments.items()):
+        for spec in (pack.get("places") or {}).get("list", []):
+            if spec.get("needs_review", True):
+                note = f": {spec['review_note']}" if spec.get("review_note") else ""
+                items.append(f"`{pilot}` site-guide place `{spec['id']}` ({spec['name']['en']} / {spec['name']['el']}){note}")
     for card in content.cards:
         if card.get("needs_review"):
             items.append(f"Card `{card['id']}`: {card.get('review_note', 'check wording and instrument grouping')}")

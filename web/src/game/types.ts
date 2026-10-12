@@ -144,9 +144,32 @@ export interface Installed {
   unplaced: (PointInstrument & { reason: string })[];
 }
 
+/** Site guide: a numbered part of the site. Position from real data, name and note authored. */
+export interface Place {
+  id: string;
+  n: number;
+  name: Text;
+  note: Text;
+  lat: number;
+  lon: number;
+  /** [lat, lon] outline from OpenStreetMap, when the place has one. */
+  outline: LatLng[] | null;
+  sources: string[];
+  authored: true;
+  needs_review: boolean;
+}
+
+export interface SiteTip {
+  id: string;
+  cards: string[];
+  text: Text;
+}
+
 export interface MapView {
   center: LatLng;
   bounds: [LatLng, LatLng];
+  /** Per raster layer: deepest zoom with real imagery here (tools/probe_imagery.py). */
+  max_native_zoom?: Record<string, number>;
 }
 
 export interface Basemap {
@@ -200,6 +223,8 @@ export interface Monument extends MonumentBase {
   installed: Installed;
   alarms: Alarm[];
   discussion_prompts: Prompt[];
+  /** Site guide, numbered on the map and listed in the mission. */
+  places: Place[];
   /** Why this monument has no alarm to replay, when it has none. */
   no_alarm_note?: Prompt;
 }
@@ -225,6 +250,8 @@ export interface ChecklistItem {
 
 export interface GameData {
   schema_version: number;
+  /** Where each kind of sensor usually goes (authored, shown with every site guide). */
+  site_guide: { where: SiteTip[]; authored: true; needs_review: boolean };
   snapshot: { fetched_at: string[] };
   level_order: { key: string; id: LevelId }[];
   mission_size: number;

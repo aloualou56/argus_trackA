@@ -1354,7 +1354,10 @@
       37.4033278,
       25.2709278
      ]
-    ]
+    ],
+    "max_native_zoom": {
+     "satellite": 18
+    }
    },
    "display_name": {
     "en": "Delos",
@@ -3652,7 +3655,311 @@
      "authored": true
     }
    ],
-   "backdrop": null
+   "backdrop": "data/backdrops/delos.json",
+   "places": [
+    {
+     "id": "masks",
+     "n": 1,
+     "name": {
+      "en": "House of the Masks",
+      "el": "Οικία με τα Προσωπεία"
+     },
+     "note": {
+      "en": "Rooms with floor mosaics: theatre masks, Dionysus, dolphins.",
+      "el": "Δωμάτια με ψηφιδωτά δάπεδα: θεατρικά προσωπεία, Διόνυσος, δελφίνια."
+     },
+     "lat": 37.3962297,
+     "lon": 25.2694767,
+     "outline": [
+      [
+       37.3964637,
+       25.2692004
+      ],
+      [
+       37.396484,
+       25.2695922
+      ],
+      [
+       37.3961702,
+       25.2696753
+      ],
+      [
+       37.3961132,
+       25.2696634
+      ],
+      [
+       37.3960813,
+       25.2694741
+      ],
+      [
+       37.3960659,
+       25.2692548
+      ],
+      [
+       37.3964637,
+       25.2692004
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 568688263 (Οικία με τα Προσωπεία)",
+      "8 ARGUS sensor place(s) described with 'Room 21'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "theatre",
+     "n": 2,
+     "name": {
+      "en": "Theatre",
+      "el": "Θέατρο"
+     },
+     "note": {
+      "en": "The ancient theatre and the houses around it.",
+      "el": "Το αρχαίο θέατρο και τα σπίτια γύρω του."
+     },
+     "lat": 37.397011,
+     "lon": 25.2681323,
+     "outline": [
+      [
+       37.3968791,
+       25.2679888
+      ],
+      [
+       37.3966829,
+       25.2680024
+      ],
+      [
+       37.3967083,
+       25.2681711
+      ],
+      [
+       37.3967483,
+       25.2682738
+      ],
+      [
+       37.3968073,
+       25.2683717
+      ],
+      [
+       37.3968904,
+       25.2684524
+      ],
+      [
+       37.3969881,
+       25.2685014
+      ],
+      [
+       37.3970648,
+       25.2684973
+      ],
+      [
+       37.3971597,
+       25.2684361
+      ],
+      [
+       37.3972313,
+       25.2683361
+      ],
+      [
+       37.3972761,
+       25.2682168
+      ],
+      [
+       37.3972842,
+       25.2680896
+      ],
+      [
+       37.397273,
+       25.268021
+      ],
+      [
+       37.3972616,
+       25.2679766
+      ],
+      [
+       37.3972038,
+       25.2678107
+      ],
+      [
+       37.3970503,
+       25.2679248
+      ],
+      [
+       37.3970599,
+       25.2679653
+      ],
+      [
+       37.3970608,
+       25.2679965
+      ],
+      [
+       37.3970549,
+       25.2680268
+      ],
+      [
+       37.3970428,
+       25.2680541
+      ],
+      [
+       37.3970252,
+       25.2680761
+      ],
+      [
+       37.3970036,
+       25.2680915
+      ],
+      [
+       37.3969795,
+       25.2680989
+      ],
+      [
+       37.3969547,
+       25.2680978
+      ],
+      [
+       37.3969311,
+       25.2680884
+      ],
+      [
+       37.3969103,
+       25.2680713
+      ],
+      [
+       37.396894,
+       25.2680478
+      ],
+      [
+       37.3968833,
+       25.2680196
+      ],
+      [
+       37.3968791,
+       25.2679888
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 384671012 (Θέατρο)",
+      "1 ARGUS sensor place(s) described with 'Theater'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "isis",
+     "n": 3,
+     "name": {
+      "en": "Temple of Isis",
+      "el": "Ναός της Ίσιδος"
+     },
+     "note": {
+      "en": "A temple of the Egyptian goddess Isis.",
+      "el": "Ναός της αιγυπτιακής θεάς Ίσιδας."
+     },
+     "lat": 37.3973835,
+     "lon": 25.2708412,
+     "outline": [
+      [
+       37.3974094,
+       25.2707772
+      ],
+      [
+       37.3973618,
+       25.2707787
+      ],
+      [
+       37.3973628,
+       25.2708274
+      ],
+      [
+       37.3973633,
+       25.2708512
+      ],
+      [
+       37.3973643,
+       25.2709015
+      ],
+      [
+       37.3974118,
+       25.2709
+      ],
+      [
+       37.3974109,
+       25.2708527
+      ],
+      [
+       37.3974094,
+       25.2707772
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 562249279 (Ναός της Ίσιδος)",
+      "1 ARGUS sensor place(s) described with 'Temple of Isis'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "fournoi",
+     "n": 4,
+     "name": {
+      "en": "House of Fournoi",
+      "el": "Οικία των Φούρνων"
+     },
+     "note": {
+      "en": "A house with plastered walls.",
+      "el": "Ένα σπίτι με σοβατισμένους τοίχους."
+     },
+     "lat": 37.3917472,
+     "lon": 25.2685862,
+     "outline": null,
+     "sources": [
+      "2 ARGUS sensor place(s) described with 'House of Fournoi'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "inopos",
+     "n": 5,
+     "name": {
+      "en": "Inopos district",
+      "el": "Συνοικία του Ινωπού"
+     },
+     "note": {
+      "en": "A district of ancient houses.",
+      "el": "Μια συνοικία με αρχαία σπίτια."
+     },
+     "lat": 37.3983528,
+     "lon": 25.2699194,
+     "outline": null,
+     "sources": [
+      "1 ARGUS sensor place(s) described with 'Inopos'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "skardanas",
+     "n": 6,
+     "name": {
+      "en": "Skardanas district",
+      "el": "Συνοικία Σκαρδανά"
+     },
+     "note": {
+      "en": "Here a wall is leaning.",
+      "el": "Εδώ ένας τοίχος γέρνει."
+     },
+     "lat": 37.4033278,
+     "lon": 25.266225,
+     "outline": null,
+     "sources": [
+      "1 ARGUS sensor place(s) described with 'Skardanas'"
+     ],
+     "authored": true,
+     "needs_review": true
+    }
+   ]
   },
   {
    "pilot_key": "baltanas",
@@ -3735,7 +4042,10 @@
       41.9390972,
       -4.2432917
      ]
-    ]
+    ],
+    "max_native_zoom": {
+     "satellite": 20
+    }
    },
    "display_name": {
     "en": "The cellar town of Baltanás",
@@ -4711,7 +5021,175 @@
     "review_note": "27 distinct AI alarms in the sample. 21 have no feature with a 30% share or more; the other 6 are driven by wind direction or wind speed, which the game does not map to a danger.",
     "authored": true
    },
-   "backdrop": null
+   "backdrop": "data/backdrops/baltanas.json",
+   "places": [
+    {
+     "id": "cellar88",
+     "n": 1,
+     "name": {
+      "en": "Cellar 88",
+      "el": "Κελάρι 88"
+     },
+     "note": {
+      "en": "An underground wine cellar with a kitchen, a wine press and chimneys.",
+      "el": "Ένα υπόγειο κελάρι κρασιού με κουζίνα, πατητήρι και καμινάδες."
+     },
+     "lat": 41.9384358,
+     "lon": -4.2438344,
+     "outline": null,
+     "sources": [
+      "18 ARGUS sensor place(s) described with 'Cellar 88'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "cellar364",
+     "n": 2,
+     "name": {
+      "en": "Cellar 364",
+      "el": "Κελάρι 364"
+     },
+     "note": {
+      "en": "A cellar next to a path where cars drive.",
+      "el": "Ένα κελάρι δίπλα σε δρόμο από όπου περνούν αυτοκίνητα."
+     },
+     "lat": 41.9379278,
+     "lon": -4.2433125,
+     "outline": null,
+     "sources": [
+      "2 ARGUS sensor place(s) described with 'Cellar 364'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "cellar193",
+     "n": 3,
+     "name": {
+      "en": "Cellar 193",
+      "el": "Κελάρι 193"
+     },
+     "note": {
+      "en": "The entrance of another cellar.",
+      "el": "Η είσοδος ενός άλλου κελαριού."
+     },
+     "lat": 41.9385333,
+     "lon": -4.2432917,
+     "outline": null,
+     "sources": [
+      "1 ARGUS sensor place(s) described with 'Cellar 193'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "church",
+     "n": 4,
+     "name": {
+      "en": "Church of San Millán",
+      "el": "Εκκλησία του Σαν Μιγιάν"
+     },
+     "note": {
+      "en": "The village church.",
+      "el": "Η εκκλησία του χωριού."
+     },
+     "lat": 41.9392773,
+     "lon": -4.2464107,
+     "outline": [
+      [
+       41.9392187,
+       -4.2466824
+      ],
+      [
+       41.9392509,
+       -4.2466998
+      ],
+      [
+       41.9392715,
+       -4.2466204
+      ],
+      [
+       41.9393321,
+       -4.246614
+      ],
+      [
+       41.9394,
+       -4.2463863
+      ],
+      [
+       41.9393611,
+       -4.2463655
+      ],
+      [
+       41.9394007,
+       -4.246245
+      ],
+      [
+       41.9393835,
+       -4.2462355
+      ],
+      [
+       41.9393912,
+       -4.2462007
+      ],
+      [
+       41.9394127,
+       -4.2462115
+      ],
+      [
+       41.9394449,
+       -4.2461043
+      ],
+      [
+       41.9393409,
+       -4.2460566
+      ],
+      [
+       41.939309,
+       -4.2461605
+      ],
+      [
+       41.9392063,
+       -4.2461133
+      ],
+      [
+       41.9391048,
+       -4.2464409
+      ],
+      [
+       41.9391455,
+       -4.2464649
+      ],
+      [
+       41.9391021,
+       -4.2466037
+      ],
+      [
+       41.9391389,
+       -4.2466247
+      ],
+      [
+       41.9391258,
+       -4.2466648
+      ],
+      [
+       41.939206,
+       -4.2467184
+      ],
+      [
+       41.9392187,
+       -4.2466824
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 204763449 (Iglesia de San Millán)",
+      "1 ARGUS sensor place(s) described with 'Church tower'"
+     ],
+     "authored": true,
+     "needs_review": true
+    }
+   ]
   },
   {
    "pilot_key": "lucretili",
@@ -4794,7 +5272,10 @@
       42.1013667,
       12.9016056
      ]
-    ]
+    ],
+    "max_native_zoom": {
+     "satellite": 19
+    }
    },
    "display_name": {
     "en": "Monti Lucretili",
@@ -6584,7 +7065,199 @@
      "authored": true
     }
    ],
-   "backdrop": null
+   "backdrop": "data/backdrops/lucretili.json",
+   "places": [
+    {
+     "id": "conventillo",
+     "n": 1,
+     "name": {
+      "en": "Conventillo",
+      "el": "Κονβεντίλο"
+     },
+     "note": {
+      "en": "An old building with cracks on several floors.",
+      "el": "Ένα παλιό κτίριο με ρωγμές σε πολλούς ορόφους."
+     },
+     "lat": 42.0236722,
+     "lon": 12.8273771,
+     "outline": null,
+     "sources": [
+      "8 ARGUS sensor place(s) described with 'Conventillo'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "villa",
+     "n": 2,
+     "name": {
+      "en": "Horace's Villa",
+      "el": "Έπαυλη του Οράτιου"
+     },
+     "note": {
+      "en": "A Roman villa with floor mosaics.",
+      "el": "Μια ρωμαϊκή έπαυλη με ψηφιδωτά δάπεδα."
+     },
+     "lat": 42.0660239,
+     "lon": 12.901175,
+     "outline": [
+      [
+       42.0664312,
+       12.9008133
+      ],
+      [
+       42.066473,
+       12.9009823
+      ],
+      [
+       42.0665148,
+       12.901162
+      ],
+      [
+       42.0665068,
+       12.9013149
+      ],
+      [
+       42.0664809,
+       12.9014383
+      ],
+      [
+       42.0664384,
+       12.901564
+      ],
+      [
+       42.0664172,
+       12.9016059
+      ],
+      [
+       42.0663964,
+       12.9016273
+      ],
+      [
+       42.0663389,
+       12.9016238
+      ],
+      [
+       42.0662964,
+       12.901615
+      ],
+      [
+       42.066254,
+       12.9015815
+      ],
+      [
+       42.0662194,
+       12.9015581
+      ],
+      [
+       42.0661683,
+       12.9014892
+      ],
+      [
+       42.0659971,
+       12.9015482
+      ],
+      [
+       42.0658159,
+       12.9016555
+      ],
+      [
+       42.0656407,
+       12.9017816
+      ],
+      [
+       42.0654913,
+       12.9019237
+      ],
+      [
+       42.0653081,
+       12.9016984
+      ],
+      [
+       42.065113,
+       12.9013739
+      ],
+      [
+       42.0651209,
+       12.9012425
+      ],
+      [
+       42.0653718,
+       12.9008509
+      ],
+      [
+       42.0655013,
+       12.9007259
+      ],
+      [
+       42.0655829,
+       12.900647
+      ],
+      [
+       42.065784,
+       12.9006202
+      ],
+      [
+       42.0659652,
+       12.900639
+      ],
+      [
+       42.0660727,
+       12.9006282
+      ],
+      [
+       42.0661325,
+       12.9006095
+      ],
+      [
+       42.066097,
+       12.9004772
+      ],
+      [
+       42.0661584,
+       12.9004217
+      ],
+      [
+       42.0662818,
+       12.9005505
+      ],
+      [
+       42.0663694,
+       12.9006551
+      ],
+      [
+       42.0664312,
+       12.9008133
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 159764391 (Villa di Orazio)",
+      "5 ARGUS sensor place(s) described with 'Villa di Orazio'"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "montefalco",
+     "n": 3,
+     "name": {
+      "en": "Montefalco Castle",
+      "el": "Κάστρο Μοντεφάλκο"
+     },
+     "note": {
+      "en": "A castle with old outer walls.",
+      "el": "Ένα κάστρο με παλιά εξωτερικά τείχη."
+     },
+     "lat": 42.0818833,
+     "lon": 12.8215632,
+     "outline": null,
+     "sources": [
+      "4 ARGUS sensor place(s) described with 'Montefalco'"
+     ],
+     "authored": true,
+     "needs_review": true
+    }
+   ]
   },
   {
    "pilot_key": "ranverso",
@@ -6674,7 +7347,10 @@
       45.081225,
       7.4499139
      ]
-    ]
+    ],
+    "max_native_zoom": {
+     "satellite": 19
+    }
    },
    "display_name": {
     "en": "Sant'Antonio di Ranverso",
@@ -8559,7 +9235,171 @@
      "authored": true
     }
    ],
-   "backdrop": "data/backdrops/ranverso.json"
+   "backdrop": "data/backdrops/ranverso.json",
+   "places": [
+    {
+     "id": "church",
+     "n": 1,
+     "name": {
+      "en": "The church",
+      "el": "Η εκκλησία"
+     },
+     "note": {
+      "en": "Its walls are covered with old paintings.",
+      "el": "Οι τοίχοι της είναι γεμάτοι παλιές τοιχογραφίες."
+     },
+     "lat": 45.0811104,
+     "lon": 7.449724,
+     "outline": [
+      [
+       45.0811857,
+       7.4493688
+      ],
+      [
+       45.0809921,
+       7.4493695
+      ],
+      [
+       45.0809933,
+       7.4494355
+      ],
+      [
+       45.0810033,
+       7.4497687
+      ],
+      [
+       45.0810789,
+       7.4497657
+      ],
+      [
+       45.0810804,
+       7.4498755
+      ],
+      [
+       45.0810916,
+       7.4499161
+      ],
+      [
+       45.0811119,
+       7.4499395
+      ],
+      [
+       45.081138,
+       7.4499395
+      ],
+      [
+       45.081159,
+       7.4499188
+      ],
+      [
+       45.0811678,
+       7.4498751
+      ],
+      [
+       45.081168,
+       7.4497547
+      ],
+      [
+       45.0811895,
+       7.449755
+      ],
+      [
+       45.0811864,
+       7.4494539
+      ],
+      [
+       45.0811857,
+       7.4493688
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 80996989 (Sant'Antonio di Ranverso)"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "abbey",
+     "n": 2,
+     "name": {
+      "en": "The abbey buildings",
+      "el": "Τα κτίρια του μοναστηριού"
+     },
+     "note": {
+      "en": "The old monastery around the church.",
+      "el": "Το παλιό μοναστήρι γύρω από την εκκλησία."
+     },
+     "lat": 45.0809378,
+     "lon": 7.4494704,
+     "outline": [
+      [
+       45.0811905,
+       7.4492227
+      ],
+      [
+       45.0810805,
+       7.4492246
+      ],
+      [
+       45.0806697,
+       7.449232
+      ],
+      [
+       45.0806707,
+       7.4492072
+      ],
+      [
+       45.080504,
+       7.4491992
+      ],
+      [
+       45.0804983,
+       7.449456
+      ],
+      [
+       45.0805381,
+       7.449457
+      ],
+      [
+       45.0809699,
+       7.4494681
+      ],
+      [
+       45.0809803,
+       7.4497966
+      ],
+      [
+       45.0811472,
+       7.4500441
+      ],
+      [
+       45.0812159,
+       7.4498677
+      ],
+      [
+       45.0812467,
+       7.4495221
+      ],
+      [
+       45.0812275,
+       7.4494446
+      ],
+      [
+       45.0811898,
+       7.4494433
+      ],
+      [
+       45.0811905,
+       7.4492227
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 1353926416 (Abbazia di Sant'Antonio di Ranverso)"
+     ],
+     "authored": true,
+     "needs_review": true
+    }
+   ]
   },
   {
    "pilot_key": "schenkenberg",
@@ -8649,7 +9489,10 @@
       47.4421528,
       8.1010778
      ]
-    ]
+    ],
+    "max_native_zoom": {
+     "satellite": 21
+    }
    },
    "display_name": {
     "en": "Schenkenberg Castle",
@@ -9654,7 +10497,238 @@
      "authored": true
     }
    ],
-   "backdrop": null
+   "backdrop": "data/backdrops/schenkenberg.json",
+   "places": [
+    {
+     "id": "ruins",
+     "n": 1,
+     "name": {
+      "en": "Castle ruins",
+      "el": "Ερείπια του κάστρου"
+     },
+     "note": {
+      "en": "What is left of the medieval castle.",
+      "el": "Ό,τι έχει απομείνει από το μεσαιωνικό κάστρο."
+     },
+     "lat": 47.4419014,
+     "lon": 8.1008096,
+     "outline": [
+      [
+       47.4417842,
+       8.1003757
+      ],
+      [
+       47.4418596,
+       8.1003498
+      ],
+      [
+       47.4419306,
+       8.1003359
+      ],
+      [
+       47.4419255,
+       8.100316
+      ],
+      [
+       47.4419304,
+       8.1002897
+      ],
+      [
+       47.4419416,
+       8.1002747
+      ],
+      [
+       47.4419569,
+       8.1002774
+      ],
+      [
+       47.4419725,
+       8.1002979
+      ],
+      [
+       47.4419727,
+       8.100321
+      ],
+      [
+       47.4419662,
+       8.1003438
+      ],
+      [
+       47.4420283,
+       8.1003761
+      ],
+      [
+       47.4420316,
+       8.1005211
+      ],
+      [
+       47.4420716,
+       8.1007411
+      ],
+      [
+       47.4421197,
+       8.1009309
+      ],
+      [
+       47.4421433,
+       8.1010997
+      ],
+      [
+       47.4420678,
+       8.1011165
+      ],
+      [
+       47.4420405,
+       8.10121
+      ],
+      [
+       47.4419763,
+       8.1011904
+      ],
+      [
+       47.4419336,
+       8.1011508
+      ],
+      [
+       47.4418752,
+       8.1011805
+      ],
+      [
+       47.4418168,
+       8.101184
+      ],
+      [
+       47.4418164,
+       8.1012146
+      ],
+      [
+       47.4418054,
+       8.1012391
+      ],
+      [
+       47.4417843,
+       8.1012418
+      ],
+      [
+       47.4417659,
+       8.1012327
+      ],
+      [
+       47.441756,
+       8.1012098
+      ],
+      [
+       47.4417569,
+       8.1011793
+      ],
+      [
+       47.4417686,
+       8.1011527
+      ],
+      [
+       47.4417814,
+       8.1011456
+      ],
+      [
+       47.4417996,
+       8.1011484
+      ],
+      [
+       47.4417683,
+       8.1008479
+      ],
+      [
+       47.441771,
+       8.1006202
+      ],
+      [
+       47.441828,
+       8.1006027
+      ],
+      [
+       47.4417842,
+       8.1003757
+      ]
+     ],
+     "sources": [
+      "OpenStreetMap way 199731189 (Burgruine Schenkenberg)"
+     ],
+     "authored": true,
+     "needs_review": true
+    },
+    {
+     "id": "tower",
+     "n": 2,
+     "name": {
+      "en": "The tower",
+      "el": "Ο πύργος"
+     },
+     "note": {
+      "en": "Its north wall, its south wall and its top.",
+      "el": "Ο βόρειος και ο νότιος τοίχος του και η κορυφή του."
+     },
+     "lat": 47.4421317,
+     "lon": 8.101045,
+     "outline": null,
+     "sources": [
+      "5 ARGUS sensor place(s) described with 'tower'"
+     ],
+     "authored": true,
+     "needs_review": true
+    }
+   ]
   }
- ]
+ ],
+ "site_guide": {
+  "where": [
+   {
+    "id": "inside",
+    "cards": [
+     "humidity",
+     "temperature",
+     "light_uv",
+     "acoustic"
+    ],
+    "text": {
+     "en": "Inside the building: damp air, heat, light and insects.",
+     "el": "Μέσα στο κτίριο: υγρασία του αέρα, ζέστη, φως και έντομα."
+    }
+   },
+   {
+    "id": "walls",
+    "cards": [
+     "crackmeter",
+     "tiltmeter",
+     "vibration"
+    ],
+    "text": {
+     "en": "On the walls: cracks, leaning and shaking.",
+     "el": "Στους τοίχους: ρωγμές, κλίση και δονήσεις."
+    }
+   },
+   {
+    "id": "ground",
+    "cards": [
+     "soil_moisture"
+    ],
+    "text": {
+     "en": "In the ground: water in the soil.",
+     "el": "Στο έδαφος: νερό μέσα στο χώμα."
+    }
+   },
+   {
+    "id": "open",
+    "cards": [
+     "rain_gauge",
+     "weather_station"
+    ],
+    "text": {
+     "en": "In the open air: rain, wind and sun.",
+     "el": "Στον ανοιχτό χώρο: βροχή, άνεμος και ήλιος."
+    }
+   }
+  ],
+  "authored": true,
+  "needs_review": true
+ }
 }

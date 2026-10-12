@@ -2,6 +2,7 @@
 // The scoring and detection rules are game-design assumptions listed in docs/data_notes.md.
 import type {
   Alarm,
+  Basemap,
   Card,
   ChecklistItem,
   GameData,
@@ -9,6 +10,7 @@ import type {
   Level,
   LevelId,
   MapPoint,
+  MapView,
   Monument,
   Picks,
   Placement,
@@ -325,4 +327,13 @@ let nextId = 0;
 export function newPlacementId(): string {
   nextId += 1;
   return `p${Date.now().toString(36)}${nextId}`;
+}
+
+/**
+ * Deepest zoom with real imagery for a raster layer: the open monument's measured value
+ * (content/imagery_zoom.json) or, with no monument open, the layer's default. Deeper tiles from
+ * the provider are "Map data not yet available" pictures, so the map stretches this level instead.
+ */
+export function nativeZoom(layer: Basemap, mon: { map: MapView | null } | null): number | undefined {
+  return mon?.map?.max_native_zoom?.[layer.id] ?? layer.max_native_zoom;
 }

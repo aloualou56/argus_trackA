@@ -9,6 +9,7 @@
       "attribution": "Imagery © Esri, Maxar, Earthstar Geographics, and the GIS User Community",
       "attribution_url": "https://www.esri.com/en-us/legal/terms/full-master-agreement",
       "max_native_zoom": 19,
+      "probe_zoom": true,
       "needs_review": true,
       "review_note": "Esri World Imagery: confirm that a free, public educational game may use these tiles without an ArcGIS key, or get a free ArcGIS Location Platform key. Alternatives with open licences: swisstopo SWISSIMAGE (CH), PNOA (ES), regional orthophotos (IT, GR)."
     },

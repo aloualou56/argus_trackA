@@ -113,5 +113,73 @@
         "el": "Όταν ένα κελάρι πλημμυρίζει, το νερό μουσκεύει τα ξύλινα δοκάρια που κρατάνε την οροφή του."
       }
     }
+  },
+  "places": {
+    "_about": "Site guide: the main parts of the site, numbered on the map so players know where things are. AUTHORED names and notes (from OpenStreetMap names and ARGUS sensor descriptions), need review. Positions come from real data: 'osm' = an outline in content/backdrops, 'sensors' = ARGUS sensor places whose description contains that text.",
+    "list": [
+      {
+        "id": "cellar88",
+        "at": {
+          "sensors": "Cellar 88"
+        },
+        "name": {
+          "en": "Cellar 88",
+          "el": "Κελάρι 88"
+        },
+        "note": {
+          "en": "An underground wine cellar with a kitchen, a wine press and chimneys.",
+          "el": "Ένα υπόγειο κελάρι κρασιού με κουζίνα, πατητήρι και καμινάδες."
+        },
+        "needs_review": true,
+        "review_note": "From the ARGUS descriptions (Kitchen, Lagar, Chimney 1-4)."
+      },
+      {
+        "id": "cellar364",
+        "at": {
+          "sensors": "Cellar 364"
+        },
+        "name": {
+          "en": "Cellar 364",
+          "el": "Κελάρι 364"
+        },
+        "note": {
+          "en": "A cellar next to a path where cars drive.",
+          "el": "Ένα κελάρι δίπλα σε δρόμο από όπου περνούν αυτοκίνητα."
+        },
+        "needs_review": true,
+        "review_note": "From the ARGUS description 'Outside - car path'."
+      },
+      {
+        "id": "cellar193",
+        "at": {
+          "sensors": "Cellar 193"
+        },
+        "name": {
+          "en": "Cellar 193",
+          "el": "Κελάρι 193"
+        },
+        "note": {
+          "en": "The entrance of another cellar.",
+          "el": "Η είσοδος ενός άλλου κελαριού."
+        },
+        "needs_review": true
+      },
+      {
+        "id": "church",
+        "at": {
+          "osm": 204763449,
+          "sensors": "Church tower"
+        },
+        "name": {
+          "en": "Church of San Millán",
+          "el": "Εκκλησία του Σαν Μιγιάν"
+        },
+        "note": {
+          "en": "The village church.",
+          "el": "Η εκκλησία του χωριού."
+        },
+        "needs_review": true
+      }
+    ]
   }
 }

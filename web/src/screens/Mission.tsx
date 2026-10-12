@@ -79,6 +79,51 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
         </ol>
       </section>
 
+      {mon.places?.length > 0 && (
+        <section aria-labelledby="guide-title" className="site-guide">
+          <h2 id="guide-title">{t("mission.guideTitle")}</h2>
+          <p className="hint">{t("mission.guideHelp")}</p>
+          <ol className="place-list">
+            {mon.places.map((place) => (
+              <li key={place.id} className="place">
+                <span className="place-num" aria-hidden="true">
+                  {place.n}
+                </span>
+                <div className="place-text">
+                  <h3 data-needs-review={place.needs_review}>{pick(place.name)}</h3>
+                  <p data-needs-review={place.needs_review}>{pick(place.note)}</p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-quiet place-go"
+                  aria-label={`${t("mission.showOnMap")}: ${pick(place.name)}`}
+                  onClick={() => {
+                    mapApi.current?.focus([place.lat, place.lon]);
+                    announce(t("map.movedTo", { name: pick(place.name) }));
+                  }}
+                >
+                  <Icon name="gnss" size={18} />
+                  {t("mission.showOnMap")}
+                </button>
+              </li>
+            ))}
+          </ol>
+          <h3>{t("mission.whereTitle")}</h3>
+          <ul className="where-list">
+            {data.site_guide.where.map((tip) => (
+              <li key={tip.id} data-needs-review={data.site_guide.needs_review}>
+                <span className="where-icons" aria-hidden="true">
+                  {tip.cards.map((card) => (
+                    <Icon key={card} name={card} size={18} />
+                  ))}
+                </span>
+                <span>{pick(tip.text)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section aria-labelledby="sensors-title">
         <h2 id="sensors-title">{t("mission.sensors")}</h2>
         <p className="hint map-hint">

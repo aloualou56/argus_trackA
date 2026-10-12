@@ -473,6 +473,24 @@ Game-design rules (in code):
 
 Authored content flagged `needs_review`:
 
+- `content/site_guide.json`: where each kind of sensor usually goes (general guidance)
+- `baltanas` site-guide place `cellar88` (Cellar 88 / Κελάρι 88): From the ARGUS descriptions (Kitchen, Lagar, Chimney 1-4).
+- `baltanas` site-guide place `cellar364` (Cellar 364 / Κελάρι 364): From the ARGUS description 'Outside - car path'.
+- `baltanas` site-guide place `cellar193` (Cellar 193 / Κελάρι 193)
+- `baltanas` site-guide place `church` (Church of San Millán / Εκκλησία του Σαν Μιγιάν)
+- `delos` site-guide place `masks` (House of the Masks / Οικία με τα Προσωπεία): Mosaic names from the ARGUS sensor descriptions (rooms 214-217).
+- `delos` site-guide place `theatre` (Theatre / Θέατρο)
+- `delos` site-guide place `isis` (Temple of Isis / Ναός της Ίσιδος)
+- `delos` site-guide place `fournoi` (House of Fournoi / Οικία των Φούρνων): Greek name of the house to be checked.
+- `delos` site-guide place `inopos` (Inopos district / Συνοικία του Ινωπού)
+- `delos` site-guide place `skardanas` (Skardanas district / Συνοικία Σκαρδανά): From the ARGUS description 'Leaning wall in Skardanas district'.
+- `lucretili` site-guide place `conventillo` (Conventillo / Κονβεντίλο): From the ARGUS descriptions (first-storey crack, staircase façade, floors).
+- `lucretili` site-guide place `villa` (Horace's Villa / Έπαυλη του Οράτιου)
+- `lucretili` site-guide place `montefalco` (Montefalco Castle / Κάστρο Μοντεφάλκο)
+- `ranverso` site-guide place `church` (The church / Η εκκλησία)
+- `ranverso` site-guide place `abbey` (The abbey buildings / Τα κτίρια του μοναστηριού)
+- `schenkenberg` site-guide place `ruins` (Castle ruins / Ερείπια του κάστρου): 'Medieval' is general knowledge, not from the ARGUS data.
+- `schenkenberg` site-guide place `tower` (The tower / Ο πύργος): From the ARGUS descriptions (north wall, south wall, top of the tower).
 - Card `airflow`: Pir-Airflow Sensor (Baltanas) grouped here by name only; confirm what it measures.
 - Card `light_uv`: Merges three ARGUS types (lux meter, UV meter, pyranometer) into one card for simplicity.
 - Card `soil_moisture`: Water Potential Sensor (Baltanas) grouped here; it measures soil water tension rather than water content.

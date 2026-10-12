@@ -213,5 +213,42 @@
         "el": "Μια μικρή φωτιά, από αυτές που περιμένουμε περίπου μία φορά στα 30 χρόνια, μπορεί να καψαλίσει τις πέτρινες επιφάνειες."
       }
     }
+  },
+  "places": {
+    "_about": "Site guide: the main parts of the site, numbered on the map so players know where things are. AUTHORED names and notes (from OpenStreetMap names and ARGUS sensor descriptions), need review. Positions come from real data: 'osm' = an outline in content/backdrops, 'sensors' = ARGUS sensor places whose description contains that text.",
+    "list": [
+      {
+        "id": "ruins",
+        "at": {
+          "osm": 199731189
+        },
+        "name": {
+          "en": "Castle ruins",
+          "el": "Ερείπια του κάστρου"
+        },
+        "note": {
+          "en": "What is left of the medieval castle.",
+          "el": "Ό,τι έχει απομείνει από το μεσαιωνικό κάστρο."
+        },
+        "needs_review": true,
+        "review_note": "'Medieval' is general knowledge, not from the ARGUS data."
+      },
+      {
+        "id": "tower",
+        "at": {
+          "sensors": "tower"
+        },
+        "name": {
+          "en": "The tower",
+          "el": "Ο πύργος"
+        },
+        "note": {
+          "en": "Its north wall, its south wall and its top.",
+          "el": "Ο βόρειος και ο νότιος τοίχος του και η κορυφή του."
+        },
+        "needs_review": true,
+        "review_note": "From the ARGUS descriptions (north wall, south wall, top of the tower)."
+      }
+    ]
   }
 }

@@ -173,5 +173,40 @@
       "title": { "en": "Living growth", "el": "Βιολογική φθορά" },
       "text": { "en": "Mould, moss and other living things can grow on damp surfaces and damage them.", "el": "Μούχλα, βρύα και άλλοι οργανισμοί μπορούν να αναπτυχθούν σε υγρές επιφάνειες και να τις φθείρουν." }
     }
+  },
+  "places": {
+    "_about": "Site guide: the main parts of the site, numbered on the map so players know where things are. AUTHORED names and notes (from OpenStreetMap names and ARGUS sensor descriptions), need review. Positions come from real data: 'osm' = an outline in content/backdrops, 'sensors' = ARGUS sensor places whose description contains that text.",
+    "list": [
+      {
+        "id": "church",
+        "at": {
+          "osm": 80996989
+        },
+        "name": {
+          "en": "The church",
+          "el": "Η εκκλησία"
+        },
+        "note": {
+          "en": "Its walls are covered with old paintings.",
+          "el": "Οι τοίχοι της είναι γεμάτοι παλιές τοιχογραφίες."
+        },
+        "needs_review": true
+      },
+      {
+        "id": "abbey",
+        "at": {
+          "osm": 1353926416
+        },
+        "name": {
+          "en": "The abbey buildings",
+          "el": "Τα κτίρια του μοναστηριού"
+        },
+        "note": {
+          "en": "The old monastery around the church.",
+          "el": "Το παλιό μοναστήρι γύρω από την εκκλησία."
+        },
+        "needs_review": true
+      }
+    ]
   }
 }

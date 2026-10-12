@@ -1,0 +1,26 @@
+{
+  "_about": "AUTHORED by the game team. General guidance shown with every site guide: where each kind of sensor usually goes. Not ARGUS data; needs review. 'cards' are sensor card ids from sensor_cards.json, shown as icons.",
+  "needs_review": true,
+  "where": [
+    {
+      "id": "inside",
+      "cards": ["humidity", "temperature", "light_uv", "acoustic"],
+      "text": { "en": "Inside the building: damp air, heat, light and insects.", "el": "Μέσα στο κτίριο: υγρασία του αέρα, ζέστη, φως και έντομα." }
+    },
+    {
+      "id": "walls",
+      "cards": ["crackmeter", "tiltmeter", "vibration"],
+      "text": { "en": "On the walls: cracks, leaning and shaking.", "el": "Στους τοίχους: ρωγμές, κλίση και δονήσεις." }
+    },
+    {
+      "id": "ground",
+      "cards": ["soil_moisture"],
+      "text": { "en": "In the ground: water in the soil.", "el": "Στο έδαφος: νερό μέσα στο χώμα." }
+    },
+    {
+      "id": "open",
+      "cards": ["rain_gauge", "weather_station"],
+      "text": { "en": "In the open air: rain, wind and sun.", "el": "Στον ανοιχτό χώρο: βροχή, άνεμος και ήλιος." }
+    }
+  ]
+}

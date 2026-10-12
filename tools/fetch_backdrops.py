@@ -9,7 +9,8 @@ The plan is the map the game shows when satellite or street-map pictures cannot 
   - content/backdrops/<pilot>.json   OpenStreetMap ways around the monument (ODbL 1.0,
                                      "© OpenStreetMap contributors"), via the OSM API map call
   - content/backdrops/world_land.json  Natural Earth 1:110m land (public domain)
-The area around each monument is the box around its ARGUS sensors (game_data.json) plus a margin.
+The area is a box around each group of nearby ARGUS sensors (game_data.json) plus a margin, so
+monuments spread over several sites (Monti Lucretili: three sites km apart) get one small box each.
 Run this by hand when a monument becomes playable; build_game_data.py only copies the files.
 Standard library only, Python 3.9+. Needs network access; the build itself does not.
 """
@@ -21,7 +22,7 @@ import math
 import sys
 import urllib.request
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
 GAME_DATA = ROOT / "web" / "public" / "data" / "game_data.json"
@@ -30,6 +31,7 @@ USER_AGENT = "guardian-for-a-day/0.1 (ARGUS Open Innovation Challenge educationa
 OSM_MAP = "https://api.openstreetmap.org/api/0.6/map.json?bbox={west},{south},{east},{north}"
 NATURAL_EARTH = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_110m_land.geojson"
 MARGIN_M = 150
+CLUSTER_M = 500  # sensors closer than this share one OSM request
 EUROPE = (-30.0, 20.0, 50.0, 72.0)  # west, south, east, north: enough for the overview map
 
 GREEN = {"farmland", "meadow", "grass", "orchard", "vineyard", "forest", "village_green", "allotments"}
@@ -62,7 +64,27 @@ def kind_of(tags: Dict[str, str]) -> Optional[str]:
     return None
 
 
-def osm_backdrop(bounds: List[List[float]]) -> Dict[str, Any]:
+def metres(a: List[float], b: List[float]) -> float:
+    dx = (b[1] - a[1]) * math.cos(math.radians((a[0] + b[0]) / 2))
+    return math.hypot(dx, b[0] - a[0]) * 111_320
+
+
+def sensor_groups(mon: Dict[str, Any]) -> List[List[List[float]]]:
+    """Bounding boxes of groups of sensors closer than CLUSTER_M to the group's first sensor."""
+    points = [[p["lat"], p["lon"]] for p in (mon.get("installed") or {}).get("points", [])]
+    if not points:
+        return [mon["map"]["bounds"]]
+    groups: List[List[List[float]]] = []
+    for point in points:
+        group = next((g for g in groups if metres(g[0], point) < CLUSTER_M), None)
+        if group is None:
+            groups.append([point])
+        else:
+            group.append(point)
+    return [[[min(p[0] for p in g), min(p[1] for p in g)], [max(p[0] for p in g), max(p[1] for p in g)]] for g in groups]
+
+
+def osm_features(bounds: List[List[float]]) -> Tuple[str, List[Dict[str, Any]]]:
     (south, west), (north, east) = bounds
     dlat = MARGIN_M / 111_320
     dlon = MARGIN_M / (111_320 * max(0.2, math.cos(math.radians((south + north) / 2))))
@@ -86,8 +108,18 @@ def osm_backdrop(bounds: List[List[float]]) -> Dict[str, Any]:
         if tags.get("name"):
             props["name"] = tags["name"]
         features.append({"type": "Feature", "properties": props, "geometry": geometry})
+    return url, features
+
+
+def osm_backdrop(mon: Dict[str, Any]) -> Dict[str, Any]:
+    by_id: Dict[int, Dict[str, Any]] = {}
+    url = OSM_MAP
+    for bounds in sensor_groups(mon):
+        url, features = osm_features(bounds)
+        for feature in features:
+            by_id[feature["properties"]["osm_id"]] = feature  # a way can sit in two boxes
     order = ["green", "built", "site", "water", "road", "rail", "building", "heritage"]
-    features.sort(key=lambda f: (order.index(f["properties"]["kind"]), f["properties"]["osm_id"]))
+    features = sorted(by_id.values(), key=lambda f: (order.index(f["properties"]["kind"]), f["properties"]["osm_id"]))
     return {
         "type": "FeatureCollection",
         "attribution": "© OpenStreetMap contributors",
@@ -134,11 +166,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--all", action="store_true", help="every monument, not only playable ones")
     args = parser.parse_args(argv)
     game = json.loads(GAME_DATA.read_text(encoding="utf-8"))
+    failed = []
     write("world_land.json", world_land())
     for mon in game["monuments"]:
         if mon.get("map") and (args.all or mon["playable"]):
-            write(f"{mon['pilot_key']}.json", osm_backdrop(mon["map"]["bounds"]))
-    return 0
+            try:
+                write(f"{mon['pilot_key']}.json", osm_backdrop(mon))
+            except Exception as exc:  # keep going: one refused area must not block the others
+                failed.append(mon["pilot_key"])
+                print(f"fetch_backdrops: {mon['pilot_key']} failed: {exc}", file=sys.stderr)
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":

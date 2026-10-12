@@ -309,5 +309,57 @@
         "el": "Τα φυτά που κανείς δεν κόβει σκεπάζουν την έπαυλη και οι ρίζες τους σπάνε τους τοίχους της."
       }
     }
+  },
+  "places": {
+    "_about": "Site guide: the main parts of the site, numbered on the map so players know where things are. AUTHORED names and notes (from OpenStreetMap names and ARGUS sensor descriptions), need review. Positions come from real data: 'osm' = an outline in content/backdrops, 'sensors' = ARGUS sensor places whose description contains that text.",
+    "list": [
+      {
+        "id": "conventillo",
+        "at": {
+          "sensors": "Conventillo"
+        },
+        "name": {
+          "en": "Conventillo",
+          "el": "Κονβεντίλο"
+        },
+        "note": {
+          "en": "An old building with cracks on several floors.",
+          "el": "Ένα παλιό κτίριο με ρωγμές σε πολλούς ορόφους."
+        },
+        "needs_review": true,
+        "review_note": "From the ARGUS descriptions (first-storey crack, staircase façade, floors)."
+      },
+      {
+        "id": "villa",
+        "at": {
+          "osm": 159764391,
+          "sensors": "Villa di Orazio"
+        },
+        "name": {
+          "en": "Horace's Villa",
+          "el": "Έπαυλη του Οράτιου"
+        },
+        "note": {
+          "en": "A Roman villa with floor mosaics.",
+          "el": "Μια ρωμαϊκή έπαυλη με ψηφιδωτά δάπεδα."
+        },
+        "needs_review": true
+      },
+      {
+        "id": "montefalco",
+        "at": {
+          "sensors": "Montefalco"
+        },
+        "name": {
+          "en": "Montefalco Castle",
+          "el": "Κάστρο Μοντεφάλκο"
+        },
+        "note": {
+          "en": "A castle with old outer walls.",
+          "el": "Ένα κάστρο με παλιά εξωτερικά τείχη."
+        },
+        "needs_review": true
+      }
+    ]
   }
 }
