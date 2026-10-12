@@ -15,6 +15,8 @@ interface Props {
   classCode: string | null;
   setClassCode: (code: string | null) => void;
   onTeacher: () => void;
+  /** Opens the observation report for the selected monument. */
+  onReport: () => void;
 }
 
 /** Join or leave a class. Lives inside the home form, so Enter here joins instead of starting the game. */
@@ -105,7 +107,7 @@ function nearestLevel(levels: LevelSummary[], wanted: LevelId): LevelId | undefi
     .sort((a, b) => a.distance - b.distance)[0]?.l.id;
 }
 
-export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, setClassCode, onTeacher }: Props) {
+export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, setClassCode, onTeacher, onReport }: Props) {
   const { t, tn, pick } = useI18n();
   const mon = data.monuments.find((m) => m.pilot_key === pilot);
   const [level, setLevel] = useState<LevelId | undefined>(initialLevel ?? (mon && defaultLevel(mon.levels)));
@@ -210,6 +212,18 @@ export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, 
           <Icon name="arrow" />
         </button>
       </div>
+
+      {/* Citizen science without playing: for someone standing at a monument right now. */}
+      <section className="panel report-invite" aria-labelledby="report-invite-title">
+        <h2 id="report-invite-title">
+          <Icon name="observer" />
+          {t("report.homeTitle")}
+        </h2>
+        <p>{t("report.homeText")}</p>
+        <button type="button" className="btn btn-secondary" disabled={!mon?.playable} onClick={onReport}>
+          {t("report.open")}
+        </button>
+      </section>
     </form>
   );
 }

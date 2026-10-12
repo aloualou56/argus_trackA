@@ -84,6 +84,8 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison, map distances (pure, tested) | code |
 | `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws | code |
 | `web/src/community/` | anonymous records: device store, optional Supabase store with offline queue, class codes | code |
+| `web/src/game/report.ts` | the citizen observation report: its rules and its export in ARGUS's format (pure, tested) | code |
+| `web/src/screens/Observe.tsx` | the report form and the printable card | code |
 | `supabase/schema.sql` | tables and security rules for the optional shared store | code |
 | `tools/class_server.py` | optional class server: the game and a class's records from the teacher's computer, no cloud | code |
 | `web/src/runtime.ts` | settings the page gets from where it is served (class server, local-only mode) | code |
@@ -223,6 +225,28 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
   forced-colours support, `lang` switches with the language.
 - `npm run screenshots` runs axe-core (WCAG 2.1 A/AA) on every screen, in both languages, on phone and desktop.
   It catches about a third of real issues: a manual screen-reader pass (NVDA, VoiceOver, TalkBack) is still needed.
+
+## Citizen observation report
+
+The checklist at the end of the game tells visitors what to look out for. The observation report lets them act on
+it: "Report something you saw", on the first screen and on the score screen.
+
+- **The form:** which monument, what they saw (the six checklist items or "something else"), a short note, where,
+  the day, and an optional photo.
+- **Where** is a pin on the same map: tap to place it, drag to adjust, or choose a named part of the site (the
+  keyboard and screen-reader path). The card says "near <place>" when the pin is within 120 m of one.
+- **The card** can be printed (only the card prints) or shown on the phone to a guard. It says plainly that it is
+  a visitor's observation, not an expert's diagnosis.
+- **Nothing is sent.** The report is kept on the visitor's device only (the last 30, in `localStorage`), never in
+  the class or community store, because it holds the visitor's own words. The photo is not stored at all: it is on
+  the card while the page is open and gone after a reload.
+- **The data file** ("Save the data file") is the report as an ARGUS cultural-documentation record: the same
+  schema (`argus_cultural_documentation_v1`, CIDOC CRM E14 Condition Assessment) as the visual condition
+  assessment in the snapshot (a Delos test record). `web/tests/report.test.ts` checks our export field by field
+  against that real record. What a visitor cannot know stays empty (severity, asset state); the spot and the
+  checklist item sit under an added `citizen_observation` key. The photo is not in the file.
+- **Open question for ARGUS:** nothing loads these files into ARGUS. Whether ARGUS would accept citizen records,
+  and through which channel, is theirs to decide; the file is a proposal in their own format.
 
 ## Languages
 

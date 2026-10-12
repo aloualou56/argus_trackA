@@ -20,6 +20,10 @@ interface Props extends ScreenProps {
   /** "Play again with new dangers" when the level can draw a new mission. */
   replayLabel: string;
   onQuiz: () => void;
+  /** Called once this game is in the community store, so coming back here does not add it twice. */
+  onRecorded: () => void;
+  /** Opens the observation report for this monument. */
+  onReport: () => void;
 }
 
 const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: MessageKey }> = {
@@ -30,7 +34,7 @@ const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: 
   unscored: { cls: "learn is-info", icon: "talk", key: "score.noSensorTag" },
 };
 
-export function Score({ data, mon, session, classCode, go, community, onReplay, replayLabel, onQuiz }: Props) {
+export function Score({ data, mon, session, classCode, go, community, onReplay, replayLabel, onQuiz, onRecorded, onReport }: Props) {
   const { t, pick, list, number } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level, session.mission);
@@ -60,18 +64,23 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
   useEffect(() => {
     if (submitted.current) return;
     submitted.current = true;
-    community
-      .submit({
-        v: 1,
-        monument: mon.pilot_key,
-        level: session.level,
-        picks: session.picks,
-        score: result.total,
-        detected,
-        day: new Date().toISOString().slice(0, 10),
-        ...(classCode ? { classCode } : {}),
-        ...(session.decision ? { decision: session.decision } : {}),
-      })
+    // Coming back from the observation report: the game is already stored, only read the summary.
+    const stored = session.recorded
+      ? Promise.resolve()
+      : community
+          .submit({
+            v: 1,
+            monument: mon.pilot_key,
+            level: session.level,
+            picks: session.picks,
+            score: result.total,
+            detected,
+            day: new Date().toISOString().slice(0, 10),
+            ...(classCode ? { classCode } : {}),
+            ...(session.decision ? { decision: session.decision } : {}),
+          })
+          .then(onRecorded);
+    stored
       .then(() => summaryOf(community, { monument: mon.pilot_key, level: session.level, classCode: classCode ?? undefined }))
       .then(setSummary)
       .catch(() => setSummary(null));
@@ -167,9 +176,14 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
         <p className="citizen-report">
           <strong>{pick(data.checklist.report)}</strong>
         </p>
-        <button type="button" className="btn btn-quiet no-print" onClick={() => window.print()}>
-          {t("citizen.print")}
-        </button>
+        <div className="actions actions-split no-print">
+          <button type="button" className="btn btn-secondary" onClick={onReport}>
+            {t("report.open")}
+          </button>
+          <button type="button" className="btn btn-quiet" onClick={() => window.print()}>
+            {t("citizen.print")}
+          </button>
+        </div>
       </section>
 
       <section className="panel community" aria-labelledby="community-title">

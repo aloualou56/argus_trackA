@@ -1000,6 +1000,166 @@ main {
   background: var(--partial-bg);
   color: var(--partial);
 }
+/* Citizen observation report: the form, the card, and the pin on the map */
+.input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--edge);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+textarea.input {
+  resize: vertical;
+}
+.input-date {
+  width: auto;
+}
+.input[aria-invalid="true"] {
+  border-color: var(--no);
+}
+.input-file {
+  display: block;
+  max-width: 100%;
+  min-height: 48px;
+  font: inherit;
+}
+.report-option {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.report-option svg,
+.report-invite h2 svg {
+  flex: none;
+  color: var(--primary);
+}
+.report-invite {
+  margin-top: 1.5rem;
+}
+.report-invite h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.report-places {
+  margin-bottom: 0.75rem;
+}
+.report-places .place-row {
+  border: 1px solid var(--edge);
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+.report-where {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px dashed var(--edge);
+  border-radius: 0.5rem;
+  color: var(--muted);
+}
+.report-where.is-set {
+  border: 2px solid var(--yes);
+  background: var(--yes-bg);
+  color: var(--ink);
+  font-weight: 600;
+}
+.report-where svg {
+  flex: none;
+}
+.report-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 22rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+.report-card {
+  border: 2px solid var(--primary);
+}
+.report-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.report-card-id {
+  margin-top: -0.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+.report-facts {
+  margin: 0.75rem 0;
+}
+.report-facts > div {
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--line);
+}
+.report-facts dt {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.report-facts dd {
+  margin: 0.1rem 0 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.report-card-staff {
+  margin-bottom: 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+.report-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.report-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--line);
+}
+.report-list-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+/* Two classes: the general .pin size further down must not win over this one. */
+.pin.pin-report {
+  width: 38px;
+  height: 38px;
+  border-width: 3px;
+}
+.crosshair-label.report-hint {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+@media print {
+  /* The card keeps its frame on paper (other printed panels lose theirs). */
+  .printable.report-card {
+    border: 2px solid var(--primary);
+  }
+  .report-photo {
+    max-height: 11cm;
+  }
+}
+
 /* What would you do next? (after the alarm) */
 .next-step .choices {
   margin-bottom: 0.75rem;

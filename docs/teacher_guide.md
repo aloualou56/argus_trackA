@@ -59,9 +59,12 @@
 ## Ιδέες για συνέχεια
 
 - Επίσκεψη σε ένα τοπικό μνημείο με τη λίστα «Γίνε κι εσύ παρατηρητής».
+- **Αναφορά παρατήρησης.** Στην πρώτη οθόνη και στη βαθμολογία υπάρχει το «Ανάφερε κάτι που είδες»: ο μαθητής σημειώνει τι είδε, βάζει μια πινέζα στον χάρτη, διαλέγει μέρα και, αν θέλει, προσθέτει φωτογραφία. Παίρνει μια κάρτα που τυπώνεται ή δείχνεται στον φύλακα. Τίποτα δεν στέλνεται πουθενά: η αναφορά μένει στη συσκευή και η φωτογραφία δεν αποθηκεύεται. Δοκιμάστε το στην αυλή του σχολείου: «Τι θα σημείωνες για το δικό μας κτίριο;» Τα πέντε μνημεία του χάρτη είναι του ARGUS, οπότε για άλλο κτίριο η κάρτα γίνεται άσκηση στο χαρτί.
 - Η τάξη φτιάχνει τη δική της «αποστολή» για ένα μνημείο της περιοχής: ποιοι κίνδυνοι, ποιοι αισθητήρες, ποιοι άνθρωποι.
 
 ## Ιδιωτικότητα
+
+Η αναφορά παρατήρησης μένει μόνο στη συσκευή του μαθητή, γιατί έχει δικά του λόγια· ζητά να μη γράφονται ονόματα ανθρώπων, και η φωτογραφία δεν αποθηκεύεται.
 
 Το παιχνίδι δεν ζητά και δεν αποθηκεύει ονόματα, email, ώρα ή αναγνωριστικό συσκευής. Αποθηκεύει μόνο τις επιλογές αισθητήρων, τη βαθμολογία, τις σωστές/λάθος απαντήσεις, την ημερομηνία και, αν υπάρχει, τον κωδικό τάξης.
 
@@ -112,6 +115,10 @@ The teacher page shows three things: what the class chose next to what ARGUS ins
 - A sensor showed the same value for three weeks. What would you do?
 - After the alarm the game asks "What would you do next?". The ARGUS record says the same thing every time: look at the evidence and the monument first, then act. When would closing a monument at once be right? When is waiting dangerous?
 - Your group chose differently from ARGUS. Who had the better reason? (There is no single right answer.)
+
+## Follow-up: the observation report
+
+On the first screen and on the score screen, "Report something you saw" lets a student note what they saw, put a pin on the map, choose the day and, if they wish, add a photo. They get a card to print or show to a guard. Nothing is sent anywhere: the report stays on the device and the photo is not stored. Try it in the school yard: "What would you note about our own building?" The five monuments on the map are the ARGUS ones, so for another building the card becomes a paper exercise.
 
 ## Privacy
 

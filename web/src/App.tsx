@@ -12,13 +12,14 @@ import { isBaseLang, isLang, LANGS, useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
 import { Home } from "./screens/Home";
 import { Mission } from "./screens/Mission";
+import { Observe, type ReportOnMap } from "./screens/Observe";
 import { Quiz } from "./screens/Quiz";
 import { Reveal } from "./screens/Reveal";
 import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
 import { Teacher } from "./screens/Teacher";
 
-type Screen = "home" | "teacher" | Step | "quizPre" | "quizPost";
+type Screen = "home" | "teacher" | "observe" | Step | "quizPre" | "quizPost";
 
 const isStep = (screen: Screen): screen is Step => (STEPS as readonly string[]).includes(screen);
 /** What the map shows behind the quiz screens. */
@@ -34,6 +35,8 @@ export interface Session {
   picks: Picks;
   /** The player's answer to "what would you do next?" after the alarm, if they gave one. */
   decision: string | null;
+  /** This game is already in the community store (the score screen can be left and come back to). */
+  recorded: boolean;
 }
 
 export interface ScreenProps {
@@ -57,6 +60,12 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
   const [game, setGame] = useState<Omit<Session, "picks"> | null>(null);
   const [homePilot, setHomePilot] = useState<string | null>(null);
+  // The observation report in hand, and the screen to go back to. The map shows its pin.
+  const [report, setReport] = useState<(ReportOnMap & { from: Screen }) | null>(null);
+  const openReport = useCallback((pilot: string, from: Screen) => {
+    setReport({ pilot, at: null, editable: true, from });
+    setScreen("observe");
+  }, []);
   // The quiz before a game is asked once per visit; its marks are compared with the quiz after each game.
   const [preQuiz, setPreQuiz] = useState<{ asked: boolean; marks: boolean[] | null }>({ asked: false, marks: null });
   const [message, setMessage] = useState("");
@@ -100,7 +109,9 @@ export default function App() {
           ? t("quiz.postTitle")
           : screen === "teacher"
             ? t("teacher.title")
-            : null;
+            : screen === "observe"
+              ? t("report.title")
+              : null;
     document.title =
       screen === "home" ? t("app.title") : `${heading ?? t(stepKey(screen as Step))} · ${t("app.title")}`;
     if (firstScreen.current) {
@@ -118,7 +129,8 @@ export default function App() {
   const mon = data && game ? data.monuments.find((m) => m.pilot_key === game.pilot) : undefined;
   const playable = mon && isPlayable(mon) ? mon : null;
   const session: Session | null = game && { ...game, picks: countPicks(game.placements) };
-  const inGame = screen !== "home" && screen !== "teacher" && session && playable;
+  const inGame = screen !== "home" && screen !== "teacher" && screen !== "observe" && session && playable;
+  const observing = screen === "observe" && report && data ? report : null;
 
   const setPlacements = useCallback((update: (prev: Placement[]) => Placement[]) => {
     setGame((g) => (g ? { ...g, placements: update(g.placements) } : g));
@@ -154,9 +166,21 @@ export default function App() {
         onBack={() => setScreen("home")}
       />
     );
+  } else if (observing) {
+    body = (
+      <Observe
+        data={data}
+        report={observing}
+        setReport={(change) => setReport((r) => (r ? { ...r, ...change } : r))}
+        mapApi={mapApi}
+        announce={announce}
+        onBack={() => setScreen(observing.from)}
+      />
+    );
   } else if (!inGame) {
     body = (
       <Home
+        onReport={() => homePilot && openReport(homePilot, "home")}
         classCode={classCode}
         setClassCode={(code) => {
           setClassCode(code);
@@ -170,7 +194,7 @@ export default function App() {
         onStart={(pilot, level) => {
           const started = data.monuments.find((m) => m.pilot_key === pilot);
           const mission = started && isPlayable(started) ? (started.levels.find((l) => l.id === level)?.mission ?? []) : [];
-          setGame({ pilot, level, placements: [], mission, decision: null });
+          setGame({ pilot, level, placements: [], mission, decision: null, recorded: false });
           setScreen(preQuiz.asked ? "story" : "quizPre");
         }}
       />
@@ -181,7 +205,7 @@ export default function App() {
     // so classmates compare the same mission.
     const replay = () => {
       const drawn = classCode ? null : drawMission(data, playable, session.level, session.mission);
-      setGame((g) => (g ? { ...g, placements: [], mission: drawn ?? g.mission, decision: null } : g));
+      setGame((g) => (g ? { ...g, placements: [], mission: drawn ?? g.mission, decision: null, recorded: false } : g));
       setScreen(STEPS[0]);
     };
     const replayLabel = t(!classCode && canDrawMission(playable, session.level) ? "score.playNew" : "score.playAgain");
@@ -258,6 +282,8 @@ export default function App() {
             onReplay={replay}
             replayLabel={replayLabel}
             onQuiz={() => setScreen("quizPost")}
+            onRecorded={() => setGame((g) => (g ? { ...g, recorded: true } : g))}
+            onReport={() => openReport(playable.pilot_key, "score")}
           />
         )}
       </>
@@ -292,8 +318,10 @@ export default function App() {
         {data && (
           <GameMap
             data={data}
-            mode={inGame ? mapMode(screen) : "overview"}
-            pilot={inGame ? game!.pilot : homePilot}
+            mode={observing ? "report" : inGame ? mapMode(screen) : "overview"}
+            pilot={observing ? observing.pilot : inGame ? game!.pilot : homePilot}
+            reportPin={observing?.at}
+            onReportPin={observing?.editable ? (at) => setReport((r) => (r ? { ...r, at } : r)) : undefined}
             placements={inGame ? game!.placements : []}
             alarm={inGame && screen === "event" ? featuredAlarm(playable!, game!.level) : null}
             apiRef={mapApi}

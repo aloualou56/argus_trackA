@@ -13,7 +13,7 @@ import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } 
 import { useI18n } from "../i18n";
 import { iconSvg } from "./Icon";
 
-export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "score";
+export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "score" | "report";
 
 export interface MapApi {
   /** Centre of the current view: where the crosshair is. */
@@ -34,6 +34,10 @@ interface Props {
   onSelectSite: (pilot: string) => void;
   onMovePlacement: (id: string, at: LatLng) => void;
   onRemovePlacement: (id: string) => void;
+  /** "report" mode: the spot of the observation report, if marked. */
+  reportPin?: LatLng | null;
+  /** "report" mode: called when the visitor taps the map or drags the pin; absent while a finished card is shown. */
+  onReportPin?: (at: LatLng) => void;
 }
 
 // Placement reticle: ring and ticks leave the centre open; the dot is the exact spot a new
@@ -119,6 +123,8 @@ function label(marker: L.Marker, text: string): L.Marker {
 
 export function GameMap(props: Props) {
   const { data, mode, pilot, placements, alarm } = props;
+  const reportPin = props.reportPin ?? null;
+  const reportEditable = !!props.onReportPin;
   const { t, pick, lang } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -179,6 +185,8 @@ export function GameMap(props: Props) {
     map.on("zoomend moveend resize", () => declutterRef.current());
     map.on("click", (e: L.LeafletMouseEvent) => {
       if (latest.current.mode === "mission") map.panTo(e.latlng, { animate: !reduced });
+      // In the observation report, a tap marks the spot.
+      if (latest.current.mode === "report") latest.current.onReportPin?.([e.latlng.lat, e.latlng.lng]);
     });
     props.apiRef.current = {
       center: () => {
@@ -427,13 +435,18 @@ export function GameMap(props: Props) {
     }
     if (!playable) return;
 
+    if (mode === "report") {
+      drawPlaces(playable, layers.places);
+      if (reportPin) drawReportPin(reportPin, layers.player);
+      return;
+    }
     if (mode === "story" || mode === "mission") drawPlaces(playable, layers.places);
     const showArgus = mode === "reveal" || mode === "score" || mode === "event";
     if (showArgus) drawArgus(clusterPoints(playable.installed.points), layers.argus);
     if (mode === "event" && alarm) drawAlarm(alarm, layers.alarm);
     drawPlayer(layers.player, map);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, pilot, placements, alarm, lang, data]);
+  }, [mode, pilot, placements, alarm, lang, data, reportPin, reportEditable]);
 
   /** Site guide: dashed outlines and numbered markers for the main parts of the site. */
   function drawPlaces(monument: Monument, group: L.LayerGroup) {
@@ -533,6 +546,27 @@ export function GameMap(props: Props) {
       .addTo(group);
   }
 
+  /** The one pin of an observation report: where the visitor saw it. */
+  function drawReportPin(at: LatLng, group: L.LayerGroup) {
+    const marker = L.marker(at, {
+      draggable: reportEditable,
+      keyboard: true,
+      zIndexOffset: 1000,
+      icon: L.divIcon({
+        className: "",
+        html: `<span class="pin pin-you pin-report">${iconSvg("observer", 20)}</span>`,
+        iconSize: [38, 38],
+        iconAnchor: [19, 19],
+      }),
+    })
+      .on("dragend", (e) => {
+        const to = (e.target as L.Marker).getLatLng();
+        latest.current.onReportPin?.([to.lat, to.lng]);
+      })
+      .addTo(group);
+    label(marker, t("report.pin"));
+  }
+
   function drawPlayer(group: L.LayerGroup, map: L.Map) {
     const editable = mode === "mission";
     for (const p of placements) {
@@ -585,6 +619,11 @@ export function GameMap(props: Props) {
             </span>
           )}
         </>
+      )}
+      {mode === "report" && reportEditable && !reportPin && (
+        <span className="crosshair-label report-hint" aria-hidden="true">
+          {t("report.mapHint")}
+        </span>
       )}
       {/* Nothing to switch between when only the drawn plan is offered (local-only mode). */}
       {data.basemaps.layers.length > 1 && (

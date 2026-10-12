@@ -1455,6 +1455,15 @@ DESIGN_ASSUMPTIONS = [
     "(web/src/game/logic.ts, judgeDecision): looking first is where experts start; acting at once is too early; "
     "waiting is risky when the alarm came back within its episode or was at least twice its limit, otherwise "
     "fair. The choice is stored for class discussion and never scored.",
+    "Observation report: a visitor records what they saw (a checklist item or 'something else'), a note, the "
+    "spot (a pin on the map, rounded to about a metre), the day and an optional photo, and gets a card to print. "
+    "It is kept on the visitor's device only (never in the class or community store) and the photo is not stored "
+    "at all. The data file follows ARGUS's own cultural-documentation record (schema argus_cultural_documentation_v1, "
+    "CIDOC CRM E14 Condition Assessment, as in the snapshot's Delos test record): severity and the asset state "
+    "stay empty because a visitor cannot know them, the spot and the checklist item sit under an added "
+    "'citizen_observation' key, and site_key is the ARGUS site key whose name contains the nearest named place "
+    "(else the pilot key, which is not an ARGUS site key at Delos and Monti Lucretili). Nothing loads these files "
+    "into ARGUS: whether and how ARGUS would accept citizen records is a question for the ARGUS team.",
     "Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the "
     "map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.",
 ]
