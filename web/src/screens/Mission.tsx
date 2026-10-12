@@ -2,7 +2,7 @@
 // everything else (coins, Done, the three dangers, the sensor tray and an info line). The site
 // guide floats over the map. Sensors are added by tapping a tile (placed at the cross, also the
 // keyboard path) or by dragging a tile onto the map (placed where it is dropped).
-import { useEffect, useMemo, useRef, useState, type MutableRefObject, type PointerEvent as ReactPointerEvent } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type MutableRefObject, type PointerEvent as ReactPointerEvent } from "react";
 import { createPortal } from "react-dom";
 import type { ScreenProps } from "../App";
 import type { MapApi } from "../components/GameMap";
@@ -42,14 +42,33 @@ interface Drag {
 
 type Info = { kind: "card"; card: Card } | { kind: "danger"; danger: Scenario } | null;
 
+// Wide: the dock is a column beside the map, so the instruments are sorted under their group
+// names and the network is listed below them.
 const WIDE = "(min-width: 60rem)";
 
-function prefersWide(): boolean {
-  try {
-    return window.matchMedia(WIDE).matches;
-  } catch {
-    return false;
-  }
+/** Whether a media query matches now, kept up to date as the window changes. */
+function useMedia(query: string): boolean {
+  const read = () => {
+    try {
+      return window.matchMedia(query).matches;
+    } catch {
+      return false;
+    }
+  };
+  const [matches, setMatches] = useState(read);
+  useEffect(() => {
+    let list: MediaQueryList;
+    try {
+      list = window.matchMedia(query);
+    } catch {
+      return;
+    }
+    const update = () => setMatches(list.matches);
+    update();
+    list.addEventListener("change", update);
+    return () => list.removeEventListener("change", update);
+  }, [query]);
+  return matches;
 }
 
 export function Mission({ data, mon, session, go, announce, setPlacements, mapApi, improving, onImproved }: Props) {
@@ -60,12 +79,17 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
   const budget = budgetFor(mon, session.level);
   const left = coinsLeft(budget, picks, cards);
   const sensors = totalSensors(picks);
+  const wide = useMedia(WIDE);
   const [hint, setHint] = useState("");
   const [info, setInfo] = useState<Info>(null);
+  // Wide screens: a danger opens in place, on a click, and stays open while tiles are hovered, so
+  // nothing in the column moves under the pointer. Narrow screens read it in the info line.
+  const [openDanger, setOpenDanger] = useState<string | null>(null);
   // Closed at first: the numbered markers are on the map; the list opens on request.
   const [placesOpen, setPlacesOpen] = useState(false);
   const trayRef = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
+  const stopWatching = useRef<() => void>(() => {});
   const suppressClick = useRef(false);
   const ordered = useMemo(
     () => data.cards.groups.flatMap((g) => data.cards.cards.filter((c) => c.group === g.id)),
@@ -118,6 +142,8 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
 
   // ---------------------------------------------------------------- drag a tile onto the map
   function endDrag() {
+    stopWatching.current();
+    stopWatching.current = () => {};
     drag.current?.ghost?.remove();
     drag.current = null;
     document.body.classList.remove("is-dragging-sensor");
@@ -125,12 +151,29 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
 
   const onPointerDown = (e: ReactPointerEvent<HTMLButtonElement>, card: Card) => {
     if (e.button !== 0 || !card.on_map) return; // satellite images cover the whole area: tap only
+    endDrag();
     drag.current = { card, pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, active: false, ghost: null };
+    // A press can end off the tile, where the tile hears nothing: the window always does. It hears
+    // it after the tile's own handlers, so a press that ends on the tile is already settled.
+    const release = () => endDrag();
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+    window.addEventListener("blur", release);
+    stopWatching.current = () => {
+      window.removeEventListener("pointerup", release);
+      window.removeEventListener("pointercancel", release);
+      window.removeEventListener("blur", release);
+    };
   };
 
   const onPointerMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
     const d = drag.current;
     if (!d || d.pointerId !== e.pointerId) return;
+    // A mouse that moves with no button held is not dragging, whatever was missed before.
+    if (e.pointerType === "mouse" && !(e.buttons & 1)) {
+      endDrag();
+      return;
+    }
     if (!d.active) {
       const dx = e.clientX - d.startX;
       const dy = e.clientY - d.startY;
@@ -166,7 +209,12 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     const wasDrag = d.active;
     endDrag();
     if (!wasDrag) return; // a tap: the click handler places the sensor at the cross
+    // The click that ends a drag must not also place a sensor; a drag that brings no click must
+    // not swallow the next one.
     suppressClick.current = true;
+    window.setTimeout(() => {
+      suppressClick.current = false;
+    }, 0);
     const at = mapApi.current?.latLngAt(e.clientX, e.clientY);
     if (at) place(d.card, at);
     else announce(t("mission.dropMissed"));
@@ -189,7 +237,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
   const showPlace = (lat: number, lon: number, name: string) => {
     mapApi.current?.focus([lat, lon]);
     announce(t("map.movedTo", { name }));
-    if (!prefersWide()) setPlacesOpen(false); // give the map back on phones
+    if (!wide) setPlacesOpen(false); // give the map back on phones
   };
 
   const step = STEPS.indexOf("mission") + 1;
@@ -203,7 +251,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
         <span className="tray-info-cost">{tn("unit.coins", info.card.cost)}</span>
       </>
     );
-  } else if (info?.kind === "danger") {
+  } else if (info?.kind === "danger" && !wide) {
     infoLine = (
       <>
         <strong>{pick(info.danger.plain.title)}:</strong> {pick(info.danger.plain.text)}
@@ -300,31 +348,41 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
         <div className="dock-row">
           <span className="dock-label">{t("mission.dangersLabel")}</span>
           <ul className="chip-row">
-            {threats.map((s) => (
-              <li key={s.scenario_key}>
-                <button
-                  type="button"
-                  className="danger-chip"
-                  aria-pressed={info?.kind === "danger" && info.danger.scenario_key === s.scenario_key}
-                  aria-describedby={`danger-${s.scenario_key}`}
-                  onClick={() => {
-                    setHint("");
-                    setInfo({ kind: "danger", danger: s });
-                  }}
-                >
-                  <LevelBars id={s.level} />
-                  <span data-needs-review={s.plain.needs_review}>{pick(s.plain.title)}</span>
-                </button>
-                <span id={`danger-${s.scenario_key}`} hidden>
-                  {pick(s.plain.text)}
-                </span>
-              </li>
-            ))}
+            {threats.map((s) => {
+              const textId = `danger-${s.scenario_key}`;
+              const open = wide && openDanger === s.scenario_key;
+              return (
+                <li key={s.scenario_key}>
+                  <button
+                    type="button"
+                    className="danger-chip"
+                    {...(wide
+                      ? { "aria-expanded": open, "aria-controls": textId }
+                      : {
+                          "aria-pressed": info?.kind === "danger" && info.danger.scenario_key === s.scenario_key,
+                          "aria-describedby": textId,
+                        })}
+                    onClick={() => {
+                      setHint("");
+                      if (wide) setOpenDanger(open ? null : s.scenario_key);
+                      else setInfo({ kind: "danger", danger: s });
+                    }}
+                  >
+                    <LevelBars id={s.level} />
+                    {wide && <Icon name="chevron" size={16} />}
+                    <span data-needs-review={s.plain.needs_review}>{pick(s.plain.title)}</span>
+                  </button>
+                  <p id={textId} className="danger-text" hidden={!open} data-needs-review={s.plain.needs_review}>
+                    {pick(s.plain.text)}
+                  </p>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <p className="tray-info" aria-hidden="true">
-          {infoLine}
+          <span>{infoLine}</span>
         </p>
 
         <div className="dock-row">
@@ -346,47 +404,85 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
             const name = pick(card.name);
             const affordable = canAdd(card, budget, picks, cards);
             const firstOfGroup = i === 0 || ordered[i - 1].group !== card.group;
+            const group = data.cards.groups.find((g) => g.id === card.group);
             return (
-              <div key={card.id} className="tile-wrap" data-group={firstOfGroup ? card.group : undefined}>
-                <button
-                  type="button"
-                  className={`tile${n > 0 ? " is-picked" : ""}`}
-                  aria-label={t("mission.add", { name })}
-                  aria-describedby={`tell-${card.id}`}
-                  aria-disabled={!affordable}
-                  onClick={() => onTileClick(card)}
-                  onPointerDown={(e) => onPointerDown(e, card)}
-                  onPointerMove={onPointerMove}
-                  onPointerUp={onPointerUp}
-                  onPointerCancel={endDrag}
-                  onFocus={() => setInfo({ kind: "card", card })}
-                  onMouseEnter={() => setInfo({ kind: "card", card })}
-                >
-                  <Icon name={card.id} size={24} />
-                  <span className="tile-name">{name}</span>
-                  <span className="tile-cost">
-                    <Icon name="coin" size={12} />
-                    {card.cost}
-                  </span>
-                  {n > 0 && (
-                    <span className="tile-count" aria-hidden="true">
-                      {n}
+              <Fragment key={card.id}>
+                {wide && firstOfGroup && group && <h2 className="dock-label tray-group">{pick(group.name)}</h2>}
+                <div className="tile-wrap" data-group={firstOfGroup ? card.group : undefined}>
+                  <button
+                    type="button"
+                    className={`tile${n > 0 ? " is-picked" : ""}`}
+                    aria-label={t("mission.add", { name })}
+                    aria-describedby={`tell-${card.id}`}
+                    aria-disabled={!affordable}
+                    onClick={() => onTileClick(card)}
+                    onPointerDown={(e) => onPointerDown(e, card)}
+                    onPointerMove={onPointerMove}
+                    onPointerUp={onPointerUp}
+                    onPointerCancel={endDrag}
+                    onLostPointerCapture={endDrag}
+                    onFocus={() => setInfo({ kind: "card", card })}
+                    onMouseEnter={() => setInfo({ kind: "card", card })}
+                  >
+                    <Icon name={card.id} size={24} />
+                    <span className="tile-name">{name}</span>
+                    {/* The price as coins to count: the tile's description says the number. */}
+                    <span className="tile-cost" aria-hidden="true">
+                      {Array.from({ length: card.cost }, (_, k) => (
+                        <i key={k} />
+                      ))}
                     </span>
-                  )}
-                </button>
-                {n > 0 && (
-                  <button type="button" className="tile-minus" aria-label={t("mission.remove", { name })} onClick={() => removeOne(card)}>
-                    <Icon name="minus" size={14} />
+                    {n > 0 && (
+                      <span className="tile-count" aria-hidden="true">
+                        {n}
+                      </span>
+                    )}
                   </button>
-                )}
-                <span id={`tell-${card.id}`} hidden>
-                  {pick(card.tells)} {t("mission.costLabel")} {tn("unit.coins", card.cost)}. {t("mission.inNetwork", { n })}
-                </span>
-              </div>
+                  {n > 0 && (
+                    <button type="button" className="tile-minus" aria-label={t("mission.remove", { name })} onClick={() => removeOne(card)}>
+                      <Icon name="minus" size={14} />
+                    </button>
+                  )}
+                  <span id={`tell-${card.id}`} hidden>
+                    {pick(card.tells)} {t("mission.costLabel")} {tn("unit.coins", card.cost)}. {t("mission.inNetwork", { n })}
+                  </span>
+                </div>
+              </Fragment>
             );
           })}
         </div>
 
+        {/* What has been bought so far and what it cost, like the list in a field book. */}
+        {wide && (
+          <section className="ledger" aria-labelledby="ledger-title">
+            <h2 id="ledger-title" className="dock-label">
+              {t("mission.networkTitle")}
+            </h2>
+            {sensors === 0 ? (
+              <p className="ledger-empty">{t("mission.networkEmpty")}</p>
+            ) : (
+              <ul>
+                {ordered
+                  .filter((card) => picks[card.id])
+                  .map((card) => (
+                    <li key={card.id}>
+                      <Icon name={card.id} size={16} />
+                      <span className="ledger-name">{pick(card.name)}</span>
+                      <span className="ledger-n">×{picks[card.id]}</span>
+                      <span className="ledger-cost">{card.cost * (picks[card.id] ?? 0)}</span>
+                    </li>
+                  ))}
+              </ul>
+            )}
+            <p className="ledger-total">
+              <span>{t("mission.networkTotal")}</span>
+              <span className="ledger-sum">
+                <Icon name="coin" size={14} />
+                {budget - left} / {budget}
+              </span>
+            </p>
+          </section>
+        )}
       </div>
     </div>
   );

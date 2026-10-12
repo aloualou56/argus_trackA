@@ -334,5 +334,8 @@
   "photo.via": "de Wikimedia Commons",
   "photo.credits": "Créditos de las fotos",
   "photo.changes": "Las fotos se muestran más pequeñas que los originales.",
-  "story.dangerLabel": "Un peligro de esta misión"
+  "story.dangerLabel": "Un peligro de esta misión",
+  "mission.networkTitle": "Tu red",
+  "mission.networkEmpty": "Todavía no hay sensores.",
+  "mission.networkTotal": "Monedas gastadas"
 }

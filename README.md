@@ -118,9 +118,14 @@ one content pack (`data/i18n/<lang>.json`, 16 KB compressed). It never loads `as
   zoom at every ARGUS sensor (Delos 18, Ranverso and Lucretili 19, Baltanás 20, Schenkenberg 21) into
   `content/imagery_zoom.json`. The map never asks deeper than that; it stretches the last real level, and you can
   zoom at most two levels past it. `npm run screenshots` zooms in fully at every site and fails on any such picture.
-- **Mission screen (one screen, no scrolling).** The map fills the screen; a dock holds the step, coins, Done, the
-  three dangers (tap one to read it), an info line and the sensor tray (17 tiles: two swipeable rows on phones,
-  a right-hand column with every tile on wide screens). A "Places" button over the map opens the site guide.
+- **Mission screen (the map never scrolls away).** The map fills the screen; a dock holds the step, coins, Done,
+  the three dangers (tap one to read it), an info line and the sensor tray (17 tiles, each showing its price as
+  coins; hollow coins mean more than is left). On phones the tray is two swipeable rows. On wide screens the dock
+  is a right-hand column: the dangers are a list (a click opens one in place), the tiles are sorted under their
+  four group names, and below them "Your network" lists what was bought and what it cost. Nothing in that column
+  moves while the pointer passes over the tiles: the info line is a window of a fixed size (four lines, the
+  longest description in any language) and the column keeps room for its scrollbar. On a short screen the column
+  scrolls and the info line stays in view. A "Places" button over the map opens the site guide.
 - **Placing:** tap a tile to put the sensor at the reticle, or drag the tile onto the map to put it exactly where you
   drop it (touch: drag upwards; sideways swipes the tray). Tap the map to move the reticle, drag pins to adjust, tap a
   pin or use the tile's "−" to remove one. Keyboard: Tab to a tile, Enter or Space adds it at the reticle. The

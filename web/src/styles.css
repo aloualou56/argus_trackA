@@ -1980,9 +1980,6 @@ html {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
 }
 .tile-count {
   position: absolute;
@@ -2015,12 +2012,14 @@ html {
   cursor: pointer;
 }
 .tray-info {
-  display: -webkit-box;
   min-height: 2.7em;
   margin: 0;
-  overflow: hidden;
   font-size: 0.85rem;
   line-height: 1.35;
+}
+.tray-info > span {
+  display: -webkit-box;
+  overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
@@ -2219,8 +2218,10 @@ body.is-dragging-sensor .board-map .map {
     touch-action: auto;
   }
   .tray-info {
-    -webkit-line-clamp: 4;
     min-height: 4em;
+  }
+  .tray-info > span {
+    -webkit-line-clamp: 4;
   }
 }
 
@@ -2729,13 +2730,22 @@ b {
 
 /* ---- coins: brass tokens */
 .coins-text svg,
-.tile-cost svg,
+.ledger-sum svg,
 .budget-text svg {
   color: var(--coin-ink);
   fill: var(--coin);
 }
-.tile-cost {
-  color: var(--coin-ink);
+/* A tile's price is its coins, to count. Hollow coins: more than is left to spend. */
+.tile-cost i {
+  width: 0.62rem;
+  height: 0.62rem;
+  border: 1.5px solid var(--coin-ink);
+  border-radius: 50%;
+  background: var(--coin);
+}
+.tile[aria-disabled="true"] .tile-cost i {
+  border-color: var(--disabled);
+  background: transparent;
 }
 .budget-meter {
   border-color: var(--coin-ink);
@@ -2768,6 +2778,159 @@ b {
 }
 .tile.is-picked {
   background: var(--primary-soft);
+}
+
+/* The dangers are rated by ARGUS, so their scales wear its colour here too. */
+.danger-chip .level-bars span.on {
+  background: var(--argus-pin);
+  border-color: var(--argus-pin);
+}
+/* The instrument case, sorted: each group under its name and a rule. */
+.tray-group {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0 0;
+}
+.tray-group:first-child {
+  margin-top: 0;
+}
+.tray-group::after {
+  flex: 1;
+  border-top: 1px solid var(--line);
+  content: "";
+}
+/* The network so far, as the list in a field book: instrument, how many, coins. */
+.ledger {
+  margin-top: 0.6rem;
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--ink);
+}
+.ledger h2 {
+  margin: 0 0 0.35rem;
+}
+.ledger ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ledger li {
+  display: grid;
+  grid-template-columns: auto 1fr auto 2.2rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px dotted var(--edge);
+  font-size: 0.85rem;
+}
+.ledger li svg {
+  color: var(--primary);
+}
+.ledger-n,
+.ledger-cost,
+.ledger-sum {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.ledger-n {
+  color: var(--muted);
+}
+.ledger-cost {
+  font-weight: 700;
+  text-align: right;
+}
+.ledger-empty {
+  margin: 0;
+  padding: 0.3rem 0;
+  border-bottom: 1px dotted var(--edge);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.ledger-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.ledger-sum {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+@media (min-width: 60rem) {
+  /* The column keeps its width whether or not it has to scroll (a rem wider, for that gutter). */
+  .app.is-play .board-panel {
+    width: 28rem;
+    scrollbar-gutter: stable;
+  }
+  /* The line that says what a sensor tells stays in view while the case scrolls under it. It is a
+     window of a fixed size (four lines, the longest text in any language), so the tiles below
+     never move as the pointer passes from one to the next. */
+  .tray-info {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    box-sizing: content-box;
+    height: calc(4 * 1.35em);
+    min-height: 0;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0.45rem var(--gutter);
+    border-block: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .tray {
+    padding-top: 0.35rem;
+  }
+  .tile {
+    height: 4.9rem;
+  }
+  /* The three dangers as a list, one to a line; the chosen one is tinted and underlined. */
+  .dock .chip-row {
+    display: grid;
+    width: 100%;
+    padding: 0;
+  }
+  .dock .chip-row li + li {
+    border-top: 1px solid var(--line);
+  }
+  .danger-chip {
+    width: 100%;
+    max-width: none;
+    min-height: 40px;
+    padding: 0.4rem 0.5rem;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 0.9rem;
+    text-align: left;
+    white-space: normal;
+  }
+  .danger-chip:hover {
+    background: var(--tint);
+  }
+  /* A danger opens in place on a click: the arrow turns and its text shows below its name. */
+  .danger-chip > svg {
+    flex: none;
+    order: 2;
+    margin-left: auto;
+    color: var(--muted);
+  }
+  .danger-chip[aria-expanded="true"] > svg {
+    transform: rotate(180deg);
+  }
+  .danger-text {
+    margin: 0;
+    padding: 0 0.5rem 0.6rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
 }
 
 /* ---- the map sheet */
@@ -3265,6 +3428,7 @@ b {
   .progress-bar li.done,
   .progress-bar li.now,
   .coin-row i,
+  .tile-cost i,
   .budget-meter span {
     background: CanvasText;
   }

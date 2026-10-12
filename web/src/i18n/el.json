@@ -334,5 +334,8 @@
   "photo.via": "από το Wikimedia Commons",
   "photo.credits": "Πηγές φωτογραφιών",
   "photo.changes": "Οι φωτογραφίες εμφανίζονται σε μικρότερο μέγεθος από τις αρχικές.",
-  "story.dangerLabel": "Ένας κίνδυνος αυτής της αποστολής"
+  "story.dangerLabel": "Ένας κίνδυνος αυτής της αποστολής",
+  "mission.networkTitle": "Το δίκτυό σου",
+  "mission.networkEmpty": "Κανένας αισθητήρας ακόμη.",
+  "mission.networkTotal": "Νομίσματα που ξόδεψες"
 }
