@@ -18,7 +18,7 @@
     "needs_review": true,
     "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic)."
   },
-  "budget": 8,
+  "budget": 12,
   "missions": {
     "_about": "Three scenario keys per priority level. Lucretili has no Low or Medium scenarios. The Catastrophic mission includes the loss of dry-stone-walling knowledge on purpose: no sensor can warn about it, which the score screen teaches (it is not scored).",
     "Catastrophic priority": [

@@ -8,6 +8,7 @@ import {
   checklistFor,
   coinsLeft,
   compareMix,
+  argusCost,
   clusterPoints,
   nativeZoom,
   countPicks,
@@ -37,7 +38,12 @@ describe("data pack", () => {
     for (const m of data.monuments.filter(isPlayable)) expect(m.budget, m.pilot_key).toBeGreaterThan(0);
   });
 
-  it("lets every level of every monument reach a full score within the budget, but not buy everything", () => {
+  // Balance: room to experiment everywhere, but at most levels not enough to buy every helpful card.
+  const SPARE_COINS = 4;
+
+  it("leaves every level room to experiment, but still makes most levels choose", () => {
+    let levels = 0;
+    let everythingFits = 0;
     for (const mon of data.monuments.filter(isPlayable)) {
       for (const lv of mon.levels.filter((l) => l.available)) {
         const threats = missionScenarios(mon, lv.id);
@@ -51,13 +57,16 @@ describe("data pack", () => {
           const s = score(threats, rule, picks, cards);
           if (s.total === 100) perfect = Math.min(perfect, s.spentCoins);
         }
-        expect(perfect, `${mon.pilot_key} ${lv.id}`).toBeLessThanOrEqual(mon.budget);
-        // ...but buying every card that helps does not fit, so the player has to choose.
+        // A full score leaves spare coins for a second sensor or a guess that turns out wrong.
+        expect(perfect, `${mon.pilot_key} ${lv.id}`).toBeLessThanOrEqual(mon.budget - SPARE_COINS);
         const everything = new Set([...threats.flatMap((s) => s.capable_cards), ...(rule?.detect_with.flat() ?? [])]);
         const all = [...everything].reduce((sum, c) => sum + cards.get(c)!.cost, 0);
-        expect(all, `${mon.pilot_key} ${lv.id}`).toBeGreaterThan(mon.budget);
+        levels += 1;
+        if (all <= mon.budget) everythingFits += 1;
       }
     }
+    // ...but at most levels (12 of 19 today), buying every card that helps does not fit.
+    expect(everythingFits / levels).toBeLessThan(0.5);
   });
 
   it("offers every available level a 3-threat mission and a real alarm", () => {
@@ -70,17 +79,10 @@ describe("data pack", () => {
     expect(() => missionScenarios(ranverso, "catastrophic")).toThrow();
   });
 
-  it("a full score fits the budget, but buying every helpful card does not", () => {
-    for (const lv of ranverso.levels.filter((l) => l.available)) {
-      const threats = missionScenarios(ranverso, lv.id);
-      const rule = ruleFor(data, ranverso, featuredAlarm(ranverso, lv.id)!)!;
-      // Upper bound for a perfect network: the cheapest primary card per threat plus the cheapest alarm card.
-      const cheapest = (ids: string[]) => Math.min(...ids.map((c) => cards.get(c)!.cost));
-      const perfect = threats.reduce((sum, s) => sum + cheapest(s.primary_cards), 0) + cheapest(rule.detect_with[0]);
-      expect(perfect, lv.id).toBeLessThanOrEqual(ranverso.budget);
-      const everything = new Set([...threats.flatMap((s) => s.capable_cards), ...rule.detect_with.flat()]);
-      expect([...everything].reduce((sum, c) => sum + cards.get(c)!.cost, 0), lv.id).toBeGreaterThan(ranverso.budget);
-    }
+  it("gives every monument the same budget, far below what the real ARGUS network would cost", () => {
+    const budgets = new Set(data.monuments.filter(isPlayable).map((m) => m.budget));
+    expect([...budgets]).toEqual([12]);
+    for (const mon of data.monuments.filter(isPlayable)) expect(argusCost(mon, cards), mon.pilot_key).toBeGreaterThan(mon.budget);
   });
 
   it("every threat that a card can help with has at least one primary card", () => {

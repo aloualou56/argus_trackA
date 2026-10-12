@@ -1377,7 +1377,7 @@
     "review_note": "Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).",
     "authored": true
    },
-   "budget": 8,
+   "budget": 12,
    "scenarios": [
     {
      "threat_id": 75,
@@ -4065,7 +4065,7 @@
     "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme).",
     "authored": true
    },
-   "budget": 8,
+   "budget": 12,
    "scenarios": [
     {
      "threat_id": 21,
@@ -5295,7 +5295,7 @@
     "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).",
     "authored": true
    },
-   "budget": 8,
+   "budget": 12,
    "scenarios": [
     {
      "threat_id": 27,
@@ -7370,7 +7370,7 @@
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).",
     "authored": true
    },
-   "budget": 8,
+   "budget": 12,
    "scenarios": [
     {
      "threat_id": 123,
@@ -9512,7 +9512,7 @@
     "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.",
     "authored": true
    },
-   "budget": 8,
+   "budget": 12,
    "scenarios": [
     {
      "threat_id": 45,

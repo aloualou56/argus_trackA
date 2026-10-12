@@ -63,6 +63,25 @@ async function checkPage(page, label) {
   }
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 0) note(`${label}: horizontal overflow of ${overflow}px`);
+  // Fixed frame: the page never scrolls, and scrolling the panel leaves the top bar and the map in place.
+  const frame = await page.evaluate(async () => {
+    const top = (sel) => document.querySelector(sel)?.getBoundingClientRect().top ?? null;
+    const before = [top(".topbar"), top(".board-map")];
+    const panel = document.querySelector(".board-panel");
+    const start = panel?.scrollTop ?? 0;
+    panel?.scrollTo({ top: panel.scrollHeight });
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise((r) => requestAnimationFrame(() => r()));
+    const after = [top(".topbar"), top(".board-map")];
+    const pageScroll = document.documentElement.scrollHeight - window.innerHeight;
+    panel?.scrollTo({ top: start });
+    window.scrollTo(0, 0);
+    return { before, after, pageScroll };
+  });
+  if (frame.pageScroll > 1) note(`${label}: the page scrolls by ${frame.pageScroll}px (only the panel should)`);
+  if (frame.before[0] !== frame.after[0] || frame.before[1] !== frame.after[1]) {
+    note(`${label}: top bar or map moved when scrolling (${JSON.stringify(frame.before)} -> ${JSON.stringify(frame.after)})`);
+  }
 }
 
 async function expectFocusOnHeading(page, label) {
@@ -184,7 +203,8 @@ async function play(browser, lang, vpName) {
   const coinsText = fill(t["mission.coinsLeft"], { left: ranverso.budget - 2 * 1 - 2 - 2, budget: ranverso.budget });
   if (!(await page.locator("#main").getByText(coinsText).isVisible())) note(`${prefix}: expected "${coinsText}"`);
 
-  // Overspending is blocked and announced (the camera costs more than the coins left).
+  // Overspending is blocked and announced: one camera fits, a second one costs more than the coins left.
+  await add("camera").click();
   await add("camera").click({ force: true });
   const afterCamera = await page.locator("[aria-live=polite]").innerText();
   if (!afterCamera.includes(fill(t["mission.notEnough"], { name: cardName(lang, "camera") }))) {
@@ -220,8 +240,8 @@ async function play(browser, lang, vpName) {
   );
   if (!(nearest < 30)) note(`${prefix}: dropped sensor is ${Math.round(nearest)} px from the drop point`);
 
-  // humidity x2, soil x1, crack x1 at the cross, thermometer where dropped: five pins
-  await checkMap(page, `${prefix} mission`, ".pin-you", 5);
+  // humidity x2, soil, crack and camera at the cross, thermometer where dropped: six pins
+  await checkMap(page, `${prefix} mission`, ".pin-you", 6);
   const scroll = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
   if (scroll > 0) note(`${prefix}: the mission page scrolls by ${scroll}px; it should fit the screen`);
   if (!(await page.locator(".crosshair").count())) note(`${prefix}: no crosshair on the mission map`);

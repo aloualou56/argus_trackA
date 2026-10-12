@@ -337,3 +337,8 @@ export function newPlacementId(): string {
 export function nativeZoom(layer: Basemap, mon: { map: MapView | null } | null): number | undefined {
   return mon?.map?.max_native_zoom?.[layer.id] ?? layer.max_native_zoom;
 }
+
+/** What the real ARGUS network would cost at the game's coin prices (instruments with a card only). */
+export function argusCost(mon: Monument, cards: Map<string, Card>): number {
+  return mon.installed.by_card.reduce((sum, row) => sum + row.count * (cards.get(row.card)?.cost ?? 0), 0);
+}

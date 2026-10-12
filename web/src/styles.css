@@ -1457,6 +1457,59 @@ main {
   color: var(--primary);
 }
 
+/* ------------------------------------------------------------------ fixed frame */
+/* The page itself never scrolls: the top bar and the map stay put and only the panel scrolls,
+   inside itself. (A scrolling page made the top bar disappear and the map shift.) */
+
+html {
+  scroll-padding-top: 0;
+}
+.app {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.topbar {
+  flex: none;
+}
+.board {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.board.no-map {
+  display: block;
+  overflow-y: auto;
+}
+.board-map {
+  position: relative;
+  top: auto;
+  flex: none;
+  height: 42%;
+  min-height: 200px;
+}
+.board-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 60rem) {
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(24rem, 34rem);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .board-map {
+    height: auto;
+    min-height: 0;
+  }
+}
+
 /* ------------------------------------------------------------------ mission: played on the map */
 /* The page does not scroll: the map takes the height the dock does not need. */
 

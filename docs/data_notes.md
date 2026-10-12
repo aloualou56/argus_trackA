@@ -570,14 +570,14 @@ Authored content flagged `needs_review`:
 - `content/monuments/baltanas.json` story: '374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme).
 - `content/monuments/baltanas.json`: all 5 plain-language threat texts are placeholders (check science and Greek)
 - `baltanas` discussion prompt "ARGUS put 7 thermometers and 6 humidity sensors in the cella...": Counts from the ARGUS installed instruments for Baltanas.
-- `baltanas` mission picks per level and budget (8 coins)
+- `baltanas` mission picks per level and budget (12 coins)
 - `content/monuments/delos.json` story: Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).
 - `content/monuments/delos.json`: all 36 plain-language threat texts are placeholders (check science and Greek)
 - `delos` discussion prompt "ARGUS put 6 soil-moisture probes and 5 humidity sensors on D...": Counts from the ARGUS installed instruments for Delos.
 - `delos` discussion prompt "Many visitors come to Delos every summer. How could visitors...": Visitor numbers are general knowledge, not ARGUS data.
 - `delos` alarm explanation for `DL_humidity` and its linked threats ['delos-masks.rh-fluctuations.site', 'delos-masks.salinity.site']
 - `delos` alarm explanation for `DL_soil_moisture` and its linked threats ['delos-masks.water-rise.site', 'delos-masks.salinity.site', 'delos-masks.rh-fluctuations.site']
-- `delos` mission picks per level and budget (8 coins)
+- `delos` mission picks per level and budget (12 coins)
 - `content/monuments/lucretili.json` story: Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).
 - `content/monuments/lucretili.json`: all 19 plain-language threat texts are placeholders (check science and Greek)
 - `lucretili` discussion prompt "The sites here are kilometres apart: Horace's villa, the cas...": ARGUS sensor positions: Sant'Angelo al Morra about 42.024, 12.827 and Horace's villa about 42.066, 12.902, roughly 7 km apart.
@@ -586,20 +586,20 @@ Authored content flagged `needs_review`:
 - `lucretili` alarm explanation for `R7_wind` and its linked threats ['lucretili-villa-orazio.forest-management.structures', 'lucretili-villa-orazio.abandonment.structures']
 - `lucretili` alarm explanation for `R8_baro` and its linked threats []
 - `lucretili` alarm explanation for `R9b_temp_st` and its linked threats []
-- `lucretili` mission picks per level and budget (8 coins)
+- `lucretili` mission picks per level and budget (12 coins)
 - `content/monuments/ranverso.json` story: History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).
 - `content/monuments/ranverso.json`: all 26 plain-language threat texts are placeholders (check science and Greek)
 - `ranverso` discussion prompt "One ARGUS soil-moisture sensor here showed almost the same v...": From the R4b_soil_low alarms (values 2.457 to 2.476 against a limit of 5, sensor A8610A333526680F). A stuck sensor is our reading, not confirmed by ARGUS, so the prompt asks rather than states. It replaces replaying this alarm in the Low level.
 - `ranverso` discussion prompt "Several ARGUS sensors sit next to the left altar inside the ...": Based on alarm variable names ('in_left_altar_hum', 'altar_tilt_z'). Check with the Ranverso team; 'Αγία Τράπεζα' for a Catholic side altar may need a better word.
 - `ranverso` alarm explanation for `R2_rain_7d` and its linked threats ['ranverso.water.groundwater', 'ranverso.water.flooding', 'ranverso.incorrect-rh.prolonged-wet-periods', 'ranverso.physical-forces.storm']
 - `ranverso` alarm explanation for `R4b_soil_low` and its linked threats ['ranverso.water.groundwater', 'ranverso.incorrect-rh.prolonged-dry-periods']
-- `ranverso` mission picks per level and budget (8 coins)
+- `ranverso` mission picks per level and budget (12 coins)
 - `content/monuments/schenkenberg.json` story: 'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.
 - `content/monuments/schenkenberg.json`: all 11 plain-language threat texts are placeholders (check science and Greek)
 - `schenkenberg` discussion prompt "ARGUS put 4 vibration sensors here but no camera to watch th...": Counts from the ARGUS installed instruments (4 in the vibration card: vibration and accelerometer sensors; no camera).
 - `schenkenberg` discussion prompt "Experts scored plants cut back every year, every three years...": ABC magnitudes 12.0 (annually), 12.5 (every 3 years), 13.0 (untreated), all Extreme.
 - `schenkenberg` alarm explanation for `R2_crack_step` and its linked threats ['schenkenberg.freeze-thaw.masonry', 'schenkenberg.earthquake.475y', 'schenkenberg.plant-growth.untreated-30y']
 - `schenkenberg` alarm explanation for `R3_vib_zscore` and its linked threats ['schenkenberg.wind-storm.walls', 'schenkenberg.earthquake.475y']
-- `schenkenberg` mission picks per level and budget (8 coins)
+- `schenkenberg` mission picks per level and budget (12 coins)
 - `content/citizen_checklist.json`: what visitors should look out for and how to report it
 - `content/quiz.json`: 5 pre/post quiz questions, answers and explanations

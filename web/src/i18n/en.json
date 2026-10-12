@@ -224,5 +224,6 @@
   "mission.places": "Places",
   "mission.trayHint": "Tap a sensor to put it at the cross, or drag it onto the map.",
   "mission.dropped": "Placed where you dropped it.",
-  "mission.dropMissed": "Drop the sensor on the map to place it."
+  "mission.dropMissed": "Drop the sensor on the map to place it.",
+  "reveal.argusCost": "At game prices, the ARGUS sensors here would cost about {argus} coins. You had {budget}: real monitoring also has to choose."
 }

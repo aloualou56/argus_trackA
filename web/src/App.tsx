@@ -103,7 +103,8 @@ export default function App() {
       firstScreen.current = false;
       return;
     }
-    window.scrollTo({ top: 0 });
+    // The page is a fixed frame; the panel is what scrolls, so a new screen starts at its top.
+    mainRef.current?.closest(".board-panel")?.scrollTo({ top: 0 });
     mainRef.current?.querySelector<HTMLElement>("h1")?.focus();
   }, [screen, load.state, t]);
 

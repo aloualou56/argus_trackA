@@ -12,7 +12,7 @@
     "needs_review": true,
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme)."
   },
-  "budget": 8,
+  "budget": 12,
   "missions": {
     "_about": "Three scenario keys per priority level. Ranverso has only 2 Extreme scenarios, so the Extreme mission borrows the strongest High one. Ranverso has no Catastrophic scenarios.",
     "Extreme priority": ["ranverso.water.groundwater", "ranverso.pests.woodworms", "ranverso.incorrect-rh.prolonged-wet-periods"],

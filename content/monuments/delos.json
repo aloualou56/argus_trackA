@@ -18,7 +18,7 @@
     "needs_review": true,
     "review_note": "Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses)."
   },
-  "budget": 8,
+  "budget": 12,
   "missions": {
     "_about": "Three scenario keys per priority level, mixing the two houses and avoiding repeats of the same kind of threat. Delos has only 1 Extreme scenario, so that mission borrows two High ones.",
     "Catastrophic priority": [
