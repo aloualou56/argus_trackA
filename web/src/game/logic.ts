@@ -5,6 +5,7 @@ import type {
   Basemap,
   Card,
   ChecklistItem,
+  DecisionOption,
   GameData,
   LatLng,
   Level,
@@ -243,6 +244,27 @@ export function autoPrompts(rows: MixRow[], distances: Map<string, number> = new
   return out;
 }
 
+// ---------------------------------------------------------------- what would you do next?
+
+/** first: where experts start; fair: defensible; risky: likely to lose time; early: acting before looking. */
+export type DecisionVerdict = "first" | "fair" | "risky" | "early";
+
+/** An alarm at least this many times its limit is too strong to sit on. */
+export const STRONG_ALARM = 2;
+
+/**
+ * How a choice after the alarm compares with what ARGUS records for every alarm ("review alarm
+ * evidence and affected asset context before intervention"). Never scored: it feeds the discussion.
+ * `alarm` is null where a monument has no alarm to replay.
+ */
+export function judgeDecision(option: DecisionOption, alarm: Alarm | null): DecisionVerdict {
+  if (option.stance === "review") return "first";
+  if (option.stance === "act") return "early";
+  const cameBack = (alarm?.episode.alarm_count ?? 1) > 1;
+  const strong = (alarm?.times_threshold ?? 1) >= STRONG_ALARM;
+  return cameBack || strong ? "risky" : "fair";
+}
+
 // ---------------------------------------------------------------- citizen checklist
 
 /** Checklist items, the ones about this mission's dangers first; `forMission` marks those. */
@@ -335,6 +357,16 @@ let nextId = 0;
 export function newPlacementId(): string {
   nextId += 1;
   return `p${Date.now().toString(36)}${nextId}`;
+}
+
+/**
+ * The data pack for a game that must not ask anything from outside its own server: only the drawn
+ * plan (shipped with the game) stays as a base map. Unchanged when the pack has no drawn plan.
+ */
+export function withoutOnlineMaps(data: GameData): GameData {
+  const drawn = data.basemaps.layers.filter((l) => l.type === "vector");
+  if (!drawn.length) return data;
+  return { ...data, basemaps: { ...data.basemaps, default: drawn[0].id, layers: drawn } };
 }
 
 /**

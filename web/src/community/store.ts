@@ -2,6 +2,7 @@
 // The game talks only to CommunityStore:
 //   LocalCommunityStore     this device only (localStorage, or memory when storage is blocked)
 //   SupabaseCommunityStore  shared by everyone, through Supabase's REST API (no SDK)
+//   LanCommunityStore       shared by one class, kept by tools/class_server.py on the teacher's computer
 //   SharedWithFallback      shared when online; keeps a local copy and queues what could not be sent
 // Records hold no names, no times and no device ids, only the date and an optional class code.
 import type { Picks } from "../game/types";
@@ -16,6 +17,8 @@ export interface PlayRecord {
   /** Date only (YYYY-MM-DD): no time, no names, no device id. */
   day: string;
   classCode?: string;
+  /** What the player would do first after the alarm (an option id of content/decisions.json), if they chose. */
+  decision?: string;
 }
 
 /** Pre/post quiz answers of one game: right (true) or wrong per question. */
@@ -84,6 +87,37 @@ export function summarizeQuiz(records: QuizRecord[]): QuizSummary {
     averagePre: average(paired.map((r) => right(r.pre))),
     averagePost: average(paired.map((r) => right(r.post))),
   };
+}
+
+export interface QuestionChange {
+  /** Share (0..1) of the games that answered this question right before playing, and after. */
+  pre: number;
+  post: number;
+}
+
+/**
+ * Per question: how many got it right before and after, over the games that have both quizzes
+ * (the same games for both numbers). Records with another number of answers are left out.
+ */
+export function quizByQuestion(records: QuizRecord[], questions: number): { games: number; questions: QuestionChange[] } {
+  const paired = records.filter(
+    (r): r is QuizRecord & { pre: boolean[] } => Array.isArray(r.pre) && r.pre.length === questions && r.post.length === questions,
+  );
+  const share = (marks: boolean[][], i: number) => (marks.length ? marks.filter((m) => m[i]).length / marks.length : 0);
+  return {
+    games: paired.length,
+    questions: Array.from({ length: questions }, (_, i) => ({
+      pre: share(paired.map((r) => r.pre), i),
+      post: share(paired.map((r) => r.post), i),
+    })),
+  };
+}
+
+/** How many games chose each "what would you do next?" option; games without a choice are not counted. */
+export function decisionCounts(records: PlayRecord[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const r of records) if (r.decision) counts[r.decision] = (counts[r.decision] ?? 0) + 1;
+  return counts;
 }
 
 export function summarize(records: PlayRecord[]): Summary {
@@ -223,6 +257,7 @@ export class SupabaseCommunityStore implements CommunityStore {
       detected: r.detected,
       day: r.day,
       class_code: r.classCode ?? null,
+      ...(r.decision ? { decision: r.decision } : {}),
     });
   }
 
@@ -231,19 +266,70 @@ export class SupabaseCommunityStore implements CommunityStore {
   }
 
   async plays(f: PlayFilter = {}): Promise<PlayRecord[]> {
-    type Row = Omit<PlayRecord, "v" | "classCode"> & { class_code: string | null };
-    const rows = await this.select<Row>("plays", "monument,level,picks,score,detected,day,class_code", {
+    type Row = Omit<PlayRecord, "v" | "classCode" | "decision"> & { class_code: string | null; decision?: string | null };
+    const rows = await this.select<Row>("plays", "monument,level,picks,score,detected,day,class_code,decision", {
       monument: f.monument,
       level: f.level,
       class_code: f.classCode,
     });
-    return rows.map(({ class_code, ...r }) => ({ v: 1, ...r, ...(class_code ? { classCode: class_code } : {}) }));
+    return rows.map(({ class_code, decision, ...r }) => ({
+      v: 1,
+      ...r,
+      ...(class_code ? { classCode: class_code } : {}),
+      ...(decision ? { decision } : {}),
+    }));
   }
 
   async quizzes(f: { classCode?: string } = {}): Promise<QuizRecord[]> {
     type Row = Omit<QuizRecord, "v" | "classCode"> & { class_code: string | null };
     const rows = await this.select<Row>("quizzes", "monument,pre,post,day,class_code", { class_code: f.classCode });
     return rows.map(({ class_code, ...r }) => ({ v: 1, ...r, ...(class_code ? { classCode: class_code } : {}) }));
+  }
+}
+
+/**
+ * Shared store kept by tools/class_server.py, the small server a teacher runs on their own computer
+ * (see README "Class server"). Records never leave the school network: the server serves the game
+ * and keeps the class's records in a file next to it. Same anonymous records as everywhere else.
+ */
+export class LanCommunityStore implements CommunityStore {
+  readonly kind = "shared" as const;
+
+  /** `base` ends with a slash, e.g. "http://192.168.1.20:8765/api/". */
+  constructor(private base: string, private fetcher: Fetch = (u, i) => fetch(u, i)) {}
+
+  private async post(path: string, record: PlayRecord | QuizRecord): Promise<void> {
+    const res = await this.fetcher(`${this.base}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(record),
+    });
+    if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
+  }
+
+  private async get<T>(path: string, filter: Record<string, string | undefined>): Promise<T[]> {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(filter)) if (value !== undefined) params.set(key, value);
+    const query = params.toString();
+    const res = await this.fetcher(`${this.base}${path}${query ? `?${query}` : ""}`);
+    if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
+    return ((await res.json()) as { records: T[] }).records;
+  }
+
+  submit(record: PlayRecord): Promise<void> {
+    return this.post("plays", record);
+  }
+
+  submitQuiz(record: QuizRecord): Promise<void> {
+    return this.post("quizzes", record);
+  }
+
+  plays(f: PlayFilter = {}): Promise<PlayRecord[]> {
+    return this.get<PlayRecord>("plays", { monument: f.monument, level: f.level, class: f.classCode });
+  }
+
+  quizzes(f: { classCode?: string } = {}): Promise<QuizRecord[]> {
+    return this.get<QuizRecord>("quizzes", { class: f.classCode });
   }
 }
 

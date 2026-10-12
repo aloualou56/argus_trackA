@@ -45,9 +45,10 @@ CONTENT_DIR = ROOT / "content"
 OUT_JSON = ROOT / "web" / "public" / "data" / "game_data.json"
 OUT_NOTES = ROOT / "docs" / "data_notes.md"
 OUT_BACKDROPS = ROOT / "web" / "public" / "data" / "backdrops"
+OUT_TRANSLATIONS = ROOT / "web" / "public" / "data" / "i18n"
 BACKDROP_URL = "data/backdrops/{name}"  # relative to the web app
 
-SCHEMA_VERSION = 2  # 2: coins per level (level.budget), no monument budget
+SCHEMA_VERSION = 3  # 3: decision step (data.decisions, alarm.decision); 2: coins per level, no monument budget
 MISSION_SIZE = 3
 
 # ABC priority labels as stored in threats.json, lowest first. Game levels use these.
@@ -91,6 +92,14 @@ RESOURCES = [
     "assets", "asset-states", "threats", "events", "threat-contexts", "policies",
     "installed-instruments", "installed-devices", "instruments", "instrument-types",
 ]
+# Read when a snapshot has them, else from the first snapshot: what ARGUS recorded as the decision
+# after each alarm. They do not count towards the snapshot date shown in the game.
+OPTIONAL_RESOURCES = ["decisions", "decision-contexts"]
+
+# The game's own text is written in English and Greek (content/*.json). Other languages are
+# overlays in content/translations/<lang>.json, keyed by the exact English text.
+BASE_LANGS = ("en", "el")
+TRANSLATION_LANGS = ("it", "es", "de")
 
 
 class BuildError(Exception):
@@ -131,7 +140,12 @@ def load_json(path: Path) -> Any:
 
 
 def load_snapshot(snapshot_dir: Path) -> Dict[str, Dict[str, Any]]:
-    return {name: load_resource(snapshot_dir, name) for name in RESOURCES}
+    raw = {name: load_resource(snapshot_dir, name) for name in RESOURCES}
+    for name in OPTIONAL_RESOURCES:
+        folder = next((d for d in (snapshot_dir, ORIGINAL_SNAPSHOT) if (d / f"{name}.json").exists()), None)
+        raw[name] = (load_resource(folder, name) if folder else
+                     {"resource": name, "count": 0, "complete": False, "fetched_at": "", "records": []})
+    return raw
 
 
 def load_content(content_dir: Path) -> Dict[str, Any]:
@@ -148,6 +162,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "map": load_json(content_dir / "map.json"),
         "site_guide": load_json(content_dir / "site_guide.json"),
         "coins": load_json(content_dir / "coins.json"),
+        "decisions": load_json(content_dir / "decisions.json"),
         "monuments": monuments,
     }
 
@@ -200,7 +215,7 @@ class Snapshot:
 
     def __init__(self, raw: Dict[str, Dict[str, Any]]):
         self.raw = raw
-        self.fetched_at = sorted({raw[r]["fetched_at"] for r in raw})
+        self.fetched_at = sorted({raw[r]["fetched_at"] for r in RESOURCES})
         self.assets = raw["assets"]["records"]
         self.asset_meta = {a["id"]: parse_metadata(a) for a in self.assets}
         self.state_to_asset = {s["id"]: s["asset_id"] for s in raw["asset-states"]["records"]}
@@ -236,6 +251,24 @@ class Snapshot:
         for evaluations in self.risk_evaluations.values():
             evaluations.sort(key=lambda m: m.get("evaluated_at", ""))
         self.pilot_to_asset = self._map_pilots_to_assets()
+        self.alarm_decisions = self._link_decisions()
+
+    def _link_decisions(self) -> Dict[Tuple[str, str, str], Dict[str, Any]]:
+        """(pilot, rule, alarm timestamp) -> the decision ARGUS recorded for that alarm."""
+        decisions = {d["id"]: d for d in self.raw["decisions"]["records"]}
+        linked = {}
+        for ctx in sorted(self.raw["decision-contexts"]["records"], key=lambda c: c["id"]):
+            m = parse_metadata(ctx)
+            alarm = m.get("alarm") or {}
+            decision = decisions.get(ctx.get("decision_id"))
+            if m.get("kind") != "ad_rt_decision_context" or not decision or not alarm.get("rule"):
+                continue
+            dm = parse_metadata(decision)
+            text = dm.get("recommendation") or decision.get("description")
+            if text:
+                linked.setdefault((m.get("pilot"), alarm["rule"], alarm.get("timestamp")),
+                                  {"decision_id": decision["id"], "text": text, "urgency": dm.get("urgency")})
+        return linked
 
     def _map_pilots_to_assets(self) -> Dict[str, Dict[str, Any]]:
         pilots = sorted({m["pilot_key"] for _, m in self.scenarios})
@@ -574,6 +607,8 @@ def build_alarms(snap: Snapshot, content: Content, pilot: str, installed_rows: L
             "_severity": severity or 0.0,
             "instruments": link_instruments(var.get("name", ""), entry, content, installed_rows, positions),
             "quality_flags": flags,
+            # AI alarms have no rule name and no decision record in the snapshot.
+            "decision": snap.alarm_decisions.get((pilot, a.get("rule"), a["timestamp"])),
         })
     funnel["excluded"] = dict(sorted(excluded.items()))
     funnel["usable"] = len(kept)
@@ -835,6 +870,22 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         if not tip.get("text", {}).get("en") or not tip.get("text", {}).get("el"):
             problems.append(f"content/site_guide.json {tip.get('id')}: text needs en and el")
 
+    decisions = content.raw["decisions"]
+    option_ids = [o.get("id") for o in decisions.get("options", [])]
+    if len(option_ids) < 2 or len(set(option_ids)) != len(option_ids):
+        problems.append("content/decisions.json: needs at least two options with unique ids")
+    for key in ("intro", "intro_no_alarm", "argus_plain"):
+        if any(not (decisions.get(key) or {}).get(lang) for lang in BASE_LANGS):
+            problems.append(f"content/decisions.json: '{key}' missing a language")
+    for option in decisions.get("options", []):
+        if option.get("stance") not in DECISION_STANCES:
+            problems.append(f"content/decisions.json {option.get('id')}: 'stance' must be one of {DECISION_STANCES}")
+        texts = [option.get("label"), option.get("feedback")] + ([option["feedback_risky"]] if "feedback_risky" in option else [])
+        if any(not (t or {}).get(lang) for t in texts for lang in BASE_LANGS):
+            problems.append(f"content/decisions.json {option.get('id')}: missing a language")
+    if not any(o.get("stance") == "review" for o in decisions.get("options", [])):
+        problems.append("content/decisions.json: no option with stance 'review' (what the ARGUS record recommends)")
+
     coins = content.raw["coins"].get("by_level", {})
     previous = 0
     for _, level_id in LEVELS:
@@ -964,8 +1015,84 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
             mon["places"] = resolve_places(mon, content.monuments[mon["pilot_key"]], content_dir)
     data["site_guide"] = {"where": content.raw["site_guide"]["where"], "authored": True,
                           "needs_review": bool(content.raw["site_guide"].get("needs_review"))}
-    notes = render_notes(snap, content, stats)
+    data["decisions"] = public_decisions(content)
+    notes = render_notes(snap, content, stats) + "\n" + render_language_notes(data, translation_packs(data, content_dir))
     return data, notes
+
+
+DECISION_STANCES = ("review", "wait", "act")
+
+
+def public_decisions(content: Content) -> Dict[str, Any]:
+    raw = content.raw["decisions"]
+    keep = ("id", "icon", "stance", "label", "feedback", "feedback_risky")
+    return {"intro": raw["intro"], "intro_no_alarm": raw["intro_no_alarm"], "argus_plain": raw["argus_plain"],
+            "options": [{k: o[k] for k in keep if k in o} for o in raw["options"]],
+            "authored": True, "needs_review": bool(raw.get("needs_review"))}
+
+
+# --------------------------------------------------------------------------- translations
+
+def content_texts(node: Any, found: Optional[Dict[str, None]] = None) -> List[str]:
+    """Every English text of the data pack that has a Greek twin (so: every authored text), in order."""
+    found = {} if found is None else found
+    if isinstance(node, dict):
+        if isinstance(node.get("en"), str) and isinstance(node.get("el"), str):
+            found.setdefault(node["en"])
+        for value in node.values():
+            content_texts(value, found)
+    elif isinstance(node, list):
+        for value in node:
+            content_texts(value, found)
+    return list(found)
+
+
+def translation_packs(data: Dict[str, Any], content_dir: Path = CONTENT_DIR) -> Dict[str, Dict[str, Any]]:
+    """Per language: the small file the browser loads (data/i18n/<lang>.json) and what is still missing.
+
+    A missing translation is not an error: the game shows the English text instead. The notes list it."""
+    wanted = content_texts(data)
+    packs = {}
+    for lang in TRANSLATION_LANGS:
+        path = content_dir / "translations" / f"{lang}.json"
+        if not path.exists():
+            continue
+        raw = load_json(path)
+        strings = raw.get("strings")
+        if raw.get("lang") != lang or not isinstance(strings, dict):
+            raise BuildError(f"{path.name}: needs \"lang\": \"{lang}\" and a 'strings' object")
+        bad = sorted(k for k, v in strings.items() if not isinstance(v, str) or not v.strip())
+        if bad:
+            raise BuildError(f"{path.name}: empty translation for {bad[0]!r}")
+        packs[lang] = {
+            "pack": {"lang": lang, "needs_review": bool(raw.get("needs_review", True)),
+                     "strings": {en: strings[en] for en in wanted if en in strings}},
+            "missing": [en for en in wanted if en not in strings],
+            "unused": sorted(set(strings) - set(wanted)),
+        }
+    return packs
+
+
+def render_language_notes(data: Dict[str, Any], packs: Dict[str, Dict[str, Any]]) -> str:
+    total = len(content_texts(data))
+    out = ["## Languages", "",
+           f"The game's own text is written in English and Greek ({total} texts in the data pack). Other languages "
+           "are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as "
+           "`data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game "
+           "shows the English text until they are redone. All translations below are machine translations that "
+           "need a native speaker.", ""]
+    rows = [[lang, len(p["pack"]["strings"]), len(p["missing"]), len(p["unused"]),
+             "yes" if p["pack"]["needs_review"] else "no"] for lang, p in sorted(packs.items())]
+    out.append(md_table(["language", "translated", "missing (shown in English)", "no longer used", "needs review"], rows)
+               if rows else "No translation files found.")
+    out.append("")
+    for lang, p in sorted(packs.items()):
+        for en in p["missing"][:20]:
+            shown = en[:70] + ("..." if len(en) > 70 else "")
+            out.append(f"- `{lang}` missing: \"{shown}\"")
+    if any(p["missing"] for p in packs.values()):
+        out.append("")
+    return "\n".join(out)
 
 
 PLACE_MAX_DISTANCE_M = 3000  # a place further than this from the monument's sensors is a typo
@@ -1106,6 +1233,9 @@ def collect_review_items(content: Content) -> List[str]:
         items.append(f"`{pilot}` mission picks per level")
     if content.raw["checklist"].get("needs_review"):
         items.append("`content/citizen_checklist.json`: what visitors should look out for and how to report it")
+    if content.raw["decisions"].get("needs_review"):
+        items.append("`content/decisions.json`: the 'what would you do next?' options, their feedback and our "
+                     "plain-language reading of the ARGUS decision record")
     if content.raw["quiz"].get("needs_review"):
         items.append(f"`content/quiz.json`: {len(content.raw['quiz']['questions'])} pre/post quiz questions, answers and explanations")
     return items
@@ -1318,6 +1448,13 @@ DESIGN_ASSUMPTIONS = [
     "least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level "
     "without a usable alarm (e.g. DL-only sites) skips the replay with a short message.",
     "Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.",
+    "Decision step: after the replayed alarm the player chooses what to do first. The quoted recommendation is "
+    "the ARGUS decision record linked to that alarm (decision-contexts and decisions, read from the first "
+    "snapshot when a later one lacks them); every such record in the snapshot has the same text ('Review alarm "
+    "evidence and affected asset context before intervention.'), and AI alarms have none. Our verdict rule "
+    "(web/src/game/logic.ts, judgeDecision): looking first is where experts start; acting at once is too early; "
+    "waiting is risky when the alarm came back within its episode or was at least twice its limit, otherwise "
+    "fair. The choice is stored for class discussion and never scored.",
     "Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the "
     "map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.",
 ]
@@ -1346,6 +1483,17 @@ def write_outputs(data: Dict[str, Any], notes: str, out_json: Path = OUT_JSON, o
     out_notes.write_text(notes, encoding="utf-8")
 
 
+def write_translations(packs: Dict[str, Dict[str, Any]], out_dir: Path = OUT_TRANSLATIONS) -> None:
+    """One small file per language next to the game; files of languages that were removed are deleted."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for stale in out_dir.glob("*.json"):
+        if stale.stem not in packs:
+            stale.unlink()
+    for lang, entry in packs.items():
+        (out_dir / f"{lang}.json").write_text(
+            json.dumps(entry["pack"], ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     for stream in (sys.stdout, sys.stderr):
         stream.reconfigure(encoding="utf-8", errors="replace")  # -I ignores PYTHONIOENCODING
@@ -1361,11 +1509,16 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 1
     size = len(json.dumps(data, ensure_ascii=False).encode("utf-8"))
     playable = [m["pilot_key"] for m in data["monuments"] if m["playable"]]
+    packs = translation_packs(data, args.content)
     if not args.check:
         write_outputs(data, notes)
         copy_backdrops(args.content)
+        write_translations(packs)
     print(f"build_game_data: {'checked' if args.check else 'wrote'} {OUT_JSON.relative_to(ROOT)} "
           f"({size / 1024:.1f} KiB), playable: {', '.join(playable) or 'none'}")
+    total = len(content_texts(data))
+    for lang, entry in sorted(packs.items()):
+        print(f"build_game_data: translation {lang}: {len(entry['pack']['strings'])} of {total} texts")
     return 0
 
 

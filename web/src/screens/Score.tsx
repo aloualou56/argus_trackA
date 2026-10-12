@@ -70,6 +70,7 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
         detected,
         day: new Date().toISOString().slice(0, 10),
         ...(classCode ? { classCode } : {}),
+        ...(session.decision ? { decision: session.decision } : {}),
       })
       .then(() => summaryOf(community, { monument: mon.pilot_key, level: session.level, classCode: classCode ?? undefined }))
       .then(setSummary)

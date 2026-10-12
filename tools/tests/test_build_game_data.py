@@ -39,6 +39,36 @@ class GameData(unittest.TestCase):
         size = len(json.dumps(self.data, ensure_ascii=False).encode("utf-8"))
         self.assertLess(size, 300 * 1024)
 
+    def test_decision_step(self):
+        decisions = self.data["decisions"]
+        self.assertEqual({o["stance"] for o in decisions["options"]}, set(b.DECISION_STANCES))
+        linked = [a for m in self.data["monuments"] for a in m["alarms"] if a["decision"]]
+        self.assertTrue(linked)
+        for alarm in linked:
+            # Every decision record in the snapshot carries this one recommendation.
+            self.assertEqual(alarm["decision"]["text"], "Review alarm evidence and affected asset context before intervention.")
+            self.assertEqual(alarm["type"], "EK", alarm["id"])
+        ai = [a for m in self.data["monuments"] for a in m["alarms"] if a["type"] == "DL"]
+        self.assertTrue(ai and all(a["decision"] is None for a in ai))
+        # The decision records come from the first snapshot and must not move the date the game shows.
+        self.assertEqual(self.data["snapshot"]["fetched_at"],
+                         sorted({b.load_resource(b.SNAPSHOT_DIR, r)["fetched_at"] for r in b.RESOURCES}))
+
+    def test_translation_packs_are_up_to_date(self):
+        packs = b.translation_packs(self.data)
+        self.assertEqual(sorted(packs), sorted(b.TRANSLATION_LANGS))
+        texts = b.content_texts(self.data)
+        self.assertGreater(len(texts), 300)
+        for lang, entry in packs.items():
+            # An edited English text loses its translation until it is redone: reported, not an error.
+            self.assertEqual(len(entry["pack"]["strings"]) + len(entry["missing"]), len(texts), lang)
+            self.assertTrue(set(entry["pack"]["strings"]) <= set(texts), lang)
+            self.assertIn(f"| {lang} | {len(entry['pack']['strings'])} | {len(entry['missing'])} |", self.notes)
+            self.assertTrue(entry["pack"]["needs_review"], f"{lang}: machine translation, not yet reviewed")
+            on_disk = json.loads((b.OUT_TRANSLATIONS / f"{lang}.json").read_text(encoding="utf-8"))
+            self.assertEqual(on_disk, entry["pack"], f"data/i18n/{lang}.json is stale: rerun tools/build_game_data.py")
+        self.assertIn("## Languages", self.notes)
+
     def test_no_secrets_or_api_hosts(self):
         text = json.dumps(self.data, ensure_ascii=False) + self.notes
         self.assertIsNone(re.search(r"(?i)bearer\s|authorization|api[_-]?key|password|token", text))

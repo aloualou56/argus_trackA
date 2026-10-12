@@ -1,6 +1,8 @@
+import { runtimeConfig } from "../runtime";
+import { withoutOnlineMaps } from "./logic";
 import type { GameData } from "./types";
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 const RELOAD_KEY = "guardian.staleReload";
 
@@ -23,7 +25,7 @@ export async function loadGameData(): Promise<GameData> {
   } catch {
     // storage blocked: nothing to clear
   }
-  return data;
+  return runtimeConfig().localOnly ? withoutOnlineMaps(data) : data;
 }
 
 /** Removes the game's service worker and stored files, once per tab; false if already tried. */

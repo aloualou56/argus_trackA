@@ -1,8 +1,12 @@
 // Types for public/data/game_data.json, written by tools/build_game_data.py.
 // Fields marked "authored" come from content/*.json (game team), the rest from the ARGUS snapshot.
 
-export type Lang = "el" | "en";
-export type Text = Record<Lang, string>;
+/** Languages the game's own text is written in (content/*.json). */
+export type BaseLang = "el" | "en";
+/** Every language of the interface. The others are translations: UI strings in src/i18n/<lang>.json,
+ *  content in data/i18n/<lang>.json, keyed by the English text (content/translations/). */
+export type Lang = BaseLang | "it" | "es" | "de";
+export type Text = Record<BaseLang, string>;
 export type LevelId = "low" | "medium" | "high" | "extreme" | "catastrophic";
 export type Picks = Record<string, number>;
 export type LatLng = [number, number];
@@ -123,6 +127,8 @@ export interface Alarm {
   quality_flags: string[];
   roles: string[];
   episode: { rule: string; start: string; end: string; alarm_count: number; flat_signal: boolean };
+  /** What ARGUS recorded as the decision for this alarm (its own English text); null for AI alarms. */
+  decision: { decision_id: number; text: string; urgency: string | null } | null;
   context: { links: string[]; why: Text; authored: true; needs_review: boolean } | null;
 }
 
@@ -265,8 +271,32 @@ export interface ChecklistItem {
   text: Text;
 }
 
+/** What kind of step a decision option is: look first, wait, or intervene at once. */
+export type DecisionStance = "review" | "wait" | "act";
+
+/** One answer to "what would you do next?" after the replayed alarm (content/decisions.json). */
+export interface DecisionOption {
+  id: string;
+  icon: string;
+  stance: DecisionStance;
+  label: Text;
+  feedback: Text;
+  /** Shown instead of `feedback` when waiting is judged risky for this alarm. */
+  feedback_risky?: Text;
+}
+
 export interface GameData {
   schema_version: number;
+  /** The decision step after the alarm (authored; the choice is never scored). */
+  decisions: {
+    intro: Text;
+    intro_no_alarm: Text;
+    /** Our plain-language reading of the ARGUS decision record. */
+    argus_plain: Text;
+    options: DecisionOption[];
+    authored: true;
+    needs_review: boolean;
+  };
   /** Where each kind of sensor usually goes (authored, shown with every site guide). */
   site_guide: { where: SiteTip[]; authored: true; needs_review: boolean };
   snapshot: { fetched_at: string[] };

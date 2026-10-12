@@ -35,6 +35,7 @@ ATHENS = dt.timezone(dt.timedelta(hours=3))  # EEST until 25 Oct 2026
 RESOURCES = [
     "assets", "asset-states", "threats", "events", "threat-contexts", "policies",
     "installed-instruments", "installed-devices", "instruments", "instrument-types",
+    "decisions", "decision-contexts",  # what ARGUS recorded as the decision after each alarm
 ]
 
 

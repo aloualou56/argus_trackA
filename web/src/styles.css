@@ -140,6 +140,33 @@ main:focus {
   gap: 0.5rem;
 }
 
+/* Language menu: a native select, so it works with every keyboard, screen reader and phone. */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 48px;
+  padding: 0 0.25rem 0 0.6rem;
+  border: 1px solid var(--edge);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+.lang-switch svg {
+  flex: none;
+}
+.lang-switch select {
+  min-height: 44px;
+  max-width: 9.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -973,6 +1000,48 @@ main {
   background: var(--partial-bg);
   color: var(--partial);
 }
+/* What would you do next? (after the alarm) */
+.next-step .choices {
+  margin-bottom: 0.75rem;
+}
+.next-step .choice-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.next-step .choice-title svg {
+  flex: none;
+  color: var(--primary);
+}
+.argus-quote {
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.5rem 0.85rem;
+  border-left: 4px solid var(--argus-pin);
+  background: var(--surface-2);
+  font-style: italic;
+}
+
+/* Teacher page: a small bar beside a number (before = grey, after = dark). */
+.share {
+  display: inline-block;
+  width: 3.5rem;
+  height: 0.6rem;
+  margin-right: 0.5rem;
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  background: var(--surface);
+  overflow: hidden;
+  vertical-align: middle;
+}
+.share span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+}
+.share-before span {
+  background: var(--edge);
+}
+
 .breakdown-label {
   display: inline-flex;
   align-items: flex-start;

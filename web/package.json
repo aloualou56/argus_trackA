@@ -11,6 +11,7 @@
     "test": "node node_modules/vitest/vitest.mjs run",
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "data": "python3 -I ../tools/build_game_data.py",
+    "class": "python3 -I ../tools/class_server.py",
     "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {

@@ -1,10 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { classLink, newClassCode } from "../community/classCode";
-import { summarize, summarizeQuiz, type CommunityStore, type PlayRecord, type QuizRecord } from "../community/store";
+import {
+  decisionCounts,
+  quizByQuestion,
+  summarize,
+  summarizeQuiz,
+  type CommunityStore,
+  type PlayRecord,
+  type QuizRecord,
+} from "../community/store";
 import { Icon } from "../components/Icon";
 import { cardById, humanCards, isPlayable } from "../game/logic";
 import type { GameData } from "../game/types";
 import { useI18n } from "../i18n";
+import { runtimeConfig } from "../runtime";
 
 interface Props {
   data: GameData;
@@ -33,7 +42,11 @@ export function Teacher({ data, community, classCode, setClassCode, onBack }: Pr
   }, [community, classCode]);
   useEffect(load, [load]);
 
-  const link = classCode ? classLink(classCode, window.location) : "";
+  const runtime = runtimeConfig();
+  const lan = runtime.store === "lan";
+  const link = classCode ? classLink(classCode, window.location, runtime.publicUrl) : "";
+  // The class server could not tell its network address, and the teacher opened it as "localhost".
+  const localhostOnly = lan && !runtime.publicUrl && ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(link);
@@ -75,6 +88,7 @@ export function Teacher({ data, community, classCode, setClassCode, onBack }: Pr
                 {t("teacher.newCode")}
               </button>
             </div>
+            {localhostOnly && <p className="note">{t("teacher.lanLocalhost")}</p>}
             <p className="small" role="status">
               {status}
             </p>
@@ -82,7 +96,9 @@ export function Teacher({ data, community, classCode, setClassCode, onBack }: Pr
 
           <section aria-labelledby="results-title">
             <h2 id="results-title">{t("teacher.results")}</h2>
-            <p className="small">{t(community.kind === "shared" ? "teacher.sharedNote" : "teacher.localNote")}</p>
+            <p className="small">
+              {t(community.kind !== "shared" ? "teacher.localNote" : lan ? "teacher.lanNote" : "teacher.sharedNote")}
+            </p>
             <button type="button" className="btn btn-quiet" onClick={load}>
               {t("teacher.refresh")}
             </button>
@@ -93,6 +109,8 @@ export function Teacher({ data, community, classCode, setClassCode, onBack }: Pr
               <>
                 <p>{t("teacher.games", { n: results.plays.length })}</p>
                 <QuizLine quizzes={results.quizzes} total={data.quiz.questions.length} />
+                <QuizTable data={data} quizzes={results.quizzes} />
+                <DecisionTable data={data} plays={results.plays} />
                 {data.monuments.filter(isPlayable).map((mon) => {
                   const plays = results.plays.filter((p) => p.monument === mon.pilot_key);
                   if (!plays.length) return null;
@@ -152,6 +170,100 @@ export function Teacher({ data, community, classCode, setClassCode, onBack }: Pr
           {t("teacher.back")}
         </button>
       </div>
+    </div>
+  );
+}
+
+/** Before and after per question: where the class learned most, and what is still unclear. */
+function QuizTable({ data, quizzes }: { data: GameData; quizzes: QuizRecord[] }) {
+  const { t, pick, number } = useI18n();
+  const byQuestion = quizByQuestion(quizzes, data.quiz.questions.length);
+  if (!byQuestion.games) return null;
+  const percent = (share: number) => `${number(share * 100, 0)}%`;
+  return (
+    <>
+      <div className="table-wrap" role="region" tabIndex={0} aria-labelledby="caption-questions">
+        <table className="mix">
+          <caption id="caption-questions">{t("teacher.questionsCaption", { n: byQuestion.games })}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{t("teacher.colQuestion")}</th>
+              <th scope="col" className="num">
+                {t("teacher.colBefore")}
+              </th>
+              <th scope="col" className="num">
+                {t("teacher.colAfter")}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.quiz.questions.map((q, i) => (
+              <tr key={q.id}>
+                <th scope="row" data-needs-review={data.quiz.needs_review}>
+                  {pick(q.question)}
+                </th>
+                <td className="num">
+                  <Share value={byQuestion.questions[i].pre} kind="before" />
+                  {percent(byQuestion.questions[i].pre)}
+                </td>
+                <td className="num">
+                  <Share value={byQuestion.questions[i].post} kind="after" />
+                  {percent(byQuestion.questions[i].post)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="small">{t("teacher.questionsNote")}</p>
+    </>
+  );
+}
+
+/** A small bar next to a number; the number beside it carries the value for screen readers. */
+function Share({ value, kind }: { value: number; kind: "before" | "after" }) {
+  return (
+    <span className={`share share-${kind}`} aria-hidden="true">
+      <span style={{ width: `${Math.round(value * 100)}%` }} />
+    </span>
+  );
+}
+
+/** What the class would do first after the alarm: a starting point for the discussion, never a mark. */
+function DecisionTable({ data, plays }: { data: GameData; plays: PlayRecord[] }) {
+  const { t, pick } = useI18n();
+  const counts = decisionCounts(plays);
+  const answers = data.decisions.options.reduce((sum, o) => sum + (counts[o.id] ?? 0), 0);
+  if (!answers) return null;
+  return (
+    <div className="table-wrap" role="region" tabIndex={0} aria-labelledby="caption-decisions">
+      <table className="mix">
+        <caption id="caption-decisions">{t("teacher.decisionsCaption", { n: answers })}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{t("teacher.colChoice")}</th>
+            <th scope="col" className="num">
+              {t("teacher.colGames")}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.decisions.options.map((o) => (
+            <tr key={o.id}>
+              <th scope="row">
+                <span className="row-label" data-needs-review={data.decisions.needs_review}>
+                  <Icon name={o.icon} size={22} />
+                  {pick(o.label)}
+                </span>
+              </th>
+              <td className="num">
+                <Share value={(counts[o.id] ?? 0) / answers} kind="after" />
+                {counts[o.id] ?? 0}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

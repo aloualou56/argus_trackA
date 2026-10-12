@@ -15,3 +15,6 @@ __pycache__/
 # Web
 node_modules/
 web/dist/
+
+# Records kept by tools/class_server.py on the teacher's computer (anonymous, but a class's own).
+class_data/

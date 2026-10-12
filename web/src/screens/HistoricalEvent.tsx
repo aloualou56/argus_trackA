@@ -1,10 +1,100 @@
 import { useMemo } from "react";
 import type { ScreenProps } from "../App";
 import { Icon } from "../components/Icon";
-import { argusCards, cardById, detects, featuredAlarm, humanCards, missionScenarios, owned, ruleFor } from "../game/logic";
+import {
+  argusCards,
+  cardById,
+  detects,
+  featuredAlarm,
+  humanCards,
+  judgeDecision,
+  missionScenarios,
+  owned,
+  ruleFor,
+  type DecisionVerdict,
+} from "../game/logic";
+import type { Alarm, GameData } from "../game/types";
 import { useI18n, type MessageKey } from "../i18n";
 
-export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
+interface Props extends ScreenProps {
+  /** The player's answer to "what would you do next?" (kept for the class discussion, never scored). */
+  onDecide: (optionId: string) => void;
+}
+
+const VERDICT: Record<DecisionVerdict, { cls: string; icon: string }> = {
+  first: { cls: "learn is-yes", icon: "check" },
+  fair: { cls: "learn is-partial", icon: "half" },
+  early: { cls: "learn is-partial", icon: "half" },
+  risky: { cls: "learn is-no", icon: "cross" },
+};
+
+/** After the alarm: someone has to decide what happens next. `alarm` is null where none can be replayed. */
+function NextStep({
+  data,
+  alarm,
+  chosen,
+  onDecide,
+}: {
+  data: GameData;
+  alarm: Alarm | null;
+  chosen: string | null;
+  onDecide: (optionId: string) => void;
+}) {
+  const { t, pick } = useI18n();
+  const decisions = data.decisions;
+  const option = decisions.options.find((o) => o.id === chosen);
+  const verdict = option && judgeDecision(option, alarm);
+  const review = decisions.needs_review;
+
+  return (
+    <section className="panel next-step" aria-labelledby="next-title">
+      <fieldset className="choices">
+        <legend>
+          <h2 id="next-title">{t("event.nextTitle")}</h2>
+        </legend>
+        <p className="hint" data-needs-review={review}>
+          {pick(alarm ? decisions.intro : decisions.intro_no_alarm)}
+        </p>
+        {decisions.options.map((o) => (
+          <label key={o.id} className="choice">
+            <input type="radio" name="next-step" value={o.id} checked={chosen === o.id} onChange={() => onDecide(o.id)} />
+            <span className="choice-body">
+              <span className="choice-title" data-needs-review={review}>
+                <Icon name={o.icon} size={20} />
+                {pick(o.label)}
+              </span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+      {/* Read out when the player chooses; they can change their mind and compare. */}
+      <div role="status">
+        {option && verdict && (
+          <div className={VERDICT[verdict].cls}>
+            <p className="status-tag">
+              <Icon name={VERDICT[verdict].icon} size={20} />
+              {t(`decision.${verdict}` as MessageKey)}
+            </p>
+            <p data-needs-review={review}>{pick((verdict === "risky" && option.feedback_risky) || option.feedback)}</p>
+          </div>
+        )}
+        {option && alarm?.decision && (
+          <>
+            <p>{t("event.nextArgus")}</p>
+            {/* ARGUS's own words, as recorded; our reading of them follows. */}
+            <blockquote className="argus-quote" lang="en">
+              {alarm.decision.text}
+            </blockquote>
+            <p data-needs-review={review}>{pick(decisions.argus_plain)}</p>
+          </>
+        )}
+      </div>
+      <p className="small">{t("event.nextNote")}</p>
+    </section>
+  );
+}
+
+export function HistoricalEvent({ data, mon, session, go, onDecide }: Props) {
   const { t, pick, number, date, list, month } = useI18n();
   // First and last alarm in the data, for "real data from ... to ..." (grows with each new snapshot).
   const alarmSpan = useMemo(() => {
@@ -36,6 +126,7 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
           <p className="lead">{t("event.none")}</p>
         )}
         <p>{t("event.noneScore")}</p>
+        <NextStep data={data} alarm={null} chosen={session.decision} onDecide={onDecide} />
         {next}
       </div>
     );
@@ -176,6 +267,8 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
           </ul>
         </section>
       )}
+
+      <NextStep data={data} alarm={alarm} chosen={session.decision} onDecide={onDecide} />
 
       <p className="small">
         {t("event.dataNote", { from: month(alarmSpan[0]), to: month(alarmSpan[1]) })}{" "}

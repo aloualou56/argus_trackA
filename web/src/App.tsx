@@ -8,7 +8,7 @@ import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
 import { loadGameData } from "./game/data";
 import { canDrawMission, countPicks, drawMission, featuredAlarm, isPlayable } from "./game/logic";
 import type { GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
-import { useI18n } from "./i18n";
+import { isBaseLang, isLang, LANGS, useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
 import { Home } from "./screens/Home";
 import { Mission } from "./screens/Mission";
@@ -32,6 +32,8 @@ export interface Session {
   mission: string[];
   /** Derived from placements: how many of each card. */
   picks: Picks;
+  /** The player's answer to "what would you do next?" after the alarm, if they gave one. */
+  decision: string | null;
 }
 
 export interface ScreenProps {
@@ -53,7 +55,7 @@ export default function App() {
   const { t, lang, setLang } = i18n;
   const [load, setLoad] = useState<Load>({ state: "loading" });
   const [screen, setScreen] = useState<Screen>("home");
-  const [game, setGame] = useState<{ pilot: string; level: LevelId; placements: Placement[]; mission: string[] } | null>(null);
+  const [game, setGame] = useState<Omit<Session, "picks"> | null>(null);
   const [homePilot, setHomePilot] = useState<string | null>(null);
   // The quiz before a game is asked once per visit; its marks are compared with the quiz after each game.
   const [preQuiz, setPreQuiz] = useState<{ asked: boolean; marks: boolean[] | null }>({ asked: false, marks: null });
@@ -168,7 +170,7 @@ export default function App() {
         onStart={(pilot, level) => {
           const started = data.monuments.find((m) => m.pilot_key === pilot);
           const mission = started && isPlayable(started) ? (started.levels.find((l) => l.id === level)?.mission ?? []) : [];
-          setGame({ pilot, level, placements: [], mission });
+          setGame({ pilot, level, placements: [], mission, decision: null });
           setScreen(preQuiz.asked ? "story" : "quizPre");
         }}
       />
@@ -179,7 +181,7 @@ export default function App() {
     // so classmates compare the same mission.
     const replay = () => {
       const drawn = classCode ? null : drawMission(data, playable, session.level, session.mission);
-      setGame((g) => (g ? { ...g, placements: [], mission: drawn ?? g.mission } : g));
+      setGame((g) => (g ? { ...g, placements: [], mission: drawn ?? g.mission, decision: null } : g));
       setScreen(STEPS[0]);
     };
     const replayLabel = t(!classCode && canDrawMission(playable, session.level) ? "score.playNew" : "score.playAgain");
@@ -246,7 +248,9 @@ export default function App() {
         {screen === "story" && <Story {...props} />}
         {screen === "mission" && <Mission {...props} setPlacements={setPlacements} mapApi={mapApi} />}
         {screen === "reveal" && <Reveal {...props} />}
-        {screen === "event" && <HistoricalEvent {...props} />}
+        {screen === "event" && (
+          <HistoricalEvent {...props} onDecide={(decision) => setGame((g) => (g ? { ...g, decision } : g))} />
+        )}
         {screen === "score" && (
           <Score
             {...props}
@@ -271,10 +275,17 @@ export default function App() {
             <Icon name="shield" />
             <span>{t("app.title")}</span>
           </button>
-          <button type="button" className="btn btn-quiet lang-switch" onClick={() => setLang(lang === "el" ? "en" : "el")}>
+          <label className="lang-switch">
             <Icon name="globe" size={20} />
-            <span lang={t("lang.otherCode")}>{t("lang.other")}</span>
-          </button>
+            <span className="sr-only">{t("lang.label")}</span>
+            <select value={lang} onChange={(e) => isLang(e.target.value) && setLang(e.target.value)}>
+              {LANGS.map((l) => (
+                <option key={l.id} value={l.id} lang={l.id}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       </header>
       <div className={data ? "board" : "board no-map"}>
@@ -304,6 +315,7 @@ export default function App() {
           {data && (
             <footer className="footer">
               <p>{t("app.footer", { date: i18n.date(data.snapshot.fetched_at[0]) })}</p>
+              {!isBaseLang(lang) && <p>{t("app.translationNote")}</p>}
             </footer>
           )}
         </div>

@@ -496,6 +496,7 @@ Game-design rules (in code):
 - AI alarms: used only when one signal accounts for at least 30% of the model's top feature contributions and content/rule_sensor_map.json maps that signal (dl_features) to a pseudo-rule such as DL_soil_moisture. The game then shows the main signal and its share, not the anomaly score against its limit.
 - Detection: the player's network detects an alarm if, for every group in the rule's detect_with, it has at least one card from that group. Real sensor placement (inside or outside, which wall) is ignored. A level without a usable alarm (e.g. DL-only sites) skips the replay with a short message.
 - Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.
+- Decision step: after the replayed alarm the player chooses what to do first. The quoted recommendation is the ARGUS decision record linked to that alarm (decision-contexts and decisions, read from the first snapshot when a later one lacks them); every such record in the snapshot has the same text ('Review alarm evidence and affected asset context before intervention.'), and AI alarms have none. Our verdict rule (web/src/game/logic.ts, judgeDecision): looking first is where experts start; acting at once is too early; waiting is risky when the alarm came back within its episode or was at least twice its limit, otherwise fair. The choice is stored for class discussion and never scored.
 - Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.
 
 Authored content flagged `needs_review`:
@@ -632,4 +633,15 @@ Authored content flagged `needs_review`:
 - `schenkenberg` alarm explanation for `R3_vib_zscore` and its linked threats ['schenkenberg.wind-storm.walls', 'schenkenberg.earthquake.475y']
 - `schenkenberg` mission picks per level
 - `content/citizen_checklist.json`: what visitors should look out for and how to report it
+- `content/decisions.json`: the 'what would you do next?' options, their feedback and our plain-language reading of the ARGUS decision record
 - `content/quiz.json`: 5 pre/post quiz questions, answers and explanations
+
+## Languages
+
+The game's own text is written in English and Greek (375 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
+
+| language | translated | missing (shown in English) | no longer used | needs review |
+|---|---|---|---|---|
+| de | 375 | 0 | 0 | yes |
+| es | 375 | 0 | 0 | yes |
+| it | 375 | 0 | 0 | yes |

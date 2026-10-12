@@ -22,8 +22,10 @@ export function classCodeFromUrl(search: string): string | null {
   return value ? normalizeClassCode(value) : null;
 }
 
-export function classLink(code: string, location: Pick<Location, "origin" | "pathname">): string {
-  return `${location.origin}${location.pathname}?class=${code}`;
+/** The link students open. `publicUrl` is the class server's address on the school network, when known
+ *  (a teacher who opened the game as "localhost" must not hand out a localhost link). */
+export function classLink(code: string, location: Pick<Location, "origin" | "pathname">, publicUrl?: string | null): string {
+  return `${publicUrl ?? `${location.origin}${location.pathname}`}?class=${code}`;
 }
 
 /** Remembered on this device only, as a convenience; the game works the same without storage. */

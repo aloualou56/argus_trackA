@@ -571,21 +571,24 @@ export function GameMap(props: Props) {
           )}
         </>
       )}
-      <div className="map-switch" role="group" aria-label={t("map.basemap")}>
-        {data.basemaps.layers.map((layer) => (
-          <button
-            key={layer.id}
-            type="button"
-            aria-pressed={basemap === layer.id}
-            onClick={() => {
-              setFellBack(false);
-              setBasemap(layer.id);
-            }}
-          >
-            {pick(layer.name)}
-          </button>
-        ))}
-      </div>
+      {/* Nothing to switch between when only the drawn plan is offered (local-only mode). */}
+      {data.basemaps.layers.length > 1 && (
+        <div className="map-switch" role="group" aria-label={t("map.basemap")}>
+          {data.basemaps.layers.map((layer) => (
+            <button
+              key={layer.id}
+              type="button"
+              aria-pressed={basemap === layer.id}
+              onClick={() => {
+                setFellBack(false);
+                setBasemap(layer.id);
+              }}
+            >
+              {pick(layer.name)}
+            </button>
+          ))}
+        </div>
+      )}
       {(mode === "reveal" || mode === "score" || mode === "event") && (
         <div className="map-legend">
           <span>

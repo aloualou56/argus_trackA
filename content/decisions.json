@@ -1,0 +1,74 @@
+{
+  "_about": "AUTHORED by the game team. The question after the replayed alarm: an alarm is not the end, someone has to decide what happens next. The options, their feedback and the verdict rule (web/src/game/logic.ts, judgeDecision) are ours and need review by a conservator. The only ARGUS data in this step is the decision record linked to each alarm (decision-contexts.json -> decisions.json), which tools/build_game_data.py attaches to the alarm; 'argus_plain' is our plain-language reading of its recommendation. 'stance' says what kind of step an option is: 'review' (look at evidence or the monument first), 'wait', or 'act' (intervene at once). 'feedback_risky' replaces 'feedback' when waiting is judged risky. The choice is never scored.",
+  "needs_review": true,
+  "intro": {
+    "en": "An alarm is not the end of the story: someone has to decide what happens next. What would you do first?",
+    "el": "Ένας συναγερμός δεν είναι το τέλος της ιστορίας: κάποιος πρέπει να αποφασίσει τι θα γίνει μετά. Εσύ τι θα έκανες πρώτα;"
+  },
+  "intro_no_alarm": {
+    "en": "Here the artificial intelligence raised alarms, but no single sensor explains them. Someone still has to decide what happens next. What would you do first?",
+    "el": "Εδώ η τεχνητή νοημοσύνη σήμανε συναγερμούς, αλλά κανένας αισθητήρας δεν τους εξηγεί μόνος του. Κάποιος πρέπει και πάλι να αποφασίσει τι θα γίνει μετά. Εσύ τι θα έκανες πρώτα;"
+  },
+  "argus_plain": {
+    "en": "In plain words: look at the evidence and at that part of the monument before you do anything to it.",
+    "el": "Με απλά λόγια: κοίτα πρώτα τα στοιχεία και εκείνο το σημείο του μνημείου, και μετά κάνε οτιδήποτε."
+  },
+  "options": [
+    {
+      "id": "inspect",
+      "icon": "observer",
+      "stance": "review",
+      "label": {
+        "en": "Send someone to look at the spot",
+        "el": "Στέλνω κάποιον να δει το σημείο"
+      },
+      "feedback": {
+        "en": "People see what a number cannot: is there a new crack, a damp patch, something broken? A look on the spot tells the experts whether the alarm is a real problem.",
+        "el": "Οι άνθρωποι βλέπουν όσα δεν δείχνει ένας αριθμός: υπάρχει νέα ρωγμή, υγρό σημάδι, κάτι σπασμένο; Μια ματιά στο σημείο δείχνει στους ειδικούς αν ο συναγερμός είναι πραγματικό πρόβλημα."
+      }
+    },
+    {
+      "id": "check_data",
+      "icon": "vibration",
+      "stance": "review",
+      "label": {
+        "en": "Check the sensor and the other measurements",
+        "el": "Ελέγχω τον αισθητήρα και τις άλλες μετρήσεις"
+      },
+      "feedback": {
+        "en": "Sensors can break or get stuck. So experts first ask: can we believe this measurement? Do the sensors nearby say the same?",
+        "el": "Οι αισθητήρες μπορεί να χαλάσουν ή να κολλήσουν. Γι' αυτό οι ειδικοί ρωτούν πρώτα: είναι πιστευτή αυτή η μέτρηση; Δείχνουν το ίδιο και οι διπλανοί αισθητήρες;"
+      }
+    },
+    {
+      "id": "wait",
+      "icon": "bell",
+      "stance": "wait",
+      "label": {
+        "en": "Wait and see if it happens again",
+        "el": "Περιμένω να δω αν θα ξανασυμβεί"
+      },
+      "feedback": {
+        "en": "For a single alarm, more measurements can help. But waiting is only safe if somebody keeps watching: slow damage does not wait.",
+        "el": "Για έναν μόνο συναγερμό, περισσότερες μετρήσεις μπορεί να βοηθήσουν. Η αναμονή όμως είναι ασφαλής μόνο αν κάποιος συνεχίζει να παρακολουθεί: η αργή φθορά δεν περιμένει."
+      },
+      "feedback_risky": {
+        "en": "This was not a small one-off: the alarm was strong or kept coming back. Waiting longer here mostly means losing time.",
+        "el": "Αυτό δεν ήταν κάτι μικρό και μεμονωμένο: ο συναγερμός ήταν δυνατός ή επαναλαμβανόταν. Αν περιμένεις κι άλλο εδώ, μάλλον χάνεις χρόνο."
+      }
+    },
+    {
+      "id": "close",
+      "icon": "visitor_counter",
+      "stance": "act",
+      "label": {
+        "en": "Close the monument to visitors at once",
+        "el": "Κλείνω αμέσως το μνημείο για τους επισκέπτες"
+      },
+      "feedback": {
+        "en": "Closing keeps people safe, and sometimes experts do it. But it is a big step: without looking first, you cannot know if it is needed, or if a sensor is simply broken.",
+        "el": "Το κλείσιμο προστατεύει τους ανθρώπους, και μερικές φορές οι ειδικοί το κάνουν. Είναι όμως μεγάλο βήμα: αν δεν κοιτάξεις πρώτα, δεν ξέρεις αν χρειάζεται ή αν απλώς χάλασε ένας αισθητήρας."
+      }
+    }
+  ]
+}

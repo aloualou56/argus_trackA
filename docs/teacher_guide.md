@@ -9,7 +9,7 @@
 | **Ηλικίες** | 10–15 ετών (Ε΄ Δημοτικού έως Γ΄ Γυμνασίου). Λειτουργεί και για επισκέπτες μουσείων κάθε ηλικίας. |
 | **Διάρκεια** | Ένα μάθημα 45 λεπτών. |
 | **Εξοπλισμός** | Ένα κινητό, tablet ή υπολογιστής ανά μαθητή ή ανά ομάδα 2–3 μαθητών. Χωρίς λογαριασμούς, χωρίς εγκατάσταση. Μετά την πρώτη επίσκεψη παίζει και χωρίς ίντερνετ. |
-| **Γλώσσες** | Ελληνικά και αγγλικά (κουμπί πάνω δεξιά). |
+| **Γλώσσες** | Ελληνικά και αγγλικά (μενού πάνω δεξιά). Ιταλικά, ισπανικά και γερμανικά σε αυτόματη μετάφραση που δεν έχει ελεγχθεί ακόμη. |
 | **Προσβασιμότητα** | Παίζεται ολόκληρο με πληκτρολόγιο και με αναγνώστη οθόνης. Χρώματα κατάλληλα για αχρωματοψία, μεγάλα κουμπιά. |
 
 ## Τι μαθαίνουν οι μαθητές
@@ -32,6 +32,10 @@
 
 Αν το παιχνίδι δεν έχει ρυθμισμένο κοινό διακομιστή, η σελίδα του εκπαιδευτικού δείχνει μόνο τα παιχνίδια της δικής σου συσκευής. Τότε οι ομάδες μπορούν να παίζουν με τη σειρά σε μία συσκευή, ή απλώς να συγκρίνετε τα αποτελέσματα προφορικά.
 
+**Χωρίς cloud, από τον δικό σου υπολογιστή.** Αν στον υπολογιστή σου υπάρχει ο φάκελος του παιχνιδιού, τρέξε `python3 -I tools/class_server.py --lan`. Το πρόγραμμα δείχνει μια διεύθυνση (π.χ. `http://192.168.1.20:8765/`) που ανοίγουν οι μαθητές στο ίδιο δίκτυο. Τα αποτελέσματα της τάξης μένουν στον υπολογιστή σου και τίποτα δεν φεύγει από το δίκτυο του σχολείου. Ο χάρτης δείχνει τότε σχέδιο αντί για δορυφορική εικόνα.
+
+Η σελίδα του εκπαιδευτικού δείχνει τρία πράγματα: τι διάλεξε η τάξη δίπλα σε ό,τι εγκατέστησε το ARGUS, το κουίζ **ερώτηση προς ερώτηση** (πόσοι απάντησαν σωστά πριν και μετά) και τι θα έκανε πρώτα η τάξη μετά τον συναγερμό.
+
 ## Το μάθημα
 
 | Χρόνος | Τι κάνουμε |
@@ -49,6 +53,7 @@
 - Ποιον κίνδυνο δεν μπορεί να «δει» κανένας αισθητήρας; Ποιος μπορεί;
 - Στη Δήλο τον συναγερμό τον έδωσε τεχνητή νοημοσύνη. Τι καλό έχει αυτό και τι θα μπορούσε να πάει στραβά;
 - Ένας αισθητήρας έδειχνε την ίδια τιμή για τρεις εβδομάδες. Τι θα έκανες;
+- Μετά τον συναγερμό, το παιχνίδι ρωτά «Τι θα έκανες μετά;». Η καταγραφή του ARGUS λέει κάθε φορά: πρώτα κοίτα τα στοιχεία και το μνημείο, μετά επέμβαινε. Πότε θα ήταν σωστό να κλείσει αμέσως ένα μνημείο; Πότε είναι επικίνδυνο να περιμένεις;
 - Η ομάδα σας διάλεξε διαφορετικά από το ARGUS. Ποιος είχε καλύτερο λόγο; (Δεν υπάρχει μία σωστή απάντηση.)
 
 ## Ιδέες για συνέχεια
@@ -66,7 +71,7 @@
 
 ## At a glance
 
-Ages 10–15 (works for museum visitors of any age). One 45-minute lesson. One phone, tablet or computer per student or per group of 2–3. No accounts, nothing to install; it works offline after the first visit. Greek and English. Fully playable by keyboard and screen reader, colour-blind-safe colours, large buttons.
+Ages 10–15 (works for museum visitors of any age). One 45-minute lesson. One phone, tablet or computer per student or per group of 2–3. No accounts, nothing to install; it works offline after the first visit. Greek and English; Italian, Spanish and German as machine translations that have not been checked yet. Fully playable by keyboard and screen reader, colour-blind-safe colours, large buttons.
 
 ## What students learn
 
@@ -83,6 +88,10 @@ Monuments, dangers and their expert risk ratings, the installed sensors and thei
 ## Before the lesson (5 minutes)
 
 On the first screen choose **"I am a teacher"**, then **"Create a class code"**. Share the 6-character code or the link (for example as a QR code). Students enter it under "Playing with your class?". Without a shared server, the teacher page shows only the games played on your own device; groups can take turns on one device.
+
+**No cloud, from your own computer.** If the game's folder is on your computer, run `python3 -I tools/class_server.py --lan`. It prints an address (for example `http://192.168.1.20:8765/`) that students open on the same network. The class's results stay on your computer and nothing leaves the school network. The map then shows a drawn plan instead of satellite pictures.
+
+The teacher page shows three things: what the class chose next to what ARGUS installed, the quiz **question by question** (how many were right before and after), and what the class would do first after the alarm.
 
 ## The lesson
 
@@ -101,6 +110,7 @@ On the first screen choose **"I am a teacher"**, then **"Create a class code"**.
 - Which danger can no sensor "see"? Who can?
 - On Delos the alarm came from artificial intelligence. What is good about that, and what could go wrong?
 - A sensor showed the same value for three weeks. What would you do?
+- After the alarm the game asks "What would you do next?". The ARGUS record says the same thing every time: look at the evidence and the monument first, then act. When would closing a monument at once be right? When is waiting dangerous?
 - Your group chose differently from ARGUS. Who had the better reason? (There is no single right answer.)
 
 ## Privacy
