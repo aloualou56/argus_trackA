@@ -51,24 +51,26 @@ function NextStep({
 
   return (
     <section className="panel next-step" aria-labelledby="next-title">
-      <fieldset className="choices">
+      <fieldset className="choices choices-actions">
         <legend>
           <h2 id="next-title">{t("event.nextTitle")}</h2>
         </legend>
         <p className="hint" data-needs-review={review}>
           {pick(alarm ? decisions.intro : decisions.intro_no_alarm)}
         </p>
-        {decisions.options.map((o) => (
-          <label key={o.id} className="choice">
-            <input type="radio" name="next-step" value={o.id} checked={chosen === o.id} onChange={() => onDecide(o.id)} />
-            <span className="choice-body">
-              <span className="choice-title" data-needs-review={review}>
-                <Icon name={o.icon} size={20} />
-                {pick(o.label)}
+        <div className="action-grid">
+          {decisions.options.map((o) => (
+            <label key={o.id} className="choice">
+              <input type="radio" name="next-step" value={o.id} checked={chosen === o.id} onChange={() => onDecide(o.id)} />
+              <span className="choice-body">
+                <span className="choice-title" data-needs-review={review}>
+                  <Icon name={o.icon} size={20} />
+                  {pick(o.label)}
+                </span>
               </span>
-            </span>
-          </label>
-        ))}
+            </label>
+          ))}
+        </div>
       </fieldset>
       {/* Read out when the player chooses; they can change their mind and compare. */}
       <div role="status">

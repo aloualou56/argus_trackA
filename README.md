@@ -210,6 +210,8 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 
 ## Assumptions that need a human
 
+0. **The five photo captions** (`content/photos/credits.json`): each says what its photo shows; check them, and
+   the Greek. The photos themselves and their credits come from Wikimedia Commons (see Photographs).
 1. **History and science text:** the five stories (facts not in the ARGUS data: e.g. the Delos myth, Greek names of
    the Delos houses), all 99 plain-language threat texts, the quiz, the citizen checklist,
    alarm explanations, discussion prompts. Native-speaker check of all Greek.
@@ -227,6 +229,28 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
    policy allows light use only. Open national orthophotos exist for CH (swisstopo), ES (PNOA) and some IT/GR regions.
 8. **Ranverso weather station position** is marked temporary by ARGUS (dashed marker in the game).
 
+## Photographs
+
+One real photograph per monument, from Wikimedia Commons under a free licence. The game shows the author and the
+licence under each photo and in "Photo credits" at the foot of every screen. The photos are bundled with the game
+(`content/photos/`, copied to `web/public/data/photos/` by the build), so nothing is fetched while playing.
+
+| Monument | What it shows | Author | Licence | Source |
+|---|---|---|---|---|
+| Delos | The House of the Masks on Delos, seen from above. The modern roof covers its mosaic floors. | Bernard Gagnon | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Commons](https://commons.wikimedia.org/wiki/File:House_of_the_Masks_01.jpg) |
+| Baltanás | The cellar hill of Baltanás: doors and stone chimneys on the slope, and the church tower on the right. | Carmen García Fdez | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Commons](https://commons.wikimedia.org/wiki/File:Panor%C3%A1mica_de_las_bodegas_de_Baltan%C3%A1s_con_la_torre.jpg) |
+| Monti Lucretili | Dry-stone walls on the high meadow of Monte Gennaro, in the Monti Lucretili. | V.lattanzi | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Commons](https://commons.wikimedia.org/wiki/File:Parco_dei_Monti_Lucretili_il_Pratone_di_M._Gennaro.jpg) |
+| Sant'Antonio di Ranverso | Sant'Antonio di Ranverso from behind: the brick apse of the church and its bell tower. | Elio Pallard | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Commons](https://commons.wikimedia.org/wiki/File:Buttigliera_Alta_-_Abbazia_di_Sant%27Antonio_di_Ranverso_003.jpg) |
+| Schenkenberg | The ruins of Schenkenberg Castle on their hill, with the valley below. | Gabrielle Merk | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Commons](https://commons.wikimedia.org/wiki/File:Ruine-Schenkenberg.jpg) |
+
+- Checked on 12 October 2026 from each file's Commons page. All are shown resized (960 px and 330 px wide).
+- The share-alike licences (CC BY-SA) ask that copies of a photo stay under the same licence and keep the credit.
+  Keep `content/photos/credits.json` with the photos wherever they go.
+- The Monti Lucretili photo shows the dry-stone walls of the landscape (one of the ARGUS scenarios there): no
+  freely licensed photograph of the monitored buildings was found. Replace it if the park can provide one.
+- To change a photo: put the new files in `content/photos/`, update its entry in `credits.json` from the photo's
+  own page, and run the build. The build refuses a photo without an author, a licence and a source.
+
 ## Look: the survey sheet
 
 The game is played on a map of real monuments, so it looks like one: a survey sheet with its margin notes.
@@ -241,9 +265,33 @@ The game is played on a map of real monuments, so it looks like one: a survey sh
   (`web/src/fonts.css`): no font service is contacted, so the class server's local-only mode still holds. Only the
   Greek, Latin and extended-Latin parts ship (about 220 KB in all; a browser fetches the parts it needs).
 - **Map furniture is real:** a true scale bar, the coordinates of the centre of the view (in the mission, the spot
-  under the cross), and each monument's position on its story screen, from the ARGUS sensor positions.
-- **Blocks, not cards:** notes are tinted blocks on the white sheet. The one inverted block is the week on duty,
-  because it is the player's next move.
+  under the cross), and each monument's position on its story screen, from the ARGUS sensor positions. The cross
+  itself is a surveyor's mark in ink on a white casing (no blue: blue is a sensor); it lies above the names of
+  places and below the sensors, and its note hangs from its lower arm.
+- **Blocks, not cards:** notes are tinted blocks on the white sheet. Inverted (survey green) blocks are kept for
+  the player's next move: the mission on the story screen and the week on duty.
+- **Notes with a rule above, never a stripe at the side:** the danger on the story screen and every note that
+  carries a verdict (what each danger needed, quiz answers, the decision, the alarm) sit under a rule. The rule's
+  line says the verdict as well as its colour: solid = yes, dashed = no, double = partly.
+- **A rating is a scale, not a badge:** what is rated in small capitals, then five rising steps and the level in
+  words (`web/src/components/LevelBadge.tsx`). The experts' rating wears the ARGUS vermilion, because it is ARGUS
+  data like the vermilion pins on the map.
+- **The mission shows its coins:** the budget is drawn as brass coins in fives, to count before spending them.
+- **Real photographs** of the five monuments, on the story screen and beside each name on the first screen, each
+  with its author and licence (see Photographs).
+- **Instrument icons** (`web/src/components/Icon.tsx`): the sensor icons are drawings of the instruments
+  themselves (a thermometer with its scale, a rain gauge with its funnel, a crack meter bridging a crack); the
+  thin marks are measuring ticks.
+- **Four kinds of choice, four shapes:** the monuments are an index with photographs and coordinates, the danger
+  levels and the report's "what did you see" are rows joined into one ladder, quiz answers are lettered (Α Β Γ in
+  Greek), and the decision after the alarm is four action tiles. All are still real radio buttons underneath.
+- **The first screen** puts the two choices first and keeps Start in a bar pinned to the bottom of the panel, which
+  says what it will start. **The score screen** puts the next steps first (the week, the questions again), folds
+  the checklist and "what others chose", and keeps the rest in one scroll.
+- **No browser-default controls left in view:** the language menu and the monument of a report use the game's own
+  drop-down (`web/src/components/Dropdown.tsx`), the report's photo is chosen with a normal button (the browser's
+  file control does the work behind it), and the map shows the credits for its data without the library's badge.
+  The date of a report is still the browser's date field, styled: its calendar is the most reliable one on phones.
 - **The mark:** a guardian's shield holding the survey target you place sensors with, with a brass centre
   (`web/src/components/BrandMark.tsx`). The favicon and the app icons (`icon-*.png`, `apple-touch-icon.png`) are
   the same drawing.

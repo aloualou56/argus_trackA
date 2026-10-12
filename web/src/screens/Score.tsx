@@ -76,6 +76,8 @@ export function Score({
   const caught = results.filter(Boolean).length;
   const [summary, setSummary] = useState<Summary | null>(null);
   const [shareStatus, setShareStatus] = useState("");
+  // The checklist is folded until asked for (or until it is printed).
+  const [checklistOpen, setChecklistOpen] = useState(false);
 
   // The challenge link: the same monument, level and dangers, and this score to beat. No class code in it.
   // On the class server it uses the address others on the network can reach, not this computer's "localhost".
@@ -199,6 +201,16 @@ export function Score({
         {hasWeek && <p className="small">{t("week.note")}</p>}
       </section>
 
+      {/* The game's own questions again, straight after the result: it is the class's next step. */}
+      <section className="panel quiz-invite" aria-labelledby="quiz-invite-title">
+        <h2 id="quiz-invite-title">{t("quiz.inviteTitle")}</h2>
+        <p>{t("quiz.inviteText")}</p>
+        <button type="button" className="btn btn-primary btn-big" onClick={onQuiz}>
+          {t("quiz.open")}
+          <Icon name="arrow" />
+        </button>
+      </section>
+
       <section aria-labelledby="learn-title">
         <h2 id="learn-title">{t("score.learn")}</h2>
         <ul className="learn-list">
@@ -235,53 +247,50 @@ export function Score({
         </ul>
       </section>
 
+      {/* Outside the game: watch for yourself, challenge someone, see what others chose. The long
+          lists fold away, so the screen is not eight blocks in a row. */}
       <section className="panel citizen printable" aria-labelledby="citizen-title">
         <h2 id="citizen-title">
           <Icon name="observer" />
           {t("citizen.title")}
         </h2>
         <p>{t("citizen.intro")}</p>
-        <ul className="checklist" data-needs-review={data.checklist.needs_review}>
-          {checklistFor(data.checklist.items, threats).map(({ item, forMission }) => (
-            <li key={item.id}>
-              <Icon name={item.icon} size={22} />
-              <span>
-                {pick(item.text)}
-                {forMission && <span className="tag">{t("citizen.mission")}</span>}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <p className="citizen-report">
-          <strong>{pick(data.checklist.report)}</strong>
-        </p>
+        <details className="fold" open={checklistOpen} onToggle={(e) => setChecklistOpen(e.currentTarget.open)}>
+          <summary>
+            <span>{t("citizen.fold", { n: data.checklist.items.length })}</span>
+            <Icon name="chevron" size={18} className="fold-chevron" />
+          </summary>
+          <ul className="checklist" data-needs-review={data.checklist.needs_review}>
+            {checklistFor(data.checklist.items, threats).map(({ item, forMission }) => (
+              <li key={item.id}>
+                <Icon name={item.icon} size={22} />
+                <span>
+                  {pick(item.text)}
+                  {forMission && <span className="tag">{t("citizen.mission")}</span>}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="citizen-report">
+            <strong>{pick(data.checklist.report)}</strong>
+          </p>
+        </details>
         <div className="actions actions-split no-print">
           <button type="button" className="btn btn-secondary" onClick={onReport}>
             {t("report.open")}
           </button>
-          <button type="button" className="btn btn-quiet" onClick={() => window.print()}>
+          <button
+            type="button"
+            className="btn btn-quiet"
+            onClick={() => {
+              // The list must be open to be on the paper.
+              setChecklistOpen(true);
+              requestAnimationFrame(() => window.print());
+            }}
+          >
             {t("citizen.print")}
           </button>
         </div>
-      </section>
-
-      <section className="panel community" aria-labelledby="community-title">
-        <h2 id="community-title">{classCode ? t("score.communityClass", { code: classCode }) : t("score.community")}</h2>
-        {summary && summary.games > 1 && top ? (
-          <>
-            <p>{t(shared ? "score.communityCountShared" : "score.communityCount", { n: summary.games })}</p>
-            <p>
-              {t("score.communityTop", {
-                name: pick(cards.get(top.card)?.name),
-                pct: number(top.share * 100, 0),
-                argus: argusCount(top.card),
-              })}
-            </p>
-          </>
-        ) : (
-          <p>{t("score.communityFirst")}</p>
-        )}
-        <p className="small">{t(shared ? "score.communityShared" : "score.communityLocal")}</p>
       </section>
 
       {/* Challenge a friend: the link is shown, so it can be seen and copied by hand too. */}
@@ -303,14 +312,27 @@ export function Score({
         </p>
       </section>
 
-      <section className="panel quiz-invite" aria-labelledby="quiz-invite-title">
-        <h2 id="quiz-invite-title">{t("quiz.inviteTitle")}</h2>
-        <p>{t("quiz.inviteText")}</p>
-        <button type="button" className="btn btn-primary btn-big" onClick={onQuiz}>
-          {t("quiz.open")}
-          <Icon name="arrow" />
-        </button>
-      </section>
+      <details className="fold fold-block community">
+        <summary>
+          <span>{classCode ? t("score.communityClass", { code: classCode }) : t("score.community")}</span>
+          <Icon name="chevron" size={18} className="fold-chevron" />
+        </summary>
+        {summary && summary.games > 1 && top ? (
+          <>
+            <p>{t(shared ? "score.communityCountShared" : "score.communityCount", { n: summary.games })}</p>
+            <p>
+              {t("score.communityTop", {
+                name: pick(cards.get(top.card)?.name),
+                pct: number(top.share * 100, 0),
+                argus: argusCount(top.card),
+              })}
+            </p>
+          </>
+        ) : (
+          <p>{t("score.communityFirst")}</p>
+        )}
+        <p className="small">{t(shared ? "score.communityShared" : "score.communityLocal")}</p>
+      </details>
 
       <div className="actions actions-split">
         <button type="button" className="btn btn-secondary btn-big" onClick={onReplay}>

@@ -500,6 +500,7 @@ Game-design rules (in code):
 - Reveal counts distinct ARGUS instruments (not installed-instrument records) and groups them by card.
 - Decision step: after the replayed alarm the player chooses what to do first. The quoted recommendation is the ARGUS decision record linked to that alarm (decision-contexts and decisions, read from the first snapshot when a later one lacks them); every such record in the snapshot has the same text ('Review alarm evidence and affected asset context before intervention.'), and AI alarms have none. Our verdict rule (web/src/game/logic.ts, judgeDecision): looking first is where experts start; acting at once is too early; waiting is risky when the alarm came back within its episode or was at least twice its limit, otherwise fair. The choice is stored for class discussion and never scored.
 - Observation report: a visitor records what they saw (a checklist item or 'something else'), a note, the spot (a pin on the map, rounded to about a metre), the day and an optional photo, and gets a card to print. It is kept on the visitor's device only (never in the class or community store) and the photo is not stored at all. The data file follows ARGUS's own cultural-documentation record (schema argus_cultural_documentation_v1, CIDOC CRM E14 Condition Assessment, as in the snapshot's Delos test record): severity and the asset state stay empty because a visitor cannot know them, the spot and the checklist item sit under an added 'citizen_observation' key, and site_key is the ARGUS site key whose name contains the nearest named place (else the pilot key, which is not an ARGUS site key at Delos and Monti Lucretili). Nothing loads these files into ARGUS: whether and how ARGUS would accept citizen records is a question for the ARGUS team.
+- Photographs: one real photograph per monument, from Wikimedia Commons under a free licence (content/photos/credits.json). Author, licence and source are shown under each photo and in the game's photo credits; the build refuses a photo without them. The captions are ours. The Monti Lucretili photo shows the dry-stone walls of the landscape (an ARGUS scenario there), because no freely licensed photograph of the monitored buildings was found.
 - Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.
 
 Authored content flagged `needs_review`:
@@ -636,15 +637,20 @@ Authored content flagged `needs_review`:
 - `schenkenberg` alarm explanation for `R3_vib_zscore` and its linked threats ['schenkenberg.wind-storm.walls', 'schenkenberg.earthquake.475y']
 - `schenkenberg` mission picks per level
 - `content/citizen_checklist.json`: what visitors should look out for and how to report it
+- `baltanas` photo caption "The cellar hill of Baltanás: doors and stone chimneys on the slope, an": check that it says what the photo shows (Carmen García Fdez, CC BY-SA 4.0, Wikimedia Commons)
+- `delos` photo caption "The House of the Masks on Delos, seen from above. The modern roof cove": check that it says what the photo shows (Bernard Gagnon, CC BY-SA 3.0, Wikimedia Commons)
+- `lucretili` photo caption "Dry-stone walls on the high meadow of Monte Gennaro, in the Monti Lucr": check that it says what the photo shows (V.lattanzi, CC BY 4.0, Wikimedia Commons)
+- `ranverso` photo caption "Sant'Antonio di Ranverso from behind: the brick apse of the church and": check that it says what the photo shows (Elio Pallard, CC BY-SA 4.0, Wikimedia Commons)
+- `schenkenberg` photo caption "The ruins of Schenkenberg Castle on their hill, with the valley below.": check that it says what the photo shows (Gabrielle Merk, CC BY-SA 4.0, Wikimedia Commons)
 - `content/decisions.json`: the 'what would you do next?' options, their feedback and our plain-language reading of the ARGUS decision record
 - `content/quiz.json`: 5 pre/post quiz questions, answers and explanations
 
 ## Languages
 
-The game's own text is written in English and Greek (375 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
+The game's own text is written in English and Greek (380 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
 
 | language | translated | missing (shown in English) | no longer used | needs review |
 |---|---|---|---|---|
-| de | 375 | 0 | 0 | yes |
-| es | 375 | 0 | 0 | yes |
-| it | 375 | 0 | 0 | yes |
+| de | 380 | 0 | 0 | yes |
+| es | 380 | 0 | 0 | yes |
+| it | 380 | 0 | 0 | yes |

@@ -326,5 +326,13 @@
   "challenge.tied": "Unentschieden: Du hast die {score} der Herausforderung erreicht.",
   "challenge.lost": "Noch nicht: Die Punktzahl, die du schlagen musst, ist {score}. Verbessere dein Netz und versuch es noch einmal.",
   "challenge.sendTitle": "Fordere jemanden heraus",
-  "challenge.sendText": "Schick diesen Link an eine Freundin oder einen Freund. Dort warten dasselbe Denkmal, dieselbe Stufe und dieselben drei Gefahren. Zu schlagen ist deine Punktzahl: {score} von 100."
+  "challenge.sendText": "Schick diesen Link an eine Freundin oder einen Freund. Dort warten dasselbe Denkmal, dieselbe Stufe und dieselben drei Gefahren. Zu schlagen ist deine Punktzahl: {score} von 100.",
+  "report.photoPick": "Foto auswählen",
+  "report.photoChange": "Anderes Foto auswählen",
+  "citizen.fold": "Worauf du achten kannst ({n} Punkte)",
+  "photo.by": "Foto: {author}",
+  "photo.via": "von Wikimedia Commons",
+  "photo.credits": "Bildnachweise",
+  "photo.changes": "Die Fotos werden kleiner gezeigt als die Originale.",
+  "story.dangerLabel": "Eine Gefahr dieser Mission"
 }

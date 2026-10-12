@@ -40,15 +40,15 @@ interface Props {
   onReportPin?: (at: LatLng) => void;
 }
 
-// Placement reticle: ring and ticks leave the centre open; the dot is the exact spot a new
-// sensor goes. Each shape is drawn three times (dark halo, white casing, colour) so it reads on
-// dark satellite imagery and on the light plan alike.
-const RETICLE_SHAPES = '<circle cx="32" cy="32" r="15"/><path d="M32 3v10M32 51v10M3 32h10M51 32h10"/>';
+// Placement reticle, drawn like a surveyor's mark: four arms and a small ring leave the centre
+// open; the point is the exact spot a new sensor goes. Ink on a white casing, so it reads on dark
+// satellite imagery and on the light plan alike, and is never taken for a (blue) sensor. The arms
+// are longer than a pin, so they still show around a sensor that sits on the spot.
+const RETICLE_SHAPES = '<path d="M32 2v19M32 43v19M2 32h19M43 32h19"/><circle cx="32" cy="32" r="6.5"/>';
 const RETICLE = `<svg width="64" height="64" viewBox="0 0 64 64" focusable="false">
-  <g class="reticle-halo">${RETICLE_SHAPES}</g>
   <g class="reticle-casing">${RETICLE_SHAPES}</g>
-  <circle class="reticle-ring" cx="32" cy="32" r="15"/>
-  <circle class="reticle-dot" cx="32" cy="32" r="3.5"/>
+  <g class="reticle-ink">${RETICLE_SHAPES}</g>
+  <circle class="reticle-dot" cx="32" cy="32" r="2"/>
 </svg>`;
 
 const BASEMAP_KEY = "guardian.basemap";
@@ -166,8 +166,15 @@ export function GameMap(props: Props) {
       fadeAnimation: !reduced,
       markerZoomAnimation: !reduced,
     }).setView([45, 10], 4);
+    // The credits name the map data and pictures (required). The library's own badge is optional.
+    map.attributionControl.setPrefix(false);
     map.createPane("backdrop").style.zIndex = "250"; // above tiles, below sensors
-    const reticlePane = map.createPane("reticle"); // above the plan, below the pins
+    // The site guide (numbers and names of places) is a note on the sheet: it lies under the
+    // reticle, so the spot being chosen is never hidden by a name.
+    const placesPane = map.createPane("places");
+    placesPane.style.zIndex = "540";
+    placesPane.style.pointerEvents = "none";
+    const reticlePane = map.createPane("reticle"); // above the plan and the site guide, below the pins
     reticlePane.style.zIndex = "550";
     reticlePane.style.pointerEvents = "none";
     backdropRef.current = L.layerGroup().addTo(map);
@@ -470,11 +477,13 @@ export function GameMap(props: Props) {
         L.polygon(place.outline, { className: "place-outline", interactive: false }).addTo(group);
       }
       L.marker([place.lat, place.lon], {
+        pane: "places",
         interactive: false,
         keyboard: false,
         icon: L.divIcon({ className: "", html: `<span class="place-pin">${place.n}</span>`, iconSize: [26, 26], iconAnchor: [13, 13] }),
       })
         .bindTooltip(el("span", "", pick(place.name)), {
+          pane: "places",
           permanent: true,
           direction: "auto", // the side with room, so labels are not cut at the map edge
           offset: [12, 0],

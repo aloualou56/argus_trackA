@@ -213,6 +213,23 @@ export interface Prompt extends Text {
   needs_review?: boolean;
 }
 
+/** A real photograph of a monument (content/photos/credits.json), always shown with its credit. */
+export interface Photo {
+  /** Relative URLs of the photo and its small version. */
+  src: string;
+  thumb: string;
+  /** What the photo shows, in plain words (authored). */
+  caption: Text;
+  author: string;
+  license: string;
+  license_url: string;
+  /** The photo's own page (Wikimedia Commons). */
+  source: string;
+  changes: string;
+  authored: true;
+  needs_review: boolean;
+}
+
 interface MonumentBase {
   pilot_key: string;
   asset_id: number;
@@ -229,6 +246,7 @@ interface MonumentBase {
   map: MapView | null;
   /** OpenStreetMap outlines around the monument for the drawn plan (relative URL), if fetched. */
   backdrop: string | null;
+  photo?: Photo;
 }
 
 export interface MonumentStub extends MonumentBase {

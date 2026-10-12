@@ -1,0 +1,81 @@
+{
+  "_about": "Photographs of the five monuments, from Wikimedia Commons under free licences. One entry per pilot_key. 'caption' is AUTHORED by the game team (what the photo shows, in plain words) and needs review; author, licence and source come from the Commons page of each file, checked on 12 October 2026. The licences ask for the author's name, the licence and a note of changes wherever a photo is shown: the game shows them under each photo and in its photo credits, and the README lists them. Share-alike photos stay under their own licence. To replace a photo: put the new files here, update this entry from its Commons page, and rerun tools/build_game_data.py (it refuses a photo without an author, a licence and a source).",
+  "source_site": "Wikimedia Commons",
+  "photos": {
+    "delos": {
+      "file": "delos.jpg",
+      "thumb": "delos-thumb.jpg",
+      "caption": {
+        "en": "The House of the Masks on Delos, seen from above. The modern roof covers its mosaic floors.",
+        "el": "Η Οικία με τα Προσωπεία στη Δήλο, από ψηλά. Η σύγχρονη στέγη σκεπάζει τα ψηφιδωτά δάπεδά της."
+      },
+      "author": "Bernard Gagnon",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:House_of_the_Masks_01.jpg",
+      "original_title": "File:House of the Masks 01.jpg",
+      "changes": "Resized to 960 px and 330 px wide.",
+      "needs_review": true
+    },
+    "baltanas": {
+      "file": "baltanas.jpg",
+      "thumb": "baltanas-thumb.jpg",
+      "caption": {
+        "en": "The cellar hill of Baltanás: doors and stone chimneys on the slope, and the church tower on the right.",
+        "el": "Ο λόφος με τα κελάρια της Μπαλτανάς: πόρτες και πέτρινες καμινάδες στην πλαγιά, και δεξιά το καμπαναριό της εκκλησίας."
+      },
+      "author": "Carmen García Fdez",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Panor%C3%A1mica_de_las_bodegas_de_Baltan%C3%A1s_con_la_torre.jpg",
+      "original_title": "File:Panorámica de las bodegas de Baltanás con la torre.jpg",
+      "changes": "Resized to 960 px and 330 px wide.",
+      "needs_review": true
+    },
+    "lucretili": {
+      "file": "lucretili.jpg",
+      "thumb": "lucretili-thumb.jpg",
+      "caption": {
+        "en": "Dry-stone walls on the high meadow of Monte Gennaro, in the Monti Lucretili.",
+        "el": "Ξερολιθιές στο ορεινό λιβάδι του Μόντε Τζενάρο, στα Όρη Λουκρετίλι."
+      },
+      "author": "V.lattanzi",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Parco_dei_Monti_Lucretili_il_Pratone_di_M._Gennaro.jpg",
+      "original_title": "File:Parco dei Monti Lucretili il Pratone di M. Gennaro.jpg",
+      "changes": "Resized to 960 px and 330 px wide.",
+      "needs_review": true
+    },
+    "ranverso": {
+      "file": "ranverso.jpg",
+      "thumb": "ranverso-thumb.jpg",
+      "caption": {
+        "en": "Sant'Antonio di Ranverso from behind: the brick apse of the church and its bell tower.",
+        "el": "Το Σαντ' Αντόνιο ντι Ρανβέρσο από πίσω: η πλίνθινη αψίδα της εκκλησίας και το καμπαναριό της."
+      },
+      "author": "Elio Pallard",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Buttigliera_Alta_-_Abbazia_di_Sant%27Antonio_di_Ranverso_003.jpg",
+      "original_title": "File:Buttigliera Alta - Abbazia di Sant'Antonio di Ranverso 003.jpg",
+      "changes": "Resized to 960 px and 330 px wide.",
+      "needs_review": true
+    },
+    "schenkenberg": {
+      "file": "schenkenberg.jpg",
+      "thumb": "schenkenberg-thumb.jpg",
+      "caption": {
+        "en": "The ruins of Schenkenberg Castle on their hill, with the valley below.",
+        "el": "Τα ερείπια του κάστρου Σένκενμπεργκ πάνω στον λόφο τους, με την κοιλάδα από κάτω."
+      },
+      "author": "Gabrielle Merk",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ruine-Schenkenberg.jpg",
+      "original_title": "File:Ruine-Schenkenberg.jpg",
+      "changes": "Resized to 960 px and 330 px wide.",
+      "needs_review": true
+    }
+  }
+}

@@ -326,5 +326,13 @@
   "challenge.tied": "Pareggio: hai raggiunto il {score} della sfida.",
   "challenge.lost": "Non ancora: il punteggio da battere è {score}. Migliora la tua rete e riprova.",
   "challenge.sendTitle": "Sfida un amico",
-  "challenge.sendText": "Manda questo link a un amico. Giocherà nello stesso monumento, allo stesso livello e con gli stessi tre pericoli, e dovrà battere il tuo punteggio: {score} su 100."
+  "challenge.sendText": "Manda questo link a un amico. Giocherà nello stesso monumento, allo stesso livello e con gli stessi tre pericoli, e dovrà battere il tuo punteggio: {score} su 100.",
+  "report.photoPick": "Scegli una foto",
+  "report.photoChange": "Scegli un'altra foto",
+  "citizen.fold": "Che cosa osservare ({n} punti)",
+  "photo.by": "Foto: {author}",
+  "photo.via": "da Wikimedia Commons",
+  "photo.credits": "Crediti delle foto",
+  "photo.changes": "Le foto sono mostrate più piccole degli originali.",
+  "story.dangerLabel": "Un pericolo di questa missione"
 }

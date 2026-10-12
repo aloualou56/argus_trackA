@@ -69,6 +69,28 @@ class GameData(unittest.TestCase):
             self.assertEqual(on_disk, entry["pack"], f"data/i18n/{lang}.json is stale: rerun tools/build_game_data.py")
         self.assertIn("## Languages", self.notes)
 
+    def test_every_monument_photo_has_its_credit(self):
+        credits = json.loads((b.CONTENT_DIR / "photos" / "credits.json").read_text(encoding="utf-8"))["photos"]
+        self.assertEqual(sorted(credits), sorted(m["pilot_key"] for m in self.data["monuments"]))
+        for mon in self.data["monuments"]:
+            photo = mon["photo"]
+            for key in ("author", "license_url", "source", "changes"):
+                self.assertTrue(photo[key], f"{mon['pilot_key']}: photo without {key}")
+            self.assertIn(photo["license"], b.PHOTO_LICENSES, mon["pilot_key"])
+            self.assertTrue(photo["source"].startswith("https://commons.wikimedia.org/wiki/File:"), mon["pilot_key"])
+            self.assertTrue(photo["license_url"].startswith("https://creativecommons.org/"), mon["pilot_key"])
+            self.assertTrue(photo["caption"]["en"] and photo["caption"]["el"], mon["pilot_key"])
+            for key in ("src", "thumb"):
+                shipped = b.OUT_PHOTOS / photo[key].rsplit("/", 1)[1]
+                original = b.CONTENT_DIR / "photos" / shipped.name
+                self.assertTrue(shipped.is_file(), f"{shipped.name} is not next to the game: rerun the build")
+                self.assertEqual(shipped.read_bytes(), original.read_bytes(), f"{shipped.name} is stale: rerun the build")
+                self.assertEqual(original.read_bytes()[:2], b"\xff\xd8", f"{shipped.name} is not a JPEG")
+        # nothing in the folder that the credits do not cover
+        listed = {p[k] for p in credits.values() for k in ("file", "thumb")}
+        self.assertEqual({f.name for f in b.OUT_PHOTOS.iterdir()}, listed)
+        self.assertEqual({f.name for f in (b.CONTENT_DIR / "photos").iterdir()} - {"credits.json"}, listed)
+
     def test_no_secrets_or_api_hosts(self):
         text = json.dumps(self.data, ensure_ascii=False) + self.notes
         self.assertIsNone(re.search(r"(?i)bearer\s|authorization|api[_-]?key|password|token", text))

@@ -224,7 +224,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
             aria-controls="places-panel"
             onClick={() => setPlacesOpen((open) => !open)}
           >
-            <Icon name="gnss" size={18} />
+            <Icon name="pin" size={18} />
             {t("mission.places")}
             <span className="places-count" aria-hidden="true">
               {mon.places.length}

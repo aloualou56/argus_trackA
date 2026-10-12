@@ -1,33 +1,58 @@
 // Line icons (24x24, stroke = currentColor). Always decorative: every icon sits next to
 // visible text or inside an element with its own label, so they are hidden from screen readers.
 // Kept as static SVG strings so map pins (plain DOM, see GameMap) can use the same icons.
+//
+// The sensor icons are the game's own drawings of the instruments themselves (a thermometer with
+// its scale, a rain gauge with its funnel, a crack meter bridging a crack), not general symbols:
+// the thin marks (stroke-width 1.5) are measuring ticks, the motif they share with the map sheet.
+
+const TICK = 'stroke-width="1.5"';
+const DOT = 'fill="currentColor" stroke="none"';
 
 const PATHS: Record<string, string> = {
-  humidity: '<path d="M12 3c-3 4.5-6 7.6-6 11a6 6 0 0 0 12 0c0-3.4-3-6.5-6-11z"/>',
-  temperature: '<path d="M10 14.5V5a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v8"/>',
-  airflow: '<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h6"/>',
-  air_quality:
-    '<path d="M7 16h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 9a3.5 3.5 0 0 0 1 7z"/><circle cx="8" cy="20" r="1"/><circle cx="12" cy="21" r="1"/><circle cx="16" cy="20" r="1"/>',
-  light_uv:
-    '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
-  rain_gauge: '<path d="M7 4h10l-1.5 15a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2z"/><path d="M8 12h8M10 8h4M10 16h4"/>',
-  soil_moisture:
-    '<path d="M3 20h18"/><path d="M12 20v-7"/><path d="M12 13c0-3 2-5 5-5 0 3-2 5-5 5zM12 15c0-2.5-1.8-4-4-4 0 2.2 1.6 4 4 4z"/><path d="M6 4c-1 1.5-2 2.6-2 3.6a2 2 0 0 0 4 0C8 6.6 7 5.5 6 4z"/>',
-  weather_station:
-    '<path d="M12 22V8M8 22h8"/><path d="M12 8 6 5M12 8l6-3M12 8V3"/><circle cx="5" cy="4.5" r="1.5"/><circle cx="19" cy="4.5" r="1.5"/><circle cx="12" cy="2.5" r="1"/>',
-  crackmeter: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M12 4l-2 4 3 3-2 4 2 5"/><path d="M6 12h3M15 12h3"/>',
-  tiltmeter: '<path d="M4 21h16"/><path d="M9 21 13 4l3 1-4 16"/><path d="M7 21V9" stroke-dasharray="2 2"/>',
-  vibration: '<path d="M2 12h3l2-6 3 12 3-12 3 12 2-6h4"/>',
-  gnss: '<path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',
-  acoustic: '<path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/>',
-  visitor_counter:
-    '<circle cx="9" cy="7" r="3"/><path d="M3 21v-1a6 6 0 0 1 12 0v1"/><circle cx="17" cy="8" r="2.5"/><path d="M17.5 13.5A4.5 4.5 0 0 1 21 18v3"/>',
-  camera:
-    '<path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/>',
-  satellite:
-    '<rect x="10" y="6" width="5" height="5" rx="1" transform="rotate(45 12.5 8.5)"/><path d="M8.2 6.4 5 3.2 2.5 5.7l3.2 3.2zM16.8 10.6l3.2 3.2-2.5 2.5-3.2-3.2z"/><path d="M11 12l-2 2"/><path d="M4 15a5 5 0 0 0 5 5M4 19a1 1 0 0 0 1 1"/>',
-  observer:
-    '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  // -- air and light
+  // hygrometer: a drop with its level marks
+  humidity: `<path d="M12 3c-3.2 4.6-6 7.7-6 11.2a6 6 0 0 0 12 0C18 10.7 15.2 7.6 12 3z"/><path d="M9.6 13h4.8M10.6 16.2h2.8" ${TICK}/>`,
+  // thermometer with its scale
+  temperature: `<path d="M8 14.6V5a2 2 0 0 1 4 0v9.6a4 4 0 1 1-4 0z"/><path d="M10 15.5V9.5"/><circle cx="10" cy="18" r="1.3" ${DOT}/><path d="M15.5 6h3.5M15.5 9.5h2.2M15.5 13h3.5" ${TICK}/>`,
+  // vane anemometer: a small fan in its ring
+  airflow: `<circle cx="12" cy="12" r="8.6"/><path d="M12 12c-1.2-3 .2-5.6 2.8-6.3M12 12c3.2-.5 5.4 1.3 5.7 4M12 12c-1.9 2.5-4.8 2.4-6.6.4" ${TICK}/><circle cx="12" cy="12" r="1.3" ${DOT}/>`,
+  // gas sensor: the sensor head and the gas around it
+  air_quality: `<rect x="5" y="12" width="14" height="8.5" rx="2"/><path d="M9 16.2h6" ${TICK}/><circle cx="7.5" cy="6.5" r="1.5"/><circle cx="12.6" cy="4.3" r="1"/><circle cx="16.8" cy="7.6" r="1.7"/>`,
+  // light meter: the sensor dome and the rays reaching it
+  light_uv: `<path d="M5 17.5a7 7 0 0 1 14 0z"/><path d="M3 20.5h18"/><path d="M12 3v3.4M4.8 6.4l2.4 2.4M19.2 6.4l-2.4 2.4" ${TICK}/>`,
+  // -- water and weather
+  // rain gauge: the funnel, the measuring tube and its marks
+  rain_gauge: `<path d="M5.5 8h13l-2.3 4H7.8z"/><path d="M8.5 12v8.5h7V12"/><path d="M11 15h2.4M11 17.8h2.4" ${TICK}/><path d="M9 2.6v2M12 3.6v2M15 2.6v2" ${TICK}/>`,
+  // soil probe: two prongs pushed into the ground
+  soil_moisture: `<rect x="8" y="3" width="8" height="6" rx="1.5"/><path d="M10 9v10.5M14 9v10.5"/><path d="M3 13h4M17 13h4"/><path d="M5.5 17.4h.01M18.5 17.4h.01M7 20.6h.01M17 20.6h.01" stroke-width="2.2"/>`,
+  // weather mast: cup anemometer and wind vane
+  weather_station: `<path d="M12 21.5V8.5M8 21.5h8"/><path d="M5 8.5h14"/><circle cx="5" cy="6.4" r="1.9"/><circle cx="19" cy="6.4" r="1.9"/><path d="M12 8.5V3l4.2 1.6L12 6.2" ${TICK}/>`,
+  // -- walls and ground
+  // crack meter: two anchors joined across a crack
+  crackmeter: `<path d="M12 2l-1.6 3.6 2.6 3.2M12 15.2l-1.4 3.2 1.8 3.6" ${TICK}/><rect x="2.8" y="9" width="6.4" height="6" rx="1"/><rect x="14.8" y="9" width="6.4" height="6" rx="1"/><path d="M9.2 12h5.6"/><path d="M11 10.8v2.4M13 10.8v2.4" ${TICK}/>`,
+  // tilt meter: a leaning wall against the plumb line
+  tiltmeter: `<path d="M3.5 21h17"/><path d="M8.5 21 12 4.5h4L12.5 21"/><path d="M8.5 21V5" stroke-dasharray="2 2.6" ${TICK}/><path d="M8.5 11.5c.8 0 1.5.1 2.1.3" ${TICK}/>`,
+  // geophone: a box on the ground, its spring, and the shaking
+  vibration: `<path d="M3 20.5h18"/><rect x="8" y="12.5" width="8" height="8" rx="1"/><path d="M12 12.5v-2l-2.2-1.4 4.4-1.7-4.4-1.7L12 4.3V3" ${TICK}/><path d="M5 14.5c-1 1.2-1 2.8 0 4M19 14.5c1 1.2 1 2.8 0 4" ${TICK}/>`,
+  // satellite positioning: the antenna on its tripod
+  gnss: `<path d="M12 12v4M8 21.5l4-5.5 4 5.5"/><path d="M6.5 12a5.5 5.5 0 0 1 11 0z"/><path d="M12 2.5v2.4M6.4 3.8l1.4 2M17.6 3.8l-1.4 2" ${TICK}/>`,
+  // acoustic sensor: a pick-up on a beam, listening
+  acoustic: `<rect x="3" y="15" width="18" height="5.5" rx="1"/><path d="M9 15v-2.5a3 3 0 0 1 6 0V15"/><path d="M8.2 7.2a5.4 5.4 0 0 1 7.6 0M5.6 4.6a9 9 0 0 1 12.8 0" ${TICK}/>`,
+  // -- eyes and counters
+  // people, not an instrument: a person with a checklist
+  observer: `<circle cx="9" cy="6.5" r="3"/><path d="M3.5 20.5v-2a5.5 5.5 0 0 1 8-4.9"/><rect x="13.5" y="11.5" width="7.5" height="9" rx="1"/><path d="M15.6 16.2l1.3 1.3 2.1-2.7" ${TICK}/>`,
+  // visitor counter: a person passing the counting post
+  visitor_counter: `<circle cx="8.5" cy="6" r="2.5"/><path d="M4 20.5v-4.8a4.5 4.5 0 0 1 9 0v4.8"/><path d="M17.5 4v16.5"/><path d="M17.5 8.5h3.5M17.5 13h3.5" ${TICK}/>`,
+  // multispectral camera: one body, several lenses
+  camera: `<rect x="3" y="7" width="18" height="12.5" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="9.2" cy="13.2" r="2.6"/><circle cx="16" cy="11.2" r="1.3" ${TICK}/><circle cx="16" cy="15.4" r="1.3" ${TICK}/>`,
+  // satellite images: the satellite and what it sends down
+  satellite: `<rect x="9.5" y="3.5" width="5" height="7" rx="1"/><path d="M9.5 8.5H3.5v-3h6M14.5 8.5h6v-3h-6"/><path d="M12 10.5v2.6"/><path d="M8.4 17.6a5.2 5.2 0 0 1 7.2 0M10.2 20.6a2.6 2.6 0 0 1 3.6 0" ${TICK}/>`,
+
+  // -- things to look out for, and the interface
+  sprout: '<path d="M3 20.5h18"/><path d="M12 20.5v-7.5"/><path d="M12 13c0-3 2-5 5-5 0 3-2 5-5 5zM12 15.2c0-2.5-1.8-4-4-4 0 2.2 1.6 4 4 4z"/>',
+  trace: '<path d="M2 12h3l2-6 3 12 3-12 3 12 2-6h4"/>',
+  pin: '<path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',
   half: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/>',
   other: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17.5v.01"/>',
   coin: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/>',
@@ -70,3 +95,6 @@ export function Icon({ name, size = 24, className }: { name: string; size?: numb
     />
   );
 }
+
+/** Every icon name, for the icon sheet check. */
+export const ICON_NAMES = Object.keys(PATHS);

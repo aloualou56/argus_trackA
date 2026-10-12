@@ -40,7 +40,7 @@
     },
     {
       "id": "plants",
-      "icon": "soil_moisture",
+      "icon": "sprout",
       "categories": [
         "plant_growth",
         "dissociation"

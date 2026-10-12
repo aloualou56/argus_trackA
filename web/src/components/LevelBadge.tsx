@@ -16,12 +16,25 @@ export function LevelBars({ id }: { id: LevelId }) {
   );
 }
 
+/**
+ * A rating on the five-step scale: what is rated (a small label), then the scale and the level in
+ * words. `template` is a sentence such as "Experts' rating: {level}"; the part before the level
+ * becomes the label, so every language keeps its own wording.
+ */
 export function LevelBadge({ id, template = "level.badge" }: { id: LevelId; template?: MessageKey }) {
   const { t } = useI18n();
+  const level = t(levelKey(id));
+  const mark = "\u0000";
+  const [before, after = ""] = t(template, { level: mark }).split(mark);
+  const label = before.replace(/[\s:]+$/, "");
   return (
     <span className="level-badge">
-      <LevelBars id={id} />
-      {t(template, { level: t(levelKey(id)) })}
+      {label && <span className="level-label">{label}</span>}
+      <span className="level-value">
+        <LevelBars id={id} />
+        {level}
+        {after}
+      </span>
     </span>
   );
 }

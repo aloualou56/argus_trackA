@@ -3,6 +3,7 @@ import { normalizeClassCode } from "../community/classCode";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
 import type { Challenge } from "../game/challenge";
+import { formatCoords } from "../game/logic";
 import type { GameData, Level, LevelId, LevelSummary } from "../game/types";
 import { useI18n } from "../i18n";
 
@@ -169,6 +170,9 @@ export function Home({
     if (mon?.playable && level) onStart(mon.pilot_key, level);
   };
 
+  const chosenLevel = mon?.levels.find((l) => l.id === level);
+  const canStart = !!mon?.playable && !!level;
+
   return (
     <form className="screen home" onSubmit={submit}>
       <h1 tabIndex={-1}>{t("app.title")}</h1>
@@ -176,17 +180,8 @@ export function Home({
 
       {challenge && <ChallengePanel data={data} challenge={challenge} onChallenge={onChallenge} />}
 
-      <section aria-labelledby="how-title" className="panel">
-        <h2 id="how-title">{t("home.how")}</h2>
-        <ol className="how-list">
-          <li>{t("home.how1")}</li>
-          <li>{t("home.how2")}</li>
-          <li>{t("home.how3")}</li>
-          <li>{t("home.how4")}</li>
-        </ol>
-      </section>
-
-      <fieldset className="choices">
+      {/* The two choices come first; the Start bar below stays in view while they are made. */}
+      <fieldset className="choices choices-index">
         <legend>
           <h2>{t("home.monument")}</h2>
         </legend>
@@ -201,19 +196,21 @@ export function Home({
               disabled={!m.playable}
               onChange={() => setPilot(m.pilot_key)}
             />
+            {m.photo && <img className="choice-photo" src={`${import.meta.env.BASE_URL}${m.photo.thumb}`} alt="" />}
             <span className="choice-body">
               <span className="choice-title">{m.display_name ? pick(m.display_name) : m.name}</span>
               <span className="choice-meta">
                 {m.place ? pick(m.place) : m.country}
                 {!m.playable && <> · {t("home.comingSoon")}</>}
               </span>
+              {m.map && <span className="choice-coords">{formatCoords(m.map.center)}</span>}
             </span>
           </label>
         ))}
       </fieldset>
 
       {mon && (
-        <fieldset className="choices">
+        <fieldset className="choices choices-ladder">
           <legend>
             <h2>{t("home.level")}</h2>
           </legend>
@@ -247,14 +244,17 @@ export function Home({
         </fieldset>
       )}
 
-      <ClassPanel classCode={classCode} setClassCode={setClassCode} onTeacher={onTeacher} />
+      <section aria-labelledby="how-title" className="panel">
+        <h2 id="how-title">{t("home.how")}</h2>
+        <ol className="how-list">
+          <li>{t("home.how1")}</li>
+          <li>{t("home.how2")}</li>
+          <li>{t("home.how3")}</li>
+          <li>{t("home.how4")}</li>
+        </ol>
+      </section>
 
-      <div className="actions">
-        <button type="submit" className="btn btn-primary btn-big" disabled={!mon?.playable || !level}>
-          {t("home.start")}
-          <Icon name="arrow" />
-        </button>
-      </div>
+      <ClassPanel classCode={classCode} setClassCode={setClassCode} onTeacher={onTeacher} />
 
       {/* Citizen science without playing: for someone standing at a monument right now. */}
       <section className="panel report-invite" aria-labelledby="report-invite-title">
@@ -267,6 +267,27 @@ export function Home({
           {t("report.open")}
         </button>
       </section>
+
+      {/* Last in the page, so a keyboard reaches it after the class code; pinned to the bottom of
+          the panel, so nobody has to scroll to find it. It says what it will start. */}
+      <div className="start-bar">
+        <p className="start-summary" aria-live="polite">
+          {canStart && mon && chosenLevel ? (
+            <>
+              <strong>{mon.display_name ? pick(mon.display_name) : mon.name}</strong>
+              <span>
+                {t(levelKey(chosenLevel.id))} · {tn("unit.coins", (chosenLevel as Level).budget ?? 0)}
+              </span>
+            </>
+          ) : (
+            t("home.monument")
+          )}
+        </p>
+        <button type="submit" className="btn btn-primary btn-big" disabled={!canStart}>
+          {t("home.start")}
+          <Icon name="arrow" />
+        </button>
+      </div>
     </form>
   );
 }

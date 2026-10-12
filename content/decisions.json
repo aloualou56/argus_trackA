@@ -29,7 +29,7 @@
     },
     {
       "id": "check_data",
-      "icon": "vibration",
+      "icon": "trace",
       "stance": "review",
       "label": {
         "en": "Check the sensor and the other measurements",

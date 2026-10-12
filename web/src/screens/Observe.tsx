@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type MutableRefOb
 import { ReportStore } from "../community/reports";
 import type { MapApi } from "../components/GameMap";
 import { BrandMark } from "../components/BrandMark";
+import { Dropdown } from "../components/Dropdown";
 import { Icon } from "../components/Icon";
 import { isPlayable } from "../game/logic";
 import {
@@ -237,23 +238,20 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
       <h1 tabIndex={-1}>{t("report.title")}</h1>
       <p className="lead">{t("report.intro")}</p>
 
-      <label className="field-label" htmlFor="report-monument">
+      {/* The button itself reads "Which monument?: Delos", so this visible label is for the eye. */}
+      <p className="field-label" aria-hidden="true">
         {t("report.monument")}
-      </label>
-      <select
+      </p>
+      <Dropdown
         id="report-monument"
-        className="input"
+        className="menu-field"
+        label={t("report.monument")}
+        options={monuments.map((m) => ({ id: m.pilot_key, name: pick(m.display_name) }))}
         value={mon.pilot_key}
-        onChange={(e) => setReport({ pilot: e.target.value, at: null })}
-      >
-        {monuments.map((m) => (
-          <option key={m.pilot_key} value={m.pilot_key}>
-            {pick(m.display_name)}
-          </option>
-        ))}
-      </select>
+        onChange={(pilot) => setReport({ pilot, at: null })}
+      />
 
-      <fieldset className="choices" aria-describedby={has("what") ? "report-what-error" : undefined}>
+      <fieldset className="choices choices-ladder" aria-describedby={has("what") ? "report-what-error" : undefined}>
         <legend>
           <h2>{t("report.what")}</h2>
         </legend>
@@ -324,7 +322,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
           ))}
         </ol>
         <p className={report.at ? "report-where is-set" : "report-where"}>
-          <Icon name="gnss" size={20} />
+          <Icon name="pin" size={20} />
           {report.at ? t("report.whereSet", { where: where(mon, report.at) }) : t("report.whereNone")}
         </p>
         {has("where") && (
@@ -356,21 +354,28 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
         </p>
       )}
 
-      <label className="field-label" htmlFor="report-photo">
+      <p className="field-label" aria-hidden="true">
         {t("report.photo")}
-      </label>
+      </p>
+      {/* The browser's own file control stays (hidden to the eye) and does the work: keyboards
+          focus it, and the button below is its label, so pressing either opens the picker. */}
       <input
         id="report-photo"
         ref={fileInput}
-        className="input-file"
+        className="file-input"
         type="file"
         accept="image/*"
+        aria-label={t("report.photo")}
         aria-describedby="report-photo-help"
         onChange={(e) => {
           const file = e.target.files?.[0];
           setPhoto(file && file.type.startsWith("image/") ? { url: URL.createObjectURL(file), forCard: null } : null);
         }}
       />
+      <label htmlFor="report-photo" className="btn btn-secondary file-btn">
+        <Icon name="camera" size={20} />
+        {t(photo ? "report.photoChange" : "report.photoPick")}
+      </label>
       <p id="report-photo-help" className="hint">
         {t("report.photoHelp")}
       </p>

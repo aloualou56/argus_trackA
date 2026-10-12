@@ -557,17 +557,6 @@ main {
   font-weight: 600;
 }
 
-/* ------------------------------------------------------------------ story */
-
-.threat-hook {
-  display: flex;
-  gap: 0.75rem;
-  border-left: 6px solid var(--primary);
-}
-.threat-hook h2 {
-  margin-top: 0;
-}
-
 /* ------------------------------------------------------------------ mission */
 
 .threat-list,
@@ -578,18 +567,6 @@ main {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.threat {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-left: 6px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 0.85rem 1rem;
-  margin-bottom: 0.75rem;
-}
-.threat p {
-  margin-bottom: 0.5rem;
 }
 
 .card-group h3 {
@@ -1004,12 +981,6 @@ textarea.input {
 .input[aria-invalid="true"] {
   border-color: var(--no);
 }
-.input-file {
-  display: block;
-  max-width: 100%;
-  min-height: 48px;
-  font: inherit;
-}
 .report-option {
   display: inline-flex;
   align-items: flex-start;
@@ -1348,67 +1319,61 @@ textarea.input {
   display: block;
   overflow: visible;
 }
-.crosshair g,
-.crosshair circle {
+/* A surveyor's mark: ink on a white casing, square ends. Blue is kept for the sensors. */
+.crosshair g {
   fill: none;
-  stroke-linecap: round;
-}
-.reticle-halo {
-  stroke: var(--ink);
-  stroke-opacity: 0.55;
-  stroke-width: 7;
 }
 .reticle-casing {
   stroke: #fff;
-  stroke-width: 4;
+  stroke-width: 5;
+  stroke-linecap: square;
 }
-.crosshair .reticle-ring {
-  stroke: var(--you);
-  stroke-width: 2;
+.reticle-ink {
+  stroke: var(--ink);
+  stroke-width: 1.75;
 }
 .crosshair .reticle-dot {
-  fill: var(--you);
+  fill: var(--ink);
   stroke: #fff;
-  stroke-width: 2;
+  stroke-width: 1.5;
+  paint-order: stroke;
   transition: opacity 0.18s ease;
 }
-/* lifts while the map moves, settles when it stops */
+/* lifts while the map moves (the point goes: no spot is chosen yet), settles when it stops */
 .crosshair.is-moving {
-  transform: scale(1.12);
+  transform: scale(1.1);
 }
 .crosshair.is-moving .reticle-dot {
-  opacity: 0.4;
+  opacity: 0;
 }
-/* small "drop" when a sensor is placed */
+/* closes on the spot when a sensor is placed */
 .crosshair.just-placed {
-  animation: reticle-drop 0.35s ease-out;
+  animation: reticle-drop 0.28s ease-out;
 }
 @keyframes reticle-drop {
   from {
-    transform: scale(0.72);
-  }
-  60% {
-    transform: scale(1.08);
+    transform: scale(1.25);
   }
   to {
     transform: scale(1);
   }
 }
+/* The note hangs from the lower arm of the cross, which serves as its leader line. */
 .crosshair-label {
   position: absolute;
   left: 50%;
-  top: calc(50% + 38px);
+  top: calc(50% + 33px);
   z-index: 1000;
   transform: translateX(-50%);
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
   background: var(--surface);
   color: var(--ink);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 650;
   white-space: nowrap;
   pointer-events: none;
-  box-shadow: 0 0 0 1px var(--edge), 0 1px 4px rgb(0 0 0 / 0.25);
 }
 
 .map-legend {
@@ -2305,8 +2270,10 @@ body.is-dragging-sensor .board-map .map {
 }
 
 @media (forced-colors: active) {
-  .reticle-casing,
-  .crosshair .reticle-ring {
+  .reticle-casing {
+    stroke: Canvas;
+  }
+  .reticle-ink {
     stroke: CanvasText;
   }
   .crosshair .reticle-dot {
@@ -2367,6 +2334,9 @@ b {
 
 /* ---- margin notes: small labels that are true labels (a step, a day, a code, a position) */
 .progress-text,
+.eyebrow,
+.level-label,
+.status-tag,
 .dock-step,
 .dock-label,
 .day-label,
@@ -2416,90 +2386,15 @@ b {
 .brand-mark {
   flex: none;
 }
-.brand-dot {
-  fill: var(--coin);
-}
 /* The band sits above the map's own controls, so the language list can open over the map. */
 .topbar {
   position: relative;
   z-index: 1200;
 }
-.lang-menu {
-  position: relative;
-  flex: none;
-}
-.lang-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  min-height: 44px;
-  padding: 0 0.7rem;
-  border: 2px solid rgb(255 255 255 / 0.7);
-  border-radius: var(--radius);
-  background: transparent;
-  color: #fff;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-}
-.lang-toggle:hover,
-.lang-toggle[aria-expanded="true"] {
-  background: rgb(255 255 255 / 0.14);
-  border-color: #fff;
-}
-.lang-toggle svg {
-  flex: none;
-}
-.lang-toggle[aria-expanded="true"] .lang-chevron {
-  transform: rotate(180deg);
-}
-.lang-list {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 12.5rem;
-  margin: 0;
-  padding: 0.3rem;
-  list-style: none;
-  background: var(--surface);
-  border: 2px solid var(--ink);
-  border-radius: var(--radius);
-  box-shadow: 0 10px 24px rgb(20 33 27 / 0.28);
-  color: var(--ink);
-}
-.lang-list button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  width: 100%;
-  min-height: 44px;
-  padding: 0.4rem 0.7rem;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-}
-.lang-list button:hover {
-  background: var(--tint);
-}
-.lang-list button[aria-current="true"] {
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-weight: 750;
-}
 .topbar :focus-visible,
+.mission-brief :focus-visible,
 .week :focus-visible {
   outline-color: #fff;
-}
-/* ...but the list is white, so its focus ring is the usual one. */
-.topbar .lang-list :focus-visible {
-  outline-color: var(--focus);
-  outline-offset: -3px;
 }
 .skip-link:focus {
   outline: 3px solid #fff;
@@ -2518,24 +2413,125 @@ b {
   border-radius: 0;
   padding: 0.9rem 0 0;
 }
-.threat-hook {
-  border-left: 6px solid var(--primary);
+/* Notes on the sheet: a rule above, then type. No box, no side stripe, no badge. */
+.sheet-note {
+  display: block;
+  margin: 1.5rem 0;
+  padding: 0.9rem 0 0;
+  border-top: 2px solid var(--ink);
 }
+.sheet-note h2 {
+  margin-top: 0;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+.eyebrow {
+  margin: 0 0 0.3rem;
+  color: var(--muted);
+}
+/* A rating on the five-step scale: what is rated, then the scale and the level in words. */
+.level-badge {
+  display: grid;
+  gap: 0.3rem;
+  width: fit-content;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.level-value {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  font-size: 1.15rem;
+  font-weight: 750;
+  line-height: 1;
+}
+.level-badge .level-bars {
+  gap: 3px;
+}
+.level-badge .level-bars span {
+  width: 9px;
+  height: 26px;
+  border-radius: 1px;
+}
+.level-badge .level-bars span:nth-child(1) {
+  height: 8px;
+}
+.level-badge .level-bars span:nth-child(2) {
+  height: 12px;
+}
+.level-badge .level-bars span:nth-child(3) {
+  height: 17px;
+}
+.level-badge .level-bars span:nth-child(4) {
+  height: 21px;
+}
+/* The experts' rating is ARGUS's own, so its scale wears the ARGUS colour, as on the map. */
+.threat-hook .level-bars span.on {
+  background: var(--argus-pin);
+  border-color: var(--argus-pin);
+}
+/* Notes with a verdict (what each danger needs, quiz answers, the decision): the rule above them
+   carries it, by its line as well as its colour: solid = yes, dashed = no, double = partly. */
 .learn {
-  background: var(--tint);
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 0;
+  margin-bottom: 1rem;
+  padding: 0.7rem 0 0;
+  border: 0;
+  border-top: 3px solid var(--edge);
+  border-radius: 0;
+  background: none;
+}
+.learn.is-yes {
+  border-left: 0;
+  border-top: 3px solid var(--yes);
+}
+.learn.is-no {
+  border-left: 0;
+  border-top: 3px dashed var(--no);
+}
+.learn.is-partial {
+  border-left: 0;
+  border-top: 5px double var(--partial);
+}
+.learn.is-info {
+  border-left: 0;
+  border-top: 3px solid var(--edge);
+}
+.learn h3 {
+  font-size: 1.2rem;
+}
+.status-tag,
+.is-yes .status-tag,
+.is-no .status-tag,
+.is-partial .status-tag,
+.is-info .status-tag {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+.is-info .status-tag {
+  color: var(--muted);
+}
+/* The alarm's answer keeps its tint; its verdict moves from a side stripe to the rule above. */
+.result {
+  border-radius: 0;
+}
+.result.is-yes {
+  border-left: 0;
+  border-top: 4px solid var(--yes);
+}
+.result.is-no {
+  border-left: 0;
+  border-top: 4px dashed var(--no);
 }
 .argus-quote {
   background: var(--surface);
 }
 .tag {
-  border-radius: 4px;
-}
-.level-badge {
-  background: var(--surface);
-  border: 1px solid var(--line);
   border-radius: 4px;
 }
 .class-code {
@@ -2617,23 +2613,77 @@ b {
   letter-spacing: 0.01em;
 }
 
-/* ---- a week on duty: the one inverted block, because it is the next move */
-.week {
+/* ---- inverted blocks: the player's next move (the mission on the story screen, a week on duty) */
+.week,
+.mission-brief {
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
 }
 .week .small,
-.week .day-label {
+.week .day-label,
+.mission-brief .eyebrow {
   color: var(--mint);
 }
-.week .btn-primary {
+.week .btn-primary,
+.mission-brief .btn-primary {
   background: #fff;
   color: var(--primary);
   box-shadow: 0 3px 0 var(--primary-deep);
 }
-.week .btn-primary:hover {
+.week .btn-primary:hover,
+.mission-brief .btn-primary:hover {
   background: var(--primary-soft);
+}
+/* The mission: its level as a margin note, the orders, the coins to count, and the way on. */
+.mission-brief {
+  margin: 1.75rem 0 1rem;
+  padding: 1.1rem 1.1rem 1.25rem;
+  border-radius: var(--radius);
+}
+.mission-brief h2 {
+  margin: 0 0 0.4rem;
+  color: inherit;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+.mission-brief p {
+  margin-bottom: 0;
+}
+.mission-brief .brief-level {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+  line-height: 1;
+}
+.mission-brief .level-bars span {
+  border-color: var(--mint);
+}
+.mission-brief .level-bars span.on {
+  background: #fff;
+  border-color: #fff;
+}
+.mission-brief .actions {
+  margin-top: 1.1rem;
+}
+/* The budget drawn as its coins, in fives so they can be counted at a glance. */
+.coin-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.85rem;
+  margin-top: 0.9rem;
+}
+.coin-row span {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+.coin-row i {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--coin-ink);
+  border-radius: 50%;
+  background: var(--coin);
 }
 .week .btn-secondary {
   background: transparent;
@@ -2664,6 +2714,11 @@ b {
 }
 .week .day-box.is-today {
   outline-color: #fff;
+}
+.challenge,
+.challenge-send,
+.report-card {
+  border: 2px solid var(--primary);
 }
 .challenge {
   background: var(--primary-soft);
@@ -2765,9 +2820,9 @@ b {
   .board-map:has(.map-legend) .map-coords {
     display: none;
   }
-  /* A phone's map is small: the coordinates show only while placing sensors, where they are the
-     spot under the cross. */
-  .board-map:not(.mode-mission):not(.mode-report) .map-coords {
+  /* A phone's map is small: the coordinates show only in the mission, where they are the spot
+     under the cross. */
+  .board-map:not(.mode-mission) .map-coords {
     display: none;
   }
 }
@@ -2782,6 +2837,422 @@ b {
   pointer-events: none;
 }
 
+/* ---- drop-down menus (components/Dropdown.tsx): the language menu, the monument of a report */
+.menu {
+  position: relative;
+}
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 48px;
+  padding: 0 0.8rem;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-toggle:hover,
+.menu-toggle[aria-expanded="true"] {
+  border-color: var(--primary);
+}
+.menu-toggle svg {
+  flex: none;
+}
+.menu-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.menu-toggle[aria-expanded="true"] .menu-chevron {
+  transform: rotate(180deg);
+}
+.menu-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  min-width: 100%;
+  max-height: 60vh;
+  margin: 0;
+  padding: 0.3rem;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgb(20 33 27 / 0.28);
+  color: var(--ink);
+}
+.menu-list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-list button:hover {
+  background: var(--tint);
+}
+.menu-list button[aria-current="true"] {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 750;
+}
+.menu-list :focus-visible {
+  outline-offset: -3px;
+}
+.menu-field {
+  display: block;
+}
+.menu-field .menu-toggle {
+  width: 100%;
+}
+/* The language menu sits on the green band: light on dark, its list opening from the right. */
+.lang-menu {
+  flex: none;
+}
+.lang-menu .menu-toggle {
+  min-height: 44px;
+  padding: 0 0.7rem;
+  border-color: rgb(255 255 255 / 0.7);
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+}
+.lang-menu .menu-toggle:hover,
+.lang-menu .menu-toggle[aria-expanded="true"] {
+  background: rgb(255 255 255 / 0.14);
+  border-color: #fff;
+}
+.lang-menu .menu-list {
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  min-width: 12.5rem;
+}
+/* The band's focus ring is white, but the list is white, so its ring is the usual one. */
+.topbar .menu-list :focus-visible {
+  outline-color: var(--focus);
+}
+
+/* ---- the photo button of a report: the browser's file control does the work, out of sight */
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+.file-btn {
+  cursor: pointer;
+}
+.file-input:focus-visible + .file-btn {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.input-date {
+  min-width: 12rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
+/* ---- real photographs of the monuments, each with its credit (content/photos/credits.json) */
+.story-photo {
+  margin: 0 0 1rem;
+}
+.story-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  background: var(--tint);
+}
+.story-photo figcaption {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.photo-credit {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+}
+.photo-credit a,
+.photo-credits a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.photo-credits {
+  margin-top: 0.5rem;
+}
+.photo-credits summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.photo-credits ul {
+  margin: 0.4rem 0;
+  padding-left: 1.1rem;
+}
+
+/* ---- four kinds of choice, each with its own shape */
+/* 1. the monuments: an index of the sheet, a photograph beside each name */
+.choices-index .choice {
+  position: relative;
+  gap: 0.8rem;
+  padding: 0.5rem 0.8rem 0.5rem 0.5rem;
+}
+.choices-index .choice input,
+.choices-letters .choice input,
+.action-grid .choice input {
+  /* still the real radio button for keyboards and screen readers, just not drawn: the whole
+     row shows the choice (border, fill and a mark, not colour alone) */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+.choice-photo {
+  flex: none;
+  width: 5.75rem;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  background: var(--tint);
+  object-fit: cover;
+}
+.choices-index .choice-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.choice-coords {
+  margin-top: 0.1rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+}
+.choices-index .choice:has(input:checked)::after {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.95rem;
+  margin: 0 0.35rem 0.25rem 0;
+  border: solid var(--primary);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* 2. a ladder: rows joined into one control (the danger levels, what was seen in a report) */
+.choices-ladder label.choice {
+  min-height: 50px;
+  margin-bottom: 0;
+  padding: 0.5rem 0.8rem;
+  border-top-width: 0;
+  border-radius: 0;
+}
+.choices-ladder label.choice:first-of-type {
+  border-top-width: 2px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.choices-ladder label.choice:last-of-type {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+.choices-ladder .choice-body {
+  flex: 1 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 0.75rem;
+}
+.choices-ladder .choice-meta {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.choices-ladder .field-error {
+  margin-top: 0.5rem;
+}
+
+/* 3. the quiz: lettered answers */
+@counter-style greek-upper {
+  system: alphabetic;
+  symbols: "Α" "Β" "Γ" "Δ" "Ε" "Ζ";
+}
+.choices-letters {
+  counter-reset: answer;
+}
+.choices-letters .choice {
+  position: relative;
+  counter-increment: answer;
+}
+.choices-letters .choice::before {
+  content: counter(answer, upper-alpha);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 2px solid var(--edge);
+  border-radius: 4px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-weight: 700;
+}
+:lang(el) .choices-letters .choice::before {
+  content: counter(answer, greek-upper);
+}
+.choices-letters .choice:has(input:checked)::before {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+/* 4. the decision after the alarm: four actions, as tiles */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.action-grid .choice {
+  position: relative;
+  align-items: flex-start;
+  min-height: 6.4rem;
+  margin: 0;
+  padding: 0.75rem 0.8rem;
+}
+.action-grid .choice-title {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  line-height: 1.3;
+}
+.action-grid .choice-title svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ---- the first screen: Start stays in view while the two choices are made */
+.board-panel {
+  scroll-padding-bottom: 6.5rem;
+}
+.start-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem calc(-1 * var(--gutter)) -2rem;
+  padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  border-top: 3px solid var(--ink);
+  background: var(--bg);
+}
+.start-summary {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  line-height: 1.25;
+}
+.start-summary strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.start-summary span {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.start-bar .btn-big {
+  flex: none;
+  width: auto;
+  min-width: 8.5rem;
+}
+
+/* ---- long lists fold away */
+.fold > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.4rem 0.75rem;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+.fold > summary::-webkit-details-marker {
+  display: none;
+}
+.fold > summary svg {
+  flex: none;
+}
+.fold[open] > summary {
+  margin-bottom: 0.75rem;
+}
+.fold[open] .fold-chevron {
+  transform: rotate(180deg);
+}
+.fold-block {
+  margin: 1rem 0;
+}
+.citizen .fold {
+  margin: 0.75rem 0;
+}
+
+/* ---- the report's map: the hint sits clear of the place names, beside the zoom buttons */
+.crosshair-label.report-hint {
+  top: 4.4rem;
+  right: 0.6rem;
+  left: 4.6rem;
+  max-width: 22rem;
+  margin: 0 auto;
+  padding: 0.3rem 0.7rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  text-align: center;
+  white-space: normal;
+  transform: none;
+}
+
+@media print {
+  .fold > summary {
+    display: none;
+  }
+}
+
 /* ---- print: the cards keep the typefaces, on plain white */
 @media print {
   .panel {
@@ -2793,6 +3264,7 @@ b {
 @media (forced-colors: active) {
   .progress-bar li.done,
   .progress-bar li.now,
+  .coin-row i,
   .budget-meter span {
     background: CanvasText;
   }

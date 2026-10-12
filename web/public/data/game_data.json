@@ -1188,7 +1188,7 @@
    },
    {
     "id": "plants",
-    "icon": "soil_moisture",
+    "icon": "sprout",
     "categories": [
      "plant_growth",
      "dissociation"
@@ -4208,7 +4208,22 @@
      "authored": true,
      "needs_review": true
     }
-   ]
+   ],
+   "photo": {
+    "src": "data/photos/delos.jpg",
+    "thumb": "data/photos/delos-thumb.jpg",
+    "caption": {
+     "en": "The House of the Masks on Delos, seen from above. The modern roof covers its mosaic floors.",
+     "el": "Η Οικία με τα Προσωπεία στη Δήλο, από ψηλά. Η σύγχρονη στέγη σκεπάζει τα ψηφιδωτά δάπεδά της."
+    },
+    "author": "Bernard Gagnon",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:House_of_the_Masks_01.jpg",
+    "changes": "Resized to 960 px and 330 px wide.",
+    "authored": true,
+    "needs_review": true
+   }
   },
   {
    "pilot_key": "baltanas",
@@ -5447,7 +5462,22 @@
      "authored": true,
      "needs_review": true
     }
-   ]
+   ],
+   "photo": {
+    "src": "data/photos/baltanas.jpg",
+    "thumb": "data/photos/baltanas-thumb.jpg",
+    "caption": {
+     "en": "The cellar hill of Baltanás: doors and stone chimneys on the slope, and the church tower on the right.",
+     "el": "Ο λόφος με τα κελάρια της Μπαλτανάς: πόρτες και πέτρινες καμινάδες στην πλαγιά, και δεξιά το καμπαναριό της εκκλησίας."
+    },
+    "author": "Carmen García Fdez",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Panor%C3%A1mica_de_las_bodegas_de_Baltan%C3%A1s_con_la_torre.jpg",
+    "changes": "Resized to 960 px and 330 px wide.",
+    "authored": true,
+    "needs_review": true
+   }
   },
   {
    "pilot_key": "lucretili",
@@ -7601,7 +7631,22 @@
      "authored": true,
      "needs_review": true
     }
-   ]
+   ],
+   "photo": {
+    "src": "data/photos/lucretili.jpg",
+    "thumb": "data/photos/lucretili-thumb.jpg",
+    "caption": {
+     "en": "Dry-stone walls on the high meadow of Monte Gennaro, in the Monti Lucretili.",
+     "el": "Ξερολιθιές στο ορεινό λιβάδι του Μόντε Τζενάρο, στα Όρη Λουκρετίλι."
+    },
+    "author": "V.lattanzi",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Parco_dei_Monti_Lucretili_il_Pratone_di_M._Gennaro.jpg",
+    "changes": "Resized to 960 px and 330 px wide.",
+    "authored": true,
+    "needs_review": true
+   }
   },
   {
    "pilot_key": "ranverso",
@@ -9914,7 +9959,22 @@
      "authored": true,
      "needs_review": true
     }
-   ]
+   ],
+   "photo": {
+    "src": "data/photos/ranverso.jpg",
+    "thumb": "data/photos/ranverso-thumb.jpg",
+    "caption": {
+     "en": "Sant'Antonio di Ranverso from behind: the brick apse of the church and its bell tower.",
+     "el": "Το Σαντ' Αντόνιο ντι Ρανβέρσο από πίσω: η πλίνθινη αψίδα της εκκλησίας και το καμπαναριό της."
+    },
+    "author": "Elio Pallard",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Buttigliera_Alta_-_Abbazia_di_Sant%27Antonio_di_Ranverso_003.jpg",
+    "changes": "Resized to 960 px and 330 px wide.",
+    "authored": true,
+    "needs_review": true
+   }
   },
   {
    "pilot_key": "schenkenberg",
@@ -11410,7 +11470,22 @@
      "authored": true,
      "needs_review": true
     }
-   ]
+   ],
+   "photo": {
+    "src": "data/photos/schenkenberg.jpg",
+    "thumb": "data/photos/schenkenberg-thumb.jpg",
+    "caption": {
+     "en": "The ruins of Schenkenberg Castle on their hill, with the valley below.",
+     "el": "Τα ερείπια του κάστρου Σένκενμπεργκ πάνω στον λόφο τους, με την κοιλάδα από κάτω."
+    },
+    "author": "Gabrielle Merk",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ruine-Schenkenberg.jpg",
+    "changes": "Resized to 960 px and 330 px wide.",
+    "authored": true,
+    "needs_review": true
+   }
   }
  ],
  "site_guide": {
@@ -11494,7 +11569,7 @@
    },
    {
     "id": "check_data",
-    "icon": "vibration",
+    "icon": "trace",
     "stance": "review",
     "label": {
      "en": "Check the sensor and the other measurements",

@@ -5,6 +5,7 @@ import { quizSummaryOf } from "./community/store";
 import { GameMap, type MapApi } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
+import { PhotoCredit } from "./components/PhotoCredit";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
 import { loadGameData } from "./game/data";
 import { challengeFromUrl } from "./game/challenge";
@@ -395,6 +396,22 @@ export default function App() {
             <footer className="footer">
               <p>{t("app.footer", { date: i18n.date(data.snapshot.fetched_at[0]) })}</p>
               {!isBaseLang(lang) && <p>{t("app.translationNote")}</p>}
+              {data.monuments.some((m) => m.photo) && (
+                <details className="photo-credits">
+                  <summary>{t("photo.credits")}</summary>
+                  <ul>
+                    {data.monuments.map(
+                      (m) =>
+                        m.photo && (
+                          <li key={m.pilot_key}>
+                            {m.display_name ? i18n.pick(m.display_name) : m.name}: <PhotoCredit photo={m.photo} />
+                          </li>
+                        ),
+                    )}
+                  </ul>
+                  <p>{t("photo.changes")}</p>
+                </details>
+              )}
             </footer>
           )}
         </div>

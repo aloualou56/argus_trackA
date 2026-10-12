@@ -46,6 +46,10 @@ OUT_JSON = ROOT / "web" / "public" / "data" / "game_data.json"
 OUT_NOTES = ROOT / "docs" / "data_notes.md"
 OUT_BACKDROPS = ROOT / "web" / "public" / "data" / "backdrops"
 OUT_TRANSLATIONS = ROOT / "web" / "public" / "data" / "i18n"
+OUT_PHOTOS = ROOT / "web" / "public" / "data" / "photos"
+PHOTO_URL = "data/photos/{name}"  # relative to the web app
+# Licences a photo may carry: free to show with credit (some ask that copies stay under the same licence).
+PHOTO_LICENSES = ("CC0", "Public domain", "CC BY 2.0", "CC BY 3.0", "CC BY 4.0", "CC BY-SA 2.0", "CC BY-SA 3.0", "CC BY-SA 4.0")
 BACKDROP_URL = "data/backdrops/{name}"  # relative to the web app
 
 SCHEMA_VERSION = 3  # 3: decision step (data.decisions, alarm.decision); 2: coins per level, no monument budget
@@ -163,6 +167,8 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "site_guide": load_json(content_dir / "site_guide.json"),
         "coins": load_json(content_dir / "coins.json"),
         "decisions": load_json(content_dir / "decisions.json"),
+        "photos": (load_json(content_dir / "photos" / "credits.json") if (content_dir / "photos" / "credits.json").exists()
+                   else {"photos": {}}),
         "monuments": monuments,
     }
 
@@ -870,6 +876,21 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         if not tip.get("text", {}).get("en") or not tip.get("text", {}).get("el"):
             problems.append(f"content/site_guide.json {tip.get('id')}: text needs en and el")
 
+    for pilot, photo in content.raw["photos"].get("photos", {}).items():
+        where = f"content/photos/credits.json {pilot}"
+        if pilot not in content.monuments:
+            problems.append(f"{where}: no monument with this pilot key")
+        for key in ("author", "license", "license_url", "source", "changes"):
+            if not photo.get(key):
+                problems.append(f"{where}: missing '{key}' (a photo is never shown without its credit)")
+        if photo.get("license") not in PHOTO_LICENSES:
+            problems.append(f"{where}: licence '{photo.get('license')}' is not one of {PHOTO_LICENSES}")
+        if any(not (photo.get("caption") or {}).get(lang) for lang in BASE_LANGS):
+            problems.append(f"{where}: caption missing a language")
+        for key in ("file", "thumb"):
+            if not (CONTENT_DIR / "photos" / str(photo.get(key))).is_file():
+                problems.append(f"{where}: file '{photo.get(key)}' is not in content/photos/")
+
     decisions = content.raw["decisions"]
     option_ids = [o.get("id") for o in decisions.get("options", [])]
     if len(option_ids) < 2 or len(set(option_ids)) != len(option_ids):
@@ -1016,6 +1037,15 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
     data["site_guide"] = {"where": content.raw["site_guide"]["where"], "authored": True,
                           "needs_review": bool(content.raw["site_guide"].get("needs_review"))}
     data["decisions"] = public_decisions(content)
+    for mon in monuments:
+        photo = content.raw["photos"].get("photos", {}).get(mon["pilot_key"])
+        if photo:
+            mon["photo"] = {
+                "src": PHOTO_URL.format(name=photo["file"]), "thumb": PHOTO_URL.format(name=photo["thumb"]),
+                "caption": photo["caption"], "author": photo["author"], "license": photo["license"],
+                "license_url": photo["license_url"], "source": photo["source"], "changes": photo["changes"],
+                "authored": True, "needs_review": bool(photo.get("needs_review", True)),
+            }
     notes = render_notes(snap, content, stats) + "\n" + render_language_notes(data, translation_packs(data, content_dir))
     return data, notes
 
@@ -1233,6 +1263,10 @@ def collect_review_items(content: Content) -> List[str]:
         items.append(f"`{pilot}` mission picks per level")
     if content.raw["checklist"].get("needs_review"):
         items.append("`content/citizen_checklist.json`: what visitors should look out for and how to report it")
+    for pilot, photo in sorted(content.raw["photos"].get("photos", {}).items()):
+        if photo.get("needs_review", True):
+            items.append(f"`{pilot}` photo caption \"{photo['caption']['en'][:70]}\": check that it says what the photo "
+                         f"shows ({photo['author']}, {photo['license']}, Wikimedia Commons)")
     if content.raw["decisions"].get("needs_review"):
         items.append("`content/decisions.json`: the 'what would you do next?' options, their feedback and our "
                      "plain-language reading of the ARGUS decision record")
@@ -1473,6 +1507,11 @@ DESIGN_ASSUMPTIONS = [
     "'citizen_observation' key, and site_key is the ARGUS site key whose name contains the nearest named place "
     "(else the pilot key, which is not an ARGUS site key at Delos and Monti Lucretili). Nothing loads these files "
     "into ARGUS: whether and how ARGUS would accept citizen records is a question for the ARGUS team.",
+    "Photographs: one real photograph per monument, from Wikimedia Commons under a free licence "
+    "(content/photos/credits.json). Author, licence and source are shown under each photo and in the game's photo "
+    "credits; the build refuses a photo without them. The captions are ours. The Monti Lucretili photo shows the "
+    "dry-stone walls of the landscape (an ARGUS scenario there), because no freely licensed photograph of the "
+    "monitored buildings was found.",
     "Map: sensor positions are the installed-device coordinates from ARGUS. Where the player puts a sensor on the "
     "map does not change the score; distances to the real ARGUS sensors are shown only as discussion prompts.",
 ]
@@ -1499,6 +1538,18 @@ def write_outputs(data: Dict[str, Any], notes: str, out_json: Path = OUT_JSON, o
     out_notes.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     out_notes.write_text(notes, encoding="utf-8")
+
+
+def copy_photos(content: Dict[str, Any], content_dir: Path = CONTENT_DIR, out_dir: Path = OUT_PHOTOS) -> List[str]:
+    """Copy the monument photos (content/photos, credits in credits.json) next to the game; drop files no longer listed."""
+    wanted = sorted({p[key] for p in content.get("photos", {}).values() for key in ("file", "thumb")})
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for stale in out_dir.glob("*"):
+        if stale.name not in wanted:
+            stale.unlink()
+    for name in wanted:
+        (out_dir / name).write_bytes((content_dir / "photos" / name).read_bytes())
+    return wanted
 
 
 def write_translations(packs: Dict[str, Dict[str, Any]], out_dir: Path = OUT_TRANSLATIONS) -> None:
@@ -1531,6 +1582,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     if not args.check:
         write_outputs(data, notes)
         copy_backdrops(args.content)
+        copy_photos(load_json(args.content / "photos" / "credits.json") if (args.content / "photos" / "credits.json").exists() else {},
+                    args.content)
         write_translations(packs)
     print(f"build_game_data: {'checked' if args.check else 'wrote'} {OUT_JSON.relative_to(ROOT)} "
           f"({size / 1024:.1f} KiB), playable: {', '.join(playable) or 'none'}")

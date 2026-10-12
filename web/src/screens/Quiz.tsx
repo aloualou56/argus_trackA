@@ -87,7 +87,7 @@ export function Quiz({ questions, phase, before, onDone, onSkip, announce, after
       <h1 tabIndex={-1}>{t(phase === "pre" ? "quiz.preTitle" : "quiz.postTitle")}</h1>
       <p className="lead">{t(phase === "pre" ? "quiz.preIntro" : "quiz.postIntro")}</p>
       {questions.map((q, i) => (
-        <fieldset key={q.id} className="choices quiz-question">
+        <fieldset key={q.id} className="choices choices-letters quiz-question">
           <legend>
             <span className="quiz-number">{t("quiz.number", { n: i + 1, total: questions.length })}</span>
             <span className="quiz-q">{pick(q.question)}</span>

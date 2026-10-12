@@ -326,5 +326,13 @@
   "challenge.tied": "A draw: you matched the {score} you were challenged with.",
   "challenge.lost": "Not yet: the score to beat is {score}. Improve your network and try again.",
   "challenge.sendTitle": "Challenge a friend",
-  "challenge.sendText": "Send this link to a friend. They get the same monument, the same level and the same three dangers, and have to beat your {score} out of 100."
+  "challenge.sendText": "Send this link to a friend. They get the same monument, the same level and the same three dangers, and have to beat your {score} out of 100.",
+  "report.photoPick": "Choose a photo",
+  "report.photoChange": "Choose another photo",
+  "citizen.fold": "What to look out for ({n} things)",
+  "photo.by": "Photo: {author}",
+  "photo.via": "via Wikimedia Commons",
+  "photo.credits": "Photo credits",
+  "photo.changes": "Photos are shown smaller than the originals.",
+  "story.dangerLabel": "A danger of this mission"
 }
