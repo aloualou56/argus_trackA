@@ -107,9 +107,13 @@ The browser loads only `game_data.json` (about 220 KB, 42 KB compressed). It nev
   zoom at every ARGUS sensor (Delos 18, Ranverso and Lucretili 19, Baltanás 20, Schenkenberg 21) into
   `content/imagery_zoom.json`. The map never asks deeper than that; it stretches the last real level, and you can
   zoom at most two levels past it. `npm run screenshots` zooms in fully at every site and fails on any such picture.
-- **Placing:** move the map so the reticle is where you want the sensor, then press + on a card (tap the map to move
-  the reticle; drag pins to adjust; tap a pin to remove it). The reticle's centre dot is the exact spot; it sits
-  under the pins, lifts while the map moves and "drops" when a sensor is placed. Satellite images get no pin.
+- **Mission screen (one screen, no scrolling).** The map fills the screen; a dock holds the step, coins, Done, the
+  three dangers (tap one to read it), an info line and the sensor tray (17 tiles: two swipeable rows on phones,
+  a right-hand column with every tile on wide screens). A "Places" button over the map opens the site guide.
+- **Placing:** tap a tile to put the sensor at the reticle, or drag the tile onto the map to put it exactly where you
+  drop it (touch: drag upwards; sideways swipes the tray). Tap the map to move the reticle, drag pins to adjust, tap a
+  pin or use the tile's "−" to remove one. Keyboard: Tab to a tile, Enter or Space adds it at the reticle. The
+  reticle's centre dot is the exact spot; it sits under the pins. Satellite images and the human observer get no pin.
 
 ### Add a monument (data only)
 
@@ -221,7 +225,7 @@ offline copies). A new build replaces the stored copy on the next visit.
 | By | Task |
 |---|---|
 | 14 Oct | Review authored content (stories, Greek, threat texts, primary cards, quiz, checklist, units); fix from feedback |
-| 15 Oct | Fix the offline check (`npm run screenshots`: "drawn plan missing offline"; already failing on the pulled code) |
+| 15 Oct | Keep an eye on the offline check (`npm run screenshots`): it failed in earlier runs and passes now, cause not identified |
 | 16 Oct | Set up Supabase (optional) and publish the site (GitHub Pages / Netlify); test a class code across two devices |
 | 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor and the meaning of the AI alarms |
 | 22 Oct | **Playtest** with a class or visitors (pre/post quiz gives the evidence); manual screen-reader and keyboard audit |

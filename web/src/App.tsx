@@ -176,7 +176,7 @@ export default function App() {
     };
     body = (
       <>
-        {isStep(screen) && <Progress current={screen} />}
+        {isStep(screen) && screen !== "mission" && <Progress current={screen} />}
         {screen === "quizPre" && (
           <Quiz
             questions={data.quiz.questions}
@@ -251,7 +251,7 @@ export default function App() {
   }
 
   return (
-    <div className={REVIEW_MODE ? "app review" : "app"}>
+    <div className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}`}>
       <a className="skip-link" href="#main">
         {t("app.skip")}
       </a>

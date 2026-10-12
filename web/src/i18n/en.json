@@ -218,5 +218,11 @@
   "mission.guideHelp": "The numbers on the map show the main parts of the site. Choose one to move the map there, then add sensors with +.",
   "mission.showOnMap": "Show on map",
   "mission.whereTitle": "Where sensors usually go",
-  "map.movedTo": "Map moved to {name}. New sensors go there."
+  "map.movedTo": "Map moved to {name}. New sensors go there.",
+  "mission.doneShort": "Done",
+  "mission.dangersLabel": "Dangers",
+  "mission.places": "Places",
+  "mission.trayHint": "Tap a sensor to put it at the cross, or drag it onto the map.",
+  "mission.dropped": "Placed where you dropped it.",
+  "mission.dropMissed": "Drop the sensor on the map to place it."
 }

@@ -20,6 +20,8 @@ export interface MapApi {
   center(): LatLng;
   /** Move the view (and so the crosshair) to a place. */
   focus(at: LatLng): void;
+  /** Map position under a screen point (for drag and drop), or null when the point is off the map. */
+  latLngAt(clientX: number, clientY: number): LatLng | null;
 }
 
 interface Props {
@@ -179,6 +181,12 @@ export function GameMap(props: Props) {
         return [c.lat, c.lng];
       },
       focus: (at) => map.flyTo(at, Math.max(map.getZoom(), 18), { animate: !reduced, duration: 1.2 }),
+      latLngAt: (clientX, clientY) => {
+        const box = map.getContainer().getBoundingClientRect();
+        if (clientX < box.left || clientX > box.right || clientY < box.top || clientY > box.bottom) return null;
+        const at = map.containerPointToLatLng([clientX - box.left, clientY - box.top]);
+        return [at.lat, at.lng];
+      },
     };
     const resize = new ResizeObserver(() => map.invalidateSize());
     resize.observe(containerRef.current!);

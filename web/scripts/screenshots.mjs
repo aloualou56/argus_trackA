@@ -192,8 +192,38 @@ async function play(browser, lang, vpName) {
   }
   // The human observer joins the network but gets no pin.
   await add("observer").click();
-  // humidity x2, soil x1, crack x1: four pins
-  await checkMap(page, `${prefix} mission`, ".pin-you", 4);
+
+  // Drag and drop: the thermometer tile dragged onto the map lands where it is dropped, not at the cross.
+  const tile = add("temperature");
+  await tile.scrollIntoViewIfNeeded();
+  const from = await tile.boundingBox();
+  const mapBox = await page.locator(".board-map .map").boundingBox();
+  const drop = { x: mapBox.x + mapBox.width * 0.3, y: mapBox.y + mapBox.height * 0.3 };
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2, from.y - 30, { steps: 4 });
+  await page.mouse.move(drop.x, drop.y, { steps: 12 });
+  await page.mouse.up();
+  await page.waitForTimeout(300);
+  const dropSaid = await page.locator("[aria-live=polite]").innerText();
+  if (!dropSaid.includes(t["mission.dropped"])) note(`${prefix}: drag and drop was not announced (${dropSaid})`);
+  const nearest = await page.$$eval(
+    ".pin-you",
+    (pins, at) =>
+      Math.min(
+        ...pins.map((p) => {
+          const r = p.getBoundingClientRect();
+          return Math.hypot(r.x + r.width / 2 - at.x, r.y + r.height / 2 - at.y);
+        }),
+      ),
+    drop,
+  );
+  if (!(nearest < 30)) note(`${prefix}: dropped sensor is ${Math.round(nearest)} px from the drop point`);
+
+  // humidity x2, soil x1, crack x1 at the cross, thermometer where dropped: five pins
+  await checkMap(page, `${prefix} mission`, ".pin-you", 5);
+  const scroll = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+  if (scroll > 0) note(`${prefix}: the mission page scrolls by ${scroll}px; it should fit the screen`);
   if (!(await page.locator(".crosshair").count())) note(`${prefix}: no crosshair on the mission map`);
   await checkPage(page, `${prefix} mission`);
   await shot(page, `${prefix}-3-mission`);
@@ -329,6 +359,8 @@ imagery depth (placeholder ${placeholder.length} B)`);
     await checkPage(page, `${mon.pilot_key} site guide`);
     await shot(page, `en-phone-${mon.pilot_key}-3-guide`);
     const last = mon.places[mon.places.length - 1];
+    const placesToggle = page.getByRole("button", { name: t["mission.places"], exact: true });
+    if ((await placesToggle.getAttribute("aria-expanded")) !== "true") await placesToggle.click();
     await page.getByRole("button", { name: `${t["mission.showOnMap"]}: ${last.name.en}`, exact: true }).click();
     await page.waitForTimeout(1600);
     const said = await page.locator("[aria-live=polite]").innerText();
