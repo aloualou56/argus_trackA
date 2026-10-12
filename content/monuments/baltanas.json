@@ -19,7 +19,7 @@
     "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme)."
   },
   "missions": {
-    "_about": "Three scenario keys per priority level. Baltanas has no Low or Catastrophic scenarios and lists flooding.structural-wood three times; missions use each key once.",
+    "_about": "Three scenario keys per priority level. Baltanas has no Low or Catastrophic scenarios and lists flooding.structural-wood three times; missions use each key once. A mission borrows only from the next level up or down (Medium borrows a High one, not the Extreme cave-in), so a level never shows a danger two levels more serious than the one chosen.",
     "Extreme priority": [
       "baltanas.subsidence.cellar-ensemble",
       "baltanas.relative-humidity.wine-elements",
@@ -33,7 +33,7 @@
     "Medium priority": [
       "baltanas.relative-humidity.structural-wood",
       "baltanas.flooding.structural-wood",
-      "baltanas.subsidence.cellar-ensemble"
+      "baltanas.relative-humidity.wine-elements"
     ]
   },
   "no_alarm_note": {

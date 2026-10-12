@@ -58,6 +58,11 @@ class GameData(unittest.TestCase):
                 name = f"{mon['pilot_key']} {lv['id']}"
                 self.assertEqual(len(set(lv["mission"])), self.data["mission_size"], name)
                 self.assertTrue(set(lv["mission"]) <= keys, name)
+                # Borrowed dangers come from the next level up or down only: never a much harder game than chosen.
+                order = [level_id for _, level_id in b.LEVELS]
+                for key in lv["mission"]:
+                    s = next(s for s in mon["scenarios"] if s["scenario_key"] == key)
+                    self.assertLessEqual(abs(order.index(s["level"]) - order.index(lv["id"])), 1, f"{name} {key}")
                 if lv["featured_alarm"] is not None:
                     alarm = alarm_ids[lv["featured_alarm"]]
                     self.assertNotIn("flat_signal", alarm["quality_flags"], name)
@@ -74,7 +79,7 @@ class GameData(unittest.TestCase):
         self.assertEqual(featured["ranverso"], {"R2_rain_7d"})
         self.assertEqual(featured["lucretili"], {"R2a_tilt_step", "R7_wind"})
         self.assertEqual(featured["schenkenberg"], {"R2_crack_step", "R3_vib_zscore"})
-        self.assertEqual(featured["delos"], {"DL_soil_moisture"})
+        self.assertEqual(featured["delos"], {"DL_soil_moisture", "R2_wind"})
         self.assertEqual(featured["baltanas"], set())
         lucretili = next(m for m in self.data["monuments"] if m["pilot_key"] == "lucretili")
         for a in lucretili["alarms"]:
@@ -139,11 +144,25 @@ class GameData(unittest.TestCase):
             self.assertNotEqual(a["value"], 0)
             self.assertTrue(a["timestamp"].startswith("2026-0"))
 
+    def test_risk_model_history(self):
+        """ARGUS raised one scenario to 'watch' after a wind alarm; Delos Extreme replays that alarm."""
+        delos = next(m for m in self.data["monuments"] if m["pilot_key"] == "delos")
+        raised = {s["scenario_key"]: s["risk"] for s in delos["scenarios"] if s.get("risk")}
+        wind = raised["delos-masks.wind-erosion.site"]["raised"][0]
+        self.assertEqual(wind["state"], "watch")
+        self.assertTrue(wind["from"].startswith("2026-10-02") and wind["until"].startswith("2026-10-03"))
+        self.assertGreaterEqual(wind["probability"], 0.1)
+        extreme = next(lv for lv in delos["levels"] if lv["id"] == "extreme")
+        alarm = next(a for a in delos["alarms"] if a["id"] == extreme["featured_alarm"])
+        self.assertEqual(alarm["rule"], "R2_wind")
+        self.assertIn("delos-masks.wind-erosion.site", alarm["context"]["links"])
+
     def test_alarm_funnel_numbers(self):
         funnel = self.ranverso["alarm_funnel"]
-        self.assertEqual(funnel["records"], 92)
+        # the full API has at least the 92 alarm records of the first (sampled) snapshot
+        self.assertGreaterEqual(funnel["records"], 92)
         self.assertLess(funnel["unique"], funnel["records"])
-        self.assertEqual(funnel["by_rule"]["R1_hum_inside"], 39)
+        self.assertGreaterEqual(funnel["by_rule"]["R1_hum_inside"], 39)
 
     def test_rule_map_covers_requested_examples(self):
         rule_map = self.data["rule_sensor_map"]

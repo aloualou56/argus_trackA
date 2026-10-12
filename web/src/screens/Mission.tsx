@@ -52,7 +52,7 @@ function prefersWide(): boolean {
 export function Mission({ data, mon, session, go, announce, setPlacements, mapApi }: Props) {
   const { t, tn, pick } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
-  const threats = missionScenarios(mon, session.level);
+  const threats = missionScenarios(mon, session.level, session.mission);
   const picks = session.picks;
   const budget = budgetFor(mon, session.level);
   const left = coinsLeft(budget, picks, cards);

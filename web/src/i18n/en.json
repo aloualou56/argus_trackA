@@ -5,6 +5,8 @@
   "app.loading": "Loading the game…",
   "app.loadError": "Sorry, the game data could not be loaded. Check your connection and try again.",
   "app.retry": "Try again",
+  "app.crash": "Sorry, something went wrong in the game. Reload the page to start again.",
+  "app.reload": "Reload the game",
   "app.footer": "Real data from the ARGUS project (snapshot of {date}). Story texts, sensor costs and scores were written by the game team.",
   "lang.other": "Ελληνικά",
   "lang.otherCode": "el",
@@ -81,7 +83,7 @@
   "event.why": "Why it matters",
   "event.linked": "Dangers it is linked to",
   "event.source": "Source: ARGUS alarm, rule {rule}, event record {ids}.",
-  "event.dataNote": "Real data from August and September 2026. Some sensors showed impossible values, so we left those alarms out.",
+  "event.dataNote": "Real data from {from} to {to}. Some sensors showed impossible values, so we left those alarms out.",
   "event.flatNote": "This sensor showed almost the same value for many days. Experts would also check that the sensor itself works: sensors can break too.",
   "event.inMission": "in your mission",
   "event.none": "There is no usable real alarm for this monument yet.",
@@ -225,5 +227,14 @@
   "mission.trayHint": "Tap a sensor to put it at the cross, or drag it onto the map.",
   "mission.dropped": "Placed where you dropped it.",
   "mission.dropMissed": "Drop the sensor on the map to place it.",
-  "reveal.argusCost": "At game prices, the ARGUS sensors here would cost about {argus} coins. You had {budget}: real monitoring also has to choose."
+  "reveal.argusCost": "At game prices, the ARGUS sensors here would cost about {argus} coins. You had {budget}: real monitoring also has to choose.",
+  "score.playNew": "Play again with new dangers",
+  "event.riskTitle": "What ARGUS's risk model did next",
+  "event.riskIntro": "Every day ARGUS works out again how likely each danger is. Above {watch}%, a danger goes on watch.",
+  "event.riskRaised": "{name}: put on {state} on {date} (chance {pct}%).",
+  "event.riskBack": "Back to normal on {date}.",
+  "risk.watch": "watch",
+  "risk.active": "active",
+  "risk.escalated": "escalated",
+  "event.justAbove": "That is just above the limit."
 }

@@ -27,14 +27,27 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
-SNAPSHOT_DIR = ROOT / "snapshot"
+ORIGINAL_SNAPSHOT = ROOT / "snapshot"  # the first snapshot (11 Oct 2026), kept read-only as the facts reference
+
+
+def latest_snapshot() -> Path:
+    """The snapshot folder (snapshot/ or snapshot_<date>/ from tools/fetch_snapshot.py) fetched last."""
+    found = []
+    for folder in ROOT.glob("snapshot*"):
+        assets = folder / "assets.json"
+        if folder.is_dir() and assets.exists():
+            found.append((json.loads(assets.read_text(encoding="utf-8")).get("fetched_at", ""), folder.name, folder))
+    return max(found)[2] if found else ORIGINAL_SNAPSHOT
+
+
+SNAPSHOT_DIR = latest_snapshot()
 CONTENT_DIR = ROOT / "content"
 OUT_JSON = ROOT / "web" / "public" / "data" / "game_data.json"
 OUT_NOTES = ROOT / "docs" / "data_notes.md"
 OUT_BACKDROPS = ROOT / "web" / "public" / "data" / "backdrops"
 BACKDROP_URL = "data/backdrops/{name}"  # relative to the web app
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2  # 2: coins per level (level.budget), no monument budget
 MISSION_SIZE = 3
 
 # ABC priority labels as stored in threats.json, lowest first. Game levels use these.
@@ -47,6 +60,7 @@ LEVELS = [
 ]
 LEVEL_IDS = dict(LEVELS)
 LEVEL_ORDER = [key for key, _ in LEVELS]
+LEVEL_RANK = {level_id: i for i, (_, level_id) in enumerate(LEVELS)}
 
 # Test record in threats.json that must never reach the game.
 IGNORED_THREAT_NAMES = {"Katastrofh"}
@@ -74,7 +88,7 @@ MAX_FEATURED_ALARMS = 10
 # Resources the build reads. asset-states.json is large (about 31 MB) but only Python
 # reads it, to map installed devices to monuments; it never reaches the browser.
 RESOURCES = [
-    "assets", "asset-states", "threats", "events", "policies",
+    "assets", "asset-states", "threats", "events", "threat-contexts", "policies",
     "installed-instruments", "installed-devices", "instruments", "instrument-types",
 ]
 
@@ -213,6 +227,14 @@ class Snapshot:
                 self.alarms.append((e, m))
 
         self.ad_rt_policies = [(p, parse_metadata(p)) for p in self.policies if p.get("policy_type_id") == 2]
+        # ARGUS risk model: regular re-evaluations of each scenario (probability and state)
+        self.risk_evaluations = collections.defaultdict(list)
+        for r in raw["threat-contexts"]["records"]:
+            m = parse_metadata(r)
+            if m.get("kind") == "ira_threat_evaluation" and m.get("scenario_key"):
+                self.risk_evaluations[m["scenario_key"]].append(m)
+        for evaluations in self.risk_evaluations.values():
+            evaluations.sort(key=lambda m: m.get("evaluated_at", ""))
         self.pilot_to_asset = self._map_pilots_to_assets()
 
     def _map_pilots_to_assets(self) -> Dict[str, Dict[str, Any]]:
@@ -282,6 +304,34 @@ class Content:
 
 # --------------------------------------------------------------------------- builders
 
+def risk_history(evaluations: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Periods when ARGUS's risk model raised a scenario above 'inactive' (watch, active, escalated).
+    None when the scenario was never raised; the many routine 'inactive' evaluations are not copied."""
+    raised, current = [], None
+    for m in evaluations:
+        e = m.get("evaluation") or {}
+        state, at = e.get("state"), m.get("evaluated_at")
+        if state and state != "inactive":
+            if current is None or current["state"] != state:
+                current = {"state": state, "probability": round_or_none(e.get("probability"), 3), "from": at, "until": None}
+                raised.append(current)
+            else:
+                current["probability"] = max(current["probability"] or 0, round_or_none(e.get("probability"), 3) or 0)
+        elif current is not None:
+            current["until"] = at
+            current = None
+    if not raised:
+        return None
+    last = evaluations[-1].get("evaluation") or {}
+    return {
+        "raised": raised,
+        "latest": {"state": last.get("state"), "probability": round_or_none(last.get("probability"), 3),
+                   "at": evaluations[-1].get("evaluated_at")},
+        "thresholds": last.get("thresholds"),
+        "evaluations": len(evaluations),
+    }
+
+
 def build_scenarios(snap: Snapshot, content: Content, pilot: str, pack: Optional[Dict[str, Any]]):
     plain = (pack or {}).get("plain_threats", {})
     out = []
@@ -312,6 +362,7 @@ def build_scenarios(snap: Snapshot, content: Content, pilot: str, pack: Optional
             "primary_cards": primary,
             "capable_cards_source": cards_source,
             "capable_cards_needs_review": cards_review,
+            "risk": risk_history(snap.risk_evaluations.get(key, [])),
         })
     out.sort(key=lambda s: (-(s["abc"]["mr"] or 0), s["threat_id"]))
     return out
@@ -822,9 +873,14 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
                 continue
             if len(level["mission"]) != MISSION_SIZE:
                 problems.append(f"{mon['pilot_key']} {level['key']}: mission has {len(level['mission'])} threats")
+            level_of = {s["scenario_key"]: s["level"] for s in mon["scenarios"]}
             for key in level["mission"]:
                 if key not in keys:
                     problems.append(f"{mon['pilot_key']} {level['key']}: unknown mission scenario '{key}'")
+                elif abs(LEVEL_RANK[level_of[key]] - LEVEL_RANK[level["id"]]) > 1:
+                    # e.g. a Medium game with an Extreme danger: the player gets a harder game than chosen
+                    problems.append(f"{mon['pilot_key']} {level['key']}: mission scenario '{key}' is {level_of[key]}, "
+                                    "more than one level away")
             spec = (content.monuments[mon["pilot_key"]].get("featured_alarm") or {})
             spec = spec.get(level["key"]) or spec.get("default")
             chosen = next((a for a in mon["alarms"] if a["id"] == level["featured_alarm"]), None)
@@ -1167,6 +1223,21 @@ def render_notes(snap: Snapshot, content: Content, stats: List[Dict[str, Any]]) 
                      ", ".join(i["name"] for i in a["instruments"]) or "-", ", ".join(a["quality_flags"]) or "-"]
                     for a in st["alarms"]]))
         w("")
+    raised_scenarios = [(key, risk_history(evs)) for key, evs in sorted(snap.risk_evaluations.items())]
+    raised_scenarios = [(key, r) for key, r in raised_scenarios if r]
+    total_evals = sum(len(evs) for evs in snap.risk_evaluations.values())
+    w("## ARGUS risk evaluations")
+    w("")
+    w(f"{total_evals} risk-model evaluations of {len(snap.risk_evaluations)} scenarios "
+      "(threat-contexts of kind ira_threat_evaluation). Raised above 'inactive':")
+    w("")
+    for key, r in raised_scenarios:
+        for period in r["raised"]:
+            w(f"- `{key}`: {period['state']} from {period['from'][:16]} until "
+              f"{(period['until'] or 'now')[:16]} (probability up to {period['probability']})")
+    if not raised_scenarios:
+        w("- none")
+    w("")
     w("## Data quirks found")
     w("")
     for line in DATA_QUIRKS:

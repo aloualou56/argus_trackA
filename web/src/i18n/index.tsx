@@ -37,7 +37,12 @@ export function makeI18n(lang: Lang) {
       new Date(Date.UTC(y, m - 1, d)),
     );
   };
-  return { lang, locale, t, tn, number, pick, list, date };
+  /** Month and year of an ARGUS timestamp, e.g. "October 2026" / «Οκτώβριος 2026». */
+  const month = (iso: string) => {
+    const [y, m] = iso.slice(0, 7).split("-").map(Number);
+    return new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(y, m - 1, 1)));
+  };
+  return { lang, locale, t, tn, number, pick, list, date, month };
 }
 
 export type I18n = ReturnType<typeof makeI18n>;

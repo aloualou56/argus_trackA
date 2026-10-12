@@ -47,6 +47,7 @@
     ]
   },
   "featured_alarm": {
+    "Extreme priority": {"rule": "R2_wind", "pick": "peak"},
     "_about": "Delos has only AI alarms. 26 of them, daily from 31 Aug to 24 Sep 2026, are driven mainly by soil-moisture sensor 149368 under the Theatrical Masks mosaic (Room 215, House of the Masks). Levels replay the first, the strongest or the last of that run.",
     "default": {
       "rule": "DL_soil_moisture",
@@ -66,6 +67,17 @@
     }
   },
   "alarm_context": {
+    "R2_wind": {
+      "links": [
+        "delos-masks.wind-erosion.site",
+        "delos-fournoi.wind-erosion.site"
+      ],
+      "why": {
+        "en": "Strong wind blew across the island. Wind that carries sand and salt slowly wears away the stone of the houses; experts rate it one of the most serious dangers on Delos.",
+        "el": "Δυνατός άνεμος φύσηξε πάνω από το νησί. Ο άνεμος που κουβαλά άμμο και αλάτι τρώει σιγά σιγά την πέτρα των σπιτιών· οι ειδικοί τον βαθμολογούν ως έναν από τους πιο σοβαρούς κινδύνους στη Δήλο."
+      },
+      "needs_review": true
+    },
     "DL_soil_moisture": {
       "links": [
         "delos-masks.water-rise.site",

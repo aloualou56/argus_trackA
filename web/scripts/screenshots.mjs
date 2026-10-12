@@ -410,6 +410,39 @@ imagery depth (placeholder ${placeholder.length} B)`);
   await context.close();
 }
 
+const LEVEL_ORDER = ["low", "medium", "high", "extreme", "catastrophic"];
+const levelDistance = (a, b) => Math.abs(LEVEL_ORDER.indexOf(a) - LEVEL_ORDER.indexOf(b));
+
+// A level picked on the home screen stays when the player then switches monument (or becomes the
+// nearest level that monument has), and the game that starts says which level it is.
+async function playKeepsChosenLevel(browser, lang) {
+  const t = dict[lang];
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const prefix = `${lang}-phone-keep-level`;
+  console.log(`
+${prefix}`);
+  const baltanas = data.monuments.find((m) => m.pilot_key === "baltanas");
+  const level = (id) => page.getByRole("radio", { name: new RegExp(t[`level.${id}`]) });
+  await page.goto(URL_BASE);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await level("low").check();
+  await page.getByRole("radio", { name: new RegExp(baltanas.display_name[lang]) }).check();
+  // Baltanás has no Low dangers: the nearest level it has is Medium, never its highest (Extreme).
+  if (!(await level("medium").isChecked())) note(`${prefix}: Low at Ranverso, then Baltanás: Medium should be selected`);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  if (!(await level("low").isChecked())) note(`${prefix}: back at Ranverso the chosen Low should be selected again`);
+  await page.getByRole("radio", { name: new RegExp(baltanas.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
+  const badge = fill(t["level.badge"], { level: t["level.medium"] });
+  if (!(await page.locator(".mission-brief .level-badge", { hasText: badge }).count())) note(`${prefix}: story does not show "${badge}"`);
+  await checkPage(page, `${prefix} story`);
+  await shot(page, `${prefix}-2-story`);
+  await context.close();
+}
+
 async function playEveryMonument(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -418,6 +451,7 @@ async function playEveryMonument(browser, lang) {
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
   console.log(`\n${lang}-monuments`);
+  let replayChecked = false;
   for (const mon of data.monuments.filter((m) => m.playable)) {
     const levels = mon.levels.filter((l) => l.available);
     for (const lv of levels) {
@@ -428,6 +462,13 @@ async function playEveryMonument(browser, lang) {
       await page.getByRole("button", { name: t["home.start"] }).click();
       await preQuiz(page, t);
       await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
+      // The story says which level was chosen, and its danger card is one of this mission's dangers.
+      const badge = fill(t["level.badge"], { level: t[`level.${lv.id}`] });
+      if (!(await page.locator(".mission-brief .level-badge", { hasText: badge }).count())) note(`${label}: story does not show "${badge}"`);
+      const hookTitle = await page.locator(".threat-hook h2").innerText();
+      const hookDanger = lv.mission.map((k) => mon.scenarios.find((sc) => sc.scenario_key === k)).find((sc) => sc.plain.title[lang] === hookTitle);
+      if (!hookDanger) note(`${label}: the story's danger "${hookTitle}" is not in the mission`);
+      else if (levelDistance(hookDanger.level, lv.id) > 1) note(`${label}: the story's danger is ${hookDanger.level}`);
       await page.getByRole("button", { name: t["story.continue"] }).click();
       // One card that helps with the first mission threat, when there is one.
       const first = mon.scenarios.find((s) => s.scenario_key === lv.mission[0]);
@@ -442,6 +483,17 @@ async function playEveryMonument(browser, lang) {
       if (!alarm && !(await page.getByText(mon.no_alarm_note?.[lang] ?? t["event.none"]).isVisible())) {
         note(`${label}: no explanation for the missing alarm`);
       }
+      // A danger linked to this alarm that ARGUS's risk model raised soon after: the screen says so.
+      const raisedAfter = alarm?.context?.links?.some((k) =>
+        mon.scenarios.find((sc) => sc.scenario_key === k)?.risk?.raised?.some((r) => {
+          const lag = Date.parse(r.from) - Date.parse(`${alarm.timestamp}Z`);
+          return lag >= -3_600_000 && lag <= 3 * 86_400_000;
+        }),
+      );
+      const riskShown = (await page.locator(".risk-note").count()) > 0;
+      if (raisedAfter && !riskShown) note(`${label}: risk-model rise after the alarm not shown`);
+      if (!raisedAfter && riskShown) note(`${label}: risk-model note shown without a rise after this alarm`);
+      if (raisedAfter) await shot(page, `${lang}-phone-${mon.pilot_key}-${lv.id}-5-risk`);
       const isDefault = lv === levels[levels.length - 1];
       if (isDefault) {
         await checkPage(page, `${label} event`);
@@ -453,8 +505,23 @@ async function playEveryMonument(browser, lang) {
         await checkPage(page, `${label} score`);
         await shot(page, `${lang}-phone-${mon.pilot_key}-6-score`);
       }
+      // "Play again with new dangers": once per language, on the first level with enough dangers.
+      const newDangers = page.getByRole("button", { name: t["score.playNew"], exact: true });
+      if (!replayChecked && (await newDangers.count())) {
+        replayChecked = true;
+        const before = await page.locator(".learn h3").allInnerTexts();
+        await newDangers.click();
+        await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
+        await page.getByRole("button", { name: t["story.continue"] }).click();
+        await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
+        const after = await page.locator(".danger-chip > span:last-child").allInnerTexts();
+        if (after.length !== 3) note(`${label}: new mission has ${after.length} dangers`);
+        if (after.every((x) => before.includes(x))) note(`${label}: "play again with new dangers" kept the same dangers`);
+        await shot(page, `${lang}-phone-${mon.pilot_key}-${lv.id}-3-new-dangers`);
+      }
     }
   }
+  if (!replayChecked) note(`${lang}-monuments: no level offered "play again with new dangers"`);
   if (errors.length) note(`${lang}-monuments: page errors: ${errors.join(" | ")}`);
   await context.close();
 }
@@ -575,6 +642,51 @@ ${prefix}`);
   await context.close();
 }
 
+// Bad data must never leave an empty page. An older data pack (as an earlier version's offline
+// copy served it) gets one reload, then a message with "try again". A crash on a screen (here a
+// level without coins) shows the crash message with a reload button.
+async function playWithBadData(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-bad-data`;
+  console.log(`\n${prefix}`);
+  const open = async (pack) => {
+    const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+    await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+    await context.route(/data\/game_data\.json/, (route) => route.fulfill({ json: pack }));
+    const page = await context.newPage();
+    return { context, page };
+  };
+
+  const stale = await open({ ...data, schema_version: data.schema_version - 1 });
+  let loads = 0;
+  stale.page.on("load", () => loads++);
+  await stale.page.goto(URL_BASE);
+  try {
+    await stale.page.getByRole("alert").filter({ hasText: t["app.loadError"] }).waitFor({ timeout: 15000 });
+    if (!(await stale.page.getByRole("button", { name: t["app.retry"] }).isVisible())) note(`${prefix}: no "try again" after old data`);
+  } catch {
+    note(`${prefix}: no message after old data (root: ${(await stale.page.locator("#root").innerHTML()).length} characters)`);
+  }
+  if (loads !== 2) note(`${prefix}: old data should reload the page exactly once (loaded ${loads} times)`);
+  await stale.context.close();
+
+  const noCoins = structuredClone(data);
+  for (const level of noCoins.monuments.find((m) => m.pilot_key === "ranverso").levels) delete level.budget;
+  const broken = await open(noCoins);
+  await broken.page.goto(URL_BASE);
+  await broken.page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await broken.page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(broken.page, t);
+  try {
+    await broken.page.getByRole("alert").filter({ hasText: t["app.crash"] }).waitFor({ timeout: 10000 });
+    if (!(await broken.page.getByRole("button", { name: t["app.reload"] }).isVisible())) note(`${prefix}: no reload button after a crash`);
+    await shot(broken.page, `${prefix}-crash`);
+  } catch {
+    note(`${prefix}: no message after a crash (root: ${(await broken.page.locator("#root").innerHTML()).length} characters)`);
+  }
+  await broken.context.close();
+}
+
 mkdirSync(outDir, { recursive: true });
 const server = await startServer();
 const browser = await chromium.launch({
@@ -585,11 +697,13 @@ try {
   const only = process.env.SCREENSHOT_ONLY; // e.g. "monuments" to run just that part
   if (!only) for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
+  if (!only || only === "monuments") for (const lang of ["el", "en"]) await playKeepsChosenLevel(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);
   if (!only || only === "offline") await playOffline(browser, "el");
   if (!only) for (const lang of ["el", "en"]) await playWithoutMapPictures(browser, lang);
+  if (!only || only === "bad-data") for (const lang of ["el", "en"]) await playWithBadData(browser, lang);
 } finally {
   await browser.close();
   server.kill();

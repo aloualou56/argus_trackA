@@ -1,12 +1,18 @@
 import type { ScreenProps } from "../App";
-import { budgetFor } from "../game/logic";
+import { budgetFor, missionScenarios } from "../game/logic";
 import { Icon } from "../components/Icon";
 import { LevelBadge } from "../components/LevelBadge";
 import { useI18n } from "../i18n";
 
 export function Story({ mon, session, go }: ScreenProps) {
   const { t, tn, pick } = useI18n();
-  const hook = mon.scenarios.find((s) => s.scenario_key === mon.story.hook_scenario);
+  // The story card shows a danger of this mission, at the chosen level where it has one (the
+  // monument's own hook when it is in the mission): a Low game never opens on a Catastrophic danger.
+  const mission = missionScenarios(mon, session.level, session.mission);
+  const hook =
+    mission.find((s) => s.scenario_key === mon.story.hook_scenario) ??
+    mission.find((s) => s.level === session.level) ??
+    mission[0];
 
   return (
     <article className="screen story">
@@ -31,6 +37,7 @@ export function Story({ mon, session, go }: ScreenProps) {
 
       <section className="panel mission-brief" aria-labelledby="brief-title">
         <h2 id="brief-title">{t("story.missionTitle")}</h2>
+        <LevelBadge id={session.level} />
         <p>{t("story.mission", { coins: tn("unit.coins", budgetFor(mon, session.level)) })}</p>
       </section>
 

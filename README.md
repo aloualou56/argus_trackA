@@ -26,6 +26,7 @@ You need Python 3.9+ (standard library only) and Node 20+.
 
 ```sh
 # 1. Build the data pack from the ARGUS snapshot (reads snapshot/, never writes to it)
+python3 -I tools/fetch_snapshot.py             # optional: fresh complete copy of the ARGUS API into snapshot_<date>/
 python3 -I tools/build_game_data.py            # writes web/public/data/game_data.json and docs/data_notes.md
 python3 -I tools/build_game_data.py --check    # validate only
 python3 -I tools/fetch_backdrops.py            # once per new monument (needs internet): drawn-plan outlines
@@ -44,9 +45,9 @@ npm run screenshots  # needs a build: plays the game in Edge, saves docs/screens
 ```
 
 `npm run screenshots` plays the Ranverso walk-through (with the quiz) on phone and desktop in both languages, every
-level of every monument, the class-code and teacher flow, the game offline, and the game with map pictures blocked,
-and runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
-`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|class|offline` (one part). It also reports when map
+level of every monument, the class-code and teacher flow, the game offline, the game with map pictures blocked, and
+bad data (an older data pack, a crash on a screen: a message, never an empty page), and runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|offline|bad-data` (one part). It also reports when map
 tiles cannot load, which is expected in sandboxes without internet.
 
 `web/dist` is a static site with relative paths: upload it to GitHub Pages, Netlify or Vercel as is.
@@ -139,6 +140,13 @@ shows the main signal and its share, not the anomaly score against its limit.
 ## Game rules (assumptions, need review)
 
 - **Levels** are the ABC priority labels. Only labels the monument has are offered (Ranverso has no Catastrophic).
+- **Missions:** the first play of a level uses its hand-picked mission (same for a class). "Play again with new
+  dangers" draws 3 other dangers of that level from its own pool (only dangers a card can warn about, one per name,
+  never the same set twice in a row, always with the 4 spare coins). 94 of the 99 scenarios can now appear (50 before);
+  the other 5 no card can warn about. Levels with fewer than 4 such dangers keep their own mission.
+- **Risk model:** ARGUS re-evaluates every scenario daily (probability and state). When a danger linked to the
+  replayed alarm was raised within three days after it, the alarm screen says so (Delos, 2 Oct 2026: a wind alarm,
+  then "Wind wears the stone, House of the Masks" on watch at 14%, back to normal the next day).
 - **Mission:** 3 real threats per level; coins grow with the danger level, the same at every monument (Low 12,
   Medium 13, High 14, Extreme 15, Catastrophic 16, in `content/coins.json`); 17 cards cost 1–4 coins (game coins, not
   real prices). A perfect network costs 2–8 coins depending on the level, so there are always at least 4 spare coins
@@ -221,7 +229,11 @@ edge function). Records hold no names, times or device ids.
 
 `npm run build` writes `dist/sw.js`, a small service worker with the list of built files. After one visit the game,
 its data and the drawn plan work without internet. Map pictures are never stored (their providers do not allow
-offline copies). A new build replaces the stored copy on the next visit.
+offline copies). A new build replaces the stored copy on the next visit. Built files have content hashes and are
+served from the stored copy first; the data pack (`data/`) has none, so it comes from the network first and from the
+stored copy only offline. If the data pack's `schema_version` does not match the game (an earlier version's offline
+copy answered), the game removes its service worker and stored files and reloads once; a crash on any screen shows
+a message with a reload button instead of an empty page.
 
 ## Next steps (to 24 October)
 
@@ -237,7 +249,9 @@ offline copies). A new build replaces the stored copy on the next visit.
 
 ## Data and credentials
 
-- `snapshot/` is ARGUS challenge data (43 MB, fetched 11 Oct 2026), committed so the whole team builds from the same
+- `snapshot_2026-10-12/` is a complete fetch of the ARGUS API (`tools/fetch_snapshot.py`: public, read-only, no token);
+  the build always uses the newest snapshot folder. `snapshot/` is the first copy (43 MB, fetched 11 Oct 2026, sampled
+  events), kept unchanged as the reference for the facts tests, committed so the whole team builds from the same
   data. It is read-only input, and the repository must stay private unless the challenge's data terms allow
   publishing it. `game_data.json` holds only the fields the game needs.
 - The API spec (`specs.json`) and `test_api.py` live outside this folder. Never copy tokens or credentials into this

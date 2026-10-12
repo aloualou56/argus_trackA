@@ -2,10 +2,15 @@ import { useMemo } from "react";
 import type { ScreenProps } from "../App";
 import { Icon } from "../components/Icon";
 import { argusCards, cardById, detects, featuredAlarm, humanCards, missionScenarios, owned, ruleFor } from "../game/logic";
-import { useI18n } from "../i18n";
+import { useI18n, type MessageKey } from "../i18n";
 
 export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
-  const { t, pick, number, date, list } = useI18n();
+  const { t, pick, number, date, list, month } = useI18n();
+  // First and last alarm in the data, for "real data from ... to ..." (grows with each new snapshot).
+  const alarmSpan = useMemo(() => {
+    const stamps = data.monuments.flatMap((m) => (m.playable ? m.alarms.map((a) => a.timestamp) : [])).sort();
+    return [stamps[0] ?? data.snapshot.fetched_at[0], stamps[stamps.length - 1] ?? data.snapshot.fetched_at[0]];
+  }, [data]);
   const cards = useMemo(() => cardById(data), [data]);
   const alarm = featuredAlarm(mon, session.level);
   const rule = alarm && ruleFor(data, mon, alarm);
@@ -46,11 +51,23 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
   const human = humanCards(data);
   const pickedHuman = [...owned(session.picks)].some((c) => human.has(c));
   const scale = Math.max(alarm.value, alarm.threshold) * 1.15;
-  const missionKeys = new Set(missionScenarios(mon, session.level).map((s) => s.scenario_key));
+  const missionKeys = new Set(missionScenarios(mon, session.level, session.mission).map((s) => s.scenario_key));
   const ai = alarm.type === "DL";
   const episode = alarm.episode.alarm_count > 1 && (
     <p>{t("event.episode", { n: alarm.episode.alarm_count, start: date(alarm.episode.start), end: date(alarm.episode.end) })}</p>
   );
+  // ARGUS's risk model raised a linked danger within three days after this alarm (real data).
+  const alarmTime = Date.parse(`${alarm.timestamp}Z`);
+  const riskAfter = (alarm.context?.links ?? [])
+    .map((key) => mon.scenarios.find((s) => s.scenario_key === key))
+    .flatMap((scenario) =>
+      (scenario?.risk?.raised ?? [])
+        .filter((p) => {
+          const lag = Date.parse(p.from) - alarmTime;
+          return lag >= -3_600_000 && lag <= 3 * 86_400_000;
+        })
+        .map((period) => ({ scenario: scenario!, period, thresholds: scenario!.risk!.thresholds })),
+    );
   const linked = (alarm.context?.links ?? [])
     .map((key) => mon.scenarios.find((s) => s.scenario_key === key))
     .filter((s): s is NonNullable<typeof s> => !!s);
@@ -90,7 +107,10 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
           </div>
           <p>
             {alarm.direction === "above"
-              ? t("event.timesAbove", { x: number(alarm.times_threshold ?? alarm.value / alarm.threshold) })
+              ? // "1 times the limit" reads oddly for a value only just over it (e.g. wind 12.4 vs 12)
+                (alarm.times_threshold ?? alarm.value / alarm.threshold) < 1.1
+                ? t("event.justAbove")
+                : t("event.timesAbove", { x: number(alarm.times_threshold ?? alarm.value / alarm.threshold) })
               : t("event.timesBelow", { pct: number((alarm.value / alarm.threshold) * 100, 0) })}
           </p>
           {alarm.quality_flags.includes("flat_signal") && <p className="note">{t("event.flatNote")}</p>}
@@ -137,8 +157,28 @@ export function HistoricalEvent({ data, mon, session, go }: ScreenProps) {
         </section>
       )}
 
+      {riskAfter.length > 0 && (
+        <section className="panel risk-note" aria-labelledby="risk-title">
+          <h2 id="risk-title">{t("event.riskTitle")}</h2>
+          <p>{t("event.riskIntro", { watch: number((riskAfter[0].thresholds?.watch ?? 0.1) * 100, 0) })}</p>
+          <ul className="linked-list">
+            {riskAfter.map(({ scenario, period }) => (
+              <li key={`${scenario.scenario_key}-${period.from}`}>
+                {t("event.riskRaised", {
+                  name: pick(scenario.plain.title),
+                  state: t(`risk.${period.state}` as MessageKey),
+                  date: date(period.from),
+                  pct: number(period.probability * 100, 0),
+                })}{" "}
+                {period.until && t("event.riskBack", { date: date(period.until) })}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <p className="small">
-        {t("event.dataNote")}{" "}
+        {t("event.dataNote", { from: month(alarmSpan[0]), to: month(alarmSpan[1]) })}{" "}
         {ai
           ? t("event.sourceAi", { ids: alarm.event_ids.join(", ") })
           : t("event.source", { rule: alarm.rule, ids: alarm.event_ids.join(", ") })}

@@ -35,6 +35,24 @@ self.addEventListener("fetch", (event) => {
     );
     return;
   }
-  // Built files have content hashes and the data pack changes only with a new version: stored first.
+  // The data pack has no content hash, so it must come with the page that reads it: newest when
+  // online (as the page is), the stored copy when offline (as the stored page is).
+  if (url.pathname.includes("/data/")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() =>
+          caches.match(request, { cacheName: CACHE, ignoreSearch: true }).then((r) => r || Response.error()),
+        ),
+    );
+    return;
+  }
+  // Built files have content hashes, so a stored copy is never out of date: stored first.
   event.respondWith(caches.match(request, { cacheName: CACHE, ignoreSearch: true }).then((hit) => hit || fetch(request)));
 });

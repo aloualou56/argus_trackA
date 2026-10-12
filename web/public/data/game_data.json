@@ -1,9 +1,18 @@
 {
- "schema_version": 1,
+ "schema_version": 2,
  "generated_by": "tools/build_game_data.py",
  "snapshot": {
   "fetched_at": [
-   "2026-10-11T21:32:59+03:00"
+   "2026-10-12T15:00:44+03:00",
+   "2026-10-12T15:00:48+03:00",
+   "2026-10-12T15:00:53+03:00",
+   "2026-10-12T15:01:38+03:00",
+   "2026-10-12T15:02:22+03:00",
+   "2026-10-12T15:02:30+03:00",
+   "2026-10-12T15:02:35+03:00",
+   "2026-10-12T15:02:39+03:00",
+   "2026-10-12T15:02:44+03:00",
+   "2026-10-12T15:02:45+03:00"
   ],
   "files": {
    "assets": {
@@ -19,8 +28,12 @@
     "complete": true
    },
    "events": {
-    "count": 750,
-    "complete": false
+    "count": 1543,
+    "complete": true
+   },
+   "threat-contexts": {
+    "count": 1350,
+    "complete": true
    },
    "policies": {
     "count": 181,
@@ -1322,7 +1335,7 @@
       "delos-fournoi.rainfall.site"
      ],
      "mission_source": "curated",
-     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00",
+     "featured_alarm": "delos:R2_wind:2026-10-02T20:30:00",
      "budget": 15
     },
     {
@@ -1424,7 +1437,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 93,
@@ -1467,7 +1481,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 74,
@@ -1507,7 +1522,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 81,
@@ -1548,7 +1564,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 83,
@@ -1592,7 +1609,8 @@
       "tiltmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 92,
@@ -1632,7 +1650,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 99,
@@ -1673,7 +1692,28 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": {
+      "raised": [
+       {
+        "state": "watch",
+        "probability": 0.144,
+        "from": "2026-10-02T20:59:56.237501+00:00",
+        "until": "2026-10-03T21:27:58.136186+00:00"
+       }
+      ],
+      "latest": {
+       "state": "inactive",
+       "probability": 0.07,
+       "at": "2026-10-11T21:00:23.659774+00:00"
+      },
+      "thresholds": {
+       "watch": 0.1,
+       "active": 0.25,
+       "escalated": 0.5
+      },
+      "evaluations": 28
+     }
     },
     {
      "threat_id": 65,
@@ -1717,7 +1757,8 @@
       "tiltmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 70,
@@ -1759,7 +1800,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 78,
@@ -1800,7 +1842,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 64,
@@ -1840,7 +1883,8 @@
       "air_quality"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 69,
@@ -1882,7 +1926,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 73,
@@ -1926,7 +1971,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 82,
@@ -1966,7 +2012,8 @@
       "air_quality"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 96,
@@ -2007,7 +2054,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 77,
@@ -2050,7 +2098,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 80,
@@ -2091,7 +2140,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 87,
@@ -2133,7 +2183,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 88,
@@ -2175,7 +2226,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 91,
@@ -2219,7 +2271,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 98,
@@ -2260,7 +2313,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 72,
@@ -2304,7 +2358,8 @@
       "rain_gauge"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 68,
@@ -2349,7 +2404,8 @@
       "gnss"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 66,
@@ -2393,7 +2449,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 67,
@@ -2436,7 +2493,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 84,
@@ -2480,7 +2538,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 90,
@@ -2524,7 +2583,8 @@
       "rain_gauge"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 95,
@@ -2567,7 +2627,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 86,
@@ -2612,7 +2673,8 @@
       "gnss"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 94,
@@ -2657,7 +2719,8 @@
       "tiltmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 71,
@@ -2699,7 +2762,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 85,
@@ -2742,7 +2806,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 89,
@@ -2784,7 +2849,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 76,
@@ -2829,7 +2895,8 @@
       "tiltmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 79,
@@ -2874,7 +2941,8 @@
       "crackmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 97,
@@ -2919,7 +2987,8 @@
       "crackmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     }
    ],
    "installed": {
@@ -3465,59 +3534,6 @@
      }
     },
     {
-     "id": "delos:DL_soil_moisture:2026-09-07T08:30:00",
-     "event_ids": [
-      181
-     ],
-     "timestamp": "2026-09-07T08:30:00",
-     "type": "DL",
-     "rule": "DL_soil_moisture",
-     "policy_id": null,
-     "policy_name": null,
-     "threat_name": null,
-     "score": 0.0434,
-     "feature_share": 0.303,
-     "variable": "149368_h_masks_in_room215_2_soil_moisture",
-     "value": 0.0434,
-     "threshold": 0.0208,
-     "direction": "above",
-     "times_threshold": 2.09,
-     "instruments": [
-      {
-       "instrument_id": 94,
-       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
-       "instrument_type": "Soil Moisture Sensor",
-       "card": "soil_moisture",
-       "lat": 37.3963389,
-       "lon": 25.2694667
-      }
-     ],
-     "quality_flags": [],
-     "roles": [
-      "extra"
-     ],
-     "episode": {
-      "rule": "DL_soil_moisture",
-      "start": "2026-08-31T20:30:00",
-      "end": "2026-09-24T20:30:00",
-      "alarm_count": 26,
-      "flat_signal": false
-     },
-     "context": {
-      "links": [
-       "delos-masks.water-rise.site",
-       "delos-masks.salinity.site",
-       "delos-masks.rh-fluctuations.site"
-      ],
-      "why": {
-       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
-       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
-      },
-      "authored": true,
-      "needs_review": true
-     }
-    },
-    {
      "id": "delos:DL_humidity:2026-09-12T20:30:00",
      "event_ids": [
       276
@@ -3623,18 +3639,235 @@
       "authored": true,
       "needs_review": true
      }
+    },
+    {
+     "id": "delos:DL_soil_moisture:2026-09-27T20:30:00",
+     "event_ids": [
+      887
+     ],
+     "timestamp": "2026-09-27T20:30:00",
+     "type": "DL",
+     "rule": "DL_soil_moisture",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0268,
+     "feature_share": 0.329,
+     "variable": "149368_h_masks_in_room215_2_soil_moisture",
+     "value": 0.0268,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 1.29,
+     "instruments": [
+      {
+       "instrument_id": 94,
+       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 37.3963389,
+       "lon": 25.2694667
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first"
+     ],
+     "episode": {
+      "rule": "DL_soil_moisture",
+      "start": "2026-09-27T20:30:00",
+      "end": "2026-09-29T20:30:00",
+      "alarm_count": 2,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.water-rise.site",
+       "delos-masks.salinity.site",
+       "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:DL_humidity:2026-09-28T20:30:00",
+     "event_ids": [
+      921
+     ],
+     "timestamp": "2026-09-28T20:30:00",
+     "type": "DL",
+     "rule": "DL_humidity",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0212,
+     "feature_share": 0.357,
+     "variable": "151836_h_masks_in_room214_hum",
+     "value": 0.0212,
+     "threshold": 0.0208,
+     "direction": "above",
+     "times_threshold": 1.02,
+     "instruments": [
+      {
+       "instrument_id": 85,
+       "name": "Installed Instrument Humidity - 151836 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Humidity Sensor",
+       "card": "humidity",
+       "lat": 37.3962972,
+       "lon": 25.2695389
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "DL_humidity",
+      "start": "2026-09-28T20:30:00",
+      "end": "2026-09-28T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.rh-fluctuations.site",
+       "delos-masks.salinity.site"
+      ],
+      "why": {
+       "en": "The humidity in a room of the House of the Masks behaved unusually. Damp that goes up and down makes salts swell and shrink inside the walls.",
+       "el": "Η υγρασία σε ένα δωμάτιο της Οικίας των Προσωπείων συμπεριφέρθηκε ασυνήθιστα. Η υγρασία που ανεβοκατεβαίνει κάνει τα άλατα να φουσκώνουν και να ξεφουσκώνουν μέσα στους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:DL_soil_moisture:2026-09-29T20:30:00",
+     "event_ids": [
+      1000
+     ],
+     "timestamp": "2026-09-29T20:30:00",
+     "type": "DL",
+     "rule": "DL_soil_moisture",
+     "policy_id": null,
+     "policy_name": null,
+     "threat_name": null,
+     "score": 0.0326,
+     "feature_share": 0.604,
+     "variable": "149368_h_masks_in_room215_2_soil_moisture",
+     "value": 0.0326,
+     "threshold": 0.0241,
+     "direction": "above",
+     "times_threshold": 1.35,
+     "instruments": [
+      {
+       "instrument_id": 94,
+       "name": "Installed Instrument Soil Moisture - 149368 (Room 215 - Theatrical Masks mosaic)",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 37.3963389,
+       "lon": 25.2694667
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "DL_soil_moisture",
+      "start": "2026-09-27T20:30:00",
+      "end": "2026-09-29T20:30:00",
+      "alarm_count": 2,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.water-rise.site",
+       "delos-masks.salinity.site",
+       "delos-masks.rh-fluctuations.site"
+      ],
+      "why": {
+       "en": "The ground under the Theatrical Masks mosaic behaved differently from usual, day after day. Water in the ground can rise into the floor and bring salt with it, the biggest danger on Delos.",
+       "el": "Το έδαφος κάτω από το ψηφιδωτό με τα θεατρικά προσωπεία συμπεριφερόταν διαφορετικά από το συνηθισμένο, μέρα με τη μέρα. Το νερό του εδάφους μπορεί να ανέβει στο δάπεδο και να φέρει μαζί του αλάτι, τον μεγαλύτερο κίνδυνο στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "delos:R2_wind:2026-10-02T20:30:00",
+     "event_ids": [
+      1139
+     ],
+     "timestamp": "2026-10-02T20:30:00",
+     "type": "EK",
+     "rule": "R2_wind",
+     "policy_id": 13,
+     "policy_name": "AD-RT Delos policy - wind",
+     "threat_name": "AD-RT wind threat",
+     "score": 0.509,
+     "feature_share": null,
+     "variable": "300548_wind_speed_1",
+     "value": 12.4333,
+     "threshold": 12.0,
+     "direction": "above",
+     "times_threshold": 1.04,
+     "instruments": [
+      {
+       "instrument_id": 109,
+       "name": "Installed Instrument Weather Station - 2CF7F1C061300548 (Few meters away from the House of the Masks)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 37.3962556,
+       "lon": 25.269825
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_wind",
+      "start": "2026-10-02T20:30:00",
+      "end": "2026-10-02T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "delos-masks.wind-erosion.site",
+       "delos-fournoi.wind-erosion.site"
+      ],
+      "why": {
+       "en": "Strong wind blew across the island. Wind that carries sand and salt slowly wears away the stone of the houses; experts rate it one of the most serious dangers on Delos.",
+       "el": "Δυνατός άνεμος φύσηξε πάνω από το νησί. Ο άνεμος που κουβαλά άμμο και αλάτι τρώει σιγά σιγά την πέτρα των σπιτιών· οι ειδικοί τον βαθμολογούν ως έναν από τους πιο σοβαρούς κινδύνους στη Δήλο."
+      },
+      "authored": true,
+      "needs_review": true
+     }
     }
    ],
    "alarm_funnel": {
-    "records": 40,
-    "unique": 31,
-    "usable": 27,
-    "featured": 5,
+    "records": 46,
+    "unique": 37,
+    "usable": 31,
+    "featured": 8,
     "excluded": {
-     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 4
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 4,
+     "AI alarm with no clear main signal (top contribution below 30%)": 2
     },
     "by_rule": {
-     "(DL, no rule)": 40
+     "(DL, no rule)": 45,
+     "R2_wind": 1
     }
    },
    "discussion_prompts": [
@@ -3989,7 +4222,7 @@
      "mission": [
       "baltanas.relative-humidity.structural-wood",
       "baltanas.flooding.structural-wood",
-      "baltanas.subsidence.cellar-ensemble"
+      "baltanas.relative-humidity.wine-elements"
      ],
      "mission_source": "curated",
      "featured_alarm": null,
@@ -4116,7 +4349,8 @@
       "gnss"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 23,
@@ -4156,7 +4390,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 25,
@@ -4200,7 +4435,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 22,
@@ -4240,7 +4476,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 24,
@@ -4284,7 +4521,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 56,
@@ -4328,7 +4566,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 57,
@@ -4372,7 +4611,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     }
    ],
    "installed": {
@@ -4987,16 +5227,16 @@
    },
    "alarms": [],
    "alarm_funnel": {
-    "records": 36,
-    "unique": 27,
+    "records": 41,
+    "unique": 32,
     "usable": 0,
     "featured": 0,
     "excluded": {
      "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 6,
-     "AI alarm with no clear main signal (top contribution below 30%)": 21
+     "AI alarm with no clear main signal (top contribution below 30%)": 26
     },
     "by_rule": {
-     "(DL, no rule)": 36
+     "(DL, no rule)": 41
     }
    },
    "discussion_prompts": [
@@ -5350,7 +5590,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 41,
@@ -5397,7 +5638,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 43,
@@ -5433,7 +5675,8 @@
      "capable_cards": [],
      "primary_cards": [],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 26,
@@ -5480,7 +5723,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 29,
@@ -5520,7 +5764,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 35,
@@ -5567,7 +5812,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 38,
@@ -5607,7 +5853,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 40,
@@ -5654,7 +5901,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 31,
@@ -5694,7 +5942,8 @@
       "humidity"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 36,
@@ -5741,7 +5990,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 37,
@@ -5788,7 +6038,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 39,
@@ -5831,7 +6082,8 @@
       "satellite"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 28,
@@ -5878,7 +6130,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 30,
@@ -5921,7 +6174,8 @@
       "satellite"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 32,
@@ -5961,7 +6215,8 @@
       "light_uv"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 42,
@@ -6008,7 +6263,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 44,
@@ -6051,7 +6307,8 @@
       "satellite"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 33,
@@ -6091,7 +6348,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 34,
@@ -6134,7 +6392,8 @@
       "satellite"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     }
    ],
    "installed": {
@@ -6524,50 +6783,6 @@
    },
    "alarms": [
     {
-     "id": "lucretili:R4c_hum_rapid_1h:2026-08-30T20:30:00",
-     "event_ids": [
-      54
-     ],
-     "timestamp": "2026-08-30T20:30:00",
-     "type": "EK",
-     "rule": "R4c_hum_rapid_1h",
-     "policy_id": 30,
-     "policy_name": "AD-RT Lucretili policy - humidity rapid change",
-     "threat_name": "AD-RT humidity instability threat",
-     "score": 1.0,
-     "feature_share": null,
-     "variable": "300286_hum1",
-     "value": 2.1667,
-     "threshold": 0.15,
-     "direction": "above",
-     "times_threshold": 14.44,
-     "instruments": [],
-     "quality_flags": [
-      "threshold_differs_from_current_policy"
-     ],
-     "roles": [
-      "first"
-     ],
-     "episode": {
-      "rule": "R4c_hum_rapid_1h",
-      "start": "2026-08-30T20:30:00",
-      "end": "2026-08-31T20:30:00",
-      "alarm_count": 3,
-      "flat_signal": false
-     },
-     "context": {
-      "links": [
-       "lucretili-conventillo.relative-humidity.mural-paintings"
-      ],
-      "why": {
-       "en": "The humidity changed very fast within one hour. Sudden changes in damp are hard on wall paintings.",
-       "el": "Η υγρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Οι απότομες αλλαγές στην υγρασία κουράζουν τις τοιχογραφίες."
-      },
-      "authored": true,
-      "needs_review": true
-     }
-    },
-    {
      "id": "lucretili:R4c_hum_rapid_1h:2026-08-31T12:00:00",
      "event_ids": [
       66,
@@ -6717,51 +6932,6 @@
       "why": {
        "en": "The temperature changed very fast within one hour. Quick heating and cooling make stone and plaster expand and shrink.",
        "el": "Η θερμοκρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Το γρήγορο ζέσταμα και κρύωμα κάνει την πέτρα και τον σοβά να διαστέλλονται και να συστέλλονται."
-      },
-      "authored": true,
-      "needs_review": true
-     }
-    },
-    {
-     "id": "lucretili:R4c_hum_rapid_1h:2026-08-31T20:30:00",
-     "event_ids": [
-      107,
-      120
-     ],
-     "timestamp": "2026-08-31T20:30:00",
-     "type": "EK",
-     "rule": "R4c_hum_rapid_1h",
-     "policy_id": 30,
-     "policy_name": "AD-RT Lucretili policy - humidity rapid change",
-     "threat_name": "AD-RT humidity instability threat",
-     "score": 1.0,
-     "feature_share": null,
-     "variable": "300286_hum1",
-     "value": 2.6667,
-     "threshold": 0.15,
-     "direction": "above",
-     "times_threshold": 17.78,
-     "instruments": [],
-     "quality_flags": [
-      "threshold_differs_from_current_policy"
-     ],
-     "roles": [
-      "last"
-     ],
-     "episode": {
-      "rule": "R4c_hum_rapid_1h",
-      "start": "2026-08-30T20:30:00",
-      "end": "2026-08-31T20:30:00",
-      "alarm_count": 3,
-      "flat_signal": false
-     },
-     "context": {
-      "links": [
-       "lucretili-conventillo.relative-humidity.mural-paintings"
-      ],
-      "why": {
-       "en": "The humidity changed very fast within one hour. Sudden changes in damp are hard on wall paintings.",
-       "el": "Η υγρασία άλλαξε πολύ γρήγορα μέσα σε μία ώρα. Οι απότομες αλλαγές στην υγρασία κουράζουν τις τοιχογραφίες."
       },
       "authored": true,
       "needs_review": true
@@ -7023,32 +7193,136 @@
       "authored": true,
       "needs_review": true
      }
+    },
+    {
+     "id": "lucretili:R8_baro:2026-09-26T20:30:00",
+     "event_ids": [
+      875
+     ],
+     "timestamp": "2026-09-26T20:30:00",
+     "type": "EK",
+     "rule": "R8_baro",
+     "policy_id": 35,
+     "policy_name": "AD-RT Lucretili policy - barometer range",
+     "threat_name": "AD-RT pressure instability threat",
+     "score": 0.5421,
+     "feature_share": null,
+     "variable": "300286_baro",
+     "value": 350.6667,
+     "threshold": 300.0,
+     "direction": "above",
+     "times_threshold": 1.17,
+     "instruments": [
+      {
+       "instrument_id": 129,
+       "name": "Installed Instrument Weather Station - 2CF7F1C072300286 (Villa di Orazio - Gateway pillar)",
+       "instrument_type": "Weather Station Sensor",
+       "card": "weather_station",
+       "lat": 42.0663778,
+       "lon": 12.9016056
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R8_baro",
+      "start": "2026-09-25T20:30:00",
+      "end": "2026-09-26T20:30:00",
+      "alarm_count": 2,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [],
+      "why": {
+       "en": "The air pressure changed a lot, which often comes before a storm.",
+       "el": "Η πίεση του αέρα άλλαξε πολύ, κάτι που συχνά έρχεται πριν από μια καταιγίδα."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "lucretili:R5_visitors:2026-10-02T20:30:00",
+     "event_ids": [
+      1163
+     ],
+     "timestamp": "2026-10-02T20:30:00",
+     "type": "EK",
+     "rule": "R5_visitors",
+     "policy_id": 31,
+     "policy_name": "AD-RT Lucretili policy - visitor peak",
+     "threat_name": "AD-RT visitor load threat",
+     "score": 1.0,
+     "feature_share": null,
+     "variable": "450308_counter_in",
+     "value": 60.0,
+     "threshold": 3.0,
+     "direction": "above",
+     "times_threshold": 20.0,
+     "instruments": [
+      {
+       "instrument_id": 121,
+       "name": "Installed Instrument People Counter - 24E124600E450308 (Villa di Orazio - Entrance gate pillar)",
+       "instrument_type": "People Counter Sensor",
+       "card": "visitor_counter",
+       "lat": 42.0662528,
+       "lon": 12.9015972
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R5_visitors",
+      "start": "2026-10-02T20:30:00",
+      "end": "2026-10-02T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "lucretili-villa-orazio.abandonment.structures"
+      ],
+      "why": {
+       "en": "Many more people than usual came through the gate of Horace's Villa. Visitors help a place not to be forgotten, but many feet and hands also wear old floors and walls down.",
+       "el": "Πολύ περισσότεροι άνθρωποι από το συνηθισμένο πέρασαν από την πύλη της Έπαυλης του Οράτιου. Οι επισκέπτες βοηθούν ώστε ένας τόπος να μην ξεχαστεί, αλλά πολλά πόδια και χέρια φθείρουν επίσης τα παλιά δάπεδα και τους τοίχους."
+      },
+      "authored": true,
+      "needs_review": true
+     }
     }
    ],
    "alarm_funnel": {
-    "records": 125,
-    "unique": 87,
-    "usable": 13,
+    "records": 135,
+    "unique": 97,
+    "usable": 16,
     "featured": 10,
     "excluded": {
-     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 7,
+     "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 8,
      "AI alarm with no clear main signal (top contribution below 30%)": 7,
-     "implausible temperature value (outside -50 to 60)": 18,
-     "implausible value for R9a_temp_lt (outside 0 to 30)": 14,
+     "implausible temperature value (outside -50 to 60)": 19,
+     "implausible value for R9a_temp_lt (outside 0 to 30)": 18,
      "implausible value for R9b_temp_st (outside 0 to 10)": 6,
-     "not exactly one variable": 22
+     "not exactly one variable": 23
     },
     "by_rule": {
-     "(DL, no rule)": 17,
+     "(DL, no rule)": 18,
      "R1a_crack_step": 7,
      "R1b_crack_offset": 7,
-     "R2a_tilt_step": 10,
+     "R2a_tilt_step": 11,
      "R2b_tilt_offset": 7,
      "R4a_hum_spike_6h": 7,
      "R4c_hum_rapid_1h": 7,
+     "R5_visitors": 1,
      "R7_wind": 1,
-     "R8_baro": 2,
-     "R9a_temp_lt": 42,
+     "R8_baro": 4,
+     "R9a_temp_lt": 47,
      "R9b_temp_st": 18
     }
    },
@@ -7422,7 +7696,8 @@
       "soil_moisture"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 121,
@@ -7466,7 +7741,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 108,
@@ -7506,7 +7782,8 @@
       "humidity"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 113,
@@ -7546,7 +7823,8 @@
       "light_uv"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 114,
@@ -7586,7 +7864,8 @@
       "air_quality"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 110,
@@ -7629,7 +7908,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 115,
@@ -7670,7 +7950,8 @@
       "air_quality"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 119,
@@ -7714,7 +7995,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 120,
@@ -7755,7 +8037,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 104,
@@ -7796,7 +8079,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 116,
@@ -7838,7 +8122,8 @@
       "air_quality"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 122,
@@ -7883,7 +8168,8 @@
       "satellite"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 102,
@@ -7928,7 +8214,8 @@
       "tiltmeter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 103,
@@ -7971,7 +8258,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 106,
@@ -8011,7 +8299,8 @@
       "weather_station"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 107,
@@ -8051,7 +8340,8 @@
       "humidity"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 124,
@@ -8092,7 +8382,8 @@
       "satellite"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 125,
@@ -8133,7 +8424,8 @@
       "temperature"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 109,
@@ -8169,7 +8461,8 @@
      "capable_cards": [],
      "primary_cards": [],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 111,
@@ -8211,7 +8504,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 112,
@@ -8253,7 +8547,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 117,
@@ -8294,7 +8589,8 @@
       "visitor_counter"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 126,
@@ -8337,7 +8633,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 127,
@@ -8379,7 +8676,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 105,
@@ -8422,7 +8720,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 118,
@@ -8465,7 +8764,8 @@
       "observer"
      ],
      "capable_cards_source": "scenario",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     }
    ],
    "installed": {
@@ -9199,23 +9499,130 @@
       "authored": true,
       "needs_review": true
      }
+    },
+    {
+     "id": "ranverso:R4b_soil_low:2026-09-24T20:00:00",
+     "event_ids": [
+      785,
+      795
+     ],
+     "timestamp": "2026-09-24T20:00:00",
+     "type": "EK",
+     "rule": "R4b_soil_low",
+     "policy_id": 43,
+     "policy_name": "AD-RT Ranverso policy - soil moisture low",
+     "threat_name": "AD-RT soil moisture threat",
+     "score": 1.0,
+     "feature_share": null,
+     "variable": "26680f_moisture",
+     "value": 2.4677,
+     "threshold": 5.0,
+     "direction": "below",
+     "times_threshold": 2.03,
+     "instruments": [
+      {
+       "instrument_id": 37,
+       "name": "Installed Instrument Soil Moisture - A8610A333526680F",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 45.0811778,
+       "lon": 7.4498472
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first"
+     ],
+     "episode": {
+      "rule": "R4b_soil_low",
+      "start": "2026-09-24T20:00:00",
+      "end": "2026-09-25T20:30:00",
+      "alarm_count": 2,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.incorrect-rh.prolonged-dry-periods"
+      ],
+      "why": {
+       "en": "The ground stayed drier than the level experts chose, for many days. Experts watch the ground's wetness because water in the ground can move into the walls, so big changes in either direction matter.",
+       "el": "Το έδαφος έμεινε πιο ξερό από το όριο που όρισαν οι ειδικοί, για πολλές μέρες. Οι ειδικοί παρακολουθούν την υγρασία του εδάφους γιατί το νερό του εδάφους μπορεί να περάσει στους τοίχους, οπότε μετράνε οι μεγάλες αλλαγές προς κάθε κατεύθυνση."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "ranverso:R4b_soil_low:2026-09-25T20:30:00",
+     "event_ids": [
+      839
+     ],
+     "timestamp": "2026-09-25T20:30:00",
+     "type": "EK",
+     "rule": "R4b_soil_low",
+     "policy_id": 43,
+     "policy_name": "AD-RT Ranverso policy - soil moisture low",
+     "threat_name": "AD-RT soil moisture threat",
+     "score": 1.0,
+     "feature_share": null,
+     "variable": "26680f_moisture",
+     "value": 2.4677,
+     "threshold": 5.0,
+     "direction": "below",
+     "times_threshold": 2.03,
+     "instruments": [
+      {
+       "instrument_id": 37,
+       "name": "Installed Instrument Soil Moisture - A8610A333526680F",
+       "instrument_type": "Soil Moisture Sensor",
+       "card": "soil_moisture",
+       "lat": 45.0811778,
+       "lon": 7.4498472
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R4b_soil_low",
+      "start": "2026-09-24T20:00:00",
+      "end": "2026-09-25T20:30:00",
+      "alarm_count": 2,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "ranverso.water.groundwater",
+       "ranverso.incorrect-rh.prolonged-dry-periods"
+      ],
+      "why": {
+       "en": "The ground stayed drier than the level experts chose, for many days. Experts watch the ground's wetness because water in the ground can move into the walls, so big changes in either direction matter.",
+       "el": "Το έδαφος έμεινε πιο ξερό από το όριο που όρισαν οι ειδικοί, για πολλές μέρες. Οι ειδικοί παρακολουθούν την υγρασία του εδάφους γιατί το νερό του εδάφους μπορεί να περάσει στους τοίχους, οπότε μετράνε οι μεγάλες αλλαγές προς κάθε κατεύθυνση."
+      },
+      "authored": true,
+      "needs_review": true
+     }
     }
    ],
    "alarm_funnel": {
-    "records": 92,
-    "unique": 73,
-    "usable": 32,
-    "featured": 5,
+    "records": 101,
+    "unique": 81,
+    "usable": 34,
+    "featured": 7,
     "excluded": {
      "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 12,
-     "implausible humidity value (outside 0 to 100)": 28,
-     "soil_moisture value exactly 0 (probable sensor dropout)": 1
+     "implausible humidity value (outside 0 to 100)": 31,
+     "rule not in content/rule_sensor_map.json": 1,
+     "soil_moisture value exactly 0 (probable sensor dropout)": 3
     },
     "by_rule": {
-     "(DL, no rule)": 14,
-     "R1_hum_inside": 39,
+     "(DL, no rule)": 15,
+     "R1_hum_inside": 42,
      "R2_rain_7d": 7,
-     "R4b_soil_low": 32
+     "R4b_soil_low": 37
     }
    },
    "discussion_prompts": [
@@ -9443,11 +9850,11 @@
      "available": true,
      "mission": [
       "schenkenberg.air-pollution.surfaces",
-      "schenkenberg.plant-growth.treated-annually",
-      "schenkenberg.wind-storm.walls"
+      "schenkenberg.fire.large-100y",
+      "schenkenberg.vandalism.graffiti"
      ],
      "mission_source": "curated",
-     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00",
+     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00",
      "budget": 13
     },
     {
@@ -9572,7 +9979,8 @@
       "observer"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 48,
@@ -9615,7 +10023,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 46,
@@ -9661,7 +10070,8 @@
       "observer"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 47,
@@ -9707,7 +10117,8 @@
       "observer"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 49,
@@ -9749,7 +10160,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 50,
@@ -9796,7 +10208,8 @@
       "gnss"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 53,
@@ -9837,7 +10250,8 @@
       "satellite"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 51,
@@ -9877,7 +10291,8 @@
       "weather_station"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 54,
@@ -9917,7 +10332,8 @@
       "air_quality"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": false
+     "capable_cards_needs_review": false,
+     "risk": null
     },
     {
      "threat_id": 55,
@@ -9959,7 +10375,8 @@
       "observer"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     },
     {
      "threat_id": 52,
@@ -10000,7 +10417,8 @@
       "satellite"
      ],
      "capable_cards_source": "category",
-     "capable_cards_needs_review": true
+     "capable_cards_needs_review": true,
+     "risk": null
     }
    ],
    "installed": {
@@ -10473,19 +10891,184 @@
       "authored": true,
       "needs_review": true
      }
+    },
+    {
+     "id": "schenkenberg:R2_crack_step:2026-09-25T20:30:00",
+     "event_ids": [
+      849
+     ],
+     "timestamp": "2026-09-25T20:30:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.5178,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.1071,
+     "threshold": 0.1,
+     "direction": "above",
+     "times_threshold": 1.07,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-09-25T20:30:00",
+      "end": "2026-09-25T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "schenkenberg:R2_crack_step:2026-09-28T20:30:00",
+     "event_ids": [
+      964
+     ],
+     "timestamp": "2026-09-28T20:30:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.9109,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.3324,
+     "threshold": 0.1,
+     "direction": "above",
+     "times_threshold": 3.32,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-09-28T20:30:00",
+      "end": "2026-09-28T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
+    },
+    {
+     "id": "schenkenberg:R2_crack_step:2026-10-08T20:30:00",
+     "event_ids": [
+      1438
+     ],
+     "timestamp": "2026-10-08T20:30:00",
+     "type": "EK",
+     "rule": "R2_crack_step",
+     "policy_id": 45,
+     "policy_name": "AD-RT Schenkenberg policy - crack step",
+     "threat_name": "AD-RT crack movement threat",
+     "score": 0.5725,
+     "feature_share": null,
+     "variable": "149796_crack",
+     "value": 0.1292,
+     "threshold": 0.1,
+     "direction": "above",
+     "times_threshold": 1.29,
+     "instruments": [
+      {
+       "instrument_id": 76,
+       "name": "Installed Instrument Crackmeter - 149796",
+       "instrument_type": "Crackmeter Sensor",
+       "card": "crackmeter",
+       "lat": 47.4421306,
+       "lon": 8.1010444
+      }
+     ],
+     "quality_flags": [],
+     "roles": [
+      "first",
+      "peak",
+      "last"
+     ],
+     "episode": {
+      "rule": "R2_crack_step",
+      "start": "2026-10-08T20:30:00",
+      "end": "2026-10-08T20:30:00",
+      "alarm_count": 1,
+      "flat_signal": false
+     },
+     "context": {
+      "links": [
+       "schenkenberg.freeze-thaw.masonry",
+       "schenkenberg.earthquake.475y",
+       "schenkenberg.plant-growth.untreated-30y"
+      ],
+      "why": {
+       "en": "A crack in the castle walls suddenly opened wider. Ice, roots and earthquakes all open cracks, so experts watch the crack itself.",
+       "el": "Μια ρωγμή στους τοίχους του κάστρου άνοιξε απότομα. Ο πάγος, οι ρίζες και οι σεισμοί ανοίγουν όλοι ρωγμές, γι' αυτό οι ειδικοί παρακολουθούν την ίδια τη ρωγμή."
+      },
+      "authored": true,
+      "needs_review": true
+     }
     }
    ],
    "alarm_funnel": {
-    "records": 11,
-    "unique": 7,
-    "usable": 6,
-    "featured": 5,
+    "records": 14,
+    "unique": 10,
+    "usable": 9,
+    "featured": 8,
     "excluded": {
      "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 1
     },
     "by_rule": {
      "(DL, no rule)": 1,
-     "R2_crack_step": 9,
+     "R2_crack_step": 12,
      "R3_vib_zscore": 1
     }
    },

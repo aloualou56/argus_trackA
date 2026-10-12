@@ -17,6 +17,8 @@ import { useI18n, type MessageKey } from "../i18n";
 interface Props extends ScreenProps {
   community: CommunityStore;
   onReplay: () => void;
+  /** "Play again with new dangers" when the level can draw a new mission. */
+  replayLabel: string;
   onQuiz: () => void;
 }
 
@@ -28,10 +30,10 @@ const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: 
   unscored: { cls: "learn is-info", icon: "talk", key: "score.noSensorTag" },
 };
 
-export function Score({ data, mon, session, classCode, go, community, onReplay, onQuiz }: Props) {
+export function Score({ data, mon, session, classCode, go, community, onReplay, replayLabel, onQuiz }: Props) {
   const { t, pick, list, number } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
-  const threats = missionScenarios(mon, session.level);
+  const threats = missionScenarios(mon, session.level, session.mission);
   const alarm = featuredAlarm(mon, session.level);
   const rule = alarm && ruleFor(data, mon, alarm);
   const result = score(threats, rule, session.picks, cards);
@@ -208,7 +210,7 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
 
       <div className="actions actions-split">
         <button type="button" className="btn btn-secondary btn-big" onClick={onReplay}>
-          {t("score.playAgain")}
+          {replayLabel}
         </button>
         <button type="button" className="btn btn-secondary btn-big" onClick={() => go("home")}>
           {t("score.otherLevel")}

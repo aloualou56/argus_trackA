@@ -217,6 +217,11 @@ export function GameMap(props: Props) {
         map.attributionControl.removeAttribution(attributionHtml(layer));
       };
     }
+    if (!navigator.onLine && planLayer) {
+      setFellBack(true);
+      setBasemap(planLayer.id);
+      return;
+    }
     let loaded = 0;
     const tiles = L.tileLayer(layer.url, {
       maxNativeZoom: imageryZoom,

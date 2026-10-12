@@ -7,14 +7,16 @@ import unittest
 
 import build_game_data as b
 
-SNAPSHOT_OK = (b.SNAPSHOT_DIR / "threats.json").exists()
+# These are the facts verified on the first snapshot (11 Oct 2026); newer fetches add records.
+SNAPSHOT = b.ORIGINAL_SNAPSHOT
+SNAPSHOT_OK = (SNAPSHOT / "threats.json").exists()
 
 
 @unittest.skipUnless(SNAPSHOT_OK, "snapshot/ not present")
 class SnapshotFacts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.snap = b.Snapshot(b.load_snapshot(b.SNAPSHOT_DIR))
+        cls.snap = b.Snapshot(b.load_snapshot(SNAPSHOT))
 
     def test_five_monuments(self):
         got = {a["id"]: (a["name"], self.snap.asset_meta[a["id"]]["country"]) for a in self.snap.assets}

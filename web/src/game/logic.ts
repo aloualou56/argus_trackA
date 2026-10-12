@@ -51,9 +51,10 @@ export function budgetFor(mon: Monument, levelId: LevelId): number {
   return budget;
 }
 
-export function missionScenarios(mon: Monument, levelId: LevelId): Scenario[] {
+/** The three dangers of a mission: the given keys (a drawn mission), else the level's own mission. */
+export function missionScenarios(mon: Monument, levelId: LevelId, keys?: string[]): Scenario[] {
   const byKey = new Map(mon.scenarios.map((s) => [s.scenario_key, s]));
-  return (level(mon, levelId).mission ?? []).map((key) => {
+  return (keys ?? level(mon, levelId).mission ?? []).map((key) => {
     const s = byKey.get(key);
     if (!s) throw new Error(`unknown scenario ${key}`);
     return s;
@@ -348,4 +349,74 @@ export function nativeZoom(layer: Basemap, mon: { map: MapView | null } | null):
 /** What the real ARGUS network would cost at the game's coin prices (instruments with a card only). */
 export function argusCost(mon: Monument, cards: Map<string, Card>): number {
   return mon.installed.by_card.reduce((sum, row) => sum + row.count * (cards.get(row.card)?.cost ?? 0), 0);
+}
+
+// ---------------------------------------------------------------- drawn missions ("play again with new dangers")
+
+/** Spare coins every mission keeps beyond its cheapest full score (balance rule, tested). */
+export const SPARE_COINS = 4;
+/** A level needs at least this many usable dangers to draw new missions from. */
+export const MIN_POOL = 4;
+
+/** Cheapest set of cards (one of each) that scores 100 for these dangers and alarm; Infinity if none. */
+export function cheapestFullScore(threats: Scenario[], rule: RuleEntry | null, cards: Map<string, Card>): number {
+  const relevant = [...new Set([...threats.flatMap((s) => s.primary_cards), ...(rule?.detect_with.flat() ?? [])])];
+  let best = Infinity;
+  for (let mask = 0; mask < 1 << relevant.length; mask++) {
+    const picks = Object.fromEntries(relevant.filter((_, i) => mask & (1 << i)).map((c) => [c, 1]));
+    const s = score(threats, rule, picks, cards);
+    if (s.total === 100) best = Math.min(best, s.spentCoins);
+  }
+  return best;
+}
+
+/** The level's own dangers a drawn mission may use: a card can warn about them, one per name. */
+export function missionPool(mon: Monument, levelId: LevelId): Scenario[] {
+  const seen = new Set<string>();
+  return mon.scenarios.filter((s) => {
+    if (s.level !== levelId || s.capable_cards.length === 0) return false;
+    const name = s.plain.title.en.trim().toLowerCase();
+    if (seen.has(name)) return false;
+    seen.add(name);
+    return true;
+  });
+}
+
+export function canDrawMission(mon: Monument, levelId: LevelId): boolean {
+  return missionPool(mon, levelId).length >= MIN_POOL;
+}
+
+/**
+ * Three dangers drawn from the level's pool for "play again": different from the last mission
+ * where the pool allows, and only sets whose cheapest full score leaves SPARE_COINS. Null when the
+ * level has too few dangers to draw from (the player then replays the level's own mission).
+ */
+export function drawMission(
+  data: GameData,
+  mon: Monument,
+  levelId: LevelId,
+  previous: string[],
+  random: () => number = Math.random,
+): string[] | null {
+  const pool = missionPool(mon, levelId);
+  if (pool.length < MIN_POOL) return null;
+  const alarm = featuredAlarm(mon, levelId);
+  const rule = alarm ? ruleFor(data, mon, alarm) : null;
+  const room = budgetFor(mon, levelId) - SPARE_COINS;
+  const cards = cardById(data);
+  const fresh = pool.filter((s) => !previous.includes(s.scenario_key));
+  const same = (keys: string[]) => keys.length === previous.length && keys.every((k) => previous.includes(k));
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const source = fresh.length >= 3 && attempt < 40 ? fresh : pool;
+    const bag = [...source];
+    for (let i = bag.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [bag[i], bag[j]] = [bag[j], bag[i]];
+    }
+    const picked = bag.slice(0, 3).sort((a, b) => b.abc.mr - a.abc.mr || a.threat_id - b.threat_id);
+    const keys = picked.map((s) => s.scenario_key);
+    if (same(keys)) continue;
+    if (cheapestFullScore(picked, rule, cards) <= room) return keys;
+  }
+  return null;
 }

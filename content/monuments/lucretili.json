@@ -48,6 +48,16 @@
     }
   },
   "alarm_context": {
+    "R5_visitors": {
+      "links": [
+        "lucretili-villa-orazio.abandonment.structures"
+      ],
+      "why": {
+        "en": "Many more people than usual came through the gate of Horace's Villa. Visitors help a place not to be forgotten, but many feet and hands also wear old floors and walls down.",
+        "el": "Πολύ περισσότεροι άνθρωποι από το συνηθισμένο πέρασαν από την πύλη της Έπαυλης του Οράτιου. Οι επισκέπτες βοηθούν ώστε ένας τόπος να μην ξεχαστεί, αλλά πολλά πόδια και χέρια φθείρουν επίσης τα παλιά δάπεδα και τους τοίχους."
+      },
+      "needs_review": true
+    },
     "R2a_tilt_step": {
       "links": [
         "lucretili-conventillo.landslide.site",

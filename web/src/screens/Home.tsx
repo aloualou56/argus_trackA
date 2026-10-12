@@ -96,18 +96,30 @@ function defaultLevel(levels: LevelSummary[]): LevelId | undefined {
   return [...levels].reverse().find((l) => l.available)?.id;
 }
 
+/** The level the player chose, or the nearest one this monument has (the less serious on a tie). */
+function nearestLevel(levels: LevelSummary[], wanted: LevelId): LevelId | undefined {
+  const at = levels.findIndex((l) => l.id === wanted);
+  return levels
+    .map((l, i) => ({ l, distance: Math.abs(i - at) + (i > at ? 0.5 : 0) }))
+    .filter(({ l }) => l.available)
+    .sort((a, b) => a.distance - b.distance)[0]?.l.id;
+}
+
 export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, setClassCode, onTeacher }: Props) {
   const { t, tn, pick } = useI18n();
   const mon = data.monuments.find((m) => m.pilot_key === pilot);
   const [level, setLevel] = useState<LevelId | undefined>(initialLevel ?? (mon && defaultLevel(mon.levels)));
+  // The level the player picked themselves: it stays when they switch monument.
+  const [chosen, setChosen] = useState<LevelId | undefined>(initialLevel);
 
-  // A new monument (from the list or the map) starts at its highest available level.
+  // A new monument (from the list or the map) keeps the chosen level, or the nearest one it has;
+  // without a choice yet, it starts at its highest available level.
   const [levelFor, setLevelFor] = useState(pilot);
   useEffect(() => {
     if (pilot === levelFor) return;
     setLevelFor(pilot);
-    setLevel(mon && defaultLevel(mon.levels));
-  }, [pilot, levelFor, mon]);
+    setLevel(mon && (chosen ? nearestLevel(mon.levels, chosen) : defaultLevel(mon.levels)));
+  }, [pilot, levelFor, mon, chosen]);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -169,7 +181,10 @@ export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, 
                 value={l.id}
                 checked={level === l.id}
                 disabled={!l.available}
-                onChange={() => setLevel(l.id)}
+                onChange={() => {
+                  setLevel(l.id);
+                  setChosen(l.id);
+                }}
               />
               <span className="choice-body">
                 <span className="choice-title">

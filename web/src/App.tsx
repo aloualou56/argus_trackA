@@ -6,7 +6,7 @@ import { GameMap, type MapApi } from "./components/GameMap";
 import { Icon } from "./components/Icon";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
 import { loadGameData } from "./game/data";
-import { countPicks, featuredAlarm, isPlayable } from "./game/logic";
+import { canDrawMission, countPicks, drawMission, featuredAlarm, isPlayable } from "./game/logic";
 import type { GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
 import { useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
@@ -28,6 +28,8 @@ export interface Session {
   pilot: string;
   level: LevelId;
   placements: Placement[];
+  /** The three dangers: the level's own mission, or a drawn one after "play again". */
+  mission: string[];
   /** Derived from placements: how many of each card. */
   picks: Picks;
 }
@@ -51,7 +53,7 @@ export default function App() {
   const { t, lang, setLang } = i18n;
   const [load, setLoad] = useState<Load>({ state: "loading" });
   const [screen, setScreen] = useState<Screen>("home");
-  const [game, setGame] = useState<{ pilot: string; level: LevelId; placements: Placement[] } | null>(null);
+  const [game, setGame] = useState<{ pilot: string; level: LevelId; placements: Placement[]; mission: string[] } | null>(null);
   const [homePilot, setHomePilot] = useState<string | null>(null);
   // The quiz before a game is asked once per visit; its marks are compared with the quiz after each game.
   const [preQuiz, setPreQuiz] = useState<{ asked: boolean; marks: boolean[] | null }>({ asked: false, marks: null });
@@ -164,17 +166,23 @@ export default function App() {
         setPilot={setHomePilot}
         initialLevel={game?.pilot === homePilot ? game.level : undefined}
         onStart={(pilot, level) => {
-          setGame({ pilot, level, placements: [] });
+          const started = data.monuments.find((m) => m.pilot_key === pilot);
+          const mission = started && isPlayable(started) ? (started.levels.find((l) => l.id === level)?.mission ?? []) : [];
+          setGame({ pilot, level, placements: [], mission });
           setScreen(preQuiz.asked ? "story" : "quizPre");
         }}
       />
     );
   } else {
     const props: ScreenProps = { data, mon: playable, session, classCode, go, announce };
+    // "Play again" draws new dangers from the level's pool; a class keeps the level's own mission
+    // so classmates compare the same mission.
     const replay = () => {
-      setPlacements(() => []);
+      const drawn = classCode ? null : drawMission(data, playable, session.level, session.mission);
+      setGame((g) => (g ? { ...g, placements: [], mission: drawn ?? g.mission } : g));
       setScreen(STEPS[0]);
     };
+    const replayLabel = t(!classCode && canDrawMission(playable, session.level) ? "score.playNew" : "score.playAgain");
     body = (
       <>
         {isStep(screen) && screen !== "mission" && <Progress current={screen} />}
@@ -226,7 +234,7 @@ export default function App() {
             after={
               <div className="actions actions-split">
                 <button type="button" className="btn btn-primary btn-big" onClick={replay}>
-                  {t("score.playAgain")}
+                  {replayLabel}
                 </button>
                 <button type="button" className="btn btn-secondary btn-big" onClick={() => go("home")}>
                   {t("score.otherLevel")}
@@ -244,6 +252,7 @@ export default function App() {
             {...props}
             community={community}
             onReplay={replay}
+            replayLabel={replayLabel}
             onQuiz={() => setScreen("quizPost")}
           />
         )}

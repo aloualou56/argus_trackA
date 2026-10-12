@@ -1,13 +1,16 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { LangProvider } from "./i18n";
 import "./styles.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <LangProvider>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </LangProvider>
   </StrictMode>,
 );

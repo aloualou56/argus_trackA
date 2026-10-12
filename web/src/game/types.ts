@@ -60,6 +60,22 @@ export interface Scenario {
   primary_cards: string[];
   capable_cards_source: "scenario" | "category" | "missing";
   capable_cards_needs_review: boolean;
+  /** When ARGUS's risk model raised this danger above "inactive" (null if never). */
+  risk?: RiskHistory | null;
+}
+
+export interface RiskPeriod {
+  state: "watch" | "active" | "escalated";
+  probability: number;
+  from: string;
+  until: string | null;
+}
+
+export interface RiskHistory {
+  raised: RiskPeriod[];
+  latest: { state: string; probability: number; at: string };
+  thresholds: { watch: number; active: number; escalated: number } | null;
+  evaluations: number;
 }
 
 export interface LevelSummary {
