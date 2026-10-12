@@ -1280,7 +1280,8 @@
       "delos-masks.prolonged-dry-periods.site"
      ],
      "mission_source": "curated",
-     "featured_alarm": "delos:DL_soil_moisture:2026-09-24T20:30:00"
+     "featured_alarm": "delos:DL_soil_moisture:2026-09-24T20:30:00",
+     "budget": 12
     },
     {
      "key": "Medium priority",
@@ -1293,7 +1294,8 @@
       "delos-masks.heatwaves.site"
      ],
      "mission_source": "curated",
-     "featured_alarm": "delos:DL_soil_moisture:2026-09-02T08:30:00"
+     "featured_alarm": "delos:DL_soil_moisture:2026-09-02T08:30:00",
+     "budget": 13
     },
     {
      "key": "High priority",
@@ -1306,7 +1308,8 @@
       "delos-masks.air-pollution.site"
      ],
      "mission_source": "curated",
-     "featured_alarm": "delos:DL_soil_moisture:2026-09-02T08:30:00"
+     "featured_alarm": "delos:DL_soil_moisture:2026-09-02T08:30:00",
+     "budget": 14
     },
     {
      "key": "Extreme priority",
@@ -1319,7 +1322,8 @@
       "delos-fournoi.rainfall.site"
      ],
      "mission_source": "curated",
-     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00"
+     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00",
+     "budget": 15
     },
     {
      "key": "Catastrophic priority",
@@ -1332,7 +1336,8 @@
       "delos-masks.architectural-stability.site"
      ],
      "mission_source": "curated",
-     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00"
+     "featured_alarm": "delos:DL_soil_moisture:2026-08-31T20:30:00",
+     "budget": 16
     }
    ],
    "installed_summary": {
@@ -1377,7 +1382,6 @@
     "review_note": "Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).",
     "authored": true
    },
-   "budget": 12,
    "scenarios": [
     {
      "threat_id": 75,
@@ -3988,7 +3992,8 @@
       "baltanas.subsidence.cellar-ensemble"
      ],
      "mission_source": "curated",
-     "featured_alarm": null
+     "featured_alarm": null,
+     "budget": 13
     },
     {
      "key": "High priority",
@@ -4001,7 +4006,8 @@
       "baltanas.relative-humidity.structural-wood"
      ],
      "mission_source": "curated",
-     "featured_alarm": null
+     "featured_alarm": null,
+     "budget": 14
     },
     {
      "key": "Extreme priority",
@@ -4014,7 +4020,8 @@
       "baltanas.flooding.wine-elements"
      ],
      "mission_source": "curated",
-     "featured_alarm": null
+     "featured_alarm": null,
+     "budget": 15
     },
     {
      "key": "Catastrophic priority",
@@ -4065,7 +4072,6 @@
     "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme).",
     "authored": true
    },
-   "budget": 12,
    "scenarios": [
     {
      "threat_id": 21,
@@ -5224,7 +5230,8 @@
       "lucretili-montefalco.earthquake.castle"
      ],
      "mission_source": "curated",
-     "featured_alarm": "lucretili:R7_wind:2026-09-07T08:30:00"
+     "featured_alarm": "lucretili:R7_wind:2026-09-07T08:30:00",
+     "budget": 14
     },
     {
      "key": "Extreme priority",
@@ -5237,7 +5244,8 @@
       "lucretili-conventillo.uv.mural-paintings"
      ],
      "mission_source": "curated",
-     "featured_alarm": "lucretili:R2a_tilt_step:2026-08-31T20:30:00"
+     "featured_alarm": "lucretili:R2a_tilt_step:2026-08-31T20:30:00",
+     "budget": 15
     },
     {
      "key": "Catastrophic priority",
@@ -5250,7 +5258,8 @@
       "lucretili-landscape.dissociation.dry-stone-walls"
      ],
      "mission_source": "curated",
-     "featured_alarm": "lucretili:R2a_tilt_step:2026-08-31T20:30:00"
+     "featured_alarm": "lucretili:R2a_tilt_step:2026-08-31T20:30:00",
+     "budget": 16
     }
    ],
    "installed_summary": {
@@ -5295,7 +5304,6 @@
     "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).",
     "authored": true
    },
-   "budget": 12,
    "scenarios": [
     {
      "threat_id": 27,
@@ -7280,7 +7288,8 @@
       "ranverso.pollutants.visitors"
      ],
      "mission_source": "curated",
-     "featured_alarm": "ranverso:R2_rain_7d:2026-09-16T15:30:00"
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-16T15:30:00",
+     "budget": 12
     },
     {
      "key": "Medium priority",
@@ -7293,7 +7302,8 @@
       "ranverso.pollutants.overloading-road-traffic"
      ],
      "mission_source": "curated",
-     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00"
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00",
+     "budget": 13
     },
     {
      "key": "High priority",
@@ -7306,7 +7316,8 @@
       "ranverso.pollutants.air-pollution"
      ],
      "mission_source": "curated",
-     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00"
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00",
+     "budget": 14
     },
     {
      "key": "Extreme priority",
@@ -7319,7 +7330,8 @@
       "ranverso.incorrect-rh.prolonged-wet-periods"
      ],
      "mission_source": "curated",
-     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00"
+     "featured_alarm": "ranverso:R2_rain_7d:2026-09-10T20:30:00",
+     "budget": 15
     },
     {
      "key": "Catastrophic priority",
@@ -7370,7 +7382,6 @@
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).",
     "authored": true
    },
-   "budget": 12,
    "scenarios": [
     {
      "threat_id": 123,
@@ -9422,7 +9433,8 @@
       "schenkenberg.air-pollution.surfaces"
      ],
      "mission_source": "curated",
-     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00"
+     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00",
+     "budget": 12
     },
     {
      "key": "Medium priority",
@@ -9435,7 +9447,8 @@
       "schenkenberg.wind-storm.walls"
      ],
      "mission_source": "curated",
-     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00"
+     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00",
+     "budget": 13
     },
     {
      "key": "High priority",
@@ -9448,7 +9461,8 @@
       "schenkenberg.temperature-variation.walls"
      ],
      "mission_source": "curated",
-     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00"
+     "featured_alarm": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00",
+     "budget": 14
     },
     {
      "key": "Extreme priority",
@@ -9461,7 +9475,8 @@
       "schenkenberg.earthquake.475y"
      ],
      "mission_source": "curated",
-     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00"
+     "featured_alarm": "schenkenberg:R2_crack_step:2026-09-20T20:30:00",
+     "budget": 15
     },
     {
      "key": "Catastrophic priority",
@@ -9512,7 +9527,6 @@
     "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.",
     "authored": true
    },
-   "budget": 12,
    "scenarios": [
     {
      "threat_id": 45,

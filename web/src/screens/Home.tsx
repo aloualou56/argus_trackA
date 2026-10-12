@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { normalizeClassCode } from "../community/classCode";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
-import type { GameData, LevelId, LevelSummary } from "../game/types";
+import type { GameData, Level, LevelId, LevelSummary } from "../game/types";
 import { useI18n } from "../i18n";
 
 interface Props {
@@ -97,7 +97,7 @@ function defaultLevel(levels: LevelSummary[]): LevelId | undefined {
 }
 
 export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, setClassCode, onTeacher }: Props) {
-  const { t, pick } = useI18n();
+  const { t, tn, pick } = useI18n();
   const mon = data.monuments.find((m) => m.pilot_key === pilot);
   const [level, setLevel] = useState<LevelId | undefined>(initialLevel ?? (mon && defaultLevel(mon.levels)));
 
@@ -177,7 +177,9 @@ export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, 
                   {t(levelKey(l.id))}
                 </span>
                 <span className="choice-meta">
-                  {l.available ? t("home.levelCount", { n: l.scenario_count }) : t("home.levelNone")}
+                  {l.available
+                    ? `${t("home.levelCount", { n: l.scenario_count })} · ${tn("unit.coins", (l as Level).budget ?? 0)}`
+                    : t("home.levelNone")}
                 </span>
               </span>
             </label>

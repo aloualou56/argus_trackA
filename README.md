@@ -139,7 +139,8 @@ shows the main signal and its share, not the anomaly score against its limit.
 ## Game rules (assumptions, need review)
 
 - **Levels** are the ABC priority labels. Only labels the monument has are offered (Ranverso has no Catastrophic).
-- **Mission:** 3 real threats per level; 12 coins at every monument; 17 cards cost 1–4 coins (game coins, not
+- **Mission:** 3 real threats per level; coins grow with the danger level, the same at every monument (Low 12,
+  Medium 13, High 14, Extreme 15, Catastrophic 16, in `content/coins.json`); 17 cards cost 1–4 coins (game coins, not
   real prices). A perfect network costs 2–8 coins depending on the level, so there are always at least 4 spare coins
   to experiment; buying every helpful card (9–24) still does not fit at 12 of the 19 levels (both tested). The real
   ARGUS networks would cost 17–68 coins at these prices; the reveal says so.
@@ -178,7 +179,7 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 4. **Units:** not in the alarm data. We assume mm for rain and % for humidity and soil moisture. Ask ARGUS.
 5. **Ranverso data:** soil moisture flat at about 2.47 for three weeks (stuck sensor?), all indoor humidity values
    above 100, double-registered instruments, the weather station marked `verification_required`.
-6. **Game balance:** budget 12, scoring weights (20 / 8 / 25 / 15), observer cost, verdict thresholds (85 / 60 / 30).
+6. **Game balance:** coins per level (12–16), scoring weights (20 / 8 / 25 / 15), observer cost, verdict thresholds (85 / 60 / 30).
    Check in the playtest.
 7. **Base-map licences:** Esri World Imagery terms for a free public game (or get a free ArcGIS key); the OSM tile
    policy allows light use only. Open national orthophotos exist for CH (swisstopo), ES (PNOA) and some IT/GR regions.

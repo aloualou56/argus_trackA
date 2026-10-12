@@ -133,6 +133,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "checklist": load_json(content_dir / "citizen_checklist.json"),
         "map": load_json(content_dir / "map.json"),
         "site_guide": load_json(content_dir / "site_guide.json"),
+        "coins": load_json(content_dir / "coins.json"),
         "monuments": monuments,
     }
 
@@ -636,7 +637,7 @@ def resolve_featured(alarms: List[Dict[str, Any]], spec: Optional[Dict[str, Any]
     return (peaks or alarms)[0]["id"]
 
 
-def build_levels(scenarios, alarms, pack) -> List[Dict[str, Any]]:
+def build_levels(scenarios, alarms, pack, coins: Dict[str, int]) -> List[Dict[str, Any]]:
     counts = collections.Counter(s["priority_label"] for s in scenarios)
     curated = (pack or {}).get("missions", {})
     featured_spec = (pack or {}).get("featured_alarm", {})
@@ -649,6 +650,7 @@ def build_levels(scenarios, alarms, pack) -> List[Dict[str, Any]]:
             level["mission"] = list(mission) if mission else pick_mission_auto(scenarios, key)
             level["mission_source"] = "curated" if mission else "auto"
             level["featured_alarm"] = resolve_featured(alarms, featured_spec.get(key) or featured_spec.get("default"))
+            level["budget"] = coins[level_id]  # content/coins.json: more serious dangers, more coins
         levels.append(level)
     return levels
 
@@ -665,7 +667,7 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
     rows = installed.pop("_rows")
     positions = installed.pop("_positions")
     alarms, funnel = build_alarms(snap, content, pilot, rows, positions)
-    levels = build_levels(scenarios, alarms, pack)
+    levels = build_levels(scenarios, alarms, pack, content.raw["coins"]["by_level"])
 
     stats = {"pilot": pilot, "asset": asset, "scenarios": scenarios, "installed": installed,
              "funnel": funnel, "levels": levels, "alarms": alarms, "playable": pack is not None}
@@ -697,7 +699,6 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         "display_name": pack["display_name"],
         "place": pack["place"],
         "story": dict(pack["story"], authored=True),
-        "budget": pack["budget"],
         "levels": levels,
         "scenarios": scenarios,
         "installed": installed,
@@ -782,6 +783,17 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
                 problems.append(f"content/site_guide.json {tip.get('id')}: unknown card '{card}'")
         if not tip.get("text", {}).get("en") or not tip.get("text", {}).get("el"):
             problems.append(f"content/site_guide.json {tip.get('id')}: text needs en and el")
+
+    coins = content.raw["coins"].get("by_level", {})
+    previous = 0
+    for _, level_id in LEVELS:
+        value = coins.get(level_id)
+        if not isinstance(value, int) or value <= 0:
+            problems.append(f"content/coins.json: '{level_id}' needs a positive whole number of coins")
+        elif value < previous:
+            problems.append(f"content/coins.json: '{level_id}' has fewer coins than a less serious level")
+        else:
+            previous = value
 
     layer_ids = [layer["id"] for layer in content.basemaps.get("layers", [])]
     if content.basemaps.get("default") not in layer_ids:
@@ -990,6 +1002,10 @@ def md_table(headers: List[str], rows: List[List[Any]]) -> str:
 
 def collect_review_items(content: Content) -> List[str]:
     items = []
+    if content.raw["coins"].get("needs_review"):
+        coins = content.raw["coins"]["by_level"]
+        items.append("`content/coins.json`: coins per danger level (" +
+                     ", ".join(f"{lid} {coins[lid]}" for _, lid in LEVELS) + ")")
     if content.raw["site_guide"].get("needs_review"):
         items.append("`content/site_guide.json`: where each kind of sensor usually goes (general guidance)")
     for pilot, pack in sorted(content.monuments.items()):
@@ -1031,7 +1047,7 @@ def collect_review_items(content: Content) -> List[str]:
         for rule, ctx in sorted(pack.get("alarm_context", {}).items()):
             if ctx.get("needs_review"):
                 items.append(f"`{pilot}` alarm explanation for `{rule}` and its linked threats {ctx.get('links')}")
-        items.append(f"`{pilot}` mission picks per level and budget ({pack.get('budget')} coins)")
+        items.append(f"`{pilot}` mission picks per level")
     if content.raw["checklist"].get("needs_review"):
         items.append("`content/citizen_checklist.json`: what visitors should look out for and how to report it")
     if content.raw["quiz"].get("needs_review"):
@@ -1210,6 +1226,8 @@ DATA_QUIRKS = [
 DESIGN_ASSUMPTIONS = [
     "Levels = ABC priority labels. A level is offered only if the monument has at least one scenario with that "
     "label. Missions have 3 threats; when a level has fewer, we borrow from the next lower level, then higher.",
+    "Coins grow with the danger level, the same at every monument (content/coins.json): Low 12, Medium 13, "
+    "High 14, Extreme 15, Catastrophic 16. Every level keeps at least 4 coins beyond its cheapest full score.",
     "Alarm plausibility: humidity and soil moisture must be 0 to 100, rain 0 to 1000, temperature -50 to 60. "
     "An exact 0 for humidity or soil moisture is treated as a sensor dropout.",
     "Alarm episodes: alarms of one rule less than 48 hours apart form one episode; the game features the first, "

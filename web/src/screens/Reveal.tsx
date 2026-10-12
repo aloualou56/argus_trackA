@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { ScreenProps } from "../App";
 import { Icon } from "../components/Icon";
-import { argusCost, autoPrompts, cardById, compareMix, humanCards, nearestToArgus, owned, type AutoPrompt } from "../game/logic";
+import { argusCost, autoPrompts, budgetFor, cardById, compareMix, humanCards, nearestToArgus, owned, type AutoPrompt } from "../game/logic";
 import { useI18n, type MessageKey } from "../i18n";
 
 const MAX_PROMPTS = 4;
@@ -51,7 +51,7 @@ export function Reveal({ data, mon, session, go }: ScreenProps) {
         {t("reveal.intro", { n: mon.installed.distinct_instruments })}
         {hasSatellite && <> {t("reveal.satelliteNote")}</>}
       </p>
-      <p className="note">{t("reveal.argusCost", { argus: argusCost(mon, cards), budget: mon.budget })}</p>
+      <p className="note">{t("reveal.argusCost", { argus: argusCost(mon, cards), budget: budgetFor(mon, session.level) })}</p>
 
       <div className="table-wrap">
         <table className="mix">

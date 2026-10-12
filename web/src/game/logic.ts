@@ -44,6 +44,13 @@ export function level(mon: Monument, levelId: LevelId): Level {
   return found;
 }
 
+/** Coins for a level: the same at every monument, more for more serious dangers (content/coins.json). */
+export function budgetFor(mon: Monument, levelId: LevelId): number {
+  const budget = level(mon, levelId).budget;
+  if (!budget) throw new Error(`no coins for ${mon.pilot_key} ${levelId}`);
+  return budget;
+}
+
 export function missionScenarios(mon: Monument, levelId: LevelId): Scenario[] {
   const byKey = new Map(mon.scenarios.map((s) => [s.scenario_key, s]));
   return (level(mon, levelId).mission ?? []).map((key) => {

@@ -18,7 +18,6 @@
     "needs_review": true,
     "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw."
   },
-  "budget": 12,
   "missions": {
     "_about": "Three scenario keys per priority level. Schenkenberg has 2 Low, 1 Medium, 2 High and 6 Extreme scenarios, so missions borrow from neighbouring levels.",
     "Extreme priority": [

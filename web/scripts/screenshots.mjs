@@ -200,16 +200,11 @@ async function play(browser, lang, vpName) {
   await add("crackmeter").click();
   const live = await page.locator("[aria-live=polite]").innerText();
   if (!live.includes(cardName(lang, "crackmeter"))) note(`${prefix}: live region did not announce the change (${live})`);
-  const coinsText = fill(t["mission.coinsLeft"], { left: ranverso.budget - 2 * 1 - 2 - 2, budget: ranverso.budget });
+  // The walk-through plays Ranverso's preselected level: its most serious one.
+  const budget = [...ranverso.levels].reverse().find((l) => l.available).budget;
+  const coinsText = fill(t["mission.coinsLeft"], { left: budget - 2 * 1 - 2 - 2, budget });
   if (!(await page.locator("#main").getByText(coinsText).isVisible())) note(`${prefix}: expected "${coinsText}"`);
 
-  // Overspending is blocked and announced: one camera fits, a second one costs more than the coins left.
-  await add("camera").click();
-  await add("camera").click({ force: true });
-  const afterCamera = await page.locator("[aria-live=polite]").innerText();
-  if (!afterCamera.includes(fill(t["mission.notEnough"], { name: cardName(lang, "camera") }))) {
-    note(`${prefix}: overspending was not announced (${afterCamera})`);
-  }
   // The human observer joins the network but gets no pin.
   await add("observer").click();
 
@@ -240,8 +235,19 @@ async function play(browser, lang, vpName) {
   );
   if (!(nearest < 30)) note(`${prefix}: dropped sensor is ${Math.round(nearest)} px from the drop point`);
 
-  // humidity x2, soil, crack and camera at the cross, thermometer where dropped: six pins
-  await checkMap(page, `${prefix} mission`, ".pin-you", 6);
+  // Overspending is blocked and announced: cameras (4 coins) until one more no longer fits.
+  let cameras = 0;
+  while (budget - 2 * 1 - 2 - 2 - 1 - 1 - 4 * cameras >= 4) {
+    await add("camera").click();
+    cameras += 1;
+  }
+  await add("camera").click({ force: true });
+  const afterCamera = await page.locator("[aria-live=polite]").innerText();
+  if (!afterCamera.includes(fill(t["mission.notEnough"], { name: cardName(lang, "camera") }))) {
+    note(`${prefix}: overspending was not announced (${afterCamera})`);
+  }
+  // humidity x2, soil and crack at the cross, thermometer where dropped, plus the cameras
+  await checkMap(page, `${prefix} mission`, ".pin-you", 5 + cameras);
   const scroll = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
   if (scroll > 0) note(`${prefix}: the mission page scrolls by ${scroll}px; it should fit the screen`);
   if (!(await page.locator(".crosshair").count())) note(`${prefix}: no crosshair on the mission map`);

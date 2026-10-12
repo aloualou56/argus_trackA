@@ -10,6 +10,7 @@ import { Icon, iconSvg } from "../components/Icon";
 import { LevelBars } from "../components/LevelBadge";
 import { STEPS } from "../components/Progress";
 import {
+  budgetFor,
   canAdd,
   cardById,
   coinsLeft,
@@ -53,7 +54,8 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level);
   const picks = session.picks;
-  const left = coinsLeft(mon.budget, picks, cards);
+  const budget = budgetFor(mon, session.level);
+  const left = coinsLeft(budget, picks, cards);
   const sensors = totalSensors(picks);
   const [hint, setHint] = useState("");
   const [info, setInfo] = useState<Info>(null);
@@ -76,7 +78,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
 
   const place = (card: Card, droppedAt?: LatLng) => {
     const name = pick(card.name);
-    if (!canAdd(card, mon.budget, picks, cards)) {
+    if (!canAdd(card, budget, picks, cards)) {
       announce(t("mission.notEnough", { name }));
       return;
     }
@@ -87,7 +89,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     const next = withChange(picks, card.id, 1);
     setHint("");
     setInfo({ kind: "card", card });
-    const changed = t("mission.changed", { name, n: next[card.id] ?? 0, left: coinsLeft(mon.budget, next, cards) });
+    const changed = t("mission.changed", { name, n: next[card.id] ?? 0, left: coinsLeft(budget, next, cards) });
     announce(card.on_map ? `${changed} ${t(droppedAt ? "mission.dropped" : "mission.placed")}` : changed);
   };
 
@@ -98,7 +100,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
       return last < 0 ? ps : [...ps.slice(0, last), ...ps.slice(last + 1)];
     });
     const next = withChange(picks, card.id, -1);
-    announce(t("mission.changed", { name: pick(card.name), n: next[card.id] ?? 0, left: coinsLeft(mon.budget, next, cards) }));
+    announce(t("mission.changed", { name: pick(card.name), n: next[card.id] ?? 0, left: coinsLeft(budget, next, cards) }));
   };
 
   const done = () => {
@@ -131,7 +133,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
       // Mouse: any direction. Touch: upwards, towards the map (sideways scrolls the tray).
       const starts = e.pointerType === "mouse" ? Math.hypot(dx, dy) > 6 : dy < -10 && Math.abs(dy) > Math.abs(dx);
       if (!starts) return;
-      if (!canAdd(d.card, mon.budget, picks, cards)) {
+      if (!canAdd(d.card, budget, picks, cards)) {
         announce(t("mission.notEnough", { name: pick(d.card.name) }));
         drag.current = null;
         return;
@@ -273,10 +275,10 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
           <div className="dock-coins">
             <p className="coins-text">
               <Icon name="coin" size={18} />
-              {t("mission.coinsLeft", { left, budget: mon.budget })}
+              {t("mission.coinsLeft", { left, budget: budget })}
             </p>
             <span className="budget-meter" aria-hidden="true">
-              <span style={{ width: `${Math.max(0, (left / mon.budget) * 100)}%` }} />
+              <span style={{ width: `${Math.max(0, (left / budget) * 100)}%` }} />
             </span>
           </div>
           <button
@@ -338,7 +340,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
           {ordered.map((card, i) => {
             const n = picks[card.id] ?? 0;
             const name = pick(card.name);
-            const affordable = canAdd(card, mon.budget, picks, cards);
+            const affordable = canAdd(card, budget, picks, cards);
             const firstOfGroup = i === 0 || ordered[i - 1].group !== card.group;
             return (
               <div key={card.id} className="tile-wrap" data-group={firstOfGroup ? card.group : undefined}>

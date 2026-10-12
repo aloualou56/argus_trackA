@@ -1,0 +1,11 @@
+{
+  "_about": "AUTHORED by the game team (game balance, not ARGUS data). Coins per danger level, the same at every monument: more serious dangers come with more coins, the way real monitoring budgets grow with the risk. Levels are the ABC priority labels. Kept in steps of one: the cheapest full-score network costs 2-8 coins, so every level keeps at least 4 spare coins, while at most levels buying every helpful card still does not fit (both checked by web/tests/logic.test.ts). Needs review after the playtest.",
+  "needs_review": true,
+  "by_level": {
+    "low": 12,
+    "medium": 13,
+    "high": 14,
+    "extreme": 15,
+    "catastrophic": 16
+  }
+}

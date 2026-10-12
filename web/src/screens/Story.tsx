@@ -1,9 +1,10 @@
 import type { ScreenProps } from "../App";
+import { budgetFor } from "../game/logic";
 import { Icon } from "../components/Icon";
 import { LevelBadge } from "../components/LevelBadge";
 import { useI18n } from "../i18n";
 
-export function Story({ mon, go }: ScreenProps) {
+export function Story({ mon, session, go }: ScreenProps) {
   const { t, tn, pick } = useI18n();
   const hook = mon.scenarios.find((s) => s.scenario_key === mon.story.hook_scenario);
 
@@ -30,7 +31,7 @@ export function Story({ mon, go }: ScreenProps) {
 
       <section className="panel mission-brief" aria-labelledby="brief-title">
         <h2 id="brief-title">{t("story.missionTitle")}</h2>
-        <p>{t("story.mission", { coins: tn("unit.coins", mon.budget) })}</p>
+        <p>{t("story.mission", { coins: tn("unit.coins", budgetFor(mon, session.level)) })}</p>
       </section>
 
       <div className="actions">

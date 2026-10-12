@@ -70,6 +70,8 @@ export interface LevelSummary {
 }
 
 export interface Level extends LevelSummary {
+  /** Coins for this level (content/coins.json): more serious dangers come with more coins. */
+  budget?: number;
   mission?: string[];
   mission_source?: "curated" | "auto";
   featured_alarm?: string | null;
@@ -217,7 +219,6 @@ export interface Monument extends MonumentBase {
   display_name: Text;
   place: Text;
   story: { hook_scenario: string; text: Text; authored: true; needs_review: boolean };
-  budget: number;
   levels: Level[];
   scenarios: Scenario[];
   installed: Installed;

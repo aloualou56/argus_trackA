@@ -245,6 +245,13 @@ class GameData(unittest.TestCase):
         self.assertEqual([t["id"] for t in tips], ["inside", "walls", "ground", "open"])
         self.assertTrue(all(set(t["cards"]) <= self.card_ids for t in tips))
 
+    def test_coins_grow_with_the_danger_level(self):
+        for mon in self.data["monuments"]:
+            self.assertNotIn("budget", mon)
+            budgets = [lv["budget"] for lv in mon["levels"] if lv["available"]]
+            self.assertTrue(all(isinstance(b, int) and b > 0 for b in budgets), mon["pilot_key"])
+            self.assertEqual(budgets, sorted(budgets), mon["pilot_key"])
+
     def test_alarm_sensors_have_positions(self):
         for alarm in self.ranverso["alarms"]:
             for instrument in alarm["instruments"]:

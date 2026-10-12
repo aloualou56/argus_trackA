@@ -9,6 +9,7 @@ import {
   coinsLeft,
   compareMix,
   argusCost,
+  budgetFor,
   clusterPoints,
   nativeZoom,
   countPicks,
@@ -35,7 +36,9 @@ const cards = cardById(data);
 describe("data pack", () => {
   it("has five playable monuments, each with a story and a budget", () => {
     expect(data.monuments.filter(isPlayable)).toHaveLength(5);
-    for (const m of data.monuments.filter(isPlayable)) expect(m.budget, m.pilot_key).toBeGreaterThan(0);
+    for (const m of data.monuments.filter(isPlayable)) {
+      for (const lv of m.levels.filter((l) => l.available)) expect(budgetFor(m, lv.id), `${m.pilot_key} ${lv.id}`).toBeGreaterThan(0);
+    }
   });
 
   // Balance: room to experiment everywhere, but at most levels not enough to buy every helpful card.
@@ -58,11 +61,11 @@ describe("data pack", () => {
           if (s.total === 100) perfect = Math.min(perfect, s.spentCoins);
         }
         // A full score leaves spare coins for a second sensor or a guess that turns out wrong.
-        expect(perfect, `${mon.pilot_key} ${lv.id}`).toBeLessThanOrEqual(mon.budget - SPARE_COINS);
+        expect(perfect, `${mon.pilot_key} ${lv.id}`).toBeLessThanOrEqual(budgetFor(mon, lv.id) - SPARE_COINS);
         const everything = new Set([...threats.flatMap((s) => s.capable_cards), ...(rule?.detect_with.flat() ?? [])]);
         const all = [...everything].reduce((sum, c) => sum + cards.get(c)!.cost, 0);
         levels += 1;
-        if (all <= mon.budget) everythingFits += 1;
+        if (all <= budgetFor(mon, lv.id)) everythingFits += 1;
       }
     }
     // ...but at most levels (12 of 19 today), buying every card that helps does not fit.
@@ -79,10 +82,14 @@ describe("data pack", () => {
     expect(() => missionScenarios(ranverso, "catastrophic")).toThrow();
   });
 
-  it("gives every monument the same budget, far below what the real ARGUS network would cost", () => {
-    const budgets = new Set(data.monuments.filter(isPlayable).map((m) => m.budget));
-    expect([...budgets]).toEqual([12]);
-    for (const mon of data.monuments.filter(isPlayable)) expect(argusCost(mon, cards), mon.pilot_key).toBeGreaterThan(mon.budget);
+  it("gives more coins for more serious dangers, the same at every monument, all below the real ARGUS cost", () => {
+    const scale = { low: 12, medium: 13, high: 14, extreme: 15, catastrophic: 16 };
+    for (const mon of data.monuments.filter(isPlayable)) {
+      for (const lv of mon.levels.filter((l) => l.available)) {
+        expect(budgetFor(mon, lv.id), `${mon.pilot_key} ${lv.id}`).toBe(scale[lv.id]);
+        expect(argusCost(mon, cards), mon.pilot_key).toBeGreaterThan(budgetFor(mon, lv.id));
+      }
+    }
   });
 
   it("every threat that a card can help with has at least one primary card", () => {

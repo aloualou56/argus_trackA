@@ -28,7 +28,7 @@
   "home.monument": "Choose a monument",
   "home.comingSoon": "Coming soon",
   "home.level": "How serious are the dangers?",
-  "home.levelHelp": "Experts rated every danger at this monument, from Low to Catastrophic.",
+  "home.levelHelp": "Experts rated every danger at this monument, from Low to Catastrophic. More serious dangers come with more coins, as real monitoring budgets grow with the risk.",
   "home.levelCount": "Dangers at this level: {n}",
   "home.levelNone": "None at this monument",
   "home.start": "Start",
