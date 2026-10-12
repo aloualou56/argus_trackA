@@ -122,7 +122,9 @@ one content pack (`data/i18n/<lang>.json`, 16 KB compressed). It never loads `as
   the three dangers (tap one to read it), an info line and the sensor tray (17 tiles, each showing its price as
   coins; hollow coins mean more than is left). On phones the tray is two swipeable rows. On wide screens the dock
   is a right-hand column: the dangers are a list (a click opens one in place), the tiles are sorted under their
-  four group names, and below them "Your network" lists what was bought and what it cost. Nothing in that column
+  four group names in full rows (three to a row; a last row of two shares the width, and a group of four is two
+  rows of two, so no tile stands alone beside a gap), and below them "Your network" lists what was bought and
+  what it cost. A tile shows its sensor's whole name, on up to three lines. Nothing in that column
   moves while the pointer passes over the tiles: the info line is a window of a fixed size (four lines, the
   longest description in any language) and the column keeps room for its scrollbar. On a short screen the column
   scrolls and the info line stays in view. A "Places" button over the map opens the site guide.
@@ -292,7 +294,11 @@ The game is played on a map of real monuments, so it looks like one: a survey sh
   Greek), and the decision after the alarm is four action tiles. All are still real radio buttons underneath.
 - **The first screen** puts the two choices first and keeps Start in a bar pinned to the bottom of the panel, which
   says what it will start. **The score screen** puts the next steps first (the week, the questions again), folds
-  the checklist and "what others chose", and keeps the rest in one scroll.
+  the checklist, "what others chose" and the week's fine print ("How it works"), and keeps the rest in one scroll.
+  In "What each danger needs" a danger that was fully covered shows only its name and the sensors that covered it;
+  the others repeat what the danger is, because those are the ones to reread.
+- **Names of places on the map** step aside for the map's own furniture: a name that would lie under the scale,
+  the coordinates, the legend or a button is hidden (its number stays, and the site guide lists every name).
 - **No browser-default controls left in view:** the language menu and the monument of a report use the game's own
   drop-down (`web/src/components/Dropdown.tsx`), the report's photo is chosen with a normal button (the browser's
   file control does the work behind it), and the map shows the credits for its data without the library's badge.
@@ -318,6 +324,9 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   the tiles scroll under them. A tile is dragged towards the map: upwards on an upright phone, to the left on its
   side (`Mission.tsx`).
 - **A narrow phone** (under 26rem) drops the globe from the language button so the language's name is never cut.
+- **The first screen** does not repeat the game's name under the band that already says it: the heading is kept
+  for screen readers and the page starts with what the game is, so the list of monuments comes sooner.
+- **Tiles** are a little wider and their icon a little smaller than before, so a name has room for three lines.
 
 ## Accessibility (WCAG 2.1 AA target)
 
@@ -369,6 +378,11 @@ native speaker has checked yet**; the game says so in its footer in those langua
   text is edited, its translation no longer matches: the game shows the English text until it is redone (delete
   the old key, add the new one). The build output and the data notes say how many texts each language is missing.
 - German uses "ss" instead of "ß" so it also reads naturally in Switzerland, and addresses teachers as "Sie".
+- A word in a sensor's name that is wider than a tile carries a soft hyphen, written `­` in the content
+  files so it can be seen (one Greek word, one Spanish, eleven German compounds). It is invisible until the word
+  has to break, and then it breaks there with a hyphen ("Μετεωρο-λογικός") instead of being cut or spilling out.
+  A new long name needs its own. One name is still cut on phone tiles in Greek, Italian and Spanish: the
+  satellite position receiver (GNSS), which would need four lines; its full name shows in the info line.
 - A first visit starts in the browser's language when the game speaks it, otherwise in Greek. The choice in the
   language menu is remembered on the device.
 - To add a language: add it to `Lang` in `web/src/game/types.ts`, `LANGS` in `web/src/i18n/index.tsx` and

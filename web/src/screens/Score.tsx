@@ -197,8 +197,15 @@ export function Score({
             {t("week.improve")}
           </button>
         </div>
-        <p className="small">{t("week.improveHelp")}</p>
-        {hasWeek && <p className="small">{t("week.note")}</p>}
+        {/* The fine print folds away: the block ends on its two buttons, and fits one phone screen. */}
+        <details className="fold week-how">
+          <summary>
+            <span>{t("week.how")}</span>
+            <Icon name="chevron" size={18} className="fold-chevron" />
+          </summary>
+          <p className="small">{t("week.improveHelp")}</p>
+          {hasWeek && <p className="small">{t("week.note")}</p>}
+        </details>
       </section>
 
       {/* The game's own questions again, straight after the result: it is the class's next step. */}
@@ -226,7 +233,8 @@ export function Score({
                   {t(status.key)}
                 </p>
                 <h3 data-needs-review={s.plain.needs_review}>{pick(s.plain.title)}</h3>
-                <p data-needs-review={s.plain.needs_review}>{pick(s.plain.text)}</p>
+                {/* What the danger is, again, only where it was not fully covered: that is the one to reread. */}
+                {status !== STATUS.full && <p data-needs-review={s.plain.needs_review}>{pick(s.plain.text)}</p>}
                 {s.capable_cards.length === 0 ? (
                   <p>{t("score.noSensor")}</p>
                 ) : (

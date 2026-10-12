@@ -245,6 +245,56 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     if (!wide) setPlacesOpen(false); // give the map back on phones
   };
 
+  // One sensor tile; `first` marks the first of its group, which the group buttons jump to.
+  const tile = (card: Card, first: boolean) => {
+    const n = picks[card.id] ?? 0;
+    const name = pick(card.name);
+    const affordable = canAdd(card, budget, picks, cards);
+    return (
+      <div key={card.id} className="tile-wrap" data-group={first ? card.group : undefined}>
+        <button
+          type="button"
+          className={`tile${n > 0 ? " is-picked" : ""}`}
+          aria-label={t("mission.add", { name })}
+          aria-describedby={`tell-${card.id}`}
+          aria-disabled={!affordable}
+          onClick={() => onTileClick(card)}
+          onPointerDown={(e) => onPointerDown(e, card)}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={endDrag}
+          // Only the tile's own loss counts: a finger is first held by the icon or name it
+          // touched, and that hold passing to the tile is how a drag begins, not how it ends.
+          onLostPointerCapture={(e) => e.target === e.currentTarget && endDrag()}
+          onFocus={() => setInfo({ kind: "card", card })}
+          onMouseEnter={() => setInfo({ kind: "card", card })}
+        >
+          <Icon name={card.id} size={24} />
+          <span className="tile-name">{name}</span>
+          {/* The price as coins to count: the tile's description says the number. */}
+          <span className="tile-cost" aria-hidden="true">
+            {Array.from({ length: card.cost }, (_, k) => (
+              <i key={k} />
+            ))}
+          </span>
+          {n > 0 && (
+            <span className="tile-count" aria-hidden="true">
+              {n}
+            </span>
+          )}
+        </button>
+        {n > 0 && (
+          <button type="button" className="tile-minus" aria-label={t("mission.remove", { name })} onClick={() => removeOne(card)}>
+            <Icon name="minus" size={14} />
+          </button>
+        )}
+        <span id={`tell-${card.id}`} hidden>
+          {pick(card.tells)} {t("mission.costLabel")} {tn("unit.coins", card.cost)}. {t("mission.inNetwork", { n })}
+        </span>
+      </div>
+    );
+  };
+
   const step = STEPS.indexOf("mission") + 1;
   let infoLine;
   if (hint) {
@@ -404,59 +454,16 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
         </div>
 
         <div className="tray" ref={trayRef} role="group" aria-label={t("mission.sensors")}>
-          {ordered.map((card, i) => {
-            const n = picks[card.id] ?? 0;
-            const name = pick(card.name);
-            const affordable = canAdd(card, budget, picks, cards);
-            const firstOfGroup = i === 0 || ordered[i - 1].group !== card.group;
-            const group = data.cards.groups.find((g) => g.id === card.group);
-            return (
-              <Fragment key={card.id}>
-                {wide && firstOfGroup && group && <h2 className="dock-label tray-group">{pick(group.name)}</h2>}
-                <div className="tile-wrap" data-group={firstOfGroup ? card.group : undefined}>
-                  <button
-                    type="button"
-                    className={`tile${n > 0 ? " is-picked" : ""}`}
-                    aria-label={t("mission.add", { name })}
-                    aria-describedby={`tell-${card.id}`}
-                    aria-disabled={!affordable}
-                    onClick={() => onTileClick(card)}
-                    onPointerDown={(e) => onPointerDown(e, card)}
-                    onPointerMove={onPointerMove}
-                    onPointerUp={onPointerUp}
-                    onPointerCancel={endDrag}
-                    // Only the tile's own loss counts: a finger is first held by the icon or name it
-                    // touched, and that hold passing to the tile is how a drag begins, not how it ends.
-                    onLostPointerCapture={(e) => e.target === e.currentTarget && endDrag()}
-                    onFocus={() => setInfo({ kind: "card", card })}
-                    onMouseEnter={() => setInfo({ kind: "card", card })}
-                  >
-                    <Icon name={card.id} size={24} />
-                    <span className="tile-name">{name}</span>
-                    {/* The price as coins to count: the tile's description says the number. */}
-                    <span className="tile-cost" aria-hidden="true">
-                      {Array.from({ length: card.cost }, (_, k) => (
-                        <i key={k} />
-                      ))}
-                    </span>
-                    {n > 0 && (
-                      <span className="tile-count" aria-hidden="true">
-                        {n}
-                      </span>
-                    )}
-                  </button>
-                  {n > 0 && (
-                    <button type="button" className="tile-minus" aria-label={t("mission.remove", { name })} onClick={() => removeOne(card)}>
-                      <Icon name="minus" size={14} />
-                    </button>
-                  )}
-                  <span id={`tell-${card.id}`} hidden>
-                    {pick(card.tells)} {t("mission.costLabel")} {tn("unit.coins", card.cost)}. {t("mission.inNetwork", { n })}
-                  </span>
-                </div>
-              </Fragment>
-            );
-          })}
+          {data.cards.groups.map((group) => (
+            <Fragment key={group.id}>
+              {wide && <h2 className="dock-label tray-group">{pick(group.name)}</h2>}
+              {/* One set of tiles per group. On wide screens a set is laid out in full rows; on
+                  small ones it has no box of its own and the tiles run on in the tray. */}
+              <div className="tray-set">
+                {ordered.filter((card) => card.group === group.id).map((card, i) => tile(card, i === 0))}
+              </div>
+            </Fragment>
+          ))}
         </div>
 
         {/* What has been bought so far and what it cost, like the list in a field book. */}

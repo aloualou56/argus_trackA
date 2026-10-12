@@ -2694,6 +2694,26 @@ b {
 .week .btn-secondary:hover {
   background: rgb(255 255 255 / 0.14);
 }
+/* The week's fine print, folded: a quiet line under the buttons, light on the green. */
+.week-how {
+  margin-top: 0.9rem;
+}
+.week .week-how > summary {
+  min-height: 36px;
+  padding: 0.2rem 0;
+  border: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: 0;
+  background: none;
+  color: var(--mint);
+  font-size: 0.9rem;
+}
+.week .week-how[open] > summary {
+  margin-bottom: 0.4rem;
+}
+.week-how p:last-child {
+  margin-bottom: 0;
+}
 .day-box {
   border-radius: 4px;
   font-family: var(--mono);
@@ -2785,13 +2805,24 @@ b {
   background: var(--argus-pin);
   border-color: var(--argus-pin);
 }
+/* A group's tiles. Without a layout of its own the set is transparent: the tiles are laid out by
+   the tray, as one run (small screens). */
+.tray-set {
+  display: contents;
+}
+/* A sensor's name is shown whole, on up to three lines. A word wider than the tile breaks where
+   its soft hyphen is (written in the content files), never at a random letter if it can be helped. */
+.tile-name {
+  overflow-wrap: break-word;
+  hyphens: manual;
+  -webkit-line-clamp: 3;
+}
 /* The instrument case, sorted: each group under its name and a rule. */
 .tray-group {
   display: flex;
-  grid-column: 1 / -1;
   align-items: center;
   gap: 0.6rem;
-  margin: 0.5rem 0 0;
+  margin: 0.7rem 0 0.45rem;
 }
 .tray-group:first-child {
   margin-top: 0;
@@ -2884,11 +2915,38 @@ b {
     border-block: 1px solid var(--line);
     background: var(--surface);
   }
+  /* The case on a wide screen: each group is a block of full rows, three tiles to a row. A last
+     row of two shares the width; a group that would leave one tile alone ends in two rows of two.
+     So no tile stands alone beside a gap, and a tile is wide enough for its whole name. */
   .tray {
+    display: block;
     padding-top: 0.35rem;
   }
+  .tray-set {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  .tray-set > .tile-wrap {
+    display: grid; /* the tile fills its place, so the tiles of a row are as tall as the tallest */
+    grid-column: span 2;
+  }
+  /* one tile over (4, 7, 10 ...): the fourth from the end starts a row, and the last four share two rows */
+  .tray-set > .tile-wrap:nth-last-child(4):nth-child(3n + 1),
+  .tray-set > .tile-wrap:nth-last-child(4):nth-child(3n + 1) ~ .tile-wrap {
+    grid-column: span 3;
+  }
+  /* two tiles over (2, 5, 8 ...): the second from the end starts a row, and the last two share it */
+  .tray-set > .tile-wrap:nth-last-child(2):nth-child(3n + 1),
+  .tray-set > .tile-wrap:nth-last-child(2):nth-child(3n + 1) + .tile-wrap {
+    grid-column: span 3;
+  }
   .tile {
-    height: 4.9rem;
+    height: auto;
+    min-height: 4.9rem;
+  }
+  .tile-name {
+    font-size: 0.76rem;
   }
   /* The three dangers as a list, one to a line; the chosen one is tinted and underlined. */
   .dock .chip-row {
@@ -3461,6 +3519,31 @@ b {
   .coins-text {
     line-height: 1.2;
     white-space: normal;
+    text-wrap: balance;
+  }
+  /* The first screen: the band above already says the game's name, so the heading that repeats it
+     is left to screen readers and the page starts with what the game is. */
+  .screen.home > h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* Tiles a little wider and their icon a little smaller, so a name has room for three lines. */
+  .tray {
+    grid-auto-columns: 5.8rem;
+  }
+  .tile {
+    padding-block: 0.2rem;
+  }
+  .tile > svg {
+    width: 20px;
+    height: 20px;
+  }
+  .tile-name {
+    line-height: 1.1;
   }
 }
 /* A narrow phone: the language button drops its globe, so its name is never cut. */

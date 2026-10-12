@@ -337,5 +337,6 @@
   "story.dangerLabel": "Eine Gefahr dieser Mission",
   "mission.networkTitle": "Dein Netz",
   "mission.networkEmpty": "Noch kein Sensor.",
-  "mission.networkTotal": "Ausgegebene Münzen"
+  "mission.networkTotal": "Ausgegebene Münzen",
+  "week.how": "So funktioniert es"
 }

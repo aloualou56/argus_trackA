@@ -498,12 +498,17 @@ export function GameMap(props: Props) {
     requestAnimationFrame(() => declutterRef.current());
   }
 
-  /** Hide a place label that would overlap a lower-numbered one; the numbers stay, and the
-   * mission panel lists every name. Runs again after each zoom or move. */
+  /** Hide a place label that would overlap a lower-numbered one or the map's own furniture (the
+   * scale, the coordinates, the legend, the buttons); the numbers stay, and the mission panel
+   * lists every name. Runs again after each zoom or move. */
   declutterRef.current = () => {
     const node = containerRef.current;
     if (!node) return;
-    const kept: DOMRect[] = [];
+    const furniture = node.parentElement?.querySelectorAll<HTMLElement>(
+      ".leaflet-control-scale, .map-coords, .map-legend, .map-switch, .leaflet-control-zoom, .places-toggle, .crosshair-label",
+    );
+    // (an element that is not shown has an empty box, which nothing overlaps)
+    const kept: DOMRect[] = [...(furniture ?? [])].map((f) => f.getBoundingClientRect()).filter((r) => r.width > 0 && r.height > 0);
     for (const label of node.querySelectorAll<HTMLElement>(".place-label")) {
       label.classList.remove("is-hidden");
       const r = label.getBoundingClientRect();

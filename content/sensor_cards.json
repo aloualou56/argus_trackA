@@ -63,7 +63,7 @@
     {
       "id": "weather_station", "group": "water", "cost": 3,
       "instrument_types": ["Weather Station Sensor", "Barometer Sensor"],
-      "name": { "en": "Weather station", "el": "Μετεωρολογικός σταθμός" },
+      "name": { "en": "Weather station", "el": "Μετεωρο\u00adλογικός σταθμός" },
       "tells": { "en": "Tells us about wind, rain, heat and air pressure outside.", "el": "Μας λέει για τον άνεμο, τη βροχή, τη ζέστη και την πίεση του αέρα έξω." },
       "needs_review": true,
       "review_note": "Assumes every ARGUS weather station includes wind, rain, temperature and pressure. Barometer Sensor grouped here."

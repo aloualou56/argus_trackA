@@ -337,5 +337,6 @@
   "story.dangerLabel": "Ένας κίνδυνος αυτής της αποστολής",
   "mission.networkTitle": "Το δίκτυό σου",
   "mission.networkEmpty": "Κανένας αισθητήρας ακόμη.",
-  "mission.networkTotal": "Νομίσματα που ξόδεψες"
+  "mission.networkTotal": "Νομίσματα που ξόδεψες",
+  "week.how": "Πώς δουλεύει"
 }
