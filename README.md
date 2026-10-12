@@ -1,17 +1,19 @@
 # Guardian for a Day · Φύλακας για μια μέρα
 
-A plain-language web game for the ARGUS Open Innovation Challenge 2026, Track A (Heritage and Citizen Science).
-The game is played on an interactive satellite map. The player picks a monument on a map of Europe, flies in, and
-places sensors on the real building on a small budget. Then the real ARGUS sensors appear on the map at their real
-positions, a real ARGUS alarm from August–September 2026 lights up the sensor that raised it, and the player gets a
-score with a short explanation of each danger. Five questions before and after the game show what was learned, a
-checklist turns the player into an observer on their next visit, and a class code lets a teacher see the class's
-choices next to what ARGUS really installed.
+A plain-language web game for the ARGUS Open Innovation Challenge 2026, Track A (Heritage and Citizen Science). The
+game is played on an interactive satellite map. The player picks a monument on a map of Europe, flies in, and places
+sensors on the real building on a small budget. Then a real ARGUS alarm from August–September 2026 plays on the map:
+waves spread from the sensor that raised it, and the player sees whether their own sensors would have caught it.
+Next the real ARGUS sensors appear at their real positions, and the player gets a score with a short explanation of
+each danger, and can go on to a week on duty, one real alarm a day. Five questions before and after the game show
+what was learned, a checklist turns the player into an observer on their next visit, and a class code lets a teacher
+see the class's choices next to what ARGUS really installed.
 
-Status (11 Oct 2026): **all five ARGUS monuments are playable** (Delos, Baltanás, Monti Lucretili, Sant'Antonio di
-Ranverso, Schenkenberg), in Greek and English, offline after the first visit. Italian, Spanish and German are
-machine translations waiting for native speakers (see Languages). All authored text still needs human
-review (see below). For teachers: [docs/teacher_guide.md](docs/teacher_guide.md).
+Status (13 Oct 2026): **all five ARGUS monuments are playable** (Delos, Baltanás, Monti Lucretili, Sant'Antonio di
+Ranverso, Schenkenberg), in Greek and English, offline after the first visit, with sound, and with a full-screen map
+for placing sensors on phones. A public copy runs on a Raspberry Pi and updates itself on every push to `main` (see
+Publishing). Italian, Spanish and German are machine translations waiting for native speakers (see Languages). All
+authored text still needs human review (see below). For teachers: [docs/teacher_guide.md](docs/teacher_guide.md).
 
 | Monument | Levels | Real alarm replayed |
 |---|---|---|
@@ -46,16 +48,23 @@ npm run class        # after a build: the game and a class's records from this c
 npm run screenshots  # needs a build: plays the game in Edge, saves docs/screenshots, runs axe a11y checks
 ```
 
-`npm run screenshots` plays the Ranverso walk-through (with the quiz) on phone and desktop in both languages, every
-level of every monument, the class-code and teacher flow, the game offline, the game with map pictures blocked, and
-bad data (an older data pack, a crash on a screen: a message, never an empty page), and runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
-`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|offline|bad-data` (one part). It also reports when map
-tiles cannot load, which is expected in sandboxes without internet.
+`npm run screenshots` plays, in both languages:
 
-`web/dist` is a static site with relative paths: upload it to GitHub Pages, Netlify or Vercel as is.
-The public copy runs on a Raspberry Pi and follows `main` by itself: every push is tested and built on GitHub
-(`.github/workflows/site.yml`, the result goes to the `site` branch) and the Pi serves it within a minute, through
-a playit.gg tunnel (`tools/pi/README.md`).
+- the Ranverso walk-through (with the quiz) on phone and desktop, including the alarm replay after "Done" (only the
+  map on a phone, the panel kept on a desktop, "Skip" there) and, on a phone, the full-screen board and its card;
+- every level of every monument, and the class-code and teacher flow;
+- a week on duty: each later day's alarm plays on the map too, full screen on a phone;
+- sound, counted as the notes the page starts (no speaker needed): none before a tap, one for each action, the
+  replay's, and none once turned off, which a reload remembers;
+- the game offline, the game with map pictures blocked, and bad data (an older data pack, a crash on a screen: a
+  message, never an empty page).
+
+It runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|offline|bad-data` (one
+part). It also reports when map tiles cannot load, which is expected in sandboxes without internet.
+
+`web/dist` is a static site with relative paths: any static host serves it as is. The public copy is on a
+Raspberry Pi and follows `main` by itself (see Publishing).
 `npm run screenshots` saves what each screen shows (`*.png`) and, for phones, the whole scrolling panel
 (`*-panel.png`; the sticky map cannot appear in full-page captures).
 Add `?review` to the URL to outline every authored text that still needs human review.
@@ -77,7 +86,8 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `content/sensor_cards.json` | 17 cards (16 instruments + the human observer): plain names, one sentence, coin cost, ARGUS instrument types | authored |
 | `content/rule_sensor_map.json` | AD-RT rule → sensor cards that detect it, keyed `pilot:rule`, all 37 policies | authored |
 | `content/threat_sensor_map.json` | threat → sensor cards that can warn about it (for the score) | authored |
-| `content/monuments/<pilot>.json` | story, budget, missions per level, plain threat texts, alarm explanations, discussion prompts, `no_alarm_note` | authored |
+| `content/monuments/<pilot>.json` | story, missions per level, plain threat texts, alarm explanations, discussion prompts, `no_alarm_note` | authored |
+| `content/coins.json` | coins per danger level (Low 12 to Catastrophic 16), the same at every monument | authored |
 | `content/quiz.json` | the 5 pre/post questions, answers and explanations | authored |
 | `content/citizen_checklist.json` | what visitors can watch for and how to report it | authored |
 | `content/map.json` | base maps for the board (satellite and street map, no API key) with attribution | authored |
@@ -85,7 +95,8 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `content/translations/<lang>.json` | Italian, Spanish and German content, keyed by the exact English text | machine-translated |
 | `tools/build_game_data.py` | joins snapshot + content, de-duplicates and filters alarms, validates everything | code |
 | `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison, map distances (pure, tested) | code |
-| `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws | code |
+| `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws, including the alarm replay | code |
+| `web/src/audio/sounds.ts` | the game's sounds, made in the browser with the Web Audio API (no audio files) | code |
 | `web/src/community/` | anonymous records: device store, optional Supabase store with offline queue, class codes | code |
 | `web/src/game/report.ts` | the citizen observation report: its rules and its export in ARGUS's format (pure, tested) | code |
 | `web/src/screens/Observe.tsx` | the report form and the printable card | code |
@@ -93,6 +104,9 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `tools/class_server.py` | optional class server: the game and a class's records from the teacher's computer, no cloud | code |
 | `web/src/runtime.ts` | settings the page gets from where it is served (class server, local-only mode) | code |
 | `web/sw-template.js` | offline service worker; `vite.config.ts` writes `dist/sw.js` with the file list | code |
+| `.github/workflows/site.yml` | tests and builds every push to `main`; puts the built site on the `site` branch | code |
+| `tools/pi/` | the Raspberry Pi that serves the public copy: update script, timer, Caddy, setup | code |
+| `docs/brand/logo.png` | the original logo; the icons and the mark are made from it | brand |
 | `web/src/i18n/{el,en}.json` | every UI string; Greek is the default | authored |
 | `web/src/i18n/{it,es,de}.json` | the same strings in Italian, Spanish and German | machine-translated |
 
@@ -123,7 +137,8 @@ one content pack (`data/i18n/<lang>.json`, 16 KB compressed). It never loads `as
   zoom at most two levels past it. `npm run screenshots` zooms in fully at every site and fails on any such picture.
 - **Mission screen (the map never scrolls away).** The map fills the screen; a dock holds the step, coins, Done,
   the three dangers (tap one to read it), an info line and the sensor tray (17 tiles, each showing its price as
-  coins; hollow coins mean more than is left). On phones the tray is two swipeable rows. On wide screens the dock
+  coins; hollow coins mean more than is left). An upright phone has no dock: the map is the whole screen and the
+  coins and the sensors float over it (see Small screens). On wide screens the dock
   is a right-hand column: the dangers are a list (a click opens one in place), the tiles are sorted under their
   four group names in full rows (three to a row; a last row of two shares the width, and a group of four is two
   rows of two, so no tile stands alone beside a gap), and below them "Your network" lists what was bought and
@@ -141,7 +156,7 @@ one content pack (`data/i18n/<lang>.json`, 16 KB compressed). It never loads `as
 All five ARGUS monuments are already playable; this is how a sixth would be added.
 
 1. Copy `content/monuments/ranverso.json` to `content/monuments/<pilot>.json` (or start from `"draft": true` with names only).
-2. Fill in `display_name`, `place`, `story` (with `hook_scenario`), `budget`, `missions` (3 scenario keys per level;
+2. Fill in `display_name`, `place`, `story` (with `hook_scenario`), `missions` (3 scenario keys per level;
    omit a level to let the script pick by ABC magnitude), `plain_threats` for every scenario, `featured_alarm`,
    `alarm_context` for each featured rule, and `discussion_prompts`.
 3. Add scenario overrides to `content/threat_sensor_map.json` if the category defaults do not fit (each entry lists
@@ -170,7 +185,7 @@ shows the main signal and its share, not the anomaly score against its limit.
 - **Mission:** 3 real threats per level; coins grow with the danger level, the same at every monument (Low 12,
   Medium 13, High 14, Extreme 15, Catastrophic 16, in `content/coins.json`); 17 cards cost 1–4 coins (game coins, not
   real prices). A perfect network costs 2–8 coins depending on the level, so there are always at least 4 spare coins
-  to experiment; buying every helpful card (9–24) still does not fit at 12 of the 19 levels (both tested). The real
+  to experiment; buying every helpful card (9–24) still does not fit at 9 of the 19 levels (both tested). The real
   ARGUS networks would cost 17–68 coins at these prices; the reveal says so.
 - **Score (out of 100):** per threat 20 points with a *primary* card (it watches the threat directly), 8 with only
   supporting cards; 25 if the network would have caught the replayed real alarm; up to 15 for the share of coins
@@ -187,12 +202,12 @@ shows the main signal and its share, not the anomaly score against its limit.
   sensors caught it or two falling notes when they missed it) and the score. Nothing plays before the player taps,
   nothing is said only by sound, and the speaker button in the top bar turns it off (remembered on the device).
 - **Order and the alarm replay:** story → mission → a real alarm → reveal → score. After "Done" (and after "Go on to
-  day N" in a week on duty, for each later day) the day's real alarm
-  plays on the map for about five seconds (two without motion): waves spread from the ARGUS sensor that raised it,
-  then the player's sensors that would have caught it light up and the rest fade (a cross when none would have).
-  Phones and small tablets show only the map meanwhile; wide screens keep the panel, unusable until it ends. "Skip"
-  ends it at once. The alarm's screen then opens on the answer, and its map shows only the ARGUS sensor that raised
-  the alarm, so the reveal still comes after it.
+  day N" in a week on duty, for each later day) the day's real alarm plays on the map for about five seconds (two
+  without motion): waves spread from the ARGUS sensor that raised it, then the player's sensors that would have
+  caught it light up and the rest fade (a cross when none would have). Phones and small tablets show only the map
+  meanwhile; wide screens keep the panel, unusable until it ends. "Skip" ends it at once. The alarm's screen then
+  opens on the answer, and its map shows only the ARGUS sensor that raised the alarm, so the reveal still comes
+  after it.
 - **What would you do next?** After the replayed alarm the player chooses a first step: send someone to look, check
   the sensor and the other measurements, wait, or close the monument. The game then quotes the decision ARGUS
   recorded for that alarm (real data: every record says "Review alarm evidence and affected asset context before
@@ -343,7 +358,12 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   move and remove sensors, the coins, and the mission's three dangers, which no longer take a row of their own.
   It is a modal `<dialog>`: focus stays inside, Escape closes it. Wider screens keep the dock (`Mission.tsx`, PHONE;
   `styles.css`, "phone board").
-- **A short upright phone** (under 44rem high) shows one row of tiles in the mission, so the map keeps its room.
+- **While the real alarm plays** (after "Done", or on the next day of a week on duty) the map takes the whole screen,
+  whichever screen it starts from; the top band and the panel come back with the answer.
+- **The top band** on a phone (under 30rem) puts the game's name on two short lines, so the sound and language
+  buttons fit beside it.
+- **A short upright screen wider than a phone** (under 44rem high) shows one row of tiles in the mission, so the
+  map keeps its room.
 - **A phone on its side** (landscape, under 32rem high) puts the map beside the page instead of above it. In the
   mission the dock is a column: the coins and Done stay in view, then the line that says what a sensor tells, and
   the tiles scroll under them. A tile is dragged towards the map: upwards on an upright phone, to the left on its
@@ -360,6 +380,13 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   focusable (arrows pan, +/- zoom), pins are labelled buttons, controls are 44 px, the sticky map never covers the
   focused element (`scroll-padding`), and the camera jumps instead of flying when reduced motion is on.
 - Focus moves to each new screen's heading; a polite live region announces sensor changes and budget problems.
+- The alarm replay can be cut short: "Skip" has the focus while it plays and ends it at once. With reduced motion
+  it is a still picture for about two seconds. Screen readers hear that it is playing, and its answer is on the
+  alarm screen in words.
+- Sound is never the only signal (what it says is on screen too), plays only after a tap, and can be turned off: in
+  the top band, and in the "?" card while placing sensors on a phone. The choice is remembered.
+- The phone's "how to" card is a modal `<dialog>`: focus moves into it, Escape closes it, and focus returns to "?"
+  or to the screen's heading.
 - Disabled-looking steppers stay focusable (`aria-disabled`) and say why they cannot be used.
 - Colour is never the only signal: icons, words, solid vs dashed borders, circles (you) vs squares (ARGUS).
 - Palette checked for contrast (text ≥ 4.5:1, controls ≥ 3:1), again after the redesign; Okabe-Ito colours for the
@@ -470,13 +497,38 @@ stored copy only offline. If the data pack's `schema_version` does not match the
 copy answered), the game removes its service worker and stored files and reloads once; a crash on any screen shows
 a message with a reload button instead of an empty page.
 
+## Publishing: the public copy on a Raspberry Pi
+
+Every push to `main` goes live by itself, about two minutes later, and only if the tests pass.
+
+```
+push to main ──► GitHub Actions (.github/workflows/site.yml): data tests, web tests, build
+                    └─► branch "site": the built site only (web/dist, about 3 MB), one commit, replaced each time
+Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/guardian ──► Caddy :8080 ──► playit.gg tunnel
+```
+
+- **The repository stays private.** The Pi has a read-only deploy key and fetches only the `site` branch, so the
+  snapshots never leave GitHub. The public copy holds what any player's browser gets anyway: the game,
+  `game_data.json`, the drawn plans and the photos.
+- **A failing test stops a release:** nothing is published and the Pi keeps serving the last good version. Actions →
+  "Build the site" shows each run, and `/VERSION` on the site gives the commit being served.
+- **The Pi only serves files.** It is a Zero 2 W (512 MB), too small to build. The web server is Caddy rather than
+  nginx: the Pi's Debian 11 no longer gets security updates, so its nginx would be an old one, while Caddy is a
+  current official release, checked against its published checksums.
+- **The tunnel** is playit.gg (the agent runs as `playit.service`): a TCP tunnel to `127.0.0.1:8080`, created in the
+  playit.gg dashboard. Its address is plain `http://`, so the offline mode, which browsers allow only over
+  `https://`, is off there; the game itself works fully.
+- Setup, logs and how to set up a new Pi: [tools/pi/README.md](tools/pi/README.md).
+
 ## Next steps (to 24 October)
 
 | By | Task |
 |---|---|
 | 14 Oct | Review authored content (stories, Greek, threat texts, primary cards, quiz, checklist, units); fix from feedback |
 | 15 Oct | Keep an eye on the offline check (`npm run screenshots`): it failed in earlier runs and passes now, cause not identified |
-| 16 Oct | Set up Supabase (optional) and publish the site (GitHub Pages / Netlify); test a class code across two devices |
+| 13 Oct | Done: the public copy on the Raspberry Pi, updated on every push (see Publishing) |
+| 16 Oct | Create the playit tunnel and share its address; set up Supabase (optional); test a class code across two devices |
+| 20 Oct | Plan the Pi's operating-system upgrade (Debian 11 no longer gets security updates) |
 | 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor and the meaning of the AI alarms |
 | 22 Oct | **Playtest** with a class or visitors (pre/post quiz gives the evidence); manual screen-reader and keyboard audit |
 | 23 Oct | Fixes, short video, submission text |
@@ -489,5 +541,7 @@ a message with a reload button instead of an empty page.
   events), kept unchanged as the reference for the facts tests, committed so the whole team builds from the same
   data. It is read-only input, and the repository must stay private unless the challenge's data terms allow
   publishing it. `game_data.json` holds only the fields the game needs.
+- The public copy holds only the built site (see Publishing); the Pi's deploy key can read this repository and
+  nothing else, and cannot write to it.
 - The API spec (`specs.json`) and `test_api.py` live outside this folder. Never copy tokens or credentials into this
   repository; `.gitignore` excludes `test_api.py`, `.env` and `*.token` as a safety net.
