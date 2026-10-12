@@ -68,6 +68,9 @@ function loadBackdrop(path: string): Promise<Backdrop> {
 const MONUMENT_MAX_ZOOM = 20;
 const PIN = 30;
 const MAP_MAX_ZOOM = 21;
+// One world only: the map cannot leave these bounds, tiles do not repeat sideways, and it cannot
+// zoom out further than the world filling the map (see fitWorld).
+const WORLD = L.latLngBounds([-85.0511, -180], [85.0511, 180]);
 
 function prefersReducedMotion(): boolean {
   try {
@@ -149,6 +152,8 @@ export function GameMap(props: Props) {
     const map = L.map(containerRef.current!, {
       zoomControl: false,
       maxZoom: MAP_MAX_ZOOM,
+      maxBounds: WORLD,
+      maxBoundsViscosity: 1,
       zoomSnap: 0.5,
       keyboard: true,
       zoomAnimation: !reduced,
@@ -188,7 +193,13 @@ export function GameMap(props: Props) {
         return [at.lat, at.lng];
       },
     };
-    const resize = new ResizeObserver(() => map.invalidateSize());
+    // The furthest zoom out is the one where a single world still fills the map, however wide it is.
+    const fitWorld = () => map.setMinZoom(map.getBoundsZoom(WORLD, true));
+    fitWorld();
+    const resize = new ResizeObserver(() => {
+      map.invalidateSize();
+      fitWorld();
+    });
     resize.observe(containerRef.current!);
     mapRef.current = map;
     return () => {
@@ -226,6 +237,8 @@ export function GameMap(props: Props) {
     const tiles = L.tileLayer(layer.url, {
       maxNativeZoom: imageryZoom,
       maxZoom: MAP_MAX_ZOOM,
+      noWrap: true,
+      bounds: WORLD,
       attribution: attributionHtml(layer),
     })
       .on("tileload", () => {
@@ -345,11 +358,13 @@ export function GameMap(props: Props) {
     const map = mapRef.current;
     if (!map) return;
     // Extra room top-left keeps markers and their labels clear of the zoom buttons and switch.
+    // On a short map the margins shrink, or they would leave almost no room and push the view far out.
+    const quarter = map.getSize().y / 4;
     const options = {
       animate: !reduced,
       duration: 1.6,
-      paddingTopLeft: L.point(70, 90),
-      paddingBottomRight: L.point(48, 84), // clear of the legend and attribution
+      paddingTopLeft: L.point(70, Math.min(90, quarter)),
+      paddingBottomRight: L.point(48, Math.min(84, quarter)), // clear of the legend and attribution
       maxZoom: MONUMENT_MAX_ZOOM,
     };
     if (mode === "overview" || !mon?.map) {
