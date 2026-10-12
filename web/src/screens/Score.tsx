@@ -17,6 +17,7 @@ import {
 } from "../game/logic";
 import type { Alarm } from "../game/types";
 import { useI18n, type MessageKey } from "../i18n";
+import { runtimeConfig } from "../runtime";
 
 interface Props extends ScreenProps {
   community: CommunityStore;
@@ -76,10 +77,13 @@ export function Score({
   const [summary, setSummary] = useState<Summary | null>(null);
   const [shareStatus, setShareStatus] = useState("");
 
+  // The challenge link: the same monument, level and dangers, and this score to beat. No class code in it.
+  // On the class server it uses the address others on the network can reach, not this computer's "localhost".
+  const here = runtimeConfig().publicUrl ?? `${window.location.origin}${window.location.pathname}`;
+  const challengeUrl = `${here}?${challengeQuery(mon, session.level, session.mission, result.total)}`;
   const share = async () => {
     const text = t("share.text", { name: pick(mon.display_name), score: result.total });
-    // A challenge link: the same monument, level and dangers, and this score to beat. No class code in it.
-    const url = `${window.location.origin}${window.location.pathname}?${challengeQuery(mon, session.level, session.mission, result.total)}`;
+    const url = challengeUrl;
     try {
       if (navigator.share) {
         await navigator.share({ title: t("app.title"), text, url });
@@ -280,14 +284,24 @@ export function Score({
         <p className="small">{t(shared ? "score.communityShared" : "score.communityLocal")}</p>
       </section>
 
-      <div className="share">
-        <button type="button" className="btn btn-secondary" onClick={share}>
+      {/* Challenge a friend: the link is shown, so it can be seen and copied by hand too. */}
+      <section className="panel challenge-send" aria-labelledby="challenge-send-title">
+        <h2 id="challenge-send-title">
+          <Icon name="shield" />
+          {t("challenge.sendTitle")}
+        </h2>
+        <p>{t("challenge.sendText", { score: result.total })}</p>
+        <p className="class-link">
+          <a href={challengeUrl}>{challengeUrl}</a>
+        </p>
+        <button type="button" className="btn btn-primary" onClick={share}>
           {t("share.button")}
+          <Icon name="arrow" />
         </button>
         <p className="small" role="status">
           {shareStatus}
         </p>
-      </div>
+      </section>
 
       <section className="panel quiz-invite" aria-labelledby="quiz-invite-title">
         <h2 id="quiz-invite-title">{t("quiz.inviteTitle")}</h2>

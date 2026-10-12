@@ -210,10 +210,10 @@
   "citizen.intro": "I sensori non vedono tutto. Quando visiti un monumento, fai attenzione a:",
   "citizen.mission": "collegato alla tua missione",
   "citizen.print": "Stampa questo elenco",
-  "share.button": "Condividi il tuo risultato",
+  "share.button": "Manda la sfida",
   "share.text": "Ho fatto il guardiano per un giorno: {name}, {score} punti su 100. Riesci a battermi con gli stessi pericoli?",
-  "share.copied": "Il testo e il link sono stati copiati.",
-  "share.failed": "Condivisione non riuscita. Copia invece l'indirizzo dalla barra degli indirizzi.",
+  "share.copied": "La sfida è stata copiata. Incollala in un messaggio per il tuo amico.",
+  "share.failed": "Non è stato possibile inviarla. Seleziona il link qui sopra e copialo a mano.",
   "mission.guideTitle": "Dove si trovano le cose",
   "mission.guideHelp": "I numeri sulla mappa indicano le parti principali del sito. Scegline una per spostare lì la mappa, poi aggiungi i sensori con +.",
   "mission.showOnMap": "Mostra sulla mappa",
@@ -324,5 +324,7 @@
   "challenge.accept": "Accetta la sfida",
   "challenge.won": "Sfida vinta! Hai battuto {score}.",
   "challenge.tied": "Pareggio: hai raggiunto il {score} della sfida.",
-  "challenge.lost": "Non ancora: il punteggio da battere è {score}. Migliora la tua rete e riprova."
+  "challenge.lost": "Non ancora: il punteggio da battere è {score}. Migliora la tua rete e riprova.",
+  "challenge.sendTitle": "Sfida un amico",
+  "challenge.sendText": "Manda questo link a un amico. Giocherà nello stesso monumento, allo stesso livello e con gli stessi tre pericoli, e dovrà battere il tuo punteggio: {score} su 100."
 }

@@ -210,10 +210,10 @@
   "citizen.intro": "Sensors do not see everything. When you visit a monument, look out for:",
   "citizen.mission": "linked to your mission",
   "citizen.print": "Print this list",
-  "share.button": "Share your result",
+  "share.button": "Send the challenge",
   "share.text": "I was a guardian for a day at {name} and scored {score} out of 100. Can you beat me on the same dangers?",
-  "share.copied": "The text and the link were copied.",
-  "share.failed": "Could not share. Copy the address from the address bar instead.",
+  "share.copied": "The challenge was copied. Paste it into a message to your friend.",
+  "share.failed": "Could not send it. Select the link above and copy it by hand.",
   "mission.guideTitle": "Where things are",
   "mission.guideHelp": "The numbers on the map show the main parts of the site. Choose one to move the map there, then add sensors with +.",
   "mission.showOnMap": "Show on map",
@@ -324,5 +324,7 @@
   "challenge.accept": "Take the challenge",
   "challenge.won": "Challenge won! You beat {score}.",
   "challenge.tied": "A draw: you matched the {score} you were challenged with.",
-  "challenge.lost": "Not yet: the score to beat is {score}. Improve your network and try again."
+  "challenge.lost": "Not yet: the score to beat is {score}. Improve your network and try again.",
+  "challenge.sendTitle": "Challenge a friend",
+  "challenge.sendText": "Send this link to a friend. They get the same monument, the same level and the same three dangers, and have to beat your {score} out of 100."
 }

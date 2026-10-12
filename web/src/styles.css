@@ -1217,14 +1217,22 @@ textarea.input {
   border: 2px solid var(--primary);
   background: var(--primary-soft);
 }
-.challenge h2 {
+.challenge h2,
+.challenge-send h2 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-.challenge h2 svg {
+.challenge h2 svg,
+.challenge-send h2 svg {
   flex: none;
   color: var(--primary);
+}
+.challenge-send {
+  border: 2px solid var(--primary);
+}
+.challenge-send .class-link {
+  overflow-wrap: anywhere;
 }
 
 /* What would you do next? (after the alarm) */

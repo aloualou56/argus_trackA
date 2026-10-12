@@ -210,10 +210,10 @@
   "citizen.intro": "Sensoren sehen nicht alles. Wenn du ein Denkmal besuchst, achte auf:",
   "citizen.mission": "gehört zu deiner Mission",
   "citizen.print": "Liste drucken",
-  "share.button": "Ergebnis teilen",
+  "share.button": "Herausforderung senden",
   "share.text": "Ich war Hüter für einen Tag: {name}, {score} von 100 Punkten. Schaffst du mehr bei denselben Gefahren?",
-  "share.copied": "Text und Link wurden kopiert.",
-  "share.failed": "Teilen hat nicht geklappt. Kopiere stattdessen die Adresse aus der Adresszeile.",
+  "share.copied": "Die Herausforderung wurde kopiert. Füge sie in eine Nachricht ein.",
+  "share.failed": "Das Senden hat nicht geklappt. Markiere den Link oben und kopiere ihn von Hand.",
   "mission.guideTitle": "Wo was ist",
   "mission.guideHelp": "Die Zahlen auf der Karte zeigen die wichtigsten Teile des Geländes. Wähle einen aus, dann springt die Karte dorthin. Füge dann mit + Sensoren hinzu.",
   "mission.showOnMap": "Auf der Karte zeigen",
@@ -324,5 +324,7 @@
   "challenge.accept": "Herausforderung annehmen",
   "challenge.won": "Herausforderung gewonnen! Du hast {score} übertroffen.",
   "challenge.tied": "Unentschieden: Du hast die {score} der Herausforderung erreicht.",
-  "challenge.lost": "Noch nicht: Die Punktzahl, die du schlagen musst, ist {score}. Verbessere dein Netz und versuch es noch einmal."
+  "challenge.lost": "Noch nicht: Die Punktzahl, die du schlagen musst, ist {score}. Verbessere dein Netz und versuch es noch einmal.",
+  "challenge.sendTitle": "Fordere jemanden heraus",
+  "challenge.sendText": "Schick diesen Link an eine Freundin oder einen Freund. Dort warten dasselbe Denkmal, dieselbe Stufe und dieselben drei Gefahren. Zu schlagen ist deine Punktzahl: {score} von 100."
 }

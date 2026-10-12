@@ -210,10 +210,10 @@
   "citizen.intro": "Los sensores no lo ven todo. Cuando visites un monumento, fíjate en:",
   "citizen.mission": "relacionado con tu misión",
   "citizen.print": "Imprimir esta lista",
-  "share.button": "Compartir tu resultado",
+  "share.button": "Enviar el reto",
   "share.text": "He sido guardián por un día: {name}, {score} puntos de 100. ¿Puedes superarme con los mismos peligros?",
-  "share.copied": "Se han copiado el texto y el enlace.",
-  "share.failed": "No se ha podido compartir. Copia la dirección de la barra de direcciones.",
+  "share.copied": "El reto se ha copiado. Pégalo en un mensaje para tu amigo.",
+  "share.failed": "No se ha podido enviar. Selecciona el enlace de arriba y cópialo a mano.",
   "mission.guideTitle": "Dónde está cada cosa",
   "mission.guideHelp": "Los números del mapa muestran las partes principales del lugar. Elige una para llevar el mapa hasta allí y luego añade sensores con +.",
   "mission.showOnMap": "Ver en el mapa",
@@ -324,5 +324,7 @@
   "challenge.accept": "Aceptar el reto",
   "challenge.won": "¡Reto ganado! Has superado {score}.",
   "challenge.tied": "Empate: has igualado el {score} del reto.",
-  "challenge.lost": "Todavía no: la puntuación que hay que superar es {score}. Mejora tu red y vuelve a intentarlo."
+  "challenge.lost": "Todavía no: la puntuación que hay que superar es {score}. Mejora tu red y vuelve a intentarlo.",
+  "challenge.sendTitle": "Reta a un amigo",
+  "challenge.sendText": "Envía este enlace a un amigo. Jugará en el mismo monumento, en el mismo nivel y con los mismos tres peligros, y tendrá que superar tu puntuación: {score} de 100."
 }
