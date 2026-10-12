@@ -223,7 +223,7 @@ function QuizTable({ data, quizzes }: { data: GameData; quizzes: QuizRecord[] })
 /** A small bar next to a number; the number beside it carries the value for screen readers. */
 function Share({ value, kind }: { value: number; kind: "before" | "after" }) {
   return (
-    <span className={`share share-${kind}`} aria-hidden="true">
+    <span className={`share-bar share-bar-${kind}`} aria-hidden="true">
       <span style={{ width: `${Math.round(value * 100)}%` }} />
     </span>
   );

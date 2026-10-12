@@ -1022,7 +1022,7 @@ main {
 }
 
 /* Teacher page: a small bar beside a number (before = grey, after = dark). */
-.share {
+.share-bar {
   display: inline-block;
   width: 3.5rem;
   height: 0.6rem;
@@ -1033,12 +1033,12 @@ main {
   overflow: hidden;
   vertical-align: middle;
 }
-.share span {
+.share-bar span {
   display: block;
   height: 100%;
   background: var(--primary);
 }
-.share-before span {
+.share-bar-before span {
   background: var(--edge);
 }
 
