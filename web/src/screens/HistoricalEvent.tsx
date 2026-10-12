@@ -114,8 +114,9 @@ export function HistoricalEvent({ data, mon, session, go, onDecide, today, days 
 
   const next = (
     <div className="actions">
-      <button type="button" className="btn btn-primary btn-big" onClick={() => go("score")}>
-        {t("event.continue")}
+      {/* The first day goes on to what ARGUS installed; later days straight to the score. */}
+      <button type="button" className="btn btn-primary btn-big" onClick={() => go(later ? "score" : "reveal")}>
+        {t(later ? "event.continue" : "event.toReveal")}
         <Icon name="arrow" />
       </button>
     </div>
@@ -178,6 +179,26 @@ export function HistoricalEvent({ data, mon, session, go, onDecide, today, days 
         {t(ai ? "event.whatAi" : "event.what", { date: date(alarm.timestamp), measures: pick(rule.measures) })}
       </p>
 
+      {/* The answer first: did these sensors catch it? (The replay on the map just showed it.) */}
+      <section
+        className={detection.detected ? "panel result is-yes" : "panel result is-no"}
+        aria-labelledby="result-title"
+      >
+        <h2 id="result-title">{t("event.question")}</h2>
+        <p className="result-line">
+          <Icon name={detection.detected ? "check" : "cross"} size={28} className="result-icon" />
+          <strong>
+            {detection.detected
+              ? t("event.yes", { names: names(detection.matched) })
+              : t("event.no", { names: missing })}
+          </strong>
+        </p>
+        {caughtBy.length > 0 && <p>{t("event.argusCaught", { names: names(caughtBy) })}</p>}
+        {pickedHuman && <p>{t("event.human")}</p>}
+        <p className="small">{t("event.counts")}</p>
+        {alarm.instruments.some((i) => i.lat !== null) && <p className="small">{t("event.mapNote")}</p>}
+      </section>
+
       {ai ? (
         <section className="panel reading" aria-label={pick(rule.measures)}>
           <p>{t("event.aiHow")}</p>
@@ -216,25 +237,6 @@ export function HistoricalEvent({ data, mon, session, go, onDecide, today, days 
           {episode}
         </section>
       )}
-
-      <section
-        className={detection.detected ? "panel result is-yes" : "panel result is-no"}
-        aria-labelledby="result-title"
-      >
-        <h2 id="result-title">{t("event.question")}</h2>
-        <p className="result-line">
-          <Icon name={detection.detected ? "check" : "cross"} size={28} className="result-icon" />
-          <strong>
-            {detection.detected
-              ? t("event.yes", { names: names(detection.matched) })
-              : t("event.no", { names: missing })}
-          </strong>
-        </p>
-        {caughtBy.length > 0 && <p>{t("event.argusCaught", { names: names(caughtBy) })}</p>}
-        {pickedHuman && <p>{t("event.human")}</p>}
-        <p className="small">{t("event.counts")}</p>
-        {alarm.instruments.some((i) => i.lat !== null) && <p className="small">{t("event.mapNote")}</p>}
-      </section>
 
       {alarm.context && (
         <section className="panel" aria-labelledby="why-title">

@@ -8,12 +8,12 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
-import { clusterPoints, formatCoords, nativeZoom } from "../game/logic";
+import { clusterPoints, countPicks, detects, formatCoords, nativeZoom, ruleFor } from "../game/logic";
 import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
 import { useI18n } from "../i18n";
 import { iconSvg } from "./Icon";
 
-export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "score" | "report";
+export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "score" | "report" | "replay";
 
 export interface MapApi {
   /** Centre of the current view: where the crosshair is. */
@@ -38,6 +38,8 @@ interface Props {
   reportPin?: LatLng | null;
   /** "report" mode: called when the visitor taps the map or drags the pin; absent while a finished card is shown. */
   onReportPin?: (at: LatLng) => void;
+  /** "replay" mode (the real alarm playing after "Done"): the player skips the rest of it. */
+  onReplaySkip?: () => void;
 }
 
 // Placement reticle, drawn like a surveyor's mark: four arms and a small ring leave the centre
@@ -125,7 +127,7 @@ export function GameMap(props: Props) {
   const { data, mode, pilot, placements, alarm } = props;
   const reportPin = props.reportPin ?? null;
   const reportEditable = !!props.onReportPin;
-  const { t, pick, lang } = useI18n();
+  const { t, pick, lang, date } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layersRef = useRef<{ sites: L.LayerGroup; places: L.LayerGroup; argus: L.LayerGroup; player: L.LayerGroup; alarm: L.LayerGroup } | null>(null);
@@ -382,6 +384,17 @@ export function GameMap(props: Props) {
     node.setAttribute("aria-describedby", "map-help");
   }, [t, pick, mode, mon]);
 
+  // ---------------------------------------------------------------- the real alarm playing (after "Done")
+  const replayRule = mode === "replay" && alarm && playable ? ruleFor(data, playable, alarm) : null;
+  const replayLine =
+    alarm && replayRule
+      ? t(alarm.type === "DL" ? "event.whatAi" : "event.what", { date: date(alarm.timestamp), measures: pick(replayRule.measures) })
+      : "";
+  const skipRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (mode === "replay") skipRef.current?.focus({ preventScroll: true });
+  }, [mode]);
+
   // ---------------------------------------------------------------- camera: only when the screen changes
   const viewKey = `${mode}|${pilot}|${alarm?.id ?? ""}`;
   useEffect(() => {
@@ -410,7 +423,7 @@ export function GameMap(props: Props) {
     if (mode === "reveal" || mode === "score") {
       placements.forEach((p) => p.lat !== null && p.lng !== null && bounds.extend([p.lat, p.lng]));
     }
-    if (mode === "event" && alarm) {
+    if ((mode === "event" || mode === "replay") && alarm) {
       const at = alarm.instruments.find((i) => i.lat !== null && i.lon !== null);
       if (at) {
         const focus = L.latLngBounds([[at.lat!, at.lon!]]);
@@ -467,10 +480,20 @@ export function GameMap(props: Props) {
       return;
     }
     if (mode === "story" || mode === "mission") drawPlaces(playable, layers.places);
-    const showArgus = mode === "reveal" || mode === "score" || mode === "event";
-    if (showArgus) drawArgus(clusterPoints(playable.installed.points), layers.argus);
-    if (mode === "event" && alarm) drawAlarm(alarm, layers.alarm);
-    drawPlayer(layers.player, map);
+    // The alarm comes before the reveal: only the ARGUS sensor that raised it is shown, and your
+    // sensors that would have caught it stand out from the rest.
+    const alarmShown = (mode === "event" || mode === "replay") && alarm ? alarm : null;
+    const rule = alarmShown ? ruleFor(data, playable, alarmShown) : null;
+    const detection = rule ? detects(rule, countPicks(placements)) : null;
+    const points = clusterPoints(playable.installed.points);
+    if (alarmShown) {
+      const alarmIds = new Set(alarmShown.instruments.map((i) => i.instrument_id));
+      drawArgus(points.filter((point) => point.instruments.some((i) => alarmIds.has(i.instrument_id))), layers.argus);
+      drawAlarm(alarmShown, layers.alarm, !detection?.detected);
+    } else if (mode === "reveal" || mode === "score") {
+      drawArgus(points, layers.argus);
+    }
+    drawPlayer(layers.player, map, alarmShown ? new Set(detection?.matched ?? []) : null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, pilot, placements, alarm, lang, data, reportPin, reportEditable]);
 
@@ -531,7 +554,7 @@ export function GameMap(props: Props) {
     const alarmIds = new Set(alarm?.instruments.map((i) => i.instrument_id) ?? []);
     for (const point of points) {
       const n = point.instruments.length;
-      const isAlarm = mode === "event" && point.instruments.some((i) => alarmIds.has(i.instrument_id));
+      const isAlarm = (mode === "event" || mode === "replay") && point.instruments.some((i) => alarmIds.has(i.instrument_id));
       const inner = n > 1 ? `<span class="pin-num">${n}</span>` : iconSvg(point.instruments[0].card ?? "other", 16);
       const names = pointNames(point);
       const temporary = point.flags.includes("temporary_position");
@@ -555,7 +578,7 @@ export function GameMap(props: Props) {
     }
   }
 
-  function drawAlarm(a: Alarm, group: L.LayerGroup) {
+  function drawAlarm(a: Alarm, group: L.LayerGroup, missed: boolean) {
     const at = a.instruments.find((i) => i.lat !== null && i.lon !== null);
     if (!at) return;
     L.marker([at.lat!, at.lon!], {
@@ -564,7 +587,8 @@ export function GameMap(props: Props) {
       zIndexOffset: -500,
       icon: L.divIcon({
         className: "",
-        html: '<span class="alarm-ring"></span>',
+        // Three waves spread from the spot while the alarm plays (replay mode only, styles.css).
+        html: `<span class="alarm-ring"><i></i><i></i><i></i></span>${missed ? `<span class="alarm-missed">${iconSvg("cross", 14)}</span>` : ""}`,
         iconSize: [72, 72],
         iconAnchor: [36, 36],
         tooltipAnchor: [30, 0], // Leaflet applies this on whichever side the label goes
@@ -600,7 +624,8 @@ export function GameMap(props: Props) {
     label(marker, t("report.pin"));
   }
 
-  function drawPlayer(group: L.LayerGroup, map: L.Map) {
+  /** Your sensors; with an alarm shown, `caught` holds the cards that would have caught it. */
+  function drawPlayer(group: L.LayerGroup, map: L.Map, caught: Set<string> | null) {
     const editable = mode === "mission";
     for (const p of placements) {
       if (p.lat === null || p.lng === null) continue;
@@ -622,7 +647,7 @@ export function GameMap(props: Props) {
         zIndexOffset: 1000,
         icon: L.divIcon({
           className: "",
-          html: `<span class="pin pin-you${mode === "event" ? " is-dim" : ""}">${iconSvg(p.card, 16)}</span>`,
+          html: `<span class="pin pin-you${caught ? (caught.has(p.card) ? " is-catch" : " is-dim") : ""}">${iconSvg(p.card, 16)}</span>`,
           iconSize: [PIN, PIN],
           iconAnchor: [PIN / 2, PIN / 2],
         }),
@@ -652,6 +677,17 @@ export function GameMap(props: Props) {
             </span>
           )}
         </>
+      )}
+      {mode === "replay" && alarm && (
+        <div className="replay-banner" aria-hidden="true">
+          <p className="replay-kicker">{t("event.heading")}</p>
+          <p>{replayLine}</p>
+        </div>
+      )}
+      {mode === "replay" && props.onReplaySkip && (
+        <button type="button" className="btn replay-skip" ref={skipRef} onClick={props.onReplaySkip}>
+          {t("replay.skip")}
+        </button>
       )}
       {mode === "report" && reportEditable && !reportPin && (
         <span className="crosshair-label report-hint" aria-hidden="true">

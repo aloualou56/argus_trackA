@@ -1,26 +1,19 @@
+import mark from "../assets/brand-mark.png";
+
+// The emblem's width to its height (src/assets/brand-mark.png, cut from docs/brand/logo.png).
+const ASPECT = 0.853;
+
 /**
- * The game's own mark: a guardian's shield holding the survey target you place sensors with
- * (the ring and four ticks of the cross on the map), with a brass centre. Decorative: the name
- * next to it carries the meaning.
+ * The game's mark: a guardian's shield over a classical temple on the survey grid. The picture is
+ * a mask painted in the text colour, so it is white on the green band and green on a report card.
+ * Decorative: the name next to it carries the meaning.
  */
-export function BrandMark({ size = 30 }: { size?: number }) {
+export function BrandMark({ size = 32 }: { size?: number }) {
   return (
-    <svg
+    <span
       className="brand-mark"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       aria-hidden="true"
-      focusable="false"
-    >
-      <path d="M12 2.4l8.6 3.2v6.4c0 5.4-3.7 8.7-8.6 9.8-4.9-1.1-8.6-4.4-8.6-9.8V5.6z" strokeWidth="2" />
-      <circle cx="12" cy="11.4" r="3.2" strokeWidth="1.5" />
-      <path d="M12 6.2v1.7M12 14.9v1.7M6.8 11.4h1.7M15.5 11.4h1.7" strokeWidth="1.5" />
-      <circle className="brand-dot" cx="12" cy="11.4" r="1.25" stroke="none" />
-    </svg>
+      style={{ width: Math.round(size * ASPECT), height: size, WebkitMaskImage: `url(${mark})`, maskImage: `url(${mark})` }}
+    />
   );
 }

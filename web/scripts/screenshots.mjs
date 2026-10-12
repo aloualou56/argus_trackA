@@ -103,6 +103,15 @@ async function retryWrite(action) {
   }
 }
 
+/** Into the mission. An upright phone opens it with the "how to" card first: close it to play. */
+async function toMission(page, t) {
+  await page.getByRole("button", { name: t["story.continue"] }).click();
+  if ((page.viewportSize()?.width ?? 1000) >= 640) return;
+  const ok = page.getByRole("button", { name: t["mission.helpOk"] });
+  await ok.waitFor({ timeout: 10000 });
+  await ok.click();
+}
+
 /** The quiz before the game: skipped, or answered with the given choice per question (an index). */
 async function preQuiz(page, t, answer = null) {
   await page.getByRole("heading", { level: 1, name: t["quiz.preTitle"] }).waitFor();
@@ -179,8 +188,28 @@ async function play(browser, lang, vpName) {
   await shot(page, `${prefix}-2-story`);
 
   await page.getByRole("button", { name: t["story.continue"] }).click();
+  const helpOk = page.getByRole("button", { name: t["mission.helpOk"] });
+  if (vpName === "phone") {
+    // An upright phone: the map is the whole screen, and a card explains how to place sensors.
+    await helpOk.waitFor();
+    if ((await page.locator(".help-dangers li").count()) !== 3) note(`${prefix}: the card does not list the 3 dangers`);
+    if (await page.locator(".topbar").isVisible()) note(`${prefix}: the top bar takes room from the phone's map`);
+    await checkPage(page, `${prefix} mission help`);
+    await retryWrite(() => page.screenshot({ path: join(outDir, `${prefix}-3a-mission-help.png`) }));
+    await helpOk.click();
+  } else if (await helpOk.count()) {
+    note(`${prefix}: the phone's "how to" card on a wide screen`);
+  }
   await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} mission`);
+  if (vpName === "phone") {
+    const share = await page.evaluate(() => document.querySelector(".board-map").getBoundingClientRect().height / innerHeight);
+    if (share < 0.95) note(`${prefix}: the map has only ${Math.round(share * 100)}% of the phone's height`);
+    await page.getByRole("button", { name: t["mission.help"] }).click();
+    await helpOk.waitFor();
+    await page.keyboard.press("Escape");
+    if (await helpOk.isVisible()) note(`${prefix}: Escape does not close the card`);
+  }
 
   if (!(await page.locator(".crosshair-label").isVisible())) note(`${prefix}: no "sensors go here" label before the first pin`);
   await retryWrite(() => page.locator(".board-map").screenshot({ path: join(outDir, `${prefix}-3-reticle.png`) }));
@@ -210,7 +239,8 @@ async function play(browser, lang, vpName) {
 
   // Drag and drop: the thermometer tile dragged onto the map lands where it is dropped, not at the cross.
   const tile = add("temperature");
-  await tile.scrollIntoViewIfNeeded();
+  // To the middle of the panel: at its top edge the tile would sit under the sticky dock header.
+  await tile.evaluate((el) => el.scrollIntoView({ block: "center" }));
   const from = await tile.boundingBox();
   const mapBox = await page.locator(".board-map .map").boundingBox();
   const drop = { x: mapBox.x + mapBox.width * 0.3, y: mapBox.y + mapBox.height * 0.3 };
@@ -254,7 +284,25 @@ async function play(browser, lang, vpName) {
   await checkPage(page, `${prefix} mission`);
   await shot(page, `${prefix}-3-mission`);
 
+  // "Done": the real alarm plays on the map first. A phone shows only the map meanwhile, a desktop
+  // keeps the panel; "Skip" is there and has the focus. Then the alarm's screen, then the reveal.
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.locator(".board-map.mode-replay").waitFor();
+  if (!(await page.getByRole("button", { name: t["replay.skip"] }).isVisible())) note(`${prefix}: no "${t["replay.skip"]}" while the alarm plays`);
+  const panelHidden = await page.evaluate(() => getComputedStyle(document.querySelector(".board-panel")).display === "none");
+  if (vpName === "phone" && !panelHidden) note(`${prefix}: the panel stays on a phone while the alarm plays`);
+  if (vpName === "desktop" && panelHidden) note(`${prefix}: the panel disappears on a desktop while the alarm plays`);
+  await retryWrite(() => page.screenshot({ path: join(outDir, `${prefix}-3b-replay.png`) }));
+  await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
+  await expectFocusOnHeading(page, `${prefix} event`);
+  // Before the reveal, the alarm's map shows only the ARGUS sensor that raised it.
+  if ((await page.locator(".pin-argus").count()) > 1) note(`${prefix} event: ARGUS sensors shown before the reveal`);
+  if (!(await page.getByText(t["event.human"]).isVisible())) note(`${prefix} event: no note on what people cannot catch`);
+  await checkMap(page, `${prefix} event`, ".alarm-ring", 1);
+  await checkPage(page, `${prefix} event`);
+  await shot(page, `${prefix}-5-event`);
+
+  await page.getByRole("button", { name: t["event.toReveal"] }).click();
   await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} reveal`);
   await checkMap(page, `${prefix} reveal`);
@@ -269,14 +317,6 @@ async function play(browser, lang, vpName) {
   await shot(page, `${prefix}-4-reveal`);
 
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
-  await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
-  await expectFocusOnHeading(page, `${prefix} event`);
-  if (!(await page.getByText(t["event.human"]).isVisible())) note(`${prefix} event: no note on what people cannot catch`);
-  await checkMap(page, `${prefix} event`, ".alarm-ring", 1);
-  await checkPage(page, `${prefix} event`);
-  await shot(page, `${prefix}-5-event`);
-
-  await page.getByRole("button", { name: t["event.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} score`);
   // No rain gauge or weather station: the replayed rain alarm is missed and that shows in the score.
@@ -324,12 +364,9 @@ ${prefix}`);
   await page.getByRole("radio", { name: new RegExp(t["level.low"]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
   await preQuiz(page, t);
-  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
-  const stuck = ranverso.discussion_prompts.find((p) => p.en.includes("stuck"))[lang];
-  if (!(await page.getByText(stuck).isVisible())) note(`${prefix}: stuck-sensor question missing from the reveal`);
-  await page.getByRole("button", { name: t["reveal.continue"] }).click();
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   if (await page.getByText(t["event.flatNote"]).count()) note(`${prefix}: a flat-signal alarm was replayed`);
   if (!(await page.getByText(fill(t["event.yes"], { names: cardName(lang, "rain_gauge") })).isVisible())) {
@@ -337,6 +374,10 @@ ${prefix}`);
   }
   await checkPage(page, `${prefix} event`);
   await shot(page, `${prefix}-5-event`);
+  await page.getByRole("button", { name: t["event.toReveal"] }).click();
+  const stuck = ranverso.discussion_prompts.find((p) => p.en.includes("stuck"))[lang];
+  await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
+  if (!(await page.getByText(stuck).isVisible())) note(`${prefix}: stuck-sensor question missing from the reveal`);
   await context.close();
 }
 
@@ -377,7 +418,7 @@ imagery depth (placeholder ${placeholder.length} B)`);
     await page.getByRole("radio", { name: new RegExp(mon.display_name.en) }).check();
     await page.getByRole("button", { name: t["home.start"] }).click();
     await preQuiz(page, t);
-    await page.getByRole("button", { name: t["story.continue"] }).click();
+    await toMission(page, t);
     await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
 
     // Site guide: one numbered marker per place, a list in the panel, and "Show on map" moves there.
@@ -437,9 +478,111 @@ ${prefix}`);
   await page.getByRole("button", { name: t["home.start"] }).click();
   await preQuiz(page, t);
   const badge = fill(t["level.badge"], { level: t["level.medium"] });
-  if (!(await page.locator(".mission-brief .level-badge", { hasText: badge }).count())) note(`${prefix}: story does not show "${badge}"`);
+  if (!(await page.locator(".mission-brief", { hasText: badge }).count())) note(`${prefix}: story does not show "${badge}"`);
   await checkPage(page, `${prefix} story`);
   await shot(page, `${prefix}-2-story`);
+  await context.close();
+}
+
+// Sound: what the player does is heard (counted as notes the page starts, so no speaker is
+// needed), the top bar turns it off, the choice survives a reload, and the alarm replay sounds.
+async function checkSound(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-sound`;
+  console.log(`\n${prefix}`);
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => {
+    if (!sessionStorage.getItem("langSet")) {
+      localStorage.setItem("guardian.lang", l);
+      sessionStorage.setItem("langSet", "1");
+    }
+    window.__notes = 0;
+    const Real = window.AudioContext;
+    if (Real) {
+      window.AudioContext = class extends Real {
+        createOscillator() {
+          const osc = super.createOscillator();
+          const start = osc.start.bind(osc);
+          osc.start = (...a) => {
+            window.__notes += 1;
+            return start(...a);
+          };
+          return osc;
+        }
+      };
+    }
+  }, lang);
+  const page = await context.newPage();
+  const notes = () => page.evaluate(() => window.__notes);
+  const toggle = page.getByRole("button", { name: t["sound.label"], exact: true });
+  await page.goto(URL_BASE);
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  if ((await toggle.getAttribute("aria-pressed")) !== "true") note(`${prefix}: sound is not on at first`);
+  if ((await notes()) !== 0) note(`${prefix}: sound before the player did anything`);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
+  await toMission(page, t);
+  const add = (id) => page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, id) }), exact: true });
+  await add("humidity").click();
+  const afterPlace = await notes();
+  if (!(afterPlace > 0)) note(`${prefix}: placing a sensor made no sound`);
+  // While placing sensors on a phone the top band is hidden: the sound button is in the "?" card.
+  await page.getByRole("button", { name: t["mission.help"] }).click();
+  const cardToggle = page.locator(".help-card .sound-toggle");
+  await cardToggle.click();
+  if ((await cardToggle.getAttribute("aria-pressed")) !== "false") note(`${prefix}: the sound button did not turn sound off`);
+  await page.keyboard.press("Escape");
+  await add("rain_gauge").click();
+  if ((await notes()) !== afterPlace) note(`${prefix}: sound with sound turned off`);
+  await page.reload();
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  if ((await toggle.getAttribute("aria-pressed")) !== "false") note(`${prefix}: "sound off" was not remembered`);
+  await checkPage(page, `${prefix} home`);
+  await toggle.click();
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t); // a reload is a new visit: the quiz comes first again
+  await toMission(page, t);
+  await add("rain_gauge").click();
+  const beforeReplay = await notes();
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
+  if (!((await notes()) > beforeReplay)) note(`${prefix}: the alarm replay made no sound`);
+  await context.close();
+}
+
+// A week on duty: every day's real alarm plays on the map before its screen, not only the first
+// day's. On a phone the map takes the whole screen for it, also when it starts from the score.
+async function checkWeekReplay(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-week`;
+  console.log(`\n${prefix}`);
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  await page.goto(URL_BASE);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
+  await toMission(page, t);
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("button", { name: t["event.toReveal"] }).click();
+  await page.getByRole("button", { name: t["reveal.continue"] }).click();
+  for (const day of [2, 3]) {
+    await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
+    await page.getByRole("button", { name: fill(t["week.next"], { n: day }) }).click();
+    const played = await page.locator(".board-map.mode-replay").waitFor({ timeout: 3000 }).then(() => true, () => false);
+    if (!played) note(`${prefix}: day ${day}'s alarm did not play on the map`);
+    else {
+      const share = await page.evaluate(() => document.querySelector(".board-map").getBoundingClientRect().height / innerHeight);
+      if (share < 0.95) note(`${prefix}: day ${day}: the map has only ${Math.round(share * 100)}% of the screen while the alarm plays`);
+      if (day === 2) await retryWrite(() => page.screenshot({ path: join(outDir, `${prefix}-day2-replay.png`) }));
+    }
+    await page.getByRole("heading", { level: 1, name: fill(t["week.eventHeading"], { n: day }) }).waitFor();
+    await page.getByRole("button", { name: t["event.continue"] }).click();
+  }
   await context.close();
 }
 
@@ -464,19 +607,17 @@ async function playEveryMonument(browser, lang) {
       await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
       // The story says which level was chosen, and its danger card is one of this mission's dangers.
       const badge = fill(t["level.badge"], { level: t[`level.${lv.id}`] });
-      if (!(await page.locator(".mission-brief .level-badge", { hasText: badge }).count())) note(`${label}: story does not show "${badge}"`);
+      if (!(await page.locator(".mission-brief", { hasText: badge }).count())) note(`${label}: story does not show "${badge}"`);
       const hookTitle = await page.locator(".threat-hook h2").innerText();
       const hookDanger = lv.mission.map((k) => mon.scenarios.find((sc) => sc.scenario_key === k)).find((sc) => sc.plain.title[lang] === hookTitle);
       if (!hookDanger) note(`${label}: the story's danger "${hookTitle}" is not in the mission`);
       else if (levelDistance(hookDanger.level, lv.id) > 1) note(`${label}: the story's danger is ${hookDanger.level}`);
-      await page.getByRole("button", { name: t["story.continue"] }).click();
+      await toMission(page, t);
       // One card that helps with the first mission threat, when there is one.
       const first = mon.scenarios.find((s) => s.scenario_key === lv.mission[0]);
       const card = first.primary_cards[0] ?? "humidity";
       await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, card) }), exact: true }).click();
       await page.getByRole("button", { name: t["mission.done"] }).click();
-      await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
-      await page.getByRole("button", { name: t["reveal.continue"] }).click();
       await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
       const alarm = mon.alarms.find((a) => a.id === lv.featured_alarm);
       if (alarm && !(await page.locator(".result").count())) note(`${label}: alarm ${alarm.id} not replayed`);
@@ -499,7 +640,9 @@ async function playEveryMonument(browser, lang) {
         await checkPage(page, `${label} event`);
         await shot(page, `${lang}-phone-${mon.pilot_key}-5-event`);
       }
-      await page.getByRole("button", { name: t["event.continue"] }).click();
+      await page.getByRole("button", { name: t["event.toReveal"] }).click();
+      await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
+      await page.getByRole("button", { name: t["reveal.continue"] }).click();
       await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
       if (isDefault) {
         await checkPage(page, `${label} score`);
@@ -512,9 +655,9 @@ async function playEveryMonument(browser, lang) {
         const before = await page.locator(".learn h3").allInnerTexts();
         await newDangers.click();
         await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
-        await page.getByRole("button", { name: t["story.continue"] }).click();
+        await toMission(page, t);
         await page.getByRole("heading", { level: 1, name: t["mission.heading"] }).waitFor();
-        const after = await page.locator(".danger-chip > span:last-child").allInnerTexts();
+        const after = await page.locator(".danger-chip > span:last-child, .help-dangers strong").allTextContents();
         if (after.length !== 3) note(`${label}: new mission has ${after.length} dangers`);
         if (after.every((x) => before.includes(x))) note(`${label}: "play again with new dangers" kept the same dangers`);
         await shot(page, `${lang}-phone-${mon.pilot_key}-${lv.id}-3-new-dangers`);
@@ -549,12 +692,13 @@ async function playClassAndTeacher(browser, lang) {
   await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
   await preQuiz(page, t);
-  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("button", { name: t["event.toReveal"] }).click();
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
-  await page.getByRole("button", { name: t["event.continue"] }).click();
-  if (!(await page.getByRole("heading", { name: fill(t["score.communityClass"], { code: "ABC234" }) }).isVisible())) {
+  // The class is named on the fold that holds the community results.
+  if (!(await page.locator(".community summary", { hasText: fill(t["score.communityClass"], { code: "ABC234" }) }).isVisible())) {
     note(`${prefix}: score does not show the class`);
   }
   await page.getByRole("button", { name: t["score.otherLevel"] }).click();
@@ -630,10 +774,11 @@ ${prefix}`);
   await page.waitForSelector(".bd-heritage", { timeout: 15000 }).catch(() => note(`${prefix}: church outline missing`));
   await checkPage(page, `${prefix} story`);
   await shot(page, `${prefix}-2-story`);
-  await page.getByRole("button", { name: t["story.continue"] }).click();
+  await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "soil_moisture") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await page.getByRole("button", { name: t["event.toReveal"] }).click();
   await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
   if ((await page.locator(".pin-argus").count()) === 0) note(`${prefix}: no ARGUS sensors on the plan`);
   await checkPage(page, `${prefix} reveal`);
@@ -698,6 +843,8 @@ try {
   if (!only) for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playKeepsChosenLevel(browser, lang);
+  if (!only || only === "sound") for (const lang of ["el", "en"]) await checkSound(browser, lang);
+  if (!only || only === "week") for (const lang of ["el", "en"]) await checkWeekReplay(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);

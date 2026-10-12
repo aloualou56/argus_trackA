@@ -1,16 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createCommunityStore } from "./community";
 import { classCodeFromUrl, loadClassCode, saveClassCode } from "./community/classCode";
 import { quizSummaryOf } from "./community/store";
 import { GameMap, type MapApi } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
+import { SoundToggle } from "./components/SoundToggle";
+import { play, playReplay } from "./audio/sounds";
 import { PhotoCredit } from "./components/PhotoCredit";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
 import { loadGameData } from "./game/data";
 import { challengeFromUrl } from "./game/challenge";
-import { canDrawMission, countPicks, drawMission, isPlayable, weekAlarms, type DayResult } from "./game/logic";
-import type { GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
+import { canDrawMission, countPicks, detects, drawMission, isPlayable, ruleFor, type DayResult, weekAlarms } from "./game/logic";
+import type { Alarm, GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
 import { isBaseLang, useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
 import { Home } from "./screens/Home";
@@ -150,6 +152,42 @@ export default function App() {
 
   const go = useCallback((next: Screen) => setScreen(next), []);
 
+  // Each day's real alarm plays on the map before its screen ("Done" on the mission for the first
+  // day, "Next day" on the score for the others). Phones hide everything else meanwhile; wide
+  // screens keep the panel. Then the alarm's screen says whether the sensors caught it.
+  const [replaying, setReplaying] = useState(false);
+  const replayFrom = useRef<Screen | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const stopReplaySound = useRef<() => void>(() => {});
+  const finishReplay = useCallback(() => {
+    stopReplaySound.current();
+    stopReplaySound.current = () => {};
+    setReplaying(false);
+    setScreen("event");
+  }, []);
+  useEffect(() => {
+    if (!replaying) return;
+    let still = false;
+    try {
+      still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      // no media queries: play it
+    }
+    const timer = window.setTimeout(finishReplay, still ? 1800 : 5200);
+    return () => window.clearTimeout(timer);
+  }, [replaying, finishReplay]);
+  // Leaving the screen it started from (the home button on a wide screen) ends it, sound and all.
+  useEffect(() => {
+    if (!replaying || screen === replayFrom.current) return;
+    setReplaying(false);
+    stopReplaySound.current();
+  }, [screen, replaying]);
+  // While it plays, the panel stays in view on wide screens but cannot be used. (A layout effect:
+  // it must be usable again before the next screen's heading takes the focus.)
+  useLayoutEffect(() => {
+    if (panelRef.current) panelRef.current.inert = replaying;
+  }, [replaying]);
+
   const data = load.state === "ready" ? load.data : null;
   const mon = data && game ? data.monuments.find((m) => m.pilot_key === game.pilot) : undefined;
   const playable = mon && isPlayable(mon) ? mon : null;
@@ -161,6 +199,25 @@ export default function App() {
   // The real alarms of this game's week on duty, one per day; today's is week[day].
   const week = playable && game ? weekAlarms(playable, game.level) : [];
   const today = game ? (week[game.day] ?? null) : null;
+
+  /** Plays `alarm` on the map, then opens its screen; an alarm with no position goes straight there. */
+  const beginReplay = (alarm: Alarm | null, picks: Picks) => {
+    if (!data || !playable || !alarm?.instruments.some((i) => i.lat !== null && i.lon !== null)) {
+      setScreen("event");
+      return;
+    }
+    replayFrom.current = screen;
+    setReplaying(true);
+    announce(t("replay.live"));
+    const rule = ruleFor(data, playable, alarm);
+    let still = false;
+    try {
+      still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      // no media queries: play it
+    }
+    stopReplaySound.current = playReplay(!!rule && detects(rule, picks).detected, still);
+  };
 
   const start = (pilot: string, level: LevelId, mission?: string[], beat: number | null = null) => {
     const started = data?.monuments.find((m) => m.pilot_key === pilot);
@@ -315,6 +372,7 @@ export default function App() {
               setGame((g) => (g ? { ...g, improving: false } : g));
               setScreen("score");
             }}
+            onReplay={() => beginReplay(today, session.picks)}
           />
         )}
         {screen === "reveal" && <Reveal {...props} />}
@@ -344,7 +402,8 @@ export default function App() {
             onNextDay={(result) => {
               // Today is settled as it stands; tomorrow starts with the same network and a fresh question.
               setGame((g) => (g ? { ...g, past: [...g.past, result], day: g.day + 1, scoreBefore: null, decision: null } : g));
-              setScreen("event");
+              // Tomorrow's alarm plays on the map first, as the first day's did.
+              beginReplay(week[session.day + 1] ?? null, session.picks);
             }}
           />
         )}
@@ -354,7 +413,7 @@ export default function App() {
 
   return (
     <div
-      className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}`}
+      className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}${replaying ? " is-replay" : ""}`}
       // Small screens size the map by what the screen is for (styles.css, "small screens").
       data-screen={screen}
     >
@@ -367,32 +426,40 @@ export default function App() {
             <BrandMark />
             <span>{t("app.title")}</span>
           </button>
-          <LangMenu />
+          <div className="topbar-tools">
+            <SoundToggle />
+            <LangMenu />
+          </div>
         </div>
       </header>
       <div className={data ? "board" : "board no-map"}>
         {data && (
           <GameMap
             data={data}
-            mode={observing ? "report" : inGame ? mapMode(screen) : "overview"}
+            mode={observing ? "report" : inGame ? (replaying ? "replay" : mapMode(screen)) : "overview"}
             pilot={observing ? observing.pilot : inGame ? game!.pilot : homePilot}
             reportPin={observing?.at}
             onReportPin={observing?.editable ? (at) => setReport((r) => (r ? { ...r, at } : r)) : undefined}
             placements={inGame ? game!.placements : []}
-            alarm={inGame && screen === "event" ? today : null}
+            alarm={inGame && (screen === "event" || replaying) ? today : null}
+            onReplaySkip={finishReplay}
             apiRef={mapApi}
             onSelectSite={(pilot) => {
               setHomePilot(pilot);
               announce(t("map.selected", { name: siteName(data, pilot, i18n.pick) }));
             }}
-            onMovePlacement={movePlacement}
+            onMovePlacement={(id, at) => {
+              movePlacement(id, at);
+              play("drop");
+            }}
             onRemovePlacement={(id) => {
               removePlacement(id);
+              play("remove");
               announce(t("map.removed"));
             }}
           />
         )}
-        <div className="board-panel">
+        <div className="board-panel" ref={panelRef}>
           <main id="main" ref={mainRef} tabIndex={-1}>
             {body}
           </main>

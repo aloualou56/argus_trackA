@@ -16,6 +16,7 @@ import {
   type DayResult,
 } from "../game/logic";
 import type { Alarm } from "../game/types";
+import { play } from "../audio/sounds";
 import { useI18n, type MessageKey } from "../i18n";
 import { runtimeConfig } from "../runtime";
 
@@ -98,6 +99,7 @@ export function Score({
     }
   };
   const submitted = useRef(false);
+  useEffect(() => play("complete"), []);
 
   useEffect(() => {
     if (submitted.current) return;

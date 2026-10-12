@@ -2385,7 +2385,21 @@ b {
   gap: 0.55rem;
 }
 .brand-mark {
+  display: inline-block;
   flex: none;
+  background-color: currentColor;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+@media (forced-colors: active) {
+  .brand-mark {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
 }
 /* The band sits above the map's own controls, so the language list can open over the map. */
 .topbar {
@@ -3650,5 +3664,476 @@ b {
     padding: 0.3rem var(--gutter);
     border-block: 1px solid var(--line);
     background: var(--surface);
+  }
+}
+
+/* ================================================================== the real alarm, played on the map */
+/* After "Done", today's real alarm plays on the map for a few seconds: waves spread from the ARGUS
+   sensor that raised it, then your sensors that would have caught it light up and the rest fade
+   (a cross marks the alarm when none would have). Phones show only the map meanwhile; wide screens
+   keep the panel, unusable until it ends. The alarm's screen keeps the final picture. With reduced
+   motion nothing moves: the final picture shows at once. */
+.alarm-ring {
+  position: relative;
+}
+.alarm-ring i {
+  display: none;
+}
+.mode-replay .alarm-ring {
+  animation: none;
+}
+.mode-replay .alarm-ring i {
+  position: absolute;
+  inset: -4px;
+  display: block;
+  border: 3px solid var(--argus);
+  border-radius: 50%;
+  opacity: 0;
+  animation: replay-wave 1.8s ease-out 0.3s infinite;
+}
+.mode-replay .alarm-ring i:nth-child(2) {
+  animation-delay: 0.9s;
+}
+.mode-replay .alarm-ring i:nth-child(3) {
+  animation-delay: 1.5s;
+}
+@keyframes replay-wave {
+  from {
+    transform: scale(0.5);
+    opacity: 0.95;
+  }
+  to {
+    transform: scale(3.4);
+    opacity: 0;
+  }
+}
+.alarm-missed {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--no);
+  color: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+}
+.pin.is-catch {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--yes), 0 0 18px 4px rgb(0 75 130 / 0.55);
+}
+.pin.is-catch::after {
+  content: "✓";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--yes);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+.mode-replay .pin-you.is-catch {
+  animation: replay-catch 0.6s ease-out 2.3s both;
+}
+.mode-replay .pin-you.is-catch::after,
+.mode-replay .alarm-missed {
+  animation: replay-pop 0.35s ease-out 2.7s both;
+}
+.mode-replay .pin-you.is-dim {
+  animation: replay-dim 0.6s ease 2.3s both;
+}
+@keyframes replay-catch {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 0 1.5px rgb(27 36 48 / 0.85), 0 2px 6px rgb(0 0 0 / 0.35);
+  }
+  55% {
+    transform: scale(1.4);
+  }
+  to {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--yes), 0 0 18px 4px rgb(0 75 130 / 0.55);
+  }
+}
+@keyframes replay-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes replay-dim {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+.replay-banner {
+  position: absolute;
+  top: 62px;
+  right: 62px;
+  left: 62px;
+  z-index: 1000;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 0.5rem 0.8rem;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.3);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.3;
+  text-align: center;
+  pointer-events: none;
+  animation: replay-pop 0.35s ease-out both;
+}
+.replay-banner p {
+  margin: 0;
+}
+.replay-banner .replay-kicker {
+  margin-bottom: 0.15rem;
+  color: var(--no);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.replay-skip {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  z-index: 1000;
+  min-height: 44px;
+  padding: 0.4rem 1.2rem;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+  color: var(--ink);
+  transform: translateX(-50%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+}
+.app.is-replay .places-float {
+  display: none;
+}
+/* Wide screens keep the panel in view while the alarm plays; it cannot be used until it ends. */
+.app.is-replay .board-panel {
+  opacity: 0.6;
+}
+/* Phones and small tablets: only the map while the alarm plays, whichever screen it starts from
+   (the mission, or the score for the next day of the week, where the map is otherwise short). */
+@media (max-width: 59.99rem) {
+  .app.is-replay .topbar,
+  .app.is-replay .board-panel {
+    display: none;
+  }
+  .app.is-replay[data-screen] .board-map {
+    flex: 1 1 auto;
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+}
+
+/* ---- sound on or off, beside the language (src/audio/sounds.ts) */
+.topbar-tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sound-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid rgb(255 255 255 / 0.7);
+  border-radius: var(--radius);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.sound-toggle:hover {
+  border-color: #fff;
+  background: rgb(255 255 255 / 0.14);
+}
+/* A phone: with sound and language on the right, the title takes two short lines. */
+@media (max-width: 30rem) {
+  .brand,
+  .brand:disabled {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: clamp(1rem, 4.6vw, 1.25rem);
+    line-height: 0.95;
+    white-space: normal;
+  }
+  .brand > span {
+    text-wrap: balance;
+  }
+}
+@media (max-width: 26rem) {
+  .topbar-tools {
+    gap: 0.35rem;
+  }
+  .sound-toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
+@media (max-width: 59.99rem) and (orientation: landscape) and (max-height: 32rem) {
+  .sound-toggle {
+    width: 36px;
+    height: 36px;
+  }
+}
+@media (forced-colors: active) {
+  .sound-toggle {
+    border-color: ButtonText;
+    color: ButtonText;
+  }
+}
+
+/* ================================================================== phone board (placing sensors) */
+/* An upright phone: the map is the whole screen. The dock no longer sits under it: its parts float
+   on the map, coins, "?" and Done in a bar at the top, the sensors in a strip at the bottom to drag
+   up onto the map (or tap, for the cross). What a sensor does shows above the strip for a few
+   seconds. The "?" card explains all this and lists the dangers (Mission.tsx, PHONE). Only phones:
+   wider screens keep their dock. */
+@media (max-width: 39.99rem) {
+  .app.is-play .topbar {
+    display: none;
+  }
+  .app.is-play .board {
+    position: relative;
+  }
+  .app.is-play .board-map {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    border: 0;
+  }
+  .app.is-play .board-panel {
+    position: absolute;
+    inset: 0;
+    z-index: 1100;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+    pointer-events: none;
+  }
+  .app.is-play main,
+  .app.is-play .screen.mission {
+    height: 100%;
+  }
+  .app.is-play .dock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    height: 100%;
+    padding: calc(8px + env(safe-area-inset-top, 0px)) 8px calc(8px + env(safe-area-inset-bottom, 0px));
+    border: 0;
+    background: transparent;
+    pointer-events: none;
+  }
+  .app.is-play .dock > * {
+    pointer-events: auto;
+  }
+
+  /* ---- top: coins, "?", Done */
+  .app.is-play .dock-head {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "coins help done";
+    gap: 0.45rem;
+    margin-bottom: auto; /* everything after it goes to the bottom */
+    padding: 0.35rem 0.35rem 0.35rem 0.7rem;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: 0 3px 12px rgb(0 0 0 / 0.3);
+  }
+  .app.is-play .dock-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .app.is-play .coins-text {
+    font-size: 0.8rem;
+  }
+  .dock-help {
+    grid-area: help;
+    width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+  .app.is-play .dock-done {
+    min-height: 40px;
+    padding: 0.35rem 0.8rem;
+  }
+
+  /* ---- bottom: what a sensor does, then the strip of sensors */
+  .app.is-play .tray-info {
+    min-height: 0;
+    padding: 0.45rem 0.7rem;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: 0 3px 12px rgb(0 0 0 / 0.3);
+    font-size: 0.82rem;
+  }
+  .app.is-play .tray-info.is-idle {
+    display: none;
+  }
+  .app.is-play .tray {
+    grid-template-rows: auto;
+    grid-auto-columns: 5.1rem;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0.5rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: rgb(255 255 255 / 0.95);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.35);
+  }
+  .app.is-play .tile {
+    height: 5.5rem;
+  }
+
+  /* ---- the map's own controls step out of the bars' way */
+  .app.is-play .board-map .leaflet-top {
+    top: 60px;
+  }
+  .app.is-play .board-map .leaflet-bottom {
+    bottom: 128px;
+  }
+  .app.is-play .map-switch {
+    top: 70px;
+  }
+  .app.is-play .map-switch button {
+    min-height: 36px;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+  .app.is-play .leaflet-bar a,
+  .app.is-play .leaflet-touch .leaflet-bar a {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    font-size: 18px;
+  }
+  .app.is-play .places-float {
+    top: 150px;
+    max-height: calc(100% - 300px);
+  }
+  .app.is-play .places-toggle {
+    min-height: 36px;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.82rem;
+  }
+  .app.is-play .board-map .map-coords {
+    display: none;
+  }
+
+  /* ---- the "how to" card (it sits in the see-through panel, so it takes taps back) */
+  .help-card {
+    pointer-events: auto;
+    width: min(26rem, calc(100% - 24px));
+    max-height: calc(100% - 32px);
+    padding: 1rem 1.1rem 1.1rem;
+    overflow-y: auto;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+    color: var(--ink);
+  }
+  .help-card::backdrop {
+    background: rgb(20 33 27 / 0.55);
+  }
+  .help-card h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1.25rem;
+  }
+  .help-card h3 {
+    margin: 0.9rem 0 0.4rem;
+    font-size: 1rem;
+  }
+  .help-steps,
+  .help-dangers {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .help-steps li,
+  .help-dangers li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+  .help-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+  .help-drag svg {
+    transform: rotate(-90deg); /* up, towards the map */
+  }
+  .help-dangers li {
+    font-size: 0.86rem;
+  }
+  .help-dangers .level-bars {
+    flex: none;
+    margin-top: 0.3rem;
+  }
+  .help-card > .btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+  .help-sound {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.9rem 0 0;
+    font-weight: 700;
+  }
+  .help-card .sound-toggle {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .help-card .sound-toggle:hover {
+    background: var(--primary-soft);
   }
 }

@@ -21,6 +21,8 @@ import {
   withChange,
 } from "../game/logic";
 import type { Card, LatLng, Placement, Scenario } from "../game/types";
+import { play } from "../audio/sounds";
+import { SoundToggle } from "../components/SoundToggle";
 import { useI18n } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -29,6 +31,8 @@ interface Props extends ScreenProps {
   /** The player came back from the score to improve the network: "Done" returns there. */
   improving: boolean;
   onImproved: () => void;
+  /** "Done": the real alarm plays on the map, then its screen says whether these sensors caught it. */
+  onReplay: () => void;
 }
 
 interface Drag {
@@ -47,6 +51,9 @@ type Info = { kind: "card"; card: Card } | { kind: "danger"; danger: Scenario } 
 const WIDE = "(min-width: 60rem)";
 // A phone on its side: the map is beside the dock, not above it (styles.css, "small screens").
 const SIDE = "(max-width: 59.99rem) and (orientation: landscape) and (max-height: 32rem)";
+// An upright phone: the map is the whole screen; coins and "Done" float at the top, the sensors
+// float at the bottom to drag onto the map, and a card explains how (styles.css, "phone board").
+const PHONE = "(max-width: 39.99rem)";
 
 /** Whether a media query matches now, kept up to date as the window changes. */
 function useMedia(query: string): boolean {
@@ -73,7 +80,7 @@ function useMedia(query: string): boolean {
   return matches;
 }
 
-export function Mission({ data, mon, session, go, announce, setPlacements, mapApi, improving, onImproved }: Props) {
+export function Mission({ data, mon, session, announce, setPlacements, mapApi, improving, onImproved, onReplay }: Props) {
   const { t, tn, pick } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level, session.mission);
@@ -83,6 +90,27 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
   const sensors = totalSensors(picks);
   const wide = useMedia(WIDE);
   const side = useMedia(SIDE);
+  const phone = useMedia(PHONE);
+  // Phones: how to place sensors, and the mission's dangers, open when the mission starts (not
+  // when the player comes back to improve the network) and again from the "?" button.
+  const [helpOpen, setHelpOpen] = useState(() => !improving && phone);
+  const helpRef = useRef<HTMLDialogElement>(null);
+  const helpButton = useRef<HTMLButtonElement>(null);
+  const lastOpener = useRef<HTMLElement | null>(null);
+  // Closing the card gives focus back to "?" when it opened the card, else to the screen's heading
+  // (the card opened with the screen, before that heading could take the focus).
+  const closeHelp = () => {
+    setHelpOpen(false);
+    const back = helpButton.current && helpButton.current === lastOpener.current ? helpButton.current : document.querySelector<HTMLElement>(".screen.mission h1");
+    lastOpener.current = null;
+    back?.focus();
+  };
+  useEffect(() => {
+    const dialog = helpRef.current;
+    if (!dialog) return;
+    if (helpOpen && !dialog.open) dialog.showModal();
+    if (!helpOpen && dialog.open) dialog.close();
+  }, [helpOpen, phone]);
   const [hint, setHint] = useState("");
   const [info, setInfo] = useState<Info>(null);
   // Wide screens: a danger opens in place, on a click, and stays open while tiles are hovered, so
@@ -99,6 +127,16 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     [data],
   );
 
+  // Phones: what a sensor does (or a hint) shows over the map for a few seconds, then goes.
+  useEffect(() => {
+    if (!phone || (!info && !hint)) return;
+    const timer = window.setTimeout(() => {
+      setInfo(null);
+      setHint("");
+    }, 4500);
+    return () => window.clearTimeout(timer);
+  }, [phone, info, hint]);
+
   // Never leave a drag ghost behind if the screen changes mid-drag.
   useEffect(() => () => endDrag(), []);
 
@@ -110,6 +148,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     const name = pick(card.name);
     if (!canAdd(card, budget, picks, cards)) {
       announce(t("mission.notEnough", { name }));
+      play("deny");
       return;
     }
     // New pins go where the cross is, or where the tile was dropped; satellite images get no pin.
@@ -119,12 +158,14 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     const next = withChange(picks, card.id, 1);
     setHint("");
     setInfo({ kind: "card", card });
+    play(droppedAt ? "drop" : "place");
     const changed = t("mission.changed", { name, n: next[card.id] ?? 0, left: coinsLeft(budget, next, cards) });
     announce(card.on_map ? `${changed} ${t(droppedAt ? "mission.dropped" : "mission.placed")}` : changed);
   };
 
   const removeOne = (card: Card) => {
     if (!picks[card.id]) return;
+    play("remove");
     setPlacements((ps) => {
       const last = ps.map((p) => p.card).lastIndexOf(card.id);
       return last < 0 ? ps : [...ps.slice(0, last), ...ps.slice(last + 1)];
@@ -137,10 +178,11 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     if (sensors === 0) {
       setHint(t("mission.needOne"));
       announce(t("mission.needOne"));
+      play("deny");
       return;
     }
     if (improving) onImproved();
-    else go("reveal");
+    else onReplay();
   };
 
   // ---------------------------------------------------------------- drag a tile onto the map
@@ -187,6 +229,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
       if (!starts) return;
       if (!canAdd(d.card, budget, picks, cards)) {
         announce(t("mission.notEnough", { name: pick(d.card.name) }));
+        play("deny");
         drag.current = null;
         return;
       }
@@ -373,6 +416,58 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
         mapSection,
       )}
 
+      {phone && (
+        <dialog ref={helpRef} className="help-card" aria-labelledby="help-title" onClose={closeHelp}>
+          <h2 id="help-title">{t("mission.helpTitle")}</h2>
+          <ol className="help-steps">
+            <li>
+              <span className="help-icon help-drag" aria-hidden="true">
+                <Icon name="arrow" size={18} />
+              </span>
+              <span>{t("mission.help1")}</span>
+            </li>
+            <li>
+              <span className="help-icon" aria-hidden="true">
+                <Icon name="plus" size={18} />
+              </span>
+              <span>{t("mission.help2")}</span>
+            </li>
+            <li>
+              <span className="help-icon" aria-hidden="true">
+                <Icon name="pin" size={18} />
+              </span>
+              <span>{t("mission.help3")}</span>
+            </li>
+            <li>
+              <span className="help-icon" aria-hidden="true">
+                <Icon name="coin" size={18} />
+              </span>
+              <span>{t("mission.help4", { coins: tn("unit.coins", budget), done: t("mission.doneShort") })}</span>
+            </li>
+          </ol>
+          <h3>{t("mission.helpDangers")}</h3>
+          <ul className="help-dangers">
+            {threats.map((s) => (
+              <li key={s.scenario_key}>
+                <LevelBars id={s.level} />
+                <span>
+                  <strong data-needs-review={s.plain.needs_review}>{pick(s.plain.title)}</strong>{" "}
+                  <span data-needs-review={s.plain.needs_review}>{pick(s.plain.text)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          {/* The top band, with its sound button, is hidden while placing sensors on a phone. */}
+          <p className="help-sound">
+            <SoundToggle />
+            <span aria-hidden="true">{t("sound.label")}</span>
+          </p>
+          <button type="button" className="btn btn-primary btn-big" autoFocus onClick={() => helpRef.current?.close()}>
+            {t("mission.helpOk")}
+          </button>
+        </dialog>
+      )}
+
       <div className="dock">
         <div className="dock-head">
           <div className="dock-title">
@@ -388,6 +483,20 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
               <span style={{ width: `${Math.max(0, (left / budget) * 100)}%` }} />
             </span>
           </div>
+          {phone && (
+            <button
+              type="button"
+              className="btn dock-help"
+              ref={helpButton}
+              aria-label={t("mission.help")}
+              onClick={() => {
+                lastOpener.current = helpButton.current;
+                setHelpOpen(true);
+              }}
+            >
+              ?
+            </button>
+          )}
           <button
             type="button"
             className="btn btn-primary dock-done"
@@ -400,6 +509,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
           </button>
         </div>
 
+        {!phone && (
         <div className="dock-row">
           <span className="dock-label">{t("mission.dangersLabel")}</span>
           <ul className="chip-row">
@@ -435,8 +545,9 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
             })}
           </ul>
         </div>
+        )}
 
-        <p className="tray-info" aria-hidden="true">
+        <p className={`tray-info${phone && !hint && !info ? " is-idle" : ""}`} aria-hidden="true">
           <span>{infoLine}</span>
         </p>
 

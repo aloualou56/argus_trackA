@@ -178,6 +178,18 @@ shows the main signal and its share, not the anomaly score against its limit.
 - **Quiz:** the same 5 questions before the first game of a visit (skippable, no feedback) and after a game (with
   feedback and "before X, now Y").
 - **Detection:** the network detects an alarm if it has a card from every group in the rule's `detect_with`.
+- **Sound** (`web/src/audio/sounds.ts`): made in the browser with the Web Audio API, so there are no audio files to
+  load or license and it works offline. Placing a sensor (a coin tick and two notes; a soft landing when dropped),
+  removing one, "not enough coins", the alarm replay (a whoosh, a sonar ping per wave, then a rising chime when the
+  sensors caught it or two falling notes when they missed it) and the score. Nothing plays before the player taps,
+  nothing is said only by sound, and the speaker button in the top bar turns it off (remembered on the device).
+- **Order and the alarm replay:** story → mission → a real alarm → reveal → score. After "Done" (and after "Go on to
+  day N" in a week on duty, for each later day) the day's real alarm
+  plays on the map for about five seconds (two without motion): waves spread from the ARGUS sensor that raised it,
+  then the player's sensors that would have caught it light up and the rest fade (a cross when none would have).
+  Phones and small tablets show only the map meanwhile; wide screens keep the panel, unusable until it ends. "Skip"
+  ends it at once. The alarm's screen then opens on the answer, and its map shows only the ARGUS sensor that raised
+  the alarm, so the reveal still comes after it.
 - **What would you do next?** After the replayed alarm the player chooses a first step: send someone to look, check
   the sensor and the other measurements, wait, or close the monument. The game then quotes the decision ARGUS
   recorded for that alarm (real data: every record says "Review alarm evidence and affected asset context before
@@ -303,9 +315,12 @@ The game is played on a map of real monuments, so it looks like one: a survey sh
   drop-down (`web/src/components/Dropdown.tsx`), the report's photo is chosen with a normal button (the browser's
   file control does the work behind it), and the map shows the credits for its data without the library's badge.
   The date of a report is still the browser's date field, styled: its calendar is the most reliable one on phones.
-- **The mark:** a guardian's shield holding the survey target you place sensors with, with a brass centre
-  (`web/src/components/BrandMark.tsx`). The favicon and the app icons (`icon-*.png`, `apple-touch-icon.png`) are
-  the same drawing.
+- **The mark:** a guardian's shield over a classical temple on the survey grid. The original is
+  `docs/brand/logo.png` (1024 px, white on green). The app icons (`icon-*.png`, `apple-touch-icon.png`) are that
+  picture scaled down, the favicon (`favicon.png`) is cropped closer around the shield so it reads at 16 px, and the
+  mark in the top band and on the report card is the white emblem cut out as a mask
+  (`web/src/assets/brand-mark.png`), painted in the text colour: white on the band, green on the card
+  (`web/src/components/BrandMark.tsx`).
 - **Language menu:** a button that opens a list of buttons, each language under its own name, styled like the
   rest (`web/src/components/LangMenu.tsx`). Arrow keys move through it, Escape closes it.
 
@@ -318,6 +333,13 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   comparing the two networks, marking a spot) it keeps 42% of the height. Where the screen is read (story, alarm,
   score) it gets 30%, and on the questions and the teacher page 20%. On those shorter maps the map picker and the
   coordinates are hidden; the chosen map stays. `App.tsx` marks the screen with `data-screen`.
+- **Placing sensors on an upright phone** (under 40rem wide): the map is the whole screen and the top band goes.
+  The coins, a "?" button and Done float in a bar at the top; the sensors float in one swipeable strip at the
+  bottom, dragged up onto the map (or tapped, for the cross); what a sensor does shows above the strip for a few
+  seconds. A card opens when a mission starts (not when improving the network) and again from "?": how to place,
+  move and remove sensors, the coins, and the mission's three dangers, which no longer take a row of their own.
+  It is a modal `<dialog>`: focus stays inside, Escape closes it. Wider screens keep the dock (`Mission.tsx`, PHONE;
+  `styles.css`, "phone board").
 - **A short upright phone** (under 44rem high) shows one row of tiles in the mission, so the map keeps its room.
 - **A phone on its side** (landscape, under 32rem high) puts the map beside the page instead of above it. In the
   mission the dock is a column: the coins and Done stay in view, then the line that says what a sensor tells, and

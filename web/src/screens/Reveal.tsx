@@ -130,7 +130,7 @@ export function Reveal({ data, mon, session, go }: ScreenProps) {
       </section>
 
       <div className="actions">
-        <button type="button" className="btn btn-primary btn-big" onClick={() => go("event")}>
+        <button type="button" className="btn btn-primary btn-big" onClick={() => go("score")}>
           {t("reveal.continue")}
           <Icon name="arrow" />
         </button>

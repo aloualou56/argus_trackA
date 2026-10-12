@@ -1,6 +1,6 @@
 import { useI18n, type MessageKey } from "../i18n";
 
-export const STEPS = ["story", "mission", "reveal", "event", "score"] as const;
+export const STEPS = ["story", "mission", "event", "reveal", "score"] as const;
 export type Step = (typeof STEPS)[number];
 
 export const stepKey = (step: Step) => `steps.${step}` as MessageKey;

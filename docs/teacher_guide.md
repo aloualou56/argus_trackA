@@ -104,7 +104,7 @@ The teacher page shows three things: what the class chose next to what ARGUS ins
 |---|---|
 | 0–5′ | **Hook.** "If you guarded an ancient monument, what would worry you?" |
 | 5–8′ | **5 questions before.** No right or wrong yet. |
-| 8–25′ | **Play.** Each group picks a monument: story → mission (sensors for 8 coins) → reveal (what ARGUS installed) → a real alarm → score. |
+| 8–25′ | **Play.** Each group picks a monument: story → mission (sensors for 8 coins) → a real alarm (it plays on the map: would the sensors have caught it?) → reveal (what ARGUS installed) → score. |
 | 25–30′ | **5 questions after.** The game shows "before" and "now". |
 | 30–42′ | **Discussion** with the teacher page on the projector: what the class chose next to what ARGUS installed. |
 | 42–45′ | **Be an observer too.** Read the checklist at the end of the game (it can be printed) and agree what everyone will look out for on their next visit. |
