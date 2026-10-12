@@ -2,17 +2,27 @@
    UI parts >= 3:1). Meaning is never carried by colour alone: icons, words and shapes too. */
 
 :root {
-  --bg: #f7f4ee;
-  --surface: #ffffff;
-  --surface-2: #efeae0;
-  --ink: #1b2430;
-  --muted: #4b5563;
-  --line: #d9d2c5; /* decorative borders */
-  --edge: #8c8270; /* borders of controls, 3.4:1 on bg */
-  --primary: #1d3a5c;
-  --primary-hover: #132a44;
-  --primary-soft: #e3e9f1;
-  --disabled: #6b7280;
+  /* The survey sheet: paper white, survey green, green-black ink. Pairs re-checked for contrast
+     (text >= 4.5:1, parts of controls >= 3:1) when the palette changed. */
+  --bg: #fbfcfa; /* the sheet */
+  --surface: #ffffff; /* controls on the sheet */
+  --surface-2: #edf2eb;
+  --tint: #edf2eb; /* margin notes: tinted blocks, not outlined cards */
+  --ink: #14211b;
+  --muted: #45544b; /* 7.8:1 on the sheet, 7:1 on the tint */
+  --line: #cbd5cb; /* decorative rules */
+  --edge: #6e7f73; /* borders of controls: 4.1:1 on the sheet, 3.7:1 on the tint */
+  --primary: #0b5d4b; /* survey green: 7.6:1 on the sheet, white on it 7.8:1 */
+  --primary-hover: #07483a;
+  --primary-deep: #063a2f;
+  --primary-soft: #d9eae2;
+  --mint: #bfe3d3; /* small text on survey green: 5.7:1 */
+  --disabled: #66736b;
+  --coin: #d9a520; /* brass, always with the dark outline below */
+  --coin-ink: #4a3600; /* 5.1:1 on brass */
+  --display: "Sofia Sans Extra Condensed Variable", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --text: "Commissioner Variable", system-ui, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Mono", Consolas, "Noto Sans Mono", monospace;
   --yes: #004b82;
   --yes-bg: #e6f0f8;
   --no: #8a3700;
@@ -24,15 +34,15 @@
   --argus-pin: #a84300; /* darker vermillion: white numbers on it reach 5.5:1 */
   --map-height: 42vh;
   /* drawn plan (OpenStreetMap / Natural Earth outlines) */
-  --plan-water: #c9dbe6;
-  --plan-land: #ece6d8;
-  --plan-green: #dce5ca;
-  --plan-built: #e3dccd;
-  --plan-building: #cfc3ae;
+  --plan-water: #bfd9ea;
+  --plan-land: #f1f3ec;
+  --plan-green: #d5e4c6;
+  --plan-built: #e6e6dd;
+  --plan-building: #c9c4b6;
   --plan-road: #ffffff;
   --focus: #0b57d0;
   --review: #c026d3;
-  --radius: 0.75rem;
+  --radius: 0.375rem;
   --gutter: 1rem;
   --page: 52rem;
   color-scheme: light;
@@ -138,33 +148,6 @@ main:focus {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-}
-
-/* Language menu: a native select, so it works with every keyboard, screen reader and phone. */
-.lang-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 48px;
-  padding: 0 0.25rem 0 0.6rem;
-  border: 1px solid var(--edge);
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--ink);
-}
-.lang-switch svg {
-  flex: none;
-}
-.lang-switch select {
-  min-height: 44px;
-  max-width: 9.5rem;
-  border: 0;
-  border-radius: 0.5rem;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-weight: 650;
-  cursor: pointer;
 }
 
 .brand {
@@ -1722,18 +1705,6 @@ textarea.input {
   display: grid;
   gap: 0.5rem;
 }
-.place {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "num text"
-    "num go";
-  column-gap: 0.75rem;
-  padding: 0.65rem 0.75rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
 .place-num {
   grid-area: num;
 }
@@ -1802,6 +1773,7 @@ html {
   min-height: 200px;
 }
 .board-panel {
+  position: relative; /* keeps visually hidden text (.sr-only) from stretching the page itself */
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -2350,5 +2322,478 @@ body.is-dragging-sensor .board-map .map {
   }
   .gauge-limit {
     background: Highlight;
+  }
+}
+
+/* ================================================================== identity: the survey sheet */
+/* The game is played on a map of real monuments, so it looks like one: a survey sheet with its
+   margin notes. Paper white and survey green, titles in the capitals of map lettering, and real
+   map furniture (a true scale bar, the coordinates under the cross). Colours and sizes come from
+   the tokens at the top of this file; this section sets how each part wears them. It only touches
+   type, colour, borders and corners, never the layout rules above. */
+
+body {
+  font-family: var(--text);
+  font-feature-settings: "kern", "calt";
+}
+
+/* ---- titles: map lettering */
+h1 {
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 8.5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  margin-bottom: 0.75rem;
+}
+h2 {
+  font-size: 1.3rem;
+  font-weight: 750;
+  letter-spacing: -0.005em;
+}
+h3 {
+  font-weight: 700;
+}
+strong,
+b {
+  font-weight: 700;
+}
+.lead {
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+/* ---- margin notes: small labels that are true labels (a step, a day, a code, a position) */
+.progress-text,
+.dock-step,
+.dock-label,
+.day-label,
+.quiz-number,
+.report-card-id,
+.coords,
+.map-coords,
+.leaflet-control-scale-line {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.progress-text strong {
+  font-weight: 700;
+}
+.coords {
+  margin: -0.35rem 0 0.9rem;
+  color: var(--muted);
+}
+
+/* ---- the top band */
+.topbar {
+  background: var(--primary);
+  border-bottom: 0;
+  color: #fff;
+}
+.brand,
+.brand:disabled {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 5.4vw, 1.55rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.brand svg {
+  flex: none;
+}
+.brand {
+  gap: 0.55rem;
+}
+.brand-mark {
+  flex: none;
+}
+.brand-dot {
+  fill: var(--coin);
+}
+/* The band sits above the map's own controls, so the language list can open over the map. */
+.topbar {
+  position: relative;
+  z-index: 1200;
+}
+.lang-menu {
+  position: relative;
+  flex: none;
+}
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0 0.7rem;
+  border: 2px solid rgb(255 255 255 / 0.7);
+  border-radius: var(--radius);
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.lang-toggle:hover,
+.lang-toggle[aria-expanded="true"] {
+  background: rgb(255 255 255 / 0.14);
+  border-color: #fff;
+}
+.lang-toggle svg {
+  flex: none;
+}
+.lang-toggle[aria-expanded="true"] .lang-chevron {
+  transform: rotate(180deg);
+}
+.lang-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 12.5rem;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgb(20 33 27 / 0.28);
+  color: var(--ink);
+}
+.lang-list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-list button:hover {
+  background: var(--tint);
+}
+.lang-list button[aria-current="true"] {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 750;
+}
+.topbar :focus-visible,
+.week :focus-visible {
+  outline-color: #fff;
+}
+/* ...but the list is white, so its focus ring is the usual one. */
+.topbar .lang-list :focus-visible {
+  outline-color: var(--focus);
+  outline-offset: -3px;
+}
+.skip-link:focus {
+  outline: 3px solid #fff;
+}
+
+/* ---- blocks: tinted notes on the white sheet, no outlined cards */
+.panel {
+  background: var(--tint);
+  border: 0;
+  padding: 1rem 1.1rem;
+}
+.class-panel,
+.report-invite {
+  background: transparent;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  padding: 0.9rem 0 0;
+}
+.threat-hook {
+  border-left: 6px solid var(--primary);
+}
+.learn {
+  background: var(--tint);
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+.argus-quote {
+  background: var(--surface);
+}
+.tag {
+  border-radius: 4px;
+}
+.level-badge {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.class-code {
+  font-family: var(--mono);
+  font-weight: 700;
+}
+.footer {
+  border-top: 1px solid var(--line);
+  margin-top: 1rem;
+}
+
+/* ---- buttons: the main action is one solid key you can feel */
+.btn {
+  font-weight: 700;
+}
+.btn-primary {
+  box-shadow: 0 3px 0 var(--primary-hover);
+}
+.btn-primary:active {
+  box-shadow: 0 1px 0 var(--primary-hover);
+  transform: translateY(2px);
+}
+.btn-primary[aria-disabled="true"],
+.btn-primary:disabled {
+  box-shadow: none;
+  transform: none;
+}
+.btn-quiet {
+  border: 2px solid var(--edge);
+}
+
+/* ---- progress: a row of survey ticks */
+.progress-bar {
+  gap: 3px;
+}
+.progress-bar li {
+  height: 5px;
+  border-radius: 0;
+}
+.progress-bar li.done {
+  background: var(--ink);
+}
+.progress-bar li.now {
+  background: var(--primary);
+}
+
+/* ---- the score: one reading, set large */
+.score-card {
+  background: transparent;
+  border-top: 4px solid var(--ink);
+  border-radius: 0;
+  padding: 0.9rem 0 0;
+  text-align: left;
+}
+.score-big {
+  font-family: var(--display);
+  font-size: clamp(3.4rem, 15vw, 5.2rem);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.verdict {
+  margin-top: 0.35rem;
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 750;
+}
+.score-change {
+  border-radius: var(--radius);
+}
+/* The alarm's measured value and its limit are readings too: set like the score, units as written. */
+.readings dd {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+/* ---- a week on duty: the one inverted block, because it is the next move */
+.week {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.week .small,
+.week .day-label {
+  color: var(--mint);
+}
+.week .btn-primary {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 3px 0 var(--primary-deep);
+}
+.week .btn-primary:hover {
+  background: var(--primary-soft);
+}
+.week .btn-secondary {
+  background: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+.week .btn-secondary:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+.day-box {
+  border-radius: 4px;
+  font-family: var(--mono);
+}
+.week .day-box {
+  background: transparent;
+  border-color: rgb(255 255 255 / 0.7);
+  color: #fff;
+}
+.week .day-box.is-caught {
+  background: var(--yes-bg);
+  border: 2px solid #fff;
+  color: var(--yes);
+}
+.week .day-box.is-missed {
+  background: var(--no-bg);
+  border: 2px dashed var(--no);
+  color: var(--no);
+}
+.week .day-box.is-today {
+  outline-color: #fff;
+}
+.challenge {
+  background: var(--primary-soft);
+}
+.challenge-send {
+  background: var(--surface);
+}
+
+/* ---- coins: brass tokens */
+.coins-text svg,
+.tile-cost svg,
+.budget-text svg {
+  color: var(--coin-ink);
+  fill: var(--coin);
+}
+.tile-cost {
+  color: var(--coin-ink);
+}
+.budget-meter {
+  border-color: var(--coin-ink);
+  border-radius: 2px;
+}
+.budget-meter span {
+  background: var(--coin);
+}
+
+/* ---- the mission dock */
+.dock {
+  border-top: 3px solid var(--ink);
+}
+.dock-title h1 {
+  font-size: 1.45rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+.dock-step,
+.dock-label {
+  font-size: 0.7rem;
+}
+.danger-chip,
+.group-chip {
+  border-radius: 4px;
+}
+.tile {
+  border-radius: 6px;
+}
+.tile.is-picked {
+  background: var(--primary-soft);
+}
+
+/* ---- the map sheet */
+.board-map .leaflet-bar {
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: none;
+}
+.board-map .leaflet-bar a {
+  color: var(--ink);
+}
+.map-switch {
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: none;
+}
+.map-legend {
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+}
+.site-label {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+/* Map furniture, bottom right above the credits: a true scale bar and where the centre is. */
+.board-map .leaflet-control-scale {
+  margin: 0 8px 4px 0;
+}
+.board-map .leaflet-control-scale-line {
+  border: 2px solid var(--ink);
+  border-top: 0;
+  background: rgb(255 255 255 / 0.88);
+  color: var(--ink);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  text-shadow: none;
+  text-transform: none; /* "m" and "km" are units, not words */
+}
+/* On a phone the legend takes the bottom of the map: it leaves room for the scale bar, and the
+   coordinates step aside. */
+@media (max-width: 39.99rem) {
+  .map-legend {
+    max-width: calc(100% - 9.5rem);
+  }
+  .board-map:has(.map-legend) .map-coords {
+    display: none;
+  }
+  /* A phone's map is small: the coordinates show only while placing sensors, where they are the
+     spot under the cross. */
+  .board-map:not(.mode-mission):not(.mode-report) .map-coords {
+    display: none;
+  }
+}
+.map-coords {
+  margin: 0 8px 4px 0;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.88);
+  color: var(--ink);
+  font-size: 0.68rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ---- print: the cards keep the typefaces, on plain white */
+@media print {
+  .panel {
+    background: #fff;
+  }
+}
+
+/* ---- high-contrast mode: the bars this section recoloured must stay visible there */
+@media (forced-colors: active) {
+  .progress-bar li.done,
+  .progress-bar li.now,
+  .budget-meter span {
+    background: CanvasText;
   }
 }

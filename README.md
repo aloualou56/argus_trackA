@@ -227,6 +227,29 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
    policy allows light use only. Open national orthophotos exist for CH (swisstopo), ES (PNOA) and some IT/GR regions.
 8. **Ranverso weather station position** is marked temporary by ARGUS (dashed marker in the game).
 
+## Look: the survey sheet
+
+The game is played on a map of real monuments, so it looks like one: a survey sheet with its margin notes.
+
+- **Colour:** paper white and survey green, green-black ink, brass for coins. The two data colours are unchanged
+  (blue for the player, vermilion for ARGUS). Tokens are at the top of `web/src/styles.css`; the section
+  "identity: the survey sheet" at its end sets how each part wears them (type, colour, borders and corners only,
+  never layout).
+- **Type:** titles in the capitals of map lettering (Sofia Sans Extra Condensed), text in Commissioner, and
+  coordinates, codes and counters in JetBrains Mono. All three are SIL Open Font License 1.1, cover Greek and the
+  four other languages, and are bundled with the build from the `@fontsource-variable` packages
+  (`web/src/fonts.css`): no font service is contacted, so the class server's local-only mode still holds. Only the
+  Greek, Latin and extended-Latin parts ship (about 220 KB in all; a browser fetches the parts it needs).
+- **Map furniture is real:** a true scale bar, the coordinates of the centre of the view (in the mission, the spot
+  under the cross), and each monument's position on its story screen, from the ARGUS sensor positions.
+- **Blocks, not cards:** notes are tinted blocks on the white sheet. The one inverted block is the week on duty,
+  because it is the player's next move.
+- **The mark:** a guardian's shield holding the survey target you place sensors with, with a brass centre
+  (`web/src/components/BrandMark.tsx`). The favicon and the app icons (`icon-*.png`, `apple-touch-icon.png`) are
+  the same drawing.
+- **Language menu:** a button that opens a list of buttons, each language under its own name, styled like the
+  rest (`web/src/components/LangMenu.tsx`). Arrow keys move through it, Escape closes it.
+
 ## Accessibility (WCAG 2.1 AA target)
 
 - Native controls only (radio groups, buttons, a real `<table>`); every step is keyboard-only playable.
@@ -236,7 +259,8 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 - Focus moves to each new screen's heading; a polite live region announces sensor changes and budget problems.
 - Disabled-looking steppers stay focusable (`aria-disabled`) and say why they cannot be used.
 - Colour is never the only signal: icons, words, solid vs dashed borders, circles (you) vs squares (ARGUS).
-- Palette checked for contrast (text ≥ 4.5:1, controls ≥ 3:1); Okabe-Ito colours for the two data series.
+- Palette checked for contrast (text ≥ 4.5:1, controls ≥ 3:1), again after the redesign; Okabe-Ito colours for the
+  two data series.
 - 48 px touch targets, mobile-first layout, no sideways scroll at 320 px, `prefers-reduced-motion` and
   forced-colours support, `lang` switches with the language.
 - `npm run screenshots` runs axe-core (WCAG 2.1 A/AA) on every screen, in both languages, on phone and desktop.

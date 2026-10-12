@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type MutableRefObject } from "react";
 import { ReportStore } from "../community/reports";
 import type { MapApi } from "../components/GameMap";
+import { BrandMark } from "../components/BrandMark";
 import { Icon } from "../components/Icon";
 import { isPlayable } from "../game/logic";
 import {
@@ -162,7 +163,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
         <h1 tabIndex={-1}>{t("report.title")}</h1>
         <section className="panel report-card printable" aria-labelledby="card-title">
           <p className="report-card-brand">
-            <Icon name="shield" size={18} />
+            <BrandMark size={22} />
             {t("app.title")}
           </p>
           <h2 id="card-title" tabIndex={-1} ref={cardTitle}>

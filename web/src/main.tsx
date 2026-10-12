@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { LangProvider } from "./i18n";
+import "./fonts.css";
 import "./styles.css";
 
 createRoot(document.getElementById("root")!).render(

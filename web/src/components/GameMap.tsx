@@ -8,7 +8,7 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
-import { clusterPoints, nativeZoom } from "../game/logic";
+import { clusterPoints, formatCoords, nativeZoom } from "../game/logic";
 import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
 import { useI18n } from "../i18n";
 import { iconSvg } from "./Icon";
@@ -201,6 +201,21 @@ export function GameMap(props: Props) {
         return [at.lat, at.lng];
       },
     };
+    // Map furniture, as on a printed sheet: a true scale bar, and the position of the centre of the
+    // view (in the mission, that is the spot under the cross). Decorative for screen readers: the
+    // readout changes with every movement.
+    L.control.scale({ position: "bottomright", metric: true, imperial: false, maxWidth: 110 }).addTo(map);
+    const coords = L.DomUtil.create("div", "map-coords");
+    coords.setAttribute("aria-hidden", "true");
+    const coordsControl = new L.Control({ position: "bottomright" });
+    coordsControl.onAdd = () => coords;
+    coordsControl.addTo(map);
+    const showCoords = () => {
+      const centre = map.getCenter();
+      coords.textContent = formatCoords([centre.lat, centre.lng]);
+    };
+    map.on("move", showCoords);
+    showCoords();
     // The furthest zoom out is the one where a single world still fills the map, however wide it is.
     const fitWorld = () => map.setMinZoom(map.getBoundsZoom(WORLD, true));
     fitWorld();

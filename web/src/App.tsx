@@ -3,13 +3,14 @@ import { createCommunityStore } from "./community";
 import { classCodeFromUrl, loadClassCode, saveClassCode } from "./community/classCode";
 import { quizSummaryOf } from "./community/store";
 import { GameMap, type MapApi } from "./components/GameMap";
-import { Icon } from "./components/Icon";
+import { BrandMark } from "./components/BrandMark";
+import { LangMenu } from "./components/LangMenu";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
 import { loadGameData } from "./game/data";
 import { challengeFromUrl } from "./game/challenge";
 import { canDrawMission, countPicks, drawMission, isPlayable, weekAlarms, type DayResult } from "./game/logic";
 import type { GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
-import { isBaseLang, isLang, LANGS, useI18n } from "./i18n";
+import { isBaseLang, useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
 import { Home } from "./screens/Home";
 import { Mission } from "./screens/Mission";
@@ -76,7 +77,7 @@ const REVIEW_MODE = new URLSearchParams(window.location.search).has("review");
 
 export default function App() {
   const i18n = useI18n();
-  const { t, lang, setLang } = i18n;
+  const { t, lang } = i18n;
   const [load, setLoad] = useState<Load>({ state: "loading" });
   const [screen, setScreen] = useState<Screen>("home");
   const [game, setGame] = useState<Omit<Session, "picks"> | null>(null);
@@ -358,20 +359,10 @@ export default function App() {
       <header className="topbar">
         <div className="topbar-inner">
           <button type="button" className="brand" onClick={() => setScreen("home")} disabled={screen === "home"}>
-            <Icon name="shield" />
+            <BrandMark />
             <span>{t("app.title")}</span>
           </button>
-          <label className="lang-switch">
-            <Icon name="globe" size={20} />
-            <span className="sr-only">{t("lang.label")}</span>
-            <select value={lang} onChange={(e) => isLang(e.target.value) && setLang(e.target.value)}>
-              {LANGS.map((l) => (
-                <option key={l.id} value={l.id} lang={l.id}>
-                  {l.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <LangMenu />
         </div>
       </header>
       <div className={data ? "board" : "board no-map"}>

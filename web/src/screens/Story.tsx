@@ -1,5 +1,5 @@
 import type { ScreenProps } from "../App";
-import { budgetFor, missionScenarios } from "../game/logic";
+import { budgetFor, formatCoords, missionScenarios } from "../game/logic";
 import { Icon } from "../components/Icon";
 import { LevelBadge } from "../components/LevelBadge";
 import { useI18n } from "../i18n";
@@ -18,6 +18,8 @@ export function Story({ mon, session, go }: ScreenProps) {
     <article className="screen story">
       <h1 tabIndex={-1}>{pick(mon.display_name)}</h1>
       <p className="place">{pick(mon.place)}</p>
+      {/* Where the ARGUS sensors are, as a map sheet would print it. */}
+      {mon.map && <p className="coords">{formatCoords(mon.map.center)}</p>}
       <p className="lead" data-needs-review={mon.story.needs_review}>
         {pick(mon.story.text)}
       </p>

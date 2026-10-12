@@ -350,6 +350,21 @@ export function countPicks(placements: Placement[]): Picks {
   return picks;
 }
 
+/** A position as a map sheet prints it: degrees and decimal minutes, "37°23.8′ N  25°16.2′ E". */
+export function formatCoords([lat, lng]: LatLng): string {
+  const part = (value: number, positive: string, negative: string) => {
+    const size = Math.abs(value);
+    let degrees = Math.floor(size);
+    let minutes = Math.round((size - degrees) * 600) / 10;
+    if (minutes >= 60) {
+      degrees += 1;
+      minutes = 0;
+    }
+    return `${degrees}°${minutes.toFixed(1).padStart(4, "0")}′ ${value >= 0 ? positive : negative}`;
+  };
+  return `${part(lat, "N", "S")}  ${part(lng, "E", "W")}`;
+}
+
 /** Ground distance in metres (equirectangular; exact enough within a few km). */
 export function distanceMeters(a: LatLng, b: LatLng): number {
   const x = (b[1] - a[1]) * Math.cos((((a[0] + b[0]) / 2) * Math.PI) / 180);

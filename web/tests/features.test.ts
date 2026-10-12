@@ -13,7 +13,7 @@ import {
   type PlayRecord,
   type QuizRecord,
 } from "../src/community/store";
-import { featuredAlarm, isPlayable, judgeDecision, STRONG_ALARM, withoutOnlineMaps } from "../src/game/logic";
+import { featuredAlarm, formatCoords, isPlayable, judgeDecision, STRONG_ALARM, withoutOnlineMaps } from "../src/game/logic";
 import type { Alarm, DecisionOption, GameData, Lang } from "../src/game/types";
 import { browserLang, isLang, LANGS, makeI18n } from "../src/i18n";
 import de from "../src/i18n/de.json";
@@ -224,6 +224,22 @@ describe("local-only mode", () => {
   it("changes nothing when a pack has no drawn plan to fall back on", () => {
     const rasterOnly = { ...data, basemaps: { ...data.basemaps, layers: data.basemaps.layers.filter((l) => l.type !== "vector") } };
     expect(withoutOnlineMaps(rasterOnly)).toBe(rasterOnly);
+  });
+});
+
+describe("map sheet details", () => {
+  it("prints a position as degrees and decimal minutes, with the right hemispheres", () => {
+    expect(formatCoords([37.3966, 25.2694])).toBe("37°23.8′ N  25°16.2′ E"); // Delos
+    expect(formatCoords([41.9383, -4.2462])).toBe("41°56.3′ N  4°14.8′ W"); // Baltanás is west of Greenwich
+    expect(formatCoords([-33.5, 151.25])).toBe("33°30.0′ S  151°15.0′ E");
+    expect(formatCoords([45.99999, 7.0])).toBe("46°00.0′ N  7°00.0′ E"); // minutes never read 60.0
+  });
+
+  it("gives every monument a position to print", () => {
+    for (const mon of data.monuments.filter(isPlayable)) {
+      expect(mon.map, mon.pilot_key).not.toBeNull();
+      expect(formatCoords(mon.map!.center)).toMatch(/^\d+°\d\d\.\d′ [NS]  \d+°\d\d\.\d′ [EW]$/);
+    }
   });
 });
 
