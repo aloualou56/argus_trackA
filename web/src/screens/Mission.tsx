@@ -45,6 +45,8 @@ type Info = { kind: "card"; card: Card } | { kind: "danger"; danger: Scenario } 
 // Wide: the dock is a column beside the map, so the instruments are sorted under their group
 // names and the network is listed below them.
 const WIDE = "(min-width: 60rem)";
+// A phone on its side: the map is beside the dock, not above it (styles.css, "small screens").
+const SIDE = "(max-width: 59.99rem) and (orientation: landscape) and (max-height: 32rem)";
 
 /** Whether a media query matches now, kept up to date as the window changes. */
 function useMedia(query: string): boolean {
@@ -80,6 +82,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
   const left = coinsLeft(budget, picks, cards);
   const sensors = totalSensors(picks);
   const wide = useMedia(WIDE);
+  const side = useMedia(SIDE);
   const [hint, setHint] = useState("");
   const [info, setInfo] = useState<Info>(null);
   // Wide screens: a danger opens in place, on a click, and stays open while tiles are hovered, so
@@ -177,8 +180,10 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
     if (!d.active) {
       const dx = e.clientX - d.startX;
       const dy = e.clientY - d.startY;
-      // Mouse: any direction. Touch: upwards, towards the map (sideways scrolls the tray).
-      const starts = e.pointerType === "mouse" ? Math.hypot(dx, dy) > 6 : dy < -10 && Math.abs(dy) > Math.abs(dx);
+      // Mouse: any direction. Touch: towards the map, across the way the tray scrolls. Upright that
+      // is upwards (sideways scrolls the tray); with the phone on its side it is to the left.
+      const towardsMap = side ? dx < -10 && Math.abs(dx) > Math.abs(dy) : dy < -10 && Math.abs(dy) > Math.abs(dx);
+      const starts = e.pointerType === "mouse" ? Math.hypot(dx, dy) > 6 : towardsMap;
       if (!starts) return;
       if (!canAdd(d.card, budget, picks, cards)) {
         announce(t("mission.notEnough", { name: pick(d.card.name) }));
@@ -420,7 +425,9 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
                     onPointerMove={onPointerMove}
                     onPointerUp={onPointerUp}
                     onPointerCancel={endDrag}
-                    onLostPointerCapture={endDrag}
+                    // Only the tile's own loss counts: a finger is first held by the icon or name it
+                    // touched, and that hold passing to the tile is how a drag begins, not how it ends.
+                    onLostPointerCapture={(e) => e.target === e.currentTarget && endDrag()}
                     onFocus={() => setInfo({ kind: "card", card })}
                     onMouseEnter={() => setInfo({ kind: "card", card })}
                   >

@@ -3433,3 +3433,139 @@ b {
     background: CanvasText;
   }
 }
+
+/* ==== small screens (under 60rem wide): phones and upright tablets. Every rule here sits inside a
+   max-width query, so the wide layout is untouched. ==== */
+@media (max-width: 59.99rem) {
+  /* A screen that is read gives the map less room than one where the map is used (choosing a
+     monument, placing sensors, comparing the two networks, marking a spot). */
+  .app[data-screen="story"] .board-map,
+  .app[data-screen="event"] .board-map,
+  .app[data-screen="score"] .board-map {
+    height: 30%;
+    min-height: 150px;
+  }
+  /* The questions and the teacher page do not need it: a strip, to keep one's bearings. */
+  .app[data-screen="quizPre"] .board-map,
+  .app[data-screen="quizPost"] .board-map,
+  .app[data-screen="teacher"] .board-map {
+    height: 20%;
+    min-height: 110px;
+  }
+  /* On those shorter maps the map picker and the coordinates step aside; the chosen map stays. */
+  .app:is([data-screen="story"], [data-screen="event"], [data-screen="score"], [data-screen="quizPre"], [data-screen="quizPost"], [data-screen="teacher"])
+    :is(.map-switch, .map-coords) {
+    display: none;
+  }
+  /* The coins line wraps beside the Done button instead of running under it. */
+  .coins-text {
+    line-height: 1.2;
+    white-space: normal;
+  }
+}
+/* A narrow phone: the language button drops its globe, so its name is never cut. */
+@media (max-width: 26rem) {
+  .lang-menu .menu-toggle {
+    gap: 0.3rem;
+    padding: 0 0.55rem;
+  }
+  .lang-menu .menu-toggle > svg:first-child {
+    display: none;
+  }
+}
+/* A short upright phone: one row of tiles, so the map keeps its room. */
+@media (max-width: 59.99rem) and (max-height: 44rem) and (orientation: portrait) {
+  .tray {
+    grid-template-rows: auto;
+  }
+}
+/* A phone on its side has width, not height: the map goes beside the page instead of above it. */
+@media (max-width: 59.99rem) and (orientation: landscape) and (max-height: 32rem) {
+  .topbar {
+    padding-block: 0.2rem;
+  }
+  .brand,
+  .brand:disabled {
+    font-size: 1.15rem;
+  }
+  .lang-menu .menu-toggle {
+    min-height: 36px;
+  }
+  .board,
+  .app.is-play .board {
+    flex-direction: row;
+  }
+  .board-map,
+  .app[data-screen] .board-map {
+    width: 44%;
+    height: auto;
+    min-height: 0;
+    border-right: 2px solid var(--primary);
+    border-bottom: 0;
+  }
+  .board-panel {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  /* Placing sensors: the map takes what the dock leaves; the dock is a column that scrolls. */
+  .app.is-play .board-map {
+    flex: 1 1 auto;
+    width: auto;
+  }
+  .app.is-play .board-panel {
+    flex: none;
+    width: 21rem;
+    max-height: none;
+  }
+  .app.is-play .dock {
+    --side-head: 3.9rem;
+    min-height: 100%;
+    align-content: start;
+    padding-top: 0;
+    border-top: 0;
+  }
+  /* The coins and Done stay in view above the tiles; the step and the title are left to screen
+     readers, there is no room to show them here. */
+  .dock-head {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    grid-template-areas: "coins done";
+    height: var(--side-head);
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0 var(--gutter);
+    background: var(--surface);
+  }
+  .dock-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* Tiles scroll up and down here, so a tile is dragged sideways, towards the map (Mission.tsx). */
+  .tray {
+    grid-auto-columns: auto;
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding-inline: 0;
+    overflow: visible;
+    touch-action: pan-y;
+  }
+  .tile {
+    touch-action: pan-y;
+  }
+  /* What a sensor tells stays in view too, under the coins. */
+  .tray-info {
+    position: sticky;
+    top: var(--side-head);
+    z-index: 3;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0.3rem var(--gutter);
+    border-block: 1px solid var(--line);
+    background: var(--surface);
+  }
+}

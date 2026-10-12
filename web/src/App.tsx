@@ -353,7 +353,11 @@ export default function App() {
   }
 
   return (
-    <div className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}`}>
+    <div
+      className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}`}
+      // Small screens size the map by what the screen is for (styles.css, "small screens").
+      data-screen={screen}
+    >
       <a className="skip-link" href="#main">
         {t("app.skip")}
       </a>

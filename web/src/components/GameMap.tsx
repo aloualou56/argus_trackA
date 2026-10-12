@@ -387,6 +387,10 @@ export function GameMap(props: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    // On small screens the map changes size from one screen to the next: measure it now, or the
+    // view below is framed for the size it had on the previous screen. (Wide screens keep the
+    // map's size, and are left exactly as they were.)
+    if (!window.matchMedia("(min-width: 60rem)").matches) map.invalidateSize({ pan: false });
     // Extra room top-left keeps markers and their labels clear of the zoom buttons and switch.
     // On a short map the margins shrink, or they would leave almost no room and push the view far out.
     const quarter = map.getSize().y / 4;

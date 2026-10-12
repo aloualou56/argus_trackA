@@ -303,6 +303,22 @@ The game is played on a map of real monuments, so it looks like one: a survey sh
 - **Language menu:** a button that opens a list of buttons, each language under its own name, styled like the
   rest (`web/src/components/LangMenu.tsx`). Arrow keys move through it, Escape closes it.
 
+### Small screens (under 60rem wide)
+
+Phones and upright tablets have their own rules, all inside `max-width` queries in the last section of
+`web/src/styles.css` ("small screens"), so the wide layout is not touched by them.
+
+- **The map is sized by what the screen is for.** Where the map is used (choosing a monument, placing sensors,
+  comparing the two networks, marking a spot) it keeps 42% of the height. Where the screen is read (story, alarm,
+  score) it gets 30%, and on the questions and the teacher page 20%. On those shorter maps the map picker and the
+  coordinates are hidden; the chosen map stays. `App.tsx` marks the screen with `data-screen`.
+- **A short upright phone** (under 44rem high) shows one row of tiles in the mission, so the map keeps its room.
+- **A phone on its side** (landscape, under 32rem high) puts the map beside the page instead of above it. In the
+  mission the dock is a column: the coins and Done stay in view, then the line that says what a sensor tells, and
+  the tiles scroll under them. A tile is dragged towards the map: upwards on an upright phone, to the left on its
+  side (`Mission.tsx`).
+- **A narrow phone** (under 26rem) drops the globe from the language button so the language's name is never cut.
+
 ## Accessibility (WCAG 2.1 AA target)
 
 - Native controls only (radio groups, buttons, a real `<table>`); every step is keyboard-only playable.
