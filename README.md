@@ -53,6 +53,9 @@ bad data (an older data pack, a crash on a screen: a message, never an empty pag
 tiles cannot load, which is expected in sandboxes without internet.
 
 `web/dist` is a static site with relative paths: upload it to GitHub Pages, Netlify or Vercel as is.
+The public copy runs on a Raspberry Pi and follows `main` by itself: every push is tested and built on GitHub
+(`.github/workflows/site.yml`, the result goes to the `site` branch) and the Pi serves it within a minute, through
+a playit.gg tunnel (`tools/pi/README.md`).
 `npm run screenshots` saves what each screen shows (`*.png`) and, for phones, the whole scrolling panel
 (`*-panel.png`; the sticky map cannot appear in full-page captures).
 Add `?review` to the URL to outline every authored text that still needs human review.

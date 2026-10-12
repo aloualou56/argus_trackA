@@ -1,0 +1,4 @@
+# Files that run on Linux (the Raspberry Pi, GitHub Actions) keep Unix line endings on every checkout.
+*.sh text eol=lf
+tools/pi/* text eol=lf
+.github/workflows/* text eol=lf
