@@ -1,0 +1,9 @@
+[Unit]
+Description=Guardian for a Day: fetch the newest built site
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=hakri
+ExecStart=/usr/local/bin/guardian-update

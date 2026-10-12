@@ -1,0 +1,10 @@
+[Unit]
+Description=Guardian for a Day: look for a new built site every minute
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=60s
+Unit=guardian-update.service
+
+[Install]
+WantedBy=timers.target
