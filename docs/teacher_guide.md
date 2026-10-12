@@ -53,12 +53,14 @@
 - Ποιον κίνδυνο δεν μπορεί να «δει» κανένας αισθητήρας; Ποιος μπορεί;
 - Στη Δήλο τον συναγερμό τον έδωσε τεχνητή νοημοσύνη. Τι καλό έχει αυτό και τι θα μπορούσε να πάει στραβά;
 - Ένας αισθητήρας έδειχνε την ίδια τιμή για τρεις εβδομάδες. Τι θα έκανες;
+- Στη βαθμολογία, ζητήστε από τις ομάδες να πατήσουν «Βελτίωσε το δίκτυό μου» και να συγκρίνουν το «πριν» με το «τώρα»: τι άλλαξαν και γιατί; Όσες προλαβαίνουν συνεχίζουν στη «Μια εβδομάδα σε υπηρεσία» (έως 7 μέρες, η καθεμιά προαιρετική, με έναν ακόμη πραγματικό συναγερμό): άντεξε το δίκτυο και την επόμενη μέρα;
 - Μετά τον συναγερμό, το παιχνίδι ρωτά «Τι θα έκανες μετά;». Η καταγραφή του ARGUS λέει κάθε φορά: πρώτα κοίτα τα στοιχεία και το μνημείο, μετά επέμβαινε. Πότε θα ήταν σωστό να κλείσει αμέσως ένα μνημείο; Πότε είναι επικίνδυνο να περιμένεις;
 - Η ομάδα σας διάλεξε διαφορετικά από το ARGUS. Ποιος είχε καλύτερο λόγο; (Δεν υπάρχει μία σωστή απάντηση.)
 
 ## Ιδέες για συνέχεια
 
 - Επίσκεψη σε ένα τοπικό μνημείο με τη λίστα «Γίνε κι εσύ παρατηρητής».
+- **Πρόκληση.** Το «Μοιράσου το αποτέλεσμα» στέλνει έναν σύνδεσμο με το ίδιο μνημείο, το ίδιο επίπεδο και τους ίδιους τρεις κινδύνους, και τη βαθμολογία που πρέπει να ξεπεραστεί. Μια τάξη μπορεί να προκαλέσει μια άλλη.
 - **Αναφορά παρατήρησης.** Στην πρώτη οθόνη και στη βαθμολογία υπάρχει το «Ανάφερε κάτι που είδες»: ο μαθητής σημειώνει τι είδε, βάζει μια πινέζα στον χάρτη, διαλέγει μέρα και, αν θέλει, προσθέτει φωτογραφία. Παίρνει μια κάρτα που τυπώνεται ή δείχνεται στον φύλακα. Τίποτα δεν στέλνεται πουθενά: η αναφορά μένει στη συσκευή και η φωτογραφία δεν αποθηκεύεται. Δοκιμάστε το στην αυλή του σχολείου: «Τι θα σημείωνες για το δικό μας κτίριο;» Τα πέντε μνημεία του χάρτη είναι του ARGUS, οπότε για άλλο κτίριο η κάρτα γίνεται άσκηση στο χαρτί.
 - Η τάξη φτιάχνει τη δική της «αποστολή» για ένα μνημείο της περιοχής: ποιοι κίνδυνοι, ποιοι αισθητήρες, ποιοι άνθρωποι.
 
@@ -113,6 +115,7 @@ The teacher page shows three things: what the class chose next to what ARGUS ins
 - Which danger can no sensor "see"? Who can?
 - On Delos the alarm came from artificial intelligence. What is good about that, and what could go wrong?
 - A sensor showed the same value for three weeks. What would you do?
+- On the score screen, ask the groups to press "Improve my network" and compare "before" with "now": what did they change, and why? Groups with time left go on to "A week on duty" (up to 7 days, each one optional, each with another real alarm): did the network hold the next day too?
 - After the alarm the game asks "What would you do next?". The ARGUS record says the same thing every time: look at the evidence and the monument first, then act. When would closing a monument at once be right? When is waiting dangerous?
 - Your group chose differently from ARGUS. Who had the better reason? (There is no single right answer.)
 

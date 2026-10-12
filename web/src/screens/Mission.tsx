@@ -26,6 +26,9 @@ import { useI18n } from "../i18n";
 interface Props extends ScreenProps {
   setPlacements: (update: (prev: Placement[]) => Placement[]) => void;
   mapApi: MutableRefObject<MapApi | null>;
+  /** The player came back from the score to improve the network: "Done" returns there. */
+  improving: boolean;
+  onImproved: () => void;
 }
 
 interface Drag {
@@ -49,7 +52,7 @@ function prefersWide(): boolean {
   }
 }
 
-export function Mission({ data, mon, session, go, announce, setPlacements, mapApi }: Props) {
+export function Mission({ data, mon, session, go, announce, setPlacements, mapApi, improving, onImproved }: Props) {
   const { t, tn, pick } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level, session.mission);
@@ -109,7 +112,8 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
       announce(t("mission.needOne"));
       return;
     }
-    go("reveal");
+    if (improving) onImproved();
+    else go("reveal");
   };
 
   // ---------------------------------------------------------------- drag a tile onto the map
@@ -206,7 +210,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
       </>
     );
   } else {
-    infoLine = t("mission.trayHint");
+    infoLine = t(improving ? "mission.improveHint" : "mission.trayHint");
   }
 
   return (
@@ -284,7 +288,7 @@ export function Mission({ data, mon, session, go, announce, setPlacements, mapAp
           <button
             type="button"
             className="btn btn-primary dock-done"
-            aria-label={t("mission.done")}
+            aria-label={t(improving ? "mission.doneImprove" : "mission.done")}
             aria-disabled={sensors === 0}
             onClick={done}
           >

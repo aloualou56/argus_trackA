@@ -1160,6 +1160,73 @@ textarea.input {
   }
 }
 
+/* A week on duty, improving the network, and the challenge link */
+.score-change {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.week {
+  border: 2px solid var(--primary);
+}
+.week-lead {
+  font-size: 1.1rem;
+  font-weight: 650;
+}
+.day-label {
+  margin: 0 0 0.35rem;
+  color: var(--muted);
+  font-weight: 650;
+}
+.day-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.day-box {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 2px dashed var(--edge);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 700;
+}
+.day-box.is-caught {
+  border: 2px solid var(--yes);
+  background: var(--yes-bg);
+  color: var(--yes);
+}
+.day-box.is-missed {
+  border: 2px dashed var(--no);
+  background: var(--no-bg);
+  color: var(--no);
+}
+.day-box.is-today {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+.challenge {
+  border: 2px solid var(--primary);
+  background: var(--primary-soft);
+}
+.challenge h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.challenge h2 svg {
+  flex: none;
+  color: var(--primary);
+}
+
 /* What would you do next? (after the alarm) */
 .next-step .choices {
   margin-bottom: 0.75rem;

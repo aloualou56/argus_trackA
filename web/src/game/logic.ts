@@ -168,14 +168,25 @@ export interface Score {
   verdict: Verdict;
 }
 
-export function usefulCards(threats: Scenario[], rule: RuleEntry | null): Set<string> {
+/** Cards that help: with a mission danger, with today's alarm, or with an alarm of an earlier day on duty. */
+export function usefulCards(threats: Scenario[], rule: RuleEntry | null, earlier: RuleEntry[] = []): Set<string> {
   const useful = new Set<string>();
   threats.forEach((s) => s.capable_cards.forEach((c) => useful.add(c)));
-  rule?.detect_with.forEach((g) => g.forEach((c) => useful.add(c)));
+  for (const r of [rule, ...earlier]) r?.detect_with.forEach((g) => g.forEach((c) => useful.add(c)));
   return useful;
 }
 
-export function score(threats: Scenario[], rule: RuleEntry | null, picks: Picks, cards: Map<string, Card>): Score {
+/**
+ * `rule` is the alarm being replayed (today's, in a week on duty). `earlier` are the rules of the
+ * alarms of the days before: a sensor kept for those is not wasted coins.
+ */
+export function score(
+  threats: Scenario[],
+  rule: RuleEntry | null,
+  picks: Picks,
+  cards: Map<string, Card>,
+  earlier: RuleEntry[] = [],
+): Score {
   const cov = threats.map((s) => coverage(s, picks));
   const full = cov.filter((c) => c.level === "full").length;
   const partial = cov.filter((c) => c.level === "partial").length;
@@ -185,7 +196,7 @@ export function score(threats: Scenario[], rule: RuleEntry | null, picks: Picks,
   const detected = rule ? detects(rule, picks).detected : false;
   const alarm = rule ? { points: detected ? ALARM_POINTS : 0, max: ALARM_POINTS, detected } : null;
 
-  const useful = usefulCards(threats, rule);
+  const useful = usefulCards(threats, rule, earlier);
   const spentCoins = spent(picks, cards);
   const usefulCoins = Object.entries(picks)
     .filter(([id]) => useful.has(id))
@@ -242,6 +253,52 @@ export function autoPrompts(rows: MixRow[], distances: Map<string, number> = new
   const onlyArgus = rows.find((r) => r.argus > 0 && r.player === 0 && r.card !== many?.card);
   if (onlyArgus) out.push({ kind: "onlyArgus", card: onlyArgus.card, n: onlyArgus.argus });
   return out;
+}
+
+// ---------------------------------------------------------------- a week on duty
+
+/** At most this many days; fewer where the monument has fewer real alarms to replay. */
+export const WEEK_DAYS = 7;
+
+/** How one day on duty went, kept once the player has moved on to the next day. */
+export interface DayResult {
+  /** Alarm id. */
+  alarm: string;
+  detected: boolean;
+  /** That day's score out of 100. */
+  total: number;
+}
+
+/**
+ * The real alarms of a week on duty at this level, one per day. Day 1 is the level's own alarm
+ * (the one every player and class sees). The days after take the monument's other replayable
+ * alarms, turning to a different kind of alarm each day while there is one, oldest first within a
+ * kind: "can your network handle tomorrow?" is only a question if tomorrow is different.
+ * The same for everyone, so a class compares the same week. Empty where no alarm can be replayed.
+ */
+export function weekAlarms(mon: Monument, levelId: LevelId, days = WEEK_DAYS): Alarm[] {
+  const first = featuredAlarm(mon, levelId);
+  if (!first) return [];
+  const byRule = new Map<string, Alarm[]>();
+  const rest = mon.alarms
+    .filter((a) => a.id !== first.id)
+    .sort((a, b) => a.timestamp.localeCompare(b.timestamp) || a.id.localeCompare(b.id));
+  for (const alarm of rest) byRule.set(alarm.rule, [...(byRule.get(alarm.rule) ?? []), alarm]);
+  // Kinds of alarm the player has not met yet come first; day 1's own kind comes last in each round.
+  const queues = [...byRule.keys()].sort((a, b) => Number(a === first.rule) - Number(b === first.rule)).map((rule) => byRule.get(rule)!);
+  const week = [first];
+  while (week.length < days && queues.some((q) => q.length)) {
+    for (const queue of queues) if (queue.length && week.length < days) week.push(queue.shift()!);
+  }
+  return week;
+}
+
+/** The rules of the alarms of the days before `day` (0 = the first day). */
+export function earlierRules(data: GameData, mon: Monument, week: Alarm[], day: number): RuleEntry[] {
+  return week
+    .slice(0, day)
+    .map((alarm) => ruleFor(data, mon, alarm))
+    .filter((rule): rule is RuleEntry => !!rule);
 }
 
 // ---------------------------------------------------------------- what would you do next?

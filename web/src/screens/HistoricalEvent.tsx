@@ -5,7 +5,6 @@ import {
   argusCards,
   cardById,
   detects,
-  featuredAlarm,
   humanCards,
   judgeDecision,
   missionScenarios,
@@ -19,6 +18,10 @@ import { useI18n, type MessageKey } from "../i18n";
 interface Props extends ScreenProps {
   /** The player's answer to "what would you do next?" (kept for the class discussion, never scored). */
   onDecide: (optionId: string) => void;
+  /** The real alarm replayed today: the level's own on day 1, another one on each later day on duty. */
+  today: Alarm | null;
+  /** How many days the week on duty has here (0 where no alarm can be replayed). */
+  days: number;
 }
 
 const VERDICT: Record<DecisionVerdict, { cls: string; icon: string }> = {
@@ -94,7 +97,7 @@ function NextStep({
   );
 }
 
-export function HistoricalEvent({ data, mon, session, go, onDecide }: Props) {
+export function HistoricalEvent({ data, mon, session, go, onDecide, today, days }: Props) {
   const { t, pick, number, date, list, month } = useI18n();
   // First and last alarm in the data, for "real data from ... to ..." (grows with each new snapshot).
   const alarmSpan = useMemo(() => {
@@ -102,8 +105,10 @@ export function HistoricalEvent({ data, mon, session, go, onDecide }: Props) {
     return [stamps[0] ?? data.snapshot.fetched_at[0], stamps[stamps.length - 1] ?? data.snapshot.fetched_at[0]];
   }, [data]);
   const cards = useMemo(() => cardById(data), [data]);
-  const alarm = featuredAlarm(mon, session.level);
+  const alarm = today;
   const rule = alarm && ruleFor(data, mon, alarm);
+  const later = session.day > 0;
+  const heading = later ? t("week.eventHeading", { n: session.day + 1 }) : t("event.heading");
 
   const next = (
     <div className="actions">
@@ -117,7 +122,7 @@ export function HistoricalEvent({ data, mon, session, go, onDecide }: Props) {
   if (!alarm || !rule) {
     return (
       <div className="screen event">
-        <h1 tabIndex={-1}>{t("event.heading")}</h1>
+        <h1 tabIndex={-1}>{heading}</h1>
         {mon.no_alarm_note ? (
           <p className="lead" data-needs-review={mon.no_alarm_note.needs_review}>
             {pick(mon.no_alarm_note)}
@@ -165,7 +170,8 @@ export function HistoricalEvent({ data, mon, session, go, onDecide }: Props) {
 
   return (
     <div className="screen event">
-      <h1 tabIndex={-1}>{t("event.heading")}</h1>
+      <h1 tabIndex={-1}>{heading}</h1>
+      {later && <p className="day-label">{t("week.day", { n: session.day + 1, total: days })}</p>}
       <p className="lead">
         {t(ai ? "event.whatAi" : "event.what", { date: date(alarm.timestamp), measures: pick(rule.measures) })}
       </p>

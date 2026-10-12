@@ -184,9 +184,25 @@ shows the main signal and its share, not the anomaly score against its limit.
   the only footprint in the data is a test shape for Baltanás.
 - **Reveal:** counts distinct ARGUS instruments (Ranverso: 26 records but 20 instruments), grouped by card.
   Differences become discussion prompts, never penalties.
-- **Alarms never replayed:** a flat signal (probably a stuck sensor, e.g. Ranverso soil moisture, now a discussion
-  question instead), implausible values (per-quantity ranges, plus per-rule ranges such as Lucretili's daily
-  temperature range of 55–60 °C), and AI alarms without a clear, mapped main signal.
+- **Alarms never replayed:** implausible values (per-quantity ranges, plus per-rule ranges such as Lucretili's daily
+  temperature range of 55–60 °C) and AI alarms without a clear, mapped main signal. A flat signal (probably a stuck
+  sensor, e.g. Ranverso soil moisture) is never a level's own alarm; it can come up on a later day of a week on
+  duty, where the alarm screen says the sensor may be stuck.
+- **Improve my network:** the score screen offers a second turn. The player goes back to the mission with the same
+  sensors, coins and three dangers, changes the network, and comes straight back to the score, which then says
+  "Before your changes: 75 out of 100. Now: 100." The class and community records keep the first attempt, so
+  classes stay comparable.
+- **A week on duty (optional, day by day):** after each score the player may go on to the next day, up to 7, or stop.
+  Day 1 is the level's own alarm; each later day replays another real alarm of the monument (`weekAlarms` in
+  `web/src/game/logic.ts`): a different kind of alarm each day while there is one, oldest first within a kind, the
+  same week for everyone. They are real alarms from different dates, not seven days in a row, and the game says
+  so. The network can be improved between any two days. Each day is scored like day 1 with that day's alarm, and
+  a sensor bought for an earlier day's alarm still counts as coins well spent. A strip shows which days were
+  caught. Baltanás has no alarm to replay, so it offers only the second turn.
+- **Challenge link:** "Share your result" sends a link such as `?m=delos&l=high&d=65.69.82&s=68`: the monument, the
+  level, the ARGUS threat ids of the three dangers, and the score to beat. Opening it offers "Take the challenge"
+  and the score screen says who won. Only a mission the game could have dealt is accepted (the level's own or one
+  from its pool), and the link never carries a class code or anything about the sender.
 - **Alarms shown:** de-duplicated, with plausible values (humidity and soil moisture
   0–100, no exact zeros). For each episode: first, strongest and last alarm, 5–10 per monument.
 

@@ -6,7 +6,8 @@ import { GameMap, type MapApi } from "./components/GameMap";
 import { Icon } from "./components/Icon";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
 import { loadGameData } from "./game/data";
-import { canDrawMission, countPicks, drawMission, featuredAlarm, isPlayable } from "./game/logic";
+import { challengeFromUrl } from "./game/challenge";
+import { canDrawMission, countPicks, drawMission, isPlayable, weekAlarms, type DayResult } from "./game/logic";
 import type { GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
 import { isBaseLang, isLang, LANGS, useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
@@ -37,7 +38,27 @@ export interface Session {
   decision: string | null;
   /** This game is already in the community store (the score screen can be left and come back to). */
   recorded: boolean;
+  /** A week on duty: the day being played (0 = the first) and how the days before it went. */
+  day: number;
+  past: DayResult[];
+  /** Today's score before the player went back to improve the network, if they did. */
+  scoreBefore: number | null;
+  /** The mission screen is open to improve the network: "Done" goes back to the score. */
+  improving: boolean;
+  /** The score to beat, when the game was started from a challenge link. */
+  beat: number | null;
 }
+
+/** A game at its very start: nothing placed, day 1, nothing decided or stored yet. */
+const fresh = (): Pick<Session, "placements" | "decision" | "recorded" | "day" | "past" | "scoreBefore" | "improving"> => ({
+  placements: [],
+  decision: null,
+  recorded: false,
+  day: 0,
+  past: [],
+  scoreBefore: null,
+  improving: false,
+});
 
 export interface ScreenProps {
   data: GameData;
@@ -88,7 +109,9 @@ export default function App() {
     setLoad({ state: "loading" });
     loadGameData()
       .then((data) => {
-        setHomePilot((p) => p ?? data.monuments.find((m) => m.playable)?.pilot_key ?? null);
+        // A challenge link opens on its own monument.
+        const challenged = challengeFromUrl(window.location.search, data)?.pilot;
+        setHomePilot((p) => p ?? challenged ?? data.monuments.find((m) => m.playable)?.pilot_key ?? null);
         setLoad({ state: "ready", data });
       })
       .catch(() => setLoad({ state: "error" }));
@@ -131,6 +154,18 @@ export default function App() {
   const session: Session | null = game && { ...game, picks: countPicks(game.placements) };
   const inGame = screen !== "home" && screen !== "teacher" && screen !== "observe" && session && playable;
   const observing = screen === "observe" && report && data ? report : null;
+  // "Beat my score on the same dangers": ?m=delos&l=high&d=65.69.82&s=68 (see game/challenge.ts).
+  const challenge = useMemo(() => (data ? challengeFromUrl(window.location.search, data) : null), [data]);
+  // The real alarms of this game's week on duty, one per day; today's is week[day].
+  const week = playable && game ? weekAlarms(playable, game.level) : [];
+  const today = game ? (week[game.day] ?? null) : null;
+
+  const start = (pilot: string, level: LevelId, mission?: string[], beat: number | null = null) => {
+    const started = data?.monuments.find((m) => m.pilot_key === pilot);
+    const own = started && isPlayable(started) ? (started.levels.find((l) => l.id === level)?.mission ?? []) : [];
+    setGame({ ...fresh(), pilot, level, mission: mission ?? own, beat });
+    setScreen(preQuiz.asked ? "story" : "quizPre");
+  };
 
   const setPlacements = useCallback((update: (prev: Placement[]) => Placement[]) => {
     setGame((g) => (g ? { ...g, placements: update(g.placements) } : g));
@@ -191,12 +226,9 @@ export default function App() {
         pilot={homePilot}
         setPilot={setHomePilot}
         initialLevel={game?.pilot === homePilot ? game.level : undefined}
-        onStart={(pilot, level) => {
-          const started = data.monuments.find((m) => m.pilot_key === pilot);
-          const mission = started && isPlayable(started) ? (started.levels.find((l) => l.id === level)?.mission ?? []) : [];
-          setGame({ pilot, level, placements: [], mission, decision: null, recorded: false });
-          setScreen(preQuiz.asked ? "story" : "quizPre");
-        }}
+        onStart={(pilot, level) => start(pilot, level)}
+        challenge={challenge}
+        onChallenge={() => challenge && start(challenge.pilot, challenge.level, challenge.mission, challenge.score)}
       />
     );
   } else {
@@ -205,7 +237,8 @@ export default function App() {
     // so classmates compare the same mission.
     const replay = () => {
       const drawn = classCode ? null : drawMission(data, playable, session.level, session.mission);
-      setGame((g) => (g ? { ...g, placements: [], mission: drawn ?? g.mission, decision: null, recorded: false } : g));
+      // New dangers are a new game: the challenge was about the old ones.
+      setGame((g) => (g ? { ...g, ...fresh(), mission: drawn ?? g.mission, beat: drawn ? null : g.beat } : g));
       setScreen(STEPS[0]);
     };
     const replayLabel = t(!classCode && canDrawMission(playable, session.level) ? "score.playNew" : "score.playAgain");
@@ -270,10 +303,26 @@ export default function App() {
           />
         )}
         {screen === "story" && <Story {...props} />}
-        {screen === "mission" && <Mission {...props} setPlacements={setPlacements} mapApi={mapApi} />}
+        {screen === "mission" && (
+          <Mission
+            {...props}
+            setPlacements={setPlacements}
+            mapApi={mapApi}
+            improving={session.improving}
+            onImproved={() => {
+              setGame((g) => (g ? { ...g, improving: false } : g));
+              setScreen("score");
+            }}
+          />
+        )}
         {screen === "reveal" && <Reveal {...props} />}
         {screen === "event" && (
-          <HistoricalEvent {...props} onDecide={(decision) => setGame((g) => (g ? { ...g, decision } : g))} />
+          <HistoricalEvent
+            {...props}
+            today={today}
+            days={week.length}
+            onDecide={(decision) => setGame((g) => (g ? { ...g, decision } : g))}
+          />
         )}
         {screen === "score" && (
           <Score
@@ -284,6 +333,17 @@ export default function App() {
             onQuiz={() => setScreen("quizPost")}
             onRecorded={() => setGame((g) => (g ? { ...g, recorded: true } : g))}
             onReport={() => openReport(playable.pilot_key, "score")}
+            week={week}
+            onImprove={(total) => {
+              // The first score of the day is the "before", however often the network is changed.
+              setGame((g) => (g ? { ...g, improving: true, scoreBefore: g.scoreBefore ?? total } : g));
+              setScreen("mission");
+            }}
+            onNextDay={(result) => {
+              // Today is settled as it stands; tomorrow starts with the same network and a fresh question.
+              setGame((g) => (g ? { ...g, past: [...g.past, result], day: g.day + 1, scoreBefore: null, decision: null } : g));
+              setScreen("event");
+            }}
           />
         )}
       </>
@@ -323,7 +383,7 @@ export default function App() {
             reportPin={observing?.at}
             onReportPin={observing?.editable ? (at) => setReport((r) => (r ? { ...r, at } : r)) : undefined}
             placements={inGame ? game!.placements : []}
-            alarm={inGame && screen === "event" ? featuredAlarm(playable!, game!.level) : null}
+            alarm={inGame && screen === "event" ? today : null}
             apiRef={mapApi}
             onSelectSite={(pilot) => {
               setHomePilot(pilot);

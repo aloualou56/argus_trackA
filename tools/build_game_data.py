@@ -1437,7 +1437,16 @@ DESIGN_ASSUMPTIONS = [
     "cards (60); 25 if the network detects the replayed real alarm; up to 15 for the share of coins spent on cards "
     "that help with a mission threat or the alarm. The total is scaled to 100 when a part does not apply (no "
     "replayable alarm, or a threat no card can warn about).",
-    "Replayed alarms never come from a flat signal (a probably stuck sensor); the build refuses such a pick.",
+    "A level's own alarm (day 1) never comes from a flat signal (a probably stuck sensor); the build refuses such a "
+    "pick. Later days of a week on duty can replay one, and the alarm screen then says the sensor may be stuck.",
+    "Second turn and week on duty (web/src/game/logic.ts, weekAlarms): after the score the player may improve the "
+    "network (same sensors, coins and dangers) and may go on, one optional day at a time, through up to 7 days. Day "
+    "1 is the level's own alarm; later days take the monument's other replayable alarms, a different rule each day "
+    "while there is one, oldest first within a rule. They are real alarms from different dates, shown with their "
+    "real dates, not consecutive days. Each day is scored like day 1 with that day's alarm; cards that detect an "
+    "earlier day's alarm count as helpful coins. Only the first attempt of day 1 is stored for the class.",
+    "Challenge link: monument, level, the three dangers (ARGUS threat ids) and a score to beat, in the page address. "
+    "Only the level's own mission or one from its pool is accepted.",
     "The human-observer card stands for regular visual inspection by people. It helps with threats people can see "
     "(pests, mould, vandalism, new cracks) but never detects an AD-RT alarm, and it is left out of the ARGUS "
     "comparison because ARGUS lists instruments only.",

@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { normalizeClassCode } from "../community/classCode";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
+import type { Challenge } from "../game/challenge";
 import type { GameData, Level, LevelId, LevelSummary } from "../game/types";
 import { useI18n } from "../i18n";
 
@@ -17,6 +18,9 @@ interface Props {
   onTeacher: () => void;
   /** Opens the observation report for the selected monument. */
   onReport: () => void;
+  /** The game was opened from a challenge link ("beat my score on the same dangers"). */
+  challenge: Challenge | null;
+  onChallenge: () => void;
 }
 
 /** Join or leave a class. Lives inside the home form, so Enter here joins instead of starting the game. */
@@ -93,6 +97,31 @@ function ClassPanel({ classCode, setClassCode, onTeacher }: Pick<Props, "classCo
   );
 }
 
+/** Shown when the game was opened from a challenge link: the same monument, level and dangers. */
+function ChallengePanel({ data, challenge, onChallenge }: Pick<Props, "data" | "onChallenge"> & { challenge: Challenge }) {
+  const { t, pick } = useI18n();
+  const mon = data.monuments.find((m) => m.pilot_key === challenge.pilot);
+  const name = mon?.display_name ? pick(mon.display_name) : (mon?.name ?? challenge.pilot);
+  return (
+    <section className="panel challenge" aria-labelledby="challenge-title">
+      <h2 id="challenge-title">
+        <Icon name="shield" />
+        {t("challenge.title")}
+      </h2>
+      <p>{t("challenge.text", { name, level: t(levelKey(challenge.level)) })}</p>
+      {challenge.score !== null && (
+        <p>
+          <strong>{t("challenge.beat", { score: challenge.score })}</strong>
+        </p>
+      )}
+      <button type="button" className="btn btn-primary btn-big" onClick={onChallenge}>
+        {t("challenge.accept")}
+        <Icon name="arrow" />
+      </button>
+    </section>
+  );
+}
+
 /** Highest available level: it carries the monument's story hook. */
 function defaultLevel(levels: LevelSummary[]): LevelId | undefined {
   return [...levels].reverse().find((l) => l.available)?.id;
@@ -107,7 +136,19 @@ function nearestLevel(levels: LevelSummary[], wanted: LevelId): LevelId | undefi
     .sort((a, b) => a.distance - b.distance)[0]?.l.id;
 }
 
-export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, setClassCode, onTeacher, onReport }: Props) {
+export function Home({
+  data,
+  pilot,
+  setPilot,
+  initialLevel,
+  onStart,
+  classCode,
+  setClassCode,
+  onTeacher,
+  onReport,
+  challenge,
+  onChallenge,
+}: Props) {
   const { t, tn, pick } = useI18n();
   const mon = data.monuments.find((m) => m.pilot_key === pilot);
   const [level, setLevel] = useState<LevelId | undefined>(initialLevel ?? (mon && defaultLevel(mon.levels)));
@@ -132,6 +173,8 @@ export function Home({ data, pilot, setPilot, initialLevel, onStart, classCode, 
     <form className="screen home" onSubmit={submit}>
       <h1 tabIndex={-1}>{t("app.title")}</h1>
       <p className="lead">{t("home.intro")}</p>
+
+      {challenge && <ChallengePanel data={data} challenge={challenge} onChallenge={onChallenge} />}
 
       <section aria-labelledby="how-title" className="panel">
         <h2 id="how-title">{t("home.how")}</h2>

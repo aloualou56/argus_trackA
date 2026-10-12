@@ -1,17 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { summaryOf, topCard, type CommunityStore, type Summary } from "../community/store";
+import { DayStrip } from "../components/DayStrip";
 import { Icon } from "../components/Icon";
+import { challengeOutcome, challengeQuery } from "../game/challenge";
 import {
   cardById,
   checklistFor,
-  featuredAlarm,
+  earlierRules,
   humanCards,
   missionScenarios,
   ruleFor,
   score,
   type CoverLevel,
+  type DayResult,
 } from "../game/logic";
+import type { Alarm } from "../game/types";
 import { useI18n, type MessageKey } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -24,6 +28,12 @@ interface Props extends ScreenProps {
   onRecorded: () => void;
   /** Opens the observation report for this monument. */
   onReport: () => void;
+  /** The real alarms of the week on duty, one per day; today's is week[session.day]. Empty if none can be replayed. */
+  week: Alarm[];
+  /** Back to the mission with the same sensors and dangers; `total` is the score to compare with afterwards. */
+  onImprove: (total: number) => void;
+  /** Settle today as it stands and replay tomorrow's alarm. */
+  onNextDay: (today: DayResult) => void;
 }
 
 const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: MessageKey }> = {
@@ -34,20 +44,42 @@ const STATUS: Record<CoverLevel | "unscored", { cls: string; icon: string; key: 
   unscored: { cls: "learn is-info", icon: "talk", key: "score.noSensorTag" },
 };
 
-export function Score({ data, mon, session, classCode, go, community, onReplay, replayLabel, onQuiz, onRecorded, onReport }: Props) {
+export function Score({
+  data,
+  mon,
+  session,
+  classCode,
+  go,
+  community,
+  onReplay,
+  replayLabel,
+  onQuiz,
+  onRecorded,
+  onReport,
+  week,
+  onImprove,
+  onNextDay,
+}: Props) {
   const { t, pick, list, number } = useI18n();
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level, session.mission);
-  const alarm = featuredAlarm(mon, session.level);
+  const alarm = week[session.day] ?? null;
   const rule = alarm && ruleFor(data, mon, alarm);
-  const result = score(threats, rule, session.picks, cards);
+  // A sensor kept for an earlier day's alarm still counts as coins well spent.
+  const result = score(threats, rule, session.picks, cards, earlierRules(data, mon, week, session.day));
   const detected = result.alarm?.detected ?? false;
+  // A week on duty: the days before as they were settled, and today as it stands now.
+  const hasWeek = week.length > 1;
+  const lastDay = session.day >= week.length - 1;
+  const results = [...session.past.map((d) => d.detected), ...(alarm ? [detected] : [])];
+  const caught = results.filter(Boolean).length;
   const [summary, setSummary] = useState<Summary | null>(null);
   const [shareStatus, setShareStatus] = useState("");
 
   const share = async () => {
     const text = t("share.text", { name: pick(mon.display_name), score: result.total });
-    const url = `${window.location.origin}${window.location.pathname}`; // no class code in shared links
+    // A challenge link: the same monument, level and dangers, and this score to beat. No class code in it.
+    const url = `${window.location.origin}${window.location.pathname}?${challengeQuery(mon, session.level, session.mission, result.total)}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: t("app.title"), text, url });
@@ -94,10 +126,20 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
 
   return (
     <div className="screen score">
-      <h1 tabIndex={-1}>{t("score.heading")}</h1>
+      <h1 tabIndex={-1}>{session.day > 0 ? t("week.scoreHeading", { n: session.day + 1 }) : t("score.heading")}</h1>
       <div className="panel score-card">
         <p className="score-big">{t("score.points", { score: result.total })}</p>
         <p className="verdict">{t(`score.verdict.${result.verdict}` as MessageKey)}</p>
+        {session.scoreBefore !== null && (
+          <p className="score-change">
+            <strong>{t("week.before", { before: session.scoreBefore, now: result.total })}</strong>
+          </p>
+        )}
+        {session.beat !== null && (
+          <p className="score-change">
+            <strong>{t(`challenge.${challengeOutcome(result.total, session.beat)}` as MessageKey, { score: session.beat })}</strong>
+          </p>
+        )}
         <ul className="breakdown">
           <li>
             <span>{t("score.threats", { full: result.full, partial: result.partial, total: threats.length })}</span>
@@ -119,6 +161,39 @@ export function Score({ data, mon, session, classCode, go, community, onReplay, 
         </ul>
         {!result.alarm && <p className="small">{t("score.scaled")}</p>}
       </div>
+
+      {/* The second turn: improve the network, and (optionally) stay on duty for another day. */}
+      <section className="panel week" aria-labelledby="week-title">
+        <h2 id="week-title">{t(hasWeek ? "week.title" : "week.improveTitle")}</h2>
+        {hasWeek && (
+          <>
+            <p className="day-label">{t("week.day", { n: session.day + 1, total: week.length })}</p>
+            <DayStrip results={results} total={week.length} />
+            <p className="week-lead">
+              {lastDay
+                ? t("week.done", { caught, total: week.length })
+                : t(detected ? "week.caughtToday" : "week.missedToday")}
+            </p>
+          </>
+        )}
+        <div className="actions actions-split">
+          {hasWeek && !lastDay && alarm && (
+            <button
+              type="button"
+              className="btn btn-primary btn-big"
+              onClick={() => onNextDay({ alarm: alarm.id, detected, total: result.total })}
+            >
+              {t("week.next", { n: session.day + 2 })}
+              <Icon name="arrow" />
+            </button>
+          )}
+          <button type="button" className="btn btn-secondary btn-big" onClick={() => onImprove(result.total)}>
+            {t("week.improve")}
+          </button>
+        </div>
+        <p className="small">{t("week.improveHelp")}</p>
+        {hasWeek && <p className="small">{t("week.note")}</p>}
+      </section>
 
       <section aria-labelledby="learn-title">
         <h2 id="learn-title">{t("score.learn")}</h2>
