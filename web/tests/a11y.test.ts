@@ -5,7 +5,7 @@ function fakePage(saved: Record<string, string> = {}) {
   const classes = new Set<string>();
   const props = new Map<string, string>();
   const root = {
-    style: { fontSize: "", setProperty: (k: string, v: string) => props.set(k, v), removeProperty: (k: string) => props.delete(k) },
+    style: { setProperty: (k: string, v: string) => props.set(k, v), removeProperty: (k: string) => props.delete(k) },
     classList: { toggle: (name: string, on: boolean) => (on ? classes.add(name) : classes.delete(name)) },
   };
   vi.stubGlobal("window", {
@@ -25,14 +25,12 @@ describe("accessibility settings", () => {
     const a = await import("../src/a11y/settings");
     expect(a.getSettings()).toEqual(a.DEFAULTS);
     a.setSettings({ textSize: 150, contrast: true, spacing: true });
-    expect(page.root.style.fontSize).toBe("150%");
-    expect(page.props.get("--text-scale")).toBe("1.5"); // the map divides its sizes by it
+    expect(page.props.get("--text-size")).toBe("150%"); // the root font size (styles.css)
     expect([...page.classes].sort()).toEqual(["a11y-contrast", "a11y-spacing"]);
     expect(a.motionReduced()).toBe(false);
     a.setSettings({ lessMotion: true, textSize: 100 });
     expect(a.motionReduced()).toBe(true);
-    expect(page.root.style.fontSize).toBe("");
-    expect(page.props.has("--text-scale")).toBe(false);
+    expect(page.props.has("--text-size")).toBe(false);
   });
 
   it("are remembered, and anything odd that was saved is ignored", async () => {

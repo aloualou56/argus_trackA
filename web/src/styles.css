@@ -32,7 +32,8 @@
   --you: #0072b2; /* Okabe-Ito blue */
   --argus: #d55e00; /* Okabe-Ito vermillion */
   --argus-pin: #a84300; /* darker vermillion: white numbers on it reach 5.5:1 */
-  --map-height: 42vh;
+  /* a narrow screen's map strip: smaller as the text grows, so the page keeps room to read */
+  --map-height: clamp(22vh, calc(42vh - (1rem - 16px) * 10), 42vh);
   /* drawn plan (OpenStreetMap / Natural Earth outlines) */
   --plan-water: #bfd9ea;
   --plan-land: #f1f3ec;
@@ -55,6 +56,7 @@
 }
 
 html {
+  font-size: var(--text-size, 100%); /* the menu's text size (see "text size", at the end) */
   -webkit-text-size-adjust: 100%;
   /* the sticky map must never hide the element that has focus */
   scroll-padding-top: calc(var(--map-height) + 0.5rem);
@@ -67,6 +69,7 @@ body {
   font-family: system-ui, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.55;
+  overflow-wrap: break-word; /* a word too long for its line (large text) breaks instead of running off */
 }
 
 h1,
@@ -118,7 +121,8 @@ main:focus {
 .skip-link {
   position: absolute;
   left: var(--gutter);
-  top: -4rem;
+  top: 0;
+  translate: 0 -100%; /* out of sight by its own height, which large text makes two lines */
   z-index: 3000; /* above the phone's floating bars too */
   background: var(--primary);
   color: #fff;
@@ -128,6 +132,7 @@ main:focus {
 }
 .skip-link:focus {
   top: 0.5rem;
+  translate: none;
 }
 
 /* ------------------------------------------------------------------ layout */
@@ -473,6 +478,7 @@ main {
   align-items: center;
   gap: 0.75rem;
   min-height: 56px;
+  scroll-margin-block: 8rem;
   margin-bottom: 0.5rem;
   padding: 0.65rem 1rem;
   background: var(--surface);
@@ -505,9 +511,11 @@ main {
 .choice-body {
   display: flex;
   flex-direction: column;
+  min-width: 0; /* large text: its words wrap inside the row instead of pushing past it */
 }
 .choice-title {
   display: inline-flex;
+  flex-wrap: wrap; /* large text: a long word goes under its icon or bars */
   align-items: center;
   gap: 0.6rem;
   font-weight: 650;
@@ -905,12 +913,14 @@ main {
 }
 .breakdown li {
   display: flex;
+  flex-wrap: wrap; /* large text: the points go under their line, on the right */
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0 1rem;
   padding: 0.5rem 0;
   border-top: 1px solid var(--line);
 }
 .breakdown strong {
+  margin-left: auto;
   white-space: nowrap;
 }
 
@@ -1249,7 +1259,7 @@ textarea.input {
   top: env(safe-area-inset-top, 0px); /* below a phone's status bar when the page runs edge to edge */
   z-index: 20;
   height: var(--map-height);
-  min-height: 240px;
+  min-height: max(150px, calc(240px - (1rem - 16px) * 6)); /* 240px, less for large text */
   background: #dde3e8;
   border-bottom: 2px solid var(--primary);
 }
@@ -1293,17 +1303,17 @@ textarea.input {
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--edge);
-  border-radius: 0.6rem;
+  border-radius: 10px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
 }
 .map-switch button {
   min-height: 44px;
-  padding: 0 0.8rem;
+  padding: 0 13px;
   border: 0;
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: calc(0.9rem / var(--text-scale, 1));
+  font-size: 14.4px;
   font-weight: 650;
   cursor: pointer;
 }
@@ -1369,12 +1379,12 @@ textarea.input {
   top: calc(50% + 33px);
   z-index: 1000;
   transform: translateX(-50%);
-  padding: 0.2rem 0.55rem;
+  padding: 3px 9px;
   border: 1px solid var(--ink);
   border-radius: 3px;
   background: var(--surface);
   color: var(--ink);
-  font-size: calc(0.8rem / var(--text-scale, 1));
+  font-size: 12.8px;
   font-weight: 650;
   white-space: nowrap;
   pointer-events: none;
@@ -1387,11 +1397,11 @@ textarea.input {
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
-  padding: 0.35rem 0.6rem;
-  border-radius: 0.5rem;
+  gap: 4px 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
   background: rgb(255 255 255 / 0.95);
-  font-size: calc(0.85rem / var(--text-scale, 1));
+  font-size: 13.6px;
   font-weight: 600;
 }
 .legend-you,
@@ -1418,13 +1428,13 @@ textarea.input {
   z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  max-width: min(18rem, calc(100% - 80px));
-  padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+  gap: 4px;
+  max-width: min(288px, calc(100% - 80px));
+  padding: 3px 3px 3px 10px;
   border: 1px solid var(--edge);
-  border-radius: 0.5rem;
+  border-radius: 8px;
   background: var(--surface);
-  font-size: calc(0.8rem / var(--text-scale, 1));
+  font-size: 12.8px;
   line-height: 1.35;
 }
 .map-notice p {
@@ -1435,10 +1445,10 @@ textarea.input {
   width: 44px;
   height: 44px;
   border: 0;
-  border-radius: 0.4rem;
+  border-radius: 6px;
   background: transparent;
   color: var(--ink);
-  font-size: calc(1.4rem / var(--text-scale, 1));
+  font-size: 22.4px;
   cursor: pointer;
 }
 
@@ -1446,7 +1456,7 @@ textarea.input {
   position: relative;
   display: grid;
   place-items: center;
-  font-size: calc(0.9375rem / var(--text-scale, 1));
+  font-size: 15px;
   width: 2em; /* 30 px at normal size; grows with large text */
   height: 2em;
   border: 2px solid #fff;
@@ -1497,14 +1507,14 @@ textarea.input {
 .alarm-label,
 .site-label {
   font: inherit;
-  font-size: calc(0.85rem / var(--text-scale, 1));
+  font-size: 13.6px;
   font-weight: 700;
   color: var(--ink);
 }
 /* long names (Greek especially) wrap instead of running off the map */
 .leaflet-tooltip.alarm-label {
   width: max-content;
-  max-width: min(calc(11rem / var(--text-scale, 1)), 42vw); /* fits beside the ring on a narrow map */
+  max-width: min(176px, 42vw); /* fits beside the ring on a narrow map */
   white-space: normal;
 }
 .site-label.is-soon {
@@ -1649,7 +1659,7 @@ textarea.input {
   border-radius: 50%;
   background: #fff;
   color: var(--ink);
-  font-size: calc(0.85rem / var(--text-scale, 1));
+  font-size: 13.6px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
@@ -1661,7 +1671,7 @@ textarea.input {
 }
 .place-label {
   font: inherit;
-  font-size: calc(0.8rem / var(--text-scale, 1));
+  font-size: 12.8px;
   font-weight: 700;
   color: var(--ink);
 }
@@ -2082,11 +2092,11 @@ body.is-dragging-sensor .board-map .map {
 }
 .places-toggle {
   min-height: 44px;
-  padding: 0.4rem 0.75rem;
+  padding: 6px 12px;
   border: 1px solid var(--edge);
   background: var(--surface);
   color: var(--ink);
-  font-size: calc(0.9rem / var(--text-scale, 1));
+  font-size: 14.4px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
 }
 .places-count {
@@ -2098,7 +2108,7 @@ body.is-dragging-sensor .board-map .map {
   border-radius: 999px;
   background: var(--ink);
   color: #fff;
-  font-size: calc(0.75rem / var(--text-scale, 1));
+  font-size: 12px;
   font-weight: 800;
 }
 .places-panel {
@@ -2314,7 +2324,7 @@ body {
 /* ---- titles: map lettering */
 h1 {
   font-family: var(--display);
-  font-size: clamp(2.5rem, 8.5vw, 3.4rem);
+  font-size: min(clamp(2.5rem, 8.5vw, 3.4rem), 12vw); /* large text: its longest words still fit a phone */
   font-weight: 800;
   line-height: 0.94;
   letter-spacing: 0.01em;
@@ -2323,7 +2333,7 @@ h1 {
   margin-bottom: 0.75rem;
 }
 h2 {
-  font-size: 1.3rem;
+  font-size: min(1.3rem, 8vw);
   font-weight: 750;
   letter-spacing: -0.005em;
 }
@@ -2357,6 +2367,11 @@ b {
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+/* the map's own lettering does not grow with the text (see "text size") */
+.map-coords,
+.leaflet-control-scale-line {
+  font-size: 12px;
 }
 .progress-text strong {
   font-weight: 700;
@@ -3030,7 +3045,7 @@ b {
 }
 .site-label {
   font-family: var(--display);
-  font-size: calc(1.2rem / var(--text-scale, 1));
+  font-size: 19.2px;
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1;
@@ -3045,7 +3060,7 @@ b {
   border-top: 0;
   background: rgb(255 255 255 / 0.88);
   color: var(--ink);
-  font-size: calc(0.68rem / var(--text-scale, 1));
+  font-size: 10.88px;
   line-height: 1.5;
   text-shadow: none;
   text-transform: none; /* "m" and "km" are units, not words */
@@ -3054,7 +3069,7 @@ b {
    coordinates step aside. */
 @media (max-width: 39.99rem) {
   .map-legend {
-    max-width: calc(100% - 9.5rem);
+    max-width: calc(100% - 152px);
   }
   .board-map:has(.map-legend) .map-coords {
     display: none;
@@ -3071,7 +3086,7 @@ b {
   border-radius: 3px;
   background: rgb(255 255 255 / 0.88);
   color: var(--ink);
-  font-size: calc(0.68rem / var(--text-scale, 1));
+  font-size: 10.88px;
   white-space: nowrap;
   pointer-events: none;
 }
@@ -3173,6 +3188,7 @@ b {
   border-color: rgb(255 255 255 / 0.7);
   background: transparent;
   color: #fff;
+  font-size: min(1.0625rem, 20px); /* see "text size" */
   font-weight: 700;
 }
 .lang-menu .menu-toggle:hover,
@@ -3260,6 +3276,7 @@ b {
 /* 1. the monuments: an index of the sheet, a photograph beside each name */
 .choices-index .choice {
   position: relative;
+  flex-wrap: wrap; /* large text: the name goes under the photograph, the whole width */
   gap: 0.8rem;
   padding: 0.5rem 0.8rem 0.5rem 0.5rem;
 }
@@ -3273,17 +3290,18 @@ b {
   height: 1px;
   margin: 0;
   opacity: 0;
+  scroll-margin-bottom: 10rem;
 }
 .choice-photo {
   flex: none;
-  width: 5.75rem;
+  width: min(5.75rem, 26vw); /* large text: the name keeps most of the row */
   aspect-ratio: 4 / 3;
   border-radius: 4px;
   background: var(--tint);
   object-fit: cover;
 }
 .choices-index .choice-body {
-  flex: 1 1 auto;
+  flex: 1 1 8em;
   min-width: 0;
 }
 .choice-coords {
@@ -3374,7 +3392,8 @@ b {
 /* 4. the decision after the alarm: four actions, as tiles */
 .action-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* two side by side, or one a row when large text leaves no room for two */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9em), 1fr));
   gap: 0.5rem;
 }
 .action-grid .choice {
@@ -3404,8 +3423,9 @@ b {
   bottom: 0;
   z-index: 20;
   display: flex;
+  flex-wrap: wrap; /* large text: the button goes under the summary, the whole width */
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem 0.75rem;
   margin: 1.5rem calc(-1 * var(--gutter)) -2rem;
   padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom, 0px));
   border-top: 3px solid var(--ink);
@@ -3413,13 +3433,14 @@ b {
 }
 .start-summary {
   display: flex;
-  flex: 1 1 auto;
+  flex: 1000 1 10em; /* beside the button, it takes the room left over */
   flex-direction: column;
   min-width: 0;
   margin: 0;
   line-height: 1.25;
 }
 .start-summary strong {
+  font-size: min(1em, 21px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3427,12 +3448,13 @@ b {
 .start-summary span {
   color: var(--muted);
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: min(0.7rem, 14px);
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 .start-bar .btn-big {
-  flex: none;
+  flex: 1 0 auto;
+  font-size: min(1.1rem, 22px); /* the bar stays on screen: see "text size" */
   width: auto;
   min-width: 8.5rem;
 }
@@ -3473,12 +3495,12 @@ b {
 
 /* ---- the report's map: the hint sits clear of the place names, beside the zoom buttons */
 .crosshair-label.report-hint {
-  top: 4.4rem;
-  right: 0.6rem;
-  left: 4.6rem;
-  max-width: 22rem;
+  top: 70px;
+  right: 10px;
+  left: 74px;
+  max-width: 352px;
   margin: 0 auto;
-  padding: 0.3rem 0.7rem;
+  padding: 5px 11px;
   border: 2px solid var(--ink);
   border-radius: var(--radius);
   text-align: center;
@@ -3889,7 +3911,7 @@ b {
 .a11y-toggle {
   display: grid;
   place-items: center;
-  font-size: 1rem;
+  font-size: min(1rem, 20px); /* see "text size" */
   width: 2.75em;
   height: 2.75em;
   padding: 0;
@@ -3909,7 +3931,7 @@ b {
   .brand,
   .brand:disabled {
     flex: 1 1 auto;
-    font-size: clamp(1rem, 4.6vw, 1.25rem);
+    font-size: min(clamp(1rem, 4.6vw, 1.25rem), 20px);
     line-height: 0.95;
     white-space: normal;
   }
@@ -4079,8 +4101,8 @@ b {
   }
   .app.is-play .map-switch button {
     min-height: 36px;
-    padding: 0 0.5rem;
-    font-size: calc(0.75rem / var(--text-scale, 1));
+    padding: 0 8px;
+    font-size: 12px;
   }
   .app.is-play .leaflet-bar a,
   .app.is-play .leaflet-touch .leaflet-bar a {
@@ -4095,8 +4117,8 @@ b {
   }
   .app.is-play .places-toggle {
     min-height: 36px;
-    padding: 0.25rem 0.55rem;
-    font-size: calc(0.82rem / var(--text-scale, 1));
+    padding: 4px 9px;
+    font-size: 13.12px;
   }
   .app.is-play .board-map .map-coords {
     display: none;
@@ -4316,7 +4338,7 @@ b {
 }
 .a11y-panel h2 {
   margin: 0 0 0.6rem;
-  font-size: 1.2rem;
+  font-size: min(1.2rem, 7vw);
 }
 .a11y-sizes {
   display: flex;
@@ -4436,10 +4458,38 @@ html.a11y-spacing main p {
   }
 }
 
-/* The menu's text size (a11y/settings.ts) grows the page's text, not the map's own furniture: on a
-   phone the map is a strip, and labels, legend, buttons and pins half as big again would bury it.
-   Those sizes are divided by --text-scale, so the map looks the same; what its labels say is also
-   in the panel, which does grow. (A phone's own font-size setting still grows everything.) */
+/* ================================================================== text size */
+/* Two settings make the text bigger: the menu's text size (a11y/settings.ts sets --text-size, the
+   root font size) and the phone's own font size (index.html's <meta name="text-scale"> has the
+   browser put it in the root font size too, evenly, instead of enlarging some blocks of text and
+   not others). Together they can make it three times as big, so:
+   - the map's own furniture (its buttons, legend, labels, pins, scale bar) is sized in px: it
+     never grows, so it never buries the map; what its labels say is also in the page, which does;
+   - the screens that are all map (placing sensors on a phone, the alarm playing on a phone or a
+     small tablet) cap the text at 125%, so the bars floating on the map leave room for it;
+   - the bars that stay on screen (the top band's buttons, the first screen's Start) cap theirs at
+     about 125% too, and the map strip above the page gets smaller as the text grows;
+   - headings are never wider than the screen, and a word too long for its line breaks;
+   - on a phone or a small tablet the text stops growing at about twice its size on the
+     narrowest phones (9vw: 32px at 360px wide), as more leaves a handful of letters a line. */
+@media (max-width: 59.99rem) {
+  html {
+    font-size: min(var(--text-size, 100%), 9vw);
+  }
+  .board-panel {
+    scroll-padding-bottom: 14rem;
+  }
+}
+@media (max-width: 39.99rem) {
+  html:has(.app.is-play) {
+    font-size: min(var(--text-size, 100%), 20px);
+  }
+}
+@media (max-width: 59.99rem) {
+  html:has(.app.is-replay) {
+    font-size: min(var(--text-size, 100%), 20px);
+  }
+}
 
 /* Phones and small tablets: the game's name shows in the top band only on the first screen (it
    is in the tab title on every screen). Elsewhere the band keeps the mark and its buttons on one

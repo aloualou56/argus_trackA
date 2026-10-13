@@ -829,7 +829,7 @@ async function checkA11yMenu(browser, lang) {
   await panel.getByRole("checkbox", { name: t["a11y.contrast"] }).check();
   await panel.getByRole("checkbox", { name: t["a11y.spacing"] }).check();
   await panel.getByRole("checkbox", { name: t["a11y.motion"] }).check();
-  const root = () => page.evaluate(() => `${document.documentElement.style.fontSize} ${[...document.documentElement.classList].sort().join(" ")}`);
+  const root = () => page.evaluate(() => `${document.documentElement.style.getPropertyValue("--text-size")} ${[...document.documentElement.classList].sort().join(" ")}`);
   const want = "150% a11y-contrast a11y-motion a11y-spacing";
   if ((await root()) !== want) note(`${prefix}: settings not applied (${await root()})`);
   await checkPage(page, `${prefix} menu`, { focus: false });

@@ -424,6 +424,15 @@ export function GameMap(props: Props) {
       if (banner) options.paddingTopLeft = L.point(70, banner.bottom - box.top + 24);
       if (skip) options.paddingBottomRight = L.point(48, box.bottom - skip.top + 24);
     }
+    // A short map strip (the alarm, the score on a phone) has its legend at the top (styles.css):
+    // the view starts below it, so it never covers the alarm or its label.
+    const legend = containerRef.current?.parentElement?.querySelector(".map-legend")?.getBoundingClientRect();
+    if (mode !== "replay" && legend?.height && containerRef.current) {
+      const box = containerRef.current.getBoundingClientRect();
+      if (legend.top - box.top < box.height / 3) {
+        options.paddingTopLeft = L.point(70, Math.max(options.paddingTopLeft.y, legend.bottom - box.top + 12));
+      }
+    }
     if (mode === "overview" || !mon?.map) {
       const centres = data.monuments.filter((m) => m.map).map((m) => m.map!.center);
       map.flyToBounds(L.latLngBounds(centres).pad(0.2), { ...options, maxZoom: 6 });

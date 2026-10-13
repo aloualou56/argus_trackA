@@ -37,14 +37,15 @@ function load(): A11ySettings {
 let current: A11ySettings = typeof window === "undefined" ? { ...DEFAULTS } : load();
 const listeners = new Set<(s: A11ySettings) => void>();
 
-/** Puts the settings on the page: the root font size (everything in rem grows) and three classes. */
+/**
+ * Puts the settings on the page: the text size (the root font size, so everything in rem grows;
+ * styles.css, "text size", also caps it on the screens that are all map) and three classes.
+ */
 export function applySettings(s: A11ySettings = current): void {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
-  root.style.fontSize = s.textSize === 100 ? "" : `${s.textSize}%`;
-  // (the map's furniture divides its sizes by this, so the map keeps its normal size: styles.css)
-  if (s.textSize === 100) root.style.removeProperty("--text-scale");
-  else root.style.setProperty("--text-scale", String(s.textSize / 100));
+  if (s.textSize === 100) root.style.removeProperty("--text-size");
+  else root.style.setProperty("--text-size", `${s.textSize}%`);
   root.classList.toggle("a11y-contrast", s.contrast);
   root.classList.toggle("a11y-motion", s.lessMotion);
   root.classList.toggle("a11y-spacing", s.spacing);
