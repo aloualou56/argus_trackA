@@ -1,5 +1,5 @@
 {
-  "_about": "AUTHORED by the game team. Settings for the recorded narration (web/scripts/narration.ts). 'provider' picks the service: 'elevenlabs' (default; the team's paid account) or 'azure' (Microsoft Azure Speech, free tier). ElevenLabs: Greek and English use eleven_multilingual_v2 (best quality, 1 credit per character); Italian, Spanish and German use eleven_flash_v2_5 (half a credit), so all five fit about 90,000 credits. Find voices with `npm run narration -- --library --lang el` (free previews), add one with --add, and put its voice_id under elevenlabs.voices. 'say_as' changes how a word is pronounced in the recording only (the screen keeps the original), e.g. the project name ARGUS, Latin place names, 'π.Χ.' and ordinals such as '13ο αιώνα' in Greek. Replacements apply in the order listed (longer, more specific ones first). After changing the provider, a model, a voice or the settings, run with `--redo`. Needs review: the voices (listen first) and the pronunciation of ARGUS in Greek.",
+  "_about": "AUTHORED by the game team. Settings for the recorded narration (web/scripts/narration.ts). 'provider' picks the service: 'elevenlabs' (default; the team's paid account) or 'azure' (Microsoft Azure Speech, free tier). ElevenLabs: Greek and English use eleven_multilingual_v2 (best quality, 1 credit per character); Italian and Spanish use eleven_flash_v2_5 (half a credit). German uses eleven_multilingual_v2 too: with Flash, about 1 German clip in 10 came out garbled (made-up words or a stuck sound after a colon), found by transcribing every clip with Whisper. Find voices with `npm run narration -- --library --lang el` (free previews), add one with --add, and put its voice_id under elevenlabs.voices. 'say_as' changes how a word is pronounced in the recording only (the screen keeps the original), e.g. the project name ARGUS, Latin place names, 'π.Χ.' and ordinals such as '13ο αιώνα' in Greek. Replacements apply in the order listed (longer, more specific ones first). After changing the provider, a model, a voice or the settings, run with `--redo`. Needs review: the voices (listen first) and the pronunciation of ARGUS in Greek.",
   "provider": "elevenlabs",
   "azure": {
     "output_format": "audio-24khz-48kbitrate-mono-mp3",
@@ -16,8 +16,7 @@
     "model_id": "eleven_multilingual_v2",
     "models": {
       "it": "eleven_flash_v2_5",
-      "es": "eleven_flash_v2_5",
-      "de": "eleven_flash_v2_5"
+      "es": "eleven_flash_v2_5"
     },
     "output_format": "mp3_44100_128",
     "voice_settings": {

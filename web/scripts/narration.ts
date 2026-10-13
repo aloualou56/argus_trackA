@@ -5,6 +5,9 @@
 //   npm run narration -- --lang el --limit 5    a few Greek lines first, to listen before recording all
 //   npm run narration                           record every line that has no recording yet
 //   npm run narration -- --redo                 record everything again (after changing a voice or settings)
+//   npm run narration -- --redo-list scripts/narration-redo.txt
+//                                               record again only the clips listed (one "lang/key" per line,
+//                                               e.g. clips a listening check found garbled)
 //   npm run narration -- --prune                delete recordings no text uses any more
 //   npm run narration -- --sample "Κείμενο" --lang el [--provider elevenlabs] [--voice <id>]
 //                                               one test clip, to compare voices (web/narration-samples/)
@@ -71,6 +74,15 @@ const settings = JSON.parse(readFileSync(join(web, "..", "content", "narration.j
 const data = JSON.parse(readFileSync(join(web, "public", "data", "game_data.json"), "utf8")) as GameData;
 const langs = (option("lang")?.split(",") ?? [...NARRATED_LANGS]) as NarratedLang[];
 const limit = Number(option("limit") ?? Infinity);
+/** --redo-list: clips to record again, as "lang/key" lines (anything after the key is a comment). */
+const redoList = new Set(
+  option("redo-list")
+    ? readFileSync(resolve(option("redo-list")!), "utf8")
+        .split(/\r?\n/)
+        .map((l) => l.trim().split(/\s+/)[0])
+        .filter((l) => /^\w+\/\w+$/.test(l))
+    : [],
+);
 const locale = (lang: NarratedLang) => LANGS.find((l) => l.id === lang)!.locale;
 
 // ---------------------------------------------------------------- the services
@@ -471,7 +483,7 @@ async function main(): Promise<void> {
     const clips = manifest.clips[lang] ?? {};
     const voice = service.voice(lang);
     const sameVoice = manifest.voices[lang]?.provider === provider && manifest.voices[lang]?.voice === voice;
-    const missing = [...wanted].filter(([k, line]) => flag("redo") || !sameVoice || clips[k] !== line);
+    const missing = [...wanted].filter(([k, line]) => flag("redo") || redoList.has(`${lang}/${k}`) || !sameVoice || clips[k] !== line);
     const todo = missing.slice(0, limit);
     const chars = todo.reduce((n, [, line]) => n + sayAs(lang, line).length, 0);
     const credits = service.cost(lang, chars);
