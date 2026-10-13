@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { ScreenProps } from "../App";
 import { Icon } from "../components/Icon";
+import { ReadAloud } from "../components/ReadAloud";
 import {
   argusCards,
   cardById,
@@ -134,6 +135,7 @@ export function HistoricalEvent({ data, mon, session, go, onDecide, today, days 
           <p className="lead">{t("event.none")}</p>
         )}
         <p>{t("event.noneScore")}</p>
+        <ReadAloud text={`${mon.no_alarm_note ? pick(mon.no_alarm_note) : t("event.none")}\n${t("event.noneScore")}`} />
         <NextStep data={data} alarm={null} chosen={session.decision} onDecide={onDecide} />
         {next}
       </div>
@@ -178,6 +180,16 @@ export function HistoricalEvent({ data, mon, session, go, onDecide, today, days 
       <p className="lead">
         {t(ai ? "event.whatAi" : "event.what", { date: date(alarm.timestamp), measures: pick(rule.measures) })}
       </p>
+      <ReadAloud
+        text={[
+          t(ai ? "event.whatAi" : "event.what", { date: date(alarm.timestamp), measures: pick(rule.measures) }),
+          t("event.question"),
+          detection.detected ? t("event.yes", { names: names(detection.matched) }) : t("event.no", { names: missing }),
+          caughtBy.length > 0 ? t("event.argusCaught", { names: names(caughtBy) }) : "",
+        ]
+          .filter(Boolean)
+          .join("\n")}
+      />
 
       {/* The answer first: did these sensors catch it? (The replay on the map just showed it.) */}
       <section

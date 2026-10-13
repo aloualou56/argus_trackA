@@ -356,5 +356,10 @@
   "mission.helpOk": "Capito, andiamo!",
   "week.how": "Come funziona",
   "replay.skip": "Salta",
-  "replay.live": "L'allarme vero si ripete sulla mappa."
+  "replay.live": "L'allarme vero si ripete sulla mappa.",
+  "replay.continue": "Vedi la risposta",
+  "replay.over": "L'allarme è finito. Premi «{button}».",
+  "speech.read": "Ascolta",
+  "speech.stop": "Interrompi la lettura",
+  "sound.labelVibrate": "Audio e vibrazione"
 }

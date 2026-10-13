@@ -112,6 +112,15 @@ async function toMission(page, t) {
   await ok.click();
 }
 
+/** After "Done" (or "Go on to day N"): the real alarm plays on the map and waits for the player.
+    Presses its button ("Skip", or "See the answer" once it is over); an alarm with no position has
+    no replay and goes straight to its screen. */
+async function passReplay(page) {
+  await page.locator(".replay-skip, .screen.event h1").first().waitFor();
+  const button = page.locator(".replay-skip");
+  if (await button.count()) await button.click();
+}
+
 /** The quiz before the game: skipped, or answered with the given choice per question (an index). */
 async function preQuiz(page, t, answer = null) {
   await page.getByRole("heading", { level: 1, name: t["quiz.preTitle"] }).waitFor();
@@ -293,6 +302,16 @@ async function play(browser, lang, vpName) {
   if (vpName === "phone" && !panelHidden) note(`${prefix}: the panel stays on a phone while the alarm plays`);
   if (vpName === "desktop" && panelHidden) note(`${prefix}: the panel disappears on a desktop while the alarm plays`);
   await retryWrite(() => page.screenshot({ path: join(outDir, `${prefix}-3b-replay.png`) }));
+  // No time limit: once played, it waits on its final picture with "See the answer" (it no longer
+  // moves on by itself), and nothing on it moves any more.
+  const answer = page.getByRole("button", { name: t["replay.continue"] });
+  await answer.waitFor({ timeout: 8000 }).catch(() => note(`${prefix}: no "${t["replay.continue"]}" after the alarm played`));
+  await page.waitForTimeout(6000);
+  if (!(await page.locator(".board-map.mode-replay").count())) note(`${prefix}: the alarm replay moved on by itself`);
+  const moving = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length);
+  if (moving) note(`${prefix}: ${moving} animation(s) still running 6 s after the replay ended`);
+  if ((await page.evaluate(() => document.activeElement?.className ?? "")).indexOf("replay-skip") < 0) note(`${prefix}: "${t["replay.continue"]}" lost the focus`);
+  await answer.click();
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} event`);
   // Before the reveal, the alarm's map shows only the ARGUS sensor that raised it.
@@ -367,6 +386,7 @@ ${prefix}`);
   await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await passReplay(page);
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   if (await page.getByText(t["event.flatNote"]).count()) note(`${prefix}: a flat-signal alarm was replayed`);
   if (!(await page.getByText(fill(t["event.yes"], { names: cardName(lang, "rain_gauge") })).isVisible())) {
@@ -497,6 +517,11 @@ async function checkSound(browser, lang) {
       sessionStorage.setItem("langSet", "1");
     }
     window.__notes = 0;
+    window.__buzz = [];
+    navigator.vibrate = (pattern) => {
+      window.__buzz.push(pattern);
+      return true;
+    };
     const Real = window.AudioContext;
     if (Real) {
       window.AudioContext = class extends Real {
@@ -514,7 +539,8 @@ async function checkSound(browser, lang) {
   }, lang);
   const page = await context.newPage();
   const notes = () => page.evaluate(() => window.__notes);
-  const toggle = page.getByRole("button", { name: t["sound.label"], exact: true });
+  // A phone names vibration too ("Sound and vibration").
+  const toggle = page.getByRole("button", { name: t["sound.labelVibrate"], exact: true });
   await page.goto(URL_BASE);
   await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
   if ((await toggle.getAttribute("aria-pressed")) !== "true") note(`${prefix}: sound is not on at first`);
@@ -527,6 +553,9 @@ async function checkSound(browser, lang) {
   await add("humidity").click();
   const afterPlace = await notes();
   if (!(afterPlace > 0)) note(`${prefix}: placing a sensor made no sound`);
+  const buzzes = () => page.evaluate(() => window.__buzz.filter((p) => !(p.length === 1 && p[0] === 0)).length);
+  const afterPlaceBuzz = await buzzes();
+  if (!(afterPlaceBuzz > 0)) note(`${prefix}: placing a sensor did not vibrate`);
   // While placing sensors on a phone the top band is hidden: the sound button is in the "?" card.
   await page.getByRole("button", { name: t["mission.help"] }).click();
   const cardToggle = page.locator(".help-card .sound-toggle");
@@ -535,6 +564,7 @@ async function checkSound(browser, lang) {
   await page.keyboard.press("Escape");
   await add("rain_gauge").click();
   if ((await notes()) !== afterPlace) note(`${prefix}: sound with sound turned off`);
+  if ((await buzzes()) !== afterPlaceBuzz) note(`${prefix}: vibration with sound and vibration turned off`);
   await page.reload();
   await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
   if ((await toggle.getAttribute("aria-pressed")) !== "false") note(`${prefix}: "sound off" was not remembered`);
@@ -546,9 +576,12 @@ async function checkSound(browser, lang) {
   await toMission(page, t);
   await add("rain_gauge").click();
   const beforeReplay = await notes();
+  const beforeReplayBuzz = await buzzes();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await passReplay(page);
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   if (!((await notes()) > beforeReplay)) note(`${prefix}: the alarm replay made no sound`);
+  if (!((await buzzes()) > beforeReplayBuzz)) note(`${prefix}: the alarm replay did not vibrate`);
   await context.close();
 }
 
@@ -568,6 +601,7 @@ async function checkWeekReplay(browser, lang) {
   await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await passReplay(page);
   await page.getByRole("button", { name: t["event.toReveal"] }).click();
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
   for (const day of [2, 3]) {
@@ -579,6 +613,7 @@ async function checkWeekReplay(browser, lang) {
       const share = await page.evaluate(() => document.querySelector(".board-map").getBoundingClientRect().height / innerHeight);
       if (share < 0.95) note(`${prefix}: day ${day}: the map has only ${Math.round(share * 100)}% of the screen while the alarm plays`);
       if (day === 2) await retryWrite(() => page.screenshot({ path: join(outDir, `${prefix}-day2-replay.png`) }));
+      await passReplay(page);
     }
     await page.getByRole("heading", { level: 1, name: fill(t["week.eventHeading"], { n: day }) }).waitFor();
     await page.getByRole("button", { name: t["event.continue"] }).click();
@@ -627,6 +662,87 @@ async function checkHistory(browser, lang) {
   await context.close();
 }
 
+// Read aloud: offered with a voice of the game's language, reads the screen's text, stops on a
+// second press, on a new chapter and on leaving the screen; not offered without such a voice.
+async function checkReadAloud(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-read-aloud`;
+  console.log(`\n${prefix}`);
+  // Runs in the page: it gets the voices as its argument (a page script keeps no outer variables).
+  const fakeVoices = (voices) => {
+    window.__said = [];
+    window.__cancelled = 0;
+    const list = voices.map(([l, name]) => ({ lang: l, name, localService: true, default: false, voiceURI: name }));
+    const synth = {
+      getVoices: () => list,
+      speak: (u) => window.__said.push(u.text),
+      cancel: () => (window.__cancelled += 1),
+      addEventListener() {},
+      removeEventListener() {},
+    };
+    Object.defineProperty(window, "speechSynthesis", { value: synth, configurable: true });
+    window.SpeechSynthesisUtterance = class {
+      constructor(text) {
+        this.text = text;
+      }
+    };
+  };
+  const open = async (voices) => {
+    const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+    await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+    await context.addInitScript(fakeVoices, voices);
+    const page = await context.newPage();
+    await page.goto(URL_BASE);
+    await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+    await page.getByRole("button", { name: t["home.start"] }).click();
+    await preQuiz(page, t);
+    await page.getByRole("heading", { level: 1, name: ranverso.display_name[lang] }).waitFor();
+    return { context, page };
+  };
+  const said = (page) => page.evaluate(() => window.__said.join(" "));
+  const cancelled = (page) => page.evaluate(() => window.__cancelled);
+
+  const { context, page } = await open([[lang === "el" ? "el-GR" : "en-GB", "voice"], ["de-DE", "other"]]);
+  const read = page.getByRole("button", { name: t["speech.read"] });
+  if (!(await read.count())) note(`${prefix}: no "${t["speech.read"]}" on the story`);
+  else {
+    await read.click();
+    if (!(await said(page)).includes(ranverso.story.text[lang].slice(0, 30))) note(`${prefix}: the story was not read`);
+    const stop = page.getByRole("button", { name: t["speech.stop"] });
+    if (!(await stop.count())) note(`${prefix}: no "${t["speech.stop"]}" while reading`);
+    const before = await cancelled(page);
+    await stop.click();
+    if (!((await cancelled(page)) > before)) note(`${prefix}: "${t["speech.stop"]}" did not stop the reading`);
+    await checkPage(page, `${prefix} story`);
+    // a chapter of the whole story; the next chapter stops the reading of this one
+    await page.getByRole("button", { name: t["story.readMore"] }).click();
+    await page.getByRole("button", { name: t["speech.read"] }).click();
+    const chapterOne = ranverso.history.chapters[0].title[lang];
+    if (!(await said(page)).includes(chapterOne)) note(`${prefix}: the chapter was not read`);
+    const beforeNext = await cancelled(page);
+    await page.getByRole("button", { name: t["history.next"], exact: true }).click();
+    if (!((await cancelled(page)) > beforeNext)) note(`${prefix}: a new chapter did not stop the reading`);
+    await page.getByRole("button", { name: t["history.done"] }).first().click();
+    // the alarm: its answer is read too
+    await toMission(page, t);
+    await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
+    await page.getByRole("button", { name: t["mission.done"] }).click();
+    await passReplay(page);
+    await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
+    await page.getByRole("button", { name: t["speech.read"] }).click();
+    if (!(await said(page)).includes(t["event.question"])) note(`${prefix}: the alarm's answer was not read`);
+    const beforeLeave = await cancelled(page);
+    await page.getByRole("button", { name: t["event.toReveal"] }).click();
+    if (!((await cancelled(page)) > beforeLeave)) note(`${prefix}: leaving the screen did not stop the reading`);
+  }
+  await context.close();
+
+  // No voice for the language: no button (never the wrong language's voice).
+  const none = await open([["de-DE", "other"]]);
+  if (await none.page.getByRole("button", { name: t["speech.read"] }).count()) note(`${prefix}: "${t["speech.read"]}" offered with no ${lang} voice`);
+  await none.context.close();
+}
+
 async function playEveryMonument(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -659,6 +775,7 @@ async function playEveryMonument(browser, lang) {
       const card = first.primary_cards[0] ?? "humidity";
       await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, card) }), exact: true }).click();
       await page.getByRole("button", { name: t["mission.done"] }).click();
+      await passReplay(page);
       await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
       const alarm = mon.alarms.find((a) => a.id === lv.featured_alarm);
       if (alarm && !(await page.locator(".result").count())) note(`${label}: alarm ${alarm.id} not replayed`);
@@ -736,6 +853,7 @@ async function playClassAndTeacher(browser, lang) {
   await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await passReplay(page);
   await page.getByRole("button", { name: t["event.toReveal"] }).click();
   await page.getByRole("button", { name: t["reveal.continue"] }).click();
   // The class is named on the fold that holds the community results.
@@ -819,6 +937,7 @@ ${prefix}`);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "soil_moisture") }), exact: true }).click();
   await page.getByRole("button", { name: t["mission.done"] }).click();
+  await passReplay(page);
   await page.getByRole("button", { name: t["event.toReveal"] }).click();
   await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
   if ((await page.locator(".pin-argus").count()) === 0) note(`${prefix}: no ARGUS sensors on the plan`);
@@ -887,6 +1006,7 @@ try {
   if (!only || only === "sound") for (const lang of ["el", "en"]) await checkSound(browser, lang);
   if (!only || only === "week") for (const lang of ["el", "en"]) await checkWeekReplay(browser, lang);
   if (!only || only === "history") for (const lang of ["el", "en"]) await checkHistory(browser, lang);
+  if (!only || only === "read-aloud") for (const lang of ["el", "en"]) await checkReadAloud(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);

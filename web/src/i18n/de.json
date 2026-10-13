@@ -356,5 +356,10 @@
   "mission.helpOk": "Verstanden, los geht's!",
   "week.how": "So funktioniert es",
   "replay.skip": "Überspringen",
-  "replay.live": "Der echte Alarm läuft noch einmal auf der Karte ab."
+  "replay.live": "Der echte Alarm läuft noch einmal auf der Karte ab.",
+  "replay.continue": "Zur Antwort",
+  "replay.over": "Der Alarm ist abgelaufen. Tippe auf „{button}“.",
+  "speech.read": "Vorlesen",
+  "speech.stop": "Vorlesen beenden",
+  "sound.labelVibrate": "Ton und Vibration"
 }

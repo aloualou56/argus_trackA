@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "rea
 import { clusterPoints, countPicks, detects, formatCoords, nativeZoom, ruleFor } from "../game/logic";
 import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
 import { useI18n } from "../i18n";
-import { iconSvg } from "./Icon";
+import { Icon, iconSvg } from "./Icon";
 
 // "history": the whole story of a site; chapters move the map to the place they are about.
 export type MapMode = "overview" | "story" | "history" | "mission" | "reveal" | "event" | "score" | "report" | "replay";
@@ -41,6 +41,8 @@ interface Props {
   onReportPin?: (at: LatLng) => void;
   /** "replay" mode (the real alarm playing after "Done"): the player skips the rest of it. */
   onReplaySkip?: () => void;
+  /** "replay" mode: the picture is complete, and the button goes on to the answer. */
+  replayOver?: boolean;
 }
 
 // Placement reticle, drawn like a surveyor's mark: four arms and a small ring leave the centre
@@ -695,8 +697,14 @@ export function GameMap(props: Props) {
         </div>
       )}
       {mode === "replay" && props.onReplaySkip && (
-        <button type="button" className="btn replay-skip" ref={skipRef} onClick={props.onReplaySkip}>
-          {t("replay.skip")}
+        <button
+          type="button"
+          className={`btn replay-skip${props.replayOver ? " btn-primary is-over" : ""}`}
+          ref={skipRef}
+          onClick={props.onReplaySkip}
+        >
+          {t(props.replayOver ? "replay.continue" : "replay.skip")}
+          {props.replayOver && <Icon name="arrow" size={18} />}
         </button>
       )}
       {mode === "report" && reportEditable && !reportPin && (

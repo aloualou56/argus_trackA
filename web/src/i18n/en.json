@@ -356,5 +356,10 @@
   "mission.helpOk": "Got it, let's go!",
   "week.how": "How it works",
   "replay.skip": "Skip",
-  "replay.live": "The real alarm is playing again on the map."
+  "replay.live": "The real alarm is playing again on the map.",
+  "replay.continue": "See the answer",
+  "replay.over": "The alarm has played. Press “{button}”.",
+  "speech.read": "Read aloud",
+  "speech.stop": "Stop reading",
+  "sound.labelVibrate": "Sound and vibration"
 }

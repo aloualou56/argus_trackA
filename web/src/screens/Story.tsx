@@ -1,6 +1,7 @@
 import type { ScreenProps } from "../App";
 import { budgetFor, formatCoords, missionScenarios } from "../game/logic";
 import { Icon } from "../components/Icon";
+import { ReadAloud } from "../components/ReadAloud";
 import { PhotoCredit } from "../components/PhotoCredit";
 import { LevelBadge, LevelBars, levelKey } from "../components/LevelBadge";
 import { useI18n } from "../i18n";
@@ -35,14 +36,19 @@ export function Story({ mon, session, go }: ScreenProps) {
       <p className="lead" data-needs-review={mon.story.needs_review}>
         {pick(mon.story.text)}
       </p>
-      {mon.history && (
-        <p className="story-more">
+      <div className="story-more">
+        <ReadAloud
+          text={[pick(mon.story.text), hook && `${t("story.dangerLabel")}: ${pick(hook.plain.title)}. ${pick(hook.plain.text)}`]
+            .filter(Boolean)
+            .join("\n")}
+        />
+        {mon.history && (
           <button type="button" className="btn btn-secondary" onClick={() => go("history")}>
             {t("story.readMore")}
             <Icon name="arrow" />
           </button>
-        </p>
-      )}
+        )}
+      </div>
 
       {hook && (
         <section className="sheet-note threat-hook" aria-labelledby="hook-title">

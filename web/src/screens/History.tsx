@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MutableRefObject } from "react";
 import type { ScreenProps } from "../App";
 import type { MapApi } from "../components/GameMap";
 import { Icon } from "../components/Icon";
+import { ReadAloud } from "../components/ReadAloud";
 import { useI18n } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -56,6 +57,7 @@ export function History({ mon, onBack, mapApi, announce }: Props) {
         <h2 id="chapter-title" tabIndex={-1} ref={title} data-needs-review={mon.history?.needs_review}>
           {pick(chapter.title)}
         </h2>
+        <ReadAloud text={`${pick(chapter.title)}.\n${pick(chapter.text)}`} />
         {pick(chapter.text)
           .split("\n\n")
           .map((paragraph, i) => (

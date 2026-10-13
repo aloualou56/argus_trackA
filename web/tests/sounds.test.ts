@@ -63,6 +63,25 @@ describe("sounds", () => {
     expect(s.soundOn()).toBe(false);
   });
 
+  it("vibrates with each sound on a phone, and not when turned off", async () => {
+    const patterns: number[][] = [];
+    vi.stubGlobal("navigator", { vibrate: (p: number[]) => patterns.push(p) });
+    const s = await import("../src/audio/sounds");
+    s.play("place");
+    s.play("deny");
+    expect(patterns).toEqual([[18], [40, 70, 40]]);
+    const stop = s.playReplay(true, false);
+    const replay = patterns[patterns.length - 1];
+    expect(replay.reduce((a, b) => a + b, 0)).toBeGreaterThan(2300); // waves, then the answer at 2.3 s
+    stop();
+    expect(patterns[patterns.length - 1]).toEqual([0]); // stopped with the sound
+    s.setSoundOn(false);
+    const count = patterns.length;
+    s.play("place");
+    s.playReplay(false, false);
+    expect(patterns.length).toBe(count + 0);
+  });
+
   it("does nothing without the Web Audio API", async () => {
     vi.stubGlobal("window", {});
     const s = await import("../src/audio/sounds");

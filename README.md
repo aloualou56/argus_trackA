@@ -60,7 +60,7 @@ npm run screenshots  # needs a build: plays the game in Edge, saves docs/screens
   message, never an empty page).
 
 It runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
-`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|history|offline|bad-data` (one
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|history|read-aloud|offline|bad-data` (one
 part). It also reports when map tiles cannot load, which is expected in sandboxes without internet.
 
 `web/dist` is a static site with relative paths: any static host serves it as is. The public copy is on a
@@ -207,13 +207,22 @@ shows the main signal and its share, not the anomaly score against its limit.
   removing one, "not enough coins", the alarm replay (a whoosh, a sonar ping per wave, then a rising chime when the
   sensors caught it or two falling notes when they missed it) and the score. Nothing plays before the player taps,
   nothing is said only by sound, and the speaker button in the top bar turns it off (remembered on the device).
+- **Vibration** (`web/src/audio/haptics.ts`): phones vibrate with each sound (a tick for a sensor, a double buzz for
+  "not enough coins", a pulse per wave of the alarm replay, then three quick pulses when the sensors caught it or
+  one long one when they missed it). Android browsers only; iPhones have no vibration in the browser. On a phone
+  the same button turns sound and vibration on and off, and is named for both ("Sound and vibration").
+- **Read aloud** (`web/src/audio/speech.ts`, `ReadAloud.tsx`): on the story screen (the story and the mission's
+  danger), on each chapter of the whole story and on the alarm screen (what was measured and the answer). It uses
+  the device's own voices (the Web Speech API: no audio files, offline on phones), a little slower than usual. Only
+  a voice of the game's language is used: a device with no Greek voice offers no "Read aloud" in Greek rather than
+  reading it with an English one. It stops on a second press, on a new chapter and on leaving the screen.
 - **Order and the alarm replay:** story → mission → a real alarm → reveal → score. After "Done" (and after "Go on to
-  day N" in a week on duty, for each later day) the day's real alarm plays on the map for about five seconds (two
-  without motion): waves spread from the ARGUS sensor that raised it, then the player's sensors that would have
-  caught it light up and the rest fade (a cross when none would have). Phones and small tablets show only the map
-  meanwhile; wide screens keep the panel, unusable until it ends. "Skip" ends it at once. The alarm's screen then
-  opens on the answer, and its map shows only the ARGUS sensor that raised the alarm, so the reveal still comes
-  after it.
+  day N" in a week on duty, for each later day) the day's real alarm plays on the map for about three seconds (less
+  than one without motion): waves spread from the ARGUS sensor that raised it, then the player's sensors that would
+  have caught it light up and the rest fade (a cross when none would have). It then waits on that picture, with no
+  time limit, until the player presses "See the answer" ("Skip" while it plays). Phones and small tablets show only
+  the map meanwhile; wide screens keep the panel, unusable until it ends. The alarm's screen then opens on the
+  answer, and its map shows only the ARGUS sensor that raised the alarm, so the reveal still comes after it.
 - **What would you do next?** After the replayed alarm the player chooses a first step: send someone to look, check
   the sensor and the other measurements, wait, or close the monument. The game then quotes the decision ARGUS
   recorded for that alarm (real data: every record says "Review alarm evidence and affected asset context before
@@ -387,11 +396,16 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   focusable (arrows pan, +/- zoom), pins are labelled buttons, controls are 44 px, the sticky map never covers the
   focused element (`scroll-padding`), and the camera jumps instead of flying when reduced motion is on.
 - Focus moves to each new screen's heading; a polite live region announces sensor changes and budget problems.
-- The alarm replay can be cut short: "Skip" has the focus while it plays and ends it at once. With reduced motion
-  it is a still picture for about two seconds. Screen readers hear that it is playing, and its answer is on the
-  alarm screen in words.
-- Sound is never the only signal (what it says is on screen too), plays only after a tap, and can be turned off: in
-  the top band, and in the "?" card while placing sensors on a phone. The choice is remembered.
+- **No time limits** (WCAG 2.2.1): nothing moves on by itself. The alarm replay waits on its final picture until the
+  player presses "See the answer" ("Skip" while it plays; the button keeps the focus, and screen readers hear when it
+  is over). On a phone, the card that says what a sensor does stays until the next tap or its close button.
+- **Nothing moves for long** (WCAG 2.2.2): the replay's waves play once, and the alarm ring on the alarm screen
+  pulses three times and then stands still. With reduced motion nothing moves at all.
+- **Read aloud** on the story, each chapter and the alarm screen, in the game's language only (see Game rules), for
+  younger players and anyone who reads slowly. **Vibration** on phones repeats what the sounds say.
+- Sound and vibration are never the only signal (what they say is on screen too), start only after a tap, and are
+  turned off together: in the top band, and in the "?" card while placing sensors on a phone. The choice is
+  remembered.
 - The phone's "how to" card is a modal `<dialog>`: focus moves into it, Escape closes it, and focus returns to "?"
   or to the screen's heading.
 - Disabled-looking steppers stay focusable (`aria-disabled`) and say why they cannot be used.

@@ -171,6 +171,8 @@ export default function App() {
   // day, "Next day" on the score for the others). Phones hide everything else meanwhile; wide
   // screens keep the panel. Then the alarm's screen says whether the sensors caught it.
   const [replaying, setReplaying] = useState(false);
+  // The replay's picture is complete: its button says "See the answer" instead of "Skip".
+  const [replayOver, setReplayOver] = useState(false);
   const replayFrom = useRef<Screen | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const stopReplaySound = useRef<() => void>(() => {});
@@ -178,6 +180,7 @@ export default function App() {
     stopReplaySound.current();
     stopReplaySound.current = () => {};
     setReplaying(false);
+    setReplayOver(false);
     setScreen("event");
   }, []);
   useEffect(() => {
@@ -188,9 +191,14 @@ export default function App() {
     } catch {
       // no media queries: play it
     }
-    const timer = window.setTimeout(finishReplay, still ? 1800 : 5200);
+    // No time limit: the replay waits on its final picture until the player goes on (WCAG 2.2.1).
+    const timer = window.setTimeout(() => {
+      setReplayOver(true);
+      announce(t("replay.over", { button: t("replay.continue") }));
+    }, still ? 600 : 3400);
     return () => window.clearTimeout(timer);
-  }, [replaying, finishReplay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [replaying]);
   // Leaving the screen it started from (the home button on a wide screen) ends it, sound and all.
   useEffect(() => {
     if (!replaying || screen === replayFrom.current) return;
@@ -222,6 +230,7 @@ export default function App() {
       return;
     }
     replayFrom.current = screen;
+    setReplayOver(false);
     setReplaying(true);
     announce(t("replay.live"));
     const rule = ruleFor(data, playable, alarm);
@@ -468,6 +477,7 @@ export default function App() {
             placements={inGame ? game!.placements : []}
             alarm={inGame && (screen === "event" || replaying) ? today : null}
             onReplaySkip={finishReplay}
+            replayOver={replayOver}
             apiRef={mapApi}
             onSelectSite={(pilot) => {
               setHomePilot(pilot);

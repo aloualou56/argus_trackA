@@ -22,6 +22,7 @@ import {
 } from "../game/logic";
 import type { Card, LatLng, Placement, Scenario } from "../game/types";
 import { play } from "../audio/sounds";
+import { vibrationLikely } from "../audio/haptics";
 import { SoundToggle } from "../components/SoundToggle";
 import { useI18n } from "../i18n";
 
@@ -126,16 +127,6 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
     () => data.cards.groups.flatMap((g) => data.cards.cards.filter((c) => c.group === g.id)),
     [data],
   );
-
-  // Phones: what a sensor does (or a hint) shows over the map for a few seconds, then goes.
-  useEffect(() => {
-    if (!phone || (!info && !hint)) return;
-    const timer = window.setTimeout(() => {
-      setInfo(null);
-      setHint("");
-    }, 4500);
-    return () => window.clearTimeout(timer);
-  }, [phone, info, hint]);
 
   // Never leave a drag ghost behind if the screen changes mid-drag.
   useEffect(() => () => endDrag(), []);
@@ -460,7 +451,7 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
           {/* The top band, with its sound button, is hidden while placing sensors on a phone. */}
           <p className="help-sound">
             <SoundToggle />
-            <span aria-hidden="true">{t("sound.label")}</span>
+            <span aria-hidden="true">{t(vibrationLikely() ? "sound.labelVibrate" : "sound.label")}</span>
           </p>
           <button type="button" className="btn btn-primary btn-big" autoFocus onClick={() => helpRef.current?.close()}>
             {t("mission.helpOk")}
@@ -549,6 +540,22 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
 
         <p className={`tray-info${phone && !hint && !info ? " is-idle" : ""}`} aria-hidden="true">
           <span>{infoLine}</span>
+          {/* Phones: the card over the map stays until the next tap, or until it is closed here.
+              (Screen readers hear each change in the live region, so the card is hidden from them.) */}
+          {phone && (hint || info) && (
+            <button
+              type="button"
+              className="tray-info-close"
+              aria-label={t("map.closeNotice")}
+              tabIndex={-1}
+              onClick={() => {
+                setInfo(null);
+                setHint("");
+              }}
+            >
+              <Icon name="cross" size={16} />
+            </button>
+          )}
         </p>
 
         <div className="dock-row">

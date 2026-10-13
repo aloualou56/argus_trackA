@@ -356,5 +356,10 @@
   "mission.helpOk": "¡Entendido, vamos!",
   "week.how": "Cómo funciona",
   "replay.skip": "Saltar",
-  "replay.live": "La alarma real se repite en el mapa."
+  "replay.live": "La alarma real se repite en el mapa.",
+  "replay.continue": "Ver la respuesta",
+  "replay.over": "La alarma ha terminado. Pulsa «{button}».",
+  "speech.read": "Escuchar",
+  "speech.stop": "Dejar de leer",
+  "sound.labelVibrate": "Sonido y vibración"
 }

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { vibrationLikely } from "../audio/haptics";
 import { onSoundChange, play, setSoundOn, soundOn } from "../audio/sounds";
 import { useI18n } from "../i18n";
 import { Icon } from "./Icon";
 
-/** Sound on or off, in the top bar. A toggle with one name ("Sound"); pressed means on. */
+/** Sound (and, on phones, vibration) on or off, in the top bar. A toggle; pressed means on. */
 export function SoundToggle() {
   const { t } = useI18n();
   const [on, setOn] = useState(soundOn);
@@ -13,7 +14,7 @@ export function SoundToggle() {
       type="button"
       className="sound-toggle"
       aria-pressed={on}
-      aria-label={t("sound.label")}
+      aria-label={t(vibrationLikely() ? "sound.labelVibrate" : "sound.label")}
       onClick={() => {
         setSoundOn(!on);
         if (!on) play("place"); // a first sound, so turning it on is heard

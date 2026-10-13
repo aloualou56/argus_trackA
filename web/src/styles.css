@@ -1477,7 +1477,7 @@ textarea.input {
   border: 4px solid #fff;
   border-radius: 50%;
   box-shadow: 0 0 0 3px var(--no), inset 0 0 0 3px var(--no);
-  animation: alarm-pulse 1.6s ease-out infinite;
+  animation: alarm-pulse 1.6s ease-out 3; /* then still: nothing moves for more than five seconds */
 }
 @keyframes alarm-pulse {
   from {
@@ -3687,7 +3687,7 @@ b {
   border: 3px solid var(--argus);
   border-radius: 50%;
   opacity: 0;
-  animation: replay-wave 1.8s ease-out 0.3s infinite;
+  animation: replay-wave 1.8s ease-out 0.3s 1; /* one wave each, with the sound's three pings */
 }
 .mode-replay .alarm-ring i:nth-child(2) {
   animation-delay: 0.9s;
@@ -4157,9 +4157,6 @@ b {
 /* ================================================================== the whole story (History.tsx) */
 /* From the story screen, a site's whole story, one chapter at a time; the map moves to the part
    of the site a chapter is about. It ends back at the story screen's danger. */
-.story-more {
-  margin: 0.25rem 0 1.5rem;
-}
 .history-chapter h2 {
   margin: 0.25rem 0 0.6rem;
   font-size: 1.45rem;
@@ -4196,4 +4193,57 @@ b {
 }
 .history-leave {
   margin: 0.6rem 0 0;
+}
+
+/* ================================================================== reading aloud, the phone's info card */
+.read-aloud {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+}
+.story-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.25rem 0 1.5rem;
+}
+.story-more:empty {
+  display: none;
+}
+.history-chapter .read-aloud,
+.screen.event > .read-aloud {
+  margin: 0 0 0.9rem;
+}
+.replay-skip.is-over {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-color: var(--ink);
+}
+/* Phones: the card that says what a sensor does stays until the next tap, or this close button. */
+.tray-info-close {
+  display: none;
+}
+@media (max-width: 39.99rem) {
+  .app.is-play .tray-info {
+    position: relative;
+    padding-right: 2.6rem;
+  }
+  .tray-info-close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--surface-2);
+    color: var(--ink);
+    cursor: pointer;
+  }
 }
