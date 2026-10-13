@@ -586,6 +586,47 @@ async function checkWeekReplay(browser, lang) {
   await context.close();
 }
 
+// The whole story: every monument's story screen offers it; it goes chapter by chapter and ends
+// back at the story screen's danger, focused, so the mission is one step away.
+async function checkHistory(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-history`;
+  console.log(`\n${prefix}`);
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  let shown = false;
+  for (const mon of data.monuments.filter((m) => m.playable)) {
+    const label = `${prefix} ${mon.pilot_key}`;
+    await page.goto(URL_BASE);
+    await page.getByRole("radio", { name: new RegExp(mon.display_name[lang]) }).check();
+    await page.getByRole("button", { name: t["home.start"] }).click();
+    await preQuiz(page, t);
+    const more = page.getByRole("button", { name: t["story.readMore"] });
+    if (!mon.history) {
+      if (await more.count()) note(`${label}: "${t["story.readMore"]}" without a story to read`);
+      continue;
+    }
+    await more.click();
+    await page.getByRole("heading", { level: 1, name: t["history.heading"] }).waitFor();
+    const chapters = mon.history.chapters.length;
+    for (let i = 1; i < chapters; i++) {
+      if (i === 2 && !shown) {
+        await checkPage(page, `${label} chapter`);
+        await shot(page, `${prefix}-chapter`);
+        shown = true;
+      }
+      await page.getByRole("button", { name: t["history.next"], exact: true }).click();
+      await page.locator(".history-chapter .eyebrow", { hasText: fill(t["history.chapter"], { n: i + 1, total: chapters }) }).waitFor();
+    }
+    if (await page.getByRole("button", { name: t["history.next"], exact: true }).count()) note(`${label}: the last chapter still offers "${t["history.next"]}"`);
+    await page.getByRole("button", { name: t["history.done"] }).click();
+    await page.getByRole("heading", { level: 1, name: mon.display_name[lang] }).waitFor();
+    if ((await page.evaluate(() => document.activeElement?.id)) !== "hook-title") note(`${label}: the story does not end at the danger`);
+  }
+  await context.close();
+}
+
 async function playEveryMonument(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -845,6 +886,7 @@ try {
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playKeepsChosenLevel(browser, lang);
   if (!only || only === "sound") for (const lang of ["el", "en"]) await checkSound(browser, lang);
   if (!only || only === "week") for (const lang of ["el", "en"]) await checkWeekReplay(browser, lang);
+  if (!only || only === "history") for (const lang of ["el", "en"]) await checkHistory(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);

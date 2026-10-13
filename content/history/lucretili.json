@@ -1,0 +1,53 @@
+{
+  "_about": "The whole story of the site, read from the story screen ('Read the whole story'), one chapter at a time. Written by the game team from general knowledge, in plain language: every claim below needs checking against a reliable source before release. 'place' (optional) moves the map to one of the site's places (content/monuments/lucretili.json, places).",
+  "needs_review": true,
+  "check": [
+    "Monti Lucretili: limestone hills north-east of Rome, a regional nature park since 1989",
+    "Horace's farm in the Sabine hills, a gift from Maecenas; its ruins near Licenza",
+    "Montefalco Castle among the medieval hilltop castles of the area",
+    "The Sant'Angelo al Morra complex (the Conventillo place) carved into the rock, with medieval wall paintings",
+    "The art of dry-stone walling on UNESCO's intangible heritage list (2018, Italy among the countries)"
+  ],
+  "chapters": [
+    {
+      "place": null,
+      "title": { "el": "Λόφοι κοντά στη Ρώμη", "en": "Hills near Rome" },
+      "text": {
+        "el": "Τα Όρη Λουκρετίλι είναι ασβεστολιθικοί λόφοι βορειοανατολικά της Ρώμης.\n\nΑπό το 1989 είναι περιφερειακό φυσικό πάρκο, με δάση, λιβάδια και μικρά μεσαιωνικά χωριά.",
+        "en": "The Monti Lucretili are limestone hills north-east of Rome.\n\nSince 1989 they have been a regional nature park, with woods, meadows and small medieval villages."
+      }
+    },
+    {
+      "place": "villa",
+      "title": { "el": "Το αγρόκτημα του Οράτιου", "en": "Horace's farm" },
+      "text": {
+        "el": "Ο Ρωμαίος ποιητής Οράτιος έζησε εδώ τον 1ο αιώνα π.Χ. Ο φίλος και προστάτης του, ο Μαικήνας, του χάρισε ένα αγρόκτημα στους λόφους των Σαβίνων.\n\nΟ Οράτιος έγραψε με αγάπη για αυτό στα ποιήματά του. Τα ερείπια της έπαυλης, με ψηφιδωτά δάπεδα, φαίνονται ακόμα κοντά στη Λιτσέντσα.",
+        "en": "The Roman poet Horace lived here in the 1st century BC. His friend and patron Maecenas gave him a farm in the Sabine hills.\n\nHorace wrote about it with love in his poems. The ruins of the villa, with mosaic floors, can still be seen near Licenza."
+      }
+    },
+    {
+      "place": "montefalco",
+      "title": { "el": "Κάστρα στους λόφους", "en": "Castles on the hills" },
+      "text": {
+        "el": "Τον Μεσαίωνα, κάστρα και οχυρωμένα χωριά χτίστηκαν στις κορυφές των λόφων, για να μπορούν οι άνθρωποι να αμυνθούν.\n\nΤο Κάστρο του Μοντεφάλκο είναι ένα από αυτά. Σήμερα τα παλιά εξωτερικά τείχη του έχουν ρωγμές.",
+        "en": "In the Middle Ages, castles and walled villages were built on the hilltops, so that people could defend themselves.\n\nMontefalco Castle is one of them. Today its old outer walls are cracked."
+      }
+    },
+    {
+      "place": "conventillo",
+      "title": { "el": "Πέτρα και χρώμα", "en": "Rock and paint" },
+      "text": {
+        "el": "Το συγκρότημα του Σαντ' Άντζελο αλ Μόρρα είναι σκαμμένο μέσα στον βράχο, και οι τοίχοι του έχουν μεσαιωνικές τοιχογραφίες.\n\nΕδώ το ARGUS προσέχει την πλαγιά και τους τοίχους, γιατί το έδαφος μπορεί να γλιστρήσει.",
+        "en": "The Sant'Angelo al Morra complex is carved into the rock, and its walls carry medieval wall paintings.\n\nHere ARGUS watches the slope and the walls, because the ground can slide."
+      }
+    },
+    {
+      "place": null,
+      "title": { "el": "Ξερολιθιές", "en": "Dry-stone walls" },
+      "text": {
+        "el": "Σε όλους τους λόφους, οι αγρότες έχτισαν τοίχους από πέτρες χωρίς λάσπη, για να στηρίζουν αναβαθμίδες και να χωρίζουν χωράφια.\n\nΗ τέχνη της ξερολιθιάς είναι στον κατάλογο της άυλης πολιτιστικής κληρονομιάς της UNESCO από το 2018. Όταν κανείς δεν τους επισκευάζει, οι τοίχοι γκρεμίζονται.",
+        "en": "All over the hills, farmers built walls of stones without mortar, to hold up terraces and to divide fields.\n\nThe art of dry-stone walling has been on UNESCO's list of intangible cultural heritage since 2018. When nobody repairs them, the walls fall apart."
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "_about": "The whole story of the site, read from the story screen ('Read the whole story'), one chapter at a time. Written by the game team from general knowledge, in plain language: every claim below needs checking against a reliable source before release. 'place' (optional) moves the map to one of the site's places (content/monuments/baltanas.json, places).",
+  "needs_review": true,
+  "check": [
+    "Baltanás is the main town of the Cerrato area of Palencia, in Castile",
+    "374 cellars on the hill (the same number as the story screen)",
+    "The vents of the cellars are called 'zarceras'",
+    "Grapes pressed and wine made in the cellars; cellars used as meeting places",
+    "The cellar district is protected as a 'Bien de Interés Cultural'"
+  ],
+  "chapters": [
+    {
+      "place": null,
+      "title": { "el": "Ένας λόφος γεμάτος κελάρια", "en": "A hill full of cellars" },
+      "text": {
+        "el": "Η Μπαλτανάς είναι μια κωμόπολη στην περιοχή Θεράτο της Παλένθια, στην Καστίλη της Ισπανίας.\n\nΣτον λόφο πάνω από την πόλη, οι οικογένειες έσκαψαν μέσα στο χώμα, μέσα στους αιώνες, 374 κελάρια για να φτιάχνουν και να φυλάνε το κρασί τους.",
+        "en": "Baltanás is a small town in the Cerrato area of Palencia, in Castile, Spain.\n\nOn the hill above the town, families dug 374 cellars into the earth over the centuries, to make and keep their wine."
+      }
+    },
+    {
+      "place": "cellar88",
+      "title": { "el": "Γιατί κάτω από τη γη", "en": "Why underground" },
+      "text": {
+        "el": "Βαθιά μέσα στη γη η θερμοκρασία μένει δροσερή και σταθερή όλο τον χρόνο, και αυτό κάνει καλό στο κρασί.\n\nΚάθε κελάρι έχει μια πόρτα στην πλαγιά, ένα τούνελ που κατεβαίνει και δωμάτια για τα βαρέλια. Μικρές πέτρινες καμινάδες, οι «θαρθέρας», αφήνουν τον αέρα να βγαίνει.",
+        "en": "Deep in the earth the temperature stays cool and steady all year round, and that is good for wine.\n\nEach cellar has a door on the slope, a tunnel going down and rooms for the barrels. Small stone chimneys, the 'zarceras', let the air out."
+      }
+    },
+    {
+      "place": "cellar88",
+      "title": { "el": "Ο τρύγος και το πατητήρι", "en": "The harvest and the wine press" },
+      "text": {
+        "el": "Το φθινόπωρο τα σταφύλια πατιούνταν μέσα στα κελάρια και ο χυμός τους γινόταν κρασί σε μεγάλα βαρέλια.\n\nΤα κελάρια ήταν και τόπος συνάντησης: μετά τη δουλειά, οικογένειες και φίλοι έτρωγαν και έπιναν εκεί μαζί.",
+        "en": "In autumn the grapes were pressed inside the cellars, and their juice turned into wine in big barrels.\n\nThe cellars were also a meeting place: after work, families and friends ate and drank there together."
+      }
+    },
+    {
+      "place": "cellar364",
+      "title": { "el": "Ένα μνημείο που κινδυνεύει", "en": "A heritage that is at risk" },
+      "text": {
+        "el": "Σήμερα η γειτονιά των κελαριών προστατεύεται ως πολιτιστική κληρονομιά της Ισπανίας. Πολλά κελάρια όμως δεν χρησιμοποιούνται πια.\n\nΌταν το έδαφος βουλιάζει ή μπαίνει νερό, οι οροφές τους μπορεί να καταρρεύσουν. Γι' αυτό το ARGUS μετρά το έδαφος και τον αέρα μέσα σε μερικά από αυτά.",
+        "en": "Today the cellar district is protected as part of Spain's cultural heritage. But many cellars are no longer used.\n\nWhen the ground sinks or water gets in, their roofs can cave in. That is why ARGUS measures the ground and the air inside some of them."
+      }
+    }
+  ]
+}

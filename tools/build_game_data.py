@@ -170,6 +170,8 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "photos": (load_json(content_dir / "photos" / "credits.json") if (content_dir / "photos" / "credits.json").exists()
                    else {"photos": {}}),
         "monuments": monuments,
+        # The whole story of each site, read chapter by chapter from the story screen.
+        "history": {path.stem: load_json(path) for path in sorted((content_dir / "history").glob("*.json"))},
     }
 
 
@@ -1034,6 +1036,7 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
     for mon in monuments:
         if mon["playable"]:
             mon["places"] = resolve_places(mon, content.monuments[mon["pilot_key"]], content_dir)
+            mon["history"] = public_history(mon, content.raw.get("history", {}).get(mon["pilot_key"]))
     data["site_guide"] = {"where": content.raw["site_guide"]["where"], "authored": True,
                           "needs_review": bool(content.raw["site_guide"].get("needs_review"))}
     data["decisions"] = public_decisions(content)
@@ -1059,6 +1062,29 @@ def public_decisions(content: Content) -> Dict[str, Any]:
     return {"intro": raw["intro"], "intro_no_alarm": raw["intro_no_alarm"], "argus_plain": raw["argus_plain"],
             "options": [{k: o[k] for k in keep if k in o} for o in raw["options"]],
             "authored": True, "needs_review": bool(raw.get("needs_review"))}
+
+
+def public_history(mon: Dict[str, Any], pack: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """The whole story of a site (content/history/<pilot>.json): chapters in Greek and English, each
+    with an optional place of the site that the map moves to. None when the site has none yet."""
+    if not pack:
+        return None
+    name = f"content/history/{mon['pilot_key']}.json"
+    chapters = pack.get("chapters") or []
+    if len(chapters) < 2:
+        raise BuildError(f"{name}: a story needs at least two chapters")
+    places = {place["id"] for place in mon.get("places") or []}
+    out = []
+    for i, chapter in enumerate(chapters, 1):
+        for field in ("title", "text"):
+            for lang in ("el", "en"):
+                if not str((chapter.get(field) or {}).get(lang, "")).strip():
+                    raise BuildError(f"{name}: chapter {i} has no {lang} {field}")
+        place = chapter.get("place")
+        if place is not None and place not in places:
+            raise BuildError(f"{name}: chapter {i} points the map at '{place}', which is not a place of this site")
+        out.append({"title": chapter["title"], "text": chapter["text"], "place": place})
+    return {"chapters": out, "authored": True, "needs_review": bool(pack.get("needs_review", True))}
 
 
 # --------------------------------------------------------------------------- translations
@@ -1252,6 +1278,10 @@ def collect_review_items(content: Content) -> List[str]:
             continue
         story = pack.get("story", {})
         items.append(f"`content/monuments/{pilot}.json` story: {story.get('review_note', 'check facts and Greek')}")
+        history = content.raw.get("history", {}).get(pilot)
+        if history and history.get("needs_review", True):
+            items.append(f"`content/history/{pilot}.json` (the whole story, {len(history.get('chapters', []))} chapters): "
+                         "check every fact and the Greek: " + "; ".join(history.get("check", [])))
         items.append(f"`content/monuments/{pilot}.json`: all {len([k for k in pack.get('plain_threats', {}) if not k.startswith('_')])} "
                      "plain-language threat texts are placeholders (check science and Greek)")
         for prompt in pack.get("discussion_prompts", []):

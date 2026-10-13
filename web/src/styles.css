@@ -4153,3 +4153,47 @@ b {
     background: var(--primary-soft);
   }
 }
+
+/* ================================================================== the whole story (History.tsx) */
+/* From the story screen, a site's whole story, one chapter at a time; the map moves to the part
+   of the site a chapter is about. It ends back at the story screen's danger. */
+.story-more {
+  margin: 0.25rem 0 1.5rem;
+}
+.history-chapter h2 {
+  margin: 0.25rem 0 0.6rem;
+  font-size: 1.45rem;
+  text-wrap: balance;
+}
+.history-chapter p {
+  max-width: 40rem;
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+.history-dots {
+  display: flex;
+  gap: 0.4rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.history-dots li {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+}
+.history-dots li.is-done,
+.history-dots li.is-now {
+  background: var(--primary);
+}
+.history-dots li.is-now {
+  width: 26px;
+  border-radius: 5px;
+}
+.history-actions {
+  align-items: center;
+}
+.history-leave {
+  margin: 0.6rem 0 0;
+}

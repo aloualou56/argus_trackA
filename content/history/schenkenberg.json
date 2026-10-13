@@ -1,0 +1,45 @@
+{
+  "_about": "The whole story of the site, read from the story screen ('Read the whole story'), one chapter at a time. Written by the game team from general knowledge, in plain language: every claim below needs checking against a reliable source before release. 'place' (optional) moves the map to one of the site's places (content/monuments/schenkenberg.json, places).",
+  "needs_review": true,
+  "check": [
+    "Schenkenberg Castle on a wooded hill above Thalheim, canton of Aargau",
+    "Built in the 1200s",
+    "Later under the city of Bern, whose bailiffs governed the area from the castle",
+    "Abandoned in the 1700s when the bailiffs moved to another castle",
+    "Walls repaired and made safe in the 1900s; open to walkers today"
+  ],
+  "chapters": [
+    {
+      "place": null,
+      "title": { "el": "Ένα κάστρο στον λόφο", "en": "A castle on the hill" },
+      "text": {
+        "el": "Το Κάστρο του Σένκενμπεργκ στέκεται σε έναν δασωμένο λόφο πάνω από το χωριό Τάλχαϊμ, στο καντόνι του Άαργκαου στην Ελβετία.\n\nΧτίστηκε τον 13ο αιώνα, σε ένα σημείο από όπου φαίνεται όλη η κοιλάδα.",
+        "en": "Schenkenberg Castle stands on a wooded hill above the village of Thalheim, in the canton of Aargau in Switzerland.\n\nIt was built in the 1200s, in a spot from where the whole valley can be seen."
+      }
+    },
+    {
+      "place": "ruins",
+      "title": { "el": "Η έδρα του επόπτη", "en": "The bailiff's seat" },
+      "text": {
+        "el": "Αργότερα το κάστρο πέρασε στην πόλη της Βέρνης. Από εδώ ένας επόπτης κυβερνούσε την περιοχή για λογαριασμό της Βέρνης.",
+        "en": "Later the castle came under the city of Bern. From here a bailiff governed the area on behalf of Bern."
+      }
+    },
+    {
+      "place": "tower",
+      "title": { "el": "Στο έλεος του καιρού", "en": "Left to the weather" },
+      "text": {
+        "el": "Τον 18ο αιώνα οι επόπτες μετακόμισαν σε ένα άλλο κάστρο και το Σένκενμπεργκ εγκαταλείφθηκε.\n\nΧωρίς στέγη, η βροχή, ο πάγος και τα φυτά έσπαγαν σιγά σιγά τους τοίχους του.",
+        "en": "In the 1700s the bailiffs moved to another castle, and Schenkenberg was abandoned.\n\nWith no roof, rain, frost and plants slowly broke down its walls."
+      }
+    },
+    {
+      "place": "ruins",
+      "title": { "el": "Ένα ερείπιο που σώθηκε", "en": "A ruin that was saved" },
+      "text": {
+        "el": "Τον 20ό αιώνα οι τοίχοι επισκευάστηκαν για να μην πέσουν, και σήμερα όποιος θέλει μπορεί να ανέβει με τα πόδια ως εκεί.\n\nΤο ARGUS προσέχει τις ρωγμές, τον πύργο και τα φυτά που φυτρώνουν ανάμεσα στις πέτρες.",
+        "en": "In the 1900s the walls were repaired so that they would not fall, and today anyone can walk up to the ruin.\n\nARGUS watches the cracks, the tower and the plants that grow between the stones."
+      }
+    }
+  ]
+}

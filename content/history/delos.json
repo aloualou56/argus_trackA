@@ -1,0 +1,55 @@
+{
+  "_about": "The whole story of the site, read from the story screen ('Read the whole story'), one chapter at a time. Written by the game team from general knowledge, in plain language: every claim below needs checking against a reliable source before release. 'place' (optional) moves the map to one of the site's places (content/monuments/delos.json, places).",
+  "needs_review": true,
+  "check": [
+    "Myth: Leto gave birth to Apollo and Artemis on Delos, holding on to a palm tree",
+    "Delian League treasury on Delos from 478 BC (moved to Athens in 454 BC)",
+    "Purification of 426 BC: no births or deaths on the island, graves moved to Rheneia",
+    "Free port under Rome from 166 BC; merchants from Italy, Egypt and the East; a temple of Isis",
+    "House of the Masks: mosaics of theatre masks and Dionysus riding a panther; the idea that it housed actors",
+    "Attacks of 88 BC and 69 BC",
+    "French School at Athens excavating since 1872; UNESCO World Heritage since 1990"
+  ],
+  "chapters": [
+    {
+      "place": null,
+      "title": { "el": "Ένα ιερό νησί", "en": "A sacred island" },
+      "text": {
+        "el": "Σύμφωνα με τον μύθο, η Λητώ γέννησε τον Απόλλωνα και την Άρτεμη στη Δήλο, κρατώντας έναν φοίνικα. Γι' αυτό οι αρχαίοι Έλληνες την έβλεπαν ως έναν από τους πιο ιερούς τόπους τους.\n\nΠροσκυνητές έρχονταν με πλοία από όλο το Αιγαίο για να φέρουν δώρα στον ναό του Απόλλωνα.",
+        "en": "According to myth, Leto gave birth to Apollo and Artemis on Delos, holding on to a palm tree. That is why the ancient Greeks saw it as one of their holiest places.\n\nPilgrims came by ship from all over the Aegean to bring gifts to the temple of Apollo."
+      }
+    },
+    {
+      "place": null,
+      "title": { "el": "Ένας θησαυρός και ένας καθαρμός", "en": "A treasury and a cleansing" },
+      "text": {
+        "el": "Το 478 π.Χ. η Αθήνα και οι σύμμαχοί της έφτιαξαν μια συμμαχία και φύλαγαν τα κοινά τους χρήματα στη Δήλο. Τη λέμε Δηλιακή Συμμαχία.\n\nΤο 426 π.Χ. οι Αθηναίοι «καθάρισαν» το νησί: από τότε κανείς δεν επιτρεπόταν να γεννηθεί ή να πεθάνει εκεί, και οι παλιοί τάφοι μεταφέρθηκαν στη γειτονική Ρήνεια.",
+        "en": "In 478 BC Athens and its allies formed an alliance and kept their shared money on Delos. We call it the Delian League.\n\nIn 426 BC the Athenians 'cleansed' the island: from then on nobody was allowed to be born or to die there, and the old graves were moved to the neighbouring island of Rheneia."
+      }
+    },
+    {
+      "place": "isis",
+      "title": { "el": "Ένα λιμάνι γεμάτο εμπόρους", "en": "A port full of traders" },
+      "text": {
+        "el": "Το 166 π.Χ. οι Ρωμαίοι έκαναν τη Δήλο ελεύθερο λιμάνι, χωρίς φόρους. Έμποροι από την Ιταλία, την Αίγυπτο και την Ανατολή ήρθαν να ζήσουν εδώ.\n\nΤο νησί γέμισε σπίτια, μαγαζιά και αποθήκες, αλλά και ναούς ξένων θεών, όπως της αιγυπτιακής θεάς Ίσιδας.",
+        "en": "In 166 BC the Romans made Delos a free port, with no taxes. Traders from Italy, Egypt and the East came to live here.\n\nThe island filled with houses, shops and warehouses, and with temples of foreign gods, such as the Egyptian goddess Isis."
+      }
+    },
+    {
+      "place": "masks",
+      "title": { "el": "Σπίτια με ψηφιδωτά", "en": "Houses with mosaics" },
+      "text": {
+        "el": "Οι πλούσιοι έμποροι στόλιζαν τα σπίτια τους. Στην Οικία των Προσωπείων, τα ψηφιδωτά δάπεδα δείχνουν θεατρικές μάσκες και τον θεό Διόνυσο πάνω σε έναν πάνθηρα.\n\nΚάποιοι ειδικοί πιστεύουν ότι εδώ έμεναν ηθοποιοί, γιατί το σπίτι είναι κοντά στο θέατρο.",
+        "en": "The rich traders decorated their homes. In the House of the Masks, the mosaic floors show theatre masks and the god Dionysus riding a panther.\n\nSome experts think that actors stayed here, because the house is close to the theatre."
+      }
+    },
+    {
+      "place": "fournoi",
+      "title": { "el": "Από ερείπια σε προστατευμένο μνημείο", "en": "From ruins to a protected site" },
+      "text": {
+        "el": "Το 88 π.Χ. και ξανά το 69 π.Χ. το νησί δέχτηκε επιθέσεις και λεηλατήθηκε, και σιγά σιγά άδειασε.\n\nΑπό το 1872 αρχαιολόγοι της Γαλλικής Σχολής Αθηνών σκάβουν εδώ, και από το 1990 η Δήλος είναι Μνημείο Παγκόσμιας Κληρονομιάς της UNESCO. Σήμερα οι αισθητήρες του ARGUS προσέχουν δύο σπίτια της, την Οικία των Προσωπείων και την Οικία των Φούρνων.",
+        "en": "In 88 BC and again in 69 BC the island was attacked and looted, and slowly it emptied.\n\nSince 1872 archaeologists of the French School at Athens have been digging here, and since 1990 Delos has been a UNESCO World Heritage site. Today ARGUS sensors watch two of its houses, the House of the Masks and the House of Fournoi."
+      }
+    }
+  ]
+}

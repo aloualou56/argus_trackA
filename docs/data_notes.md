@@ -601,10 +601,12 @@ Authored content flagged `needs_review`:
 - Scenario `ranverso.water.flooding` -> ['rain_gauge', 'weather_station', 'satellite', 'soil_moisture'], primary ['rain_gauge', 'weather_station', 'satellite']
 - Scenario `ranverso.water.groundwater` -> ['soil_moisture', 'humidity'], primary ['soil_moisture']: Rising damp: the ground probe watches the cause directly; air humidity only shows the effect.
 - `content/monuments/baltanas.json` story: '374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme).
+- `content/history/baltanas.json` (the whole story, 4 chapters): check every fact and the Greek: Baltanás is the main town of the Cerrato area of Palencia, in Castile; 374 cellars on the hill (the same number as the story screen); The vents of the cellars are called 'zarceras'; Grapes pressed and wine made in the cellars; cellars used as meeting places; The cellar district is protected as a 'Bien de Interés Cultural'
 - `content/monuments/baltanas.json`: all 5 plain-language threat texts are placeholders (check science and Greek)
 - `baltanas` discussion prompt "ARGUS put 7 thermometers and 6 humidity sensors in the cella...": Counts from the ARGUS installed instruments for Baltanas.
 - `baltanas` mission picks per level
 - `content/monuments/delos.json` story: Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).
+- `content/history/delos.json` (the whole story, 5 chapters): check every fact and the Greek: Myth: Leto gave birth to Apollo and Artemis on Delos, holding on to a palm tree; Delian League treasury on Delos from 478 BC (moved to Athens in 454 BC); Purification of 426 BC: no births or deaths on the island, graves moved to Rheneia; Free port under Rome from 166 BC; merchants from Italy, Egypt and the East; a temple of Isis; House of the Masks: mosaics of theatre masks and Dionysus riding a panther; the idea that it housed actors; Attacks of 88 BC and 69 BC; French School at Athens excavating since 1872; UNESCO World Heritage since 1990
 - `content/monuments/delos.json`: all 36 plain-language threat texts are placeholders (check science and Greek)
 - `delos` discussion prompt "ARGUS put 6 soil-moisture probes and 5 humidity sensors on D...": Counts from the ARGUS installed instruments for Delos.
 - `delos` discussion prompt "Many visitors come to Delos every summer. How could visitors...": Visitor numbers are general knowledge, not ARGUS data.
@@ -613,6 +615,7 @@ Authored content flagged `needs_review`:
 - `delos` alarm explanation for `R2_wind` and its linked threats ['delos-masks.wind-erosion.site', 'delos-fournoi.wind-erosion.site']
 - `delos` mission picks per level
 - `content/monuments/lucretili.json` story: Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).
+- `content/history/lucretili.json` (the whole story, 5 chapters): check every fact and the Greek: Monti Lucretili: limestone hills north-east of Rome, a regional nature park since 1989; Horace's farm in the Sabine hills, a gift from Maecenas; its ruins near Licenza; Montefalco Castle among the medieval hilltop castles of the area; The Sant'Angelo al Morra complex (the Conventillo place) carved into the rock, with medieval wall paintings; The art of dry-stone walling on UNESCO's intangible heritage list (2018, Italy among the countries)
 - `content/monuments/lucretili.json`: all 19 plain-language threat texts are placeholders (check science and Greek)
 - `lucretili` discussion prompt "The sites here are kilometres apart: Horace's villa, the cas...": ARGUS sensor positions: Sant'Angelo al Morra about 42.024, 12.827 and Horace's villa about 42.066, 12.902, roughly 7 km apart.
 - `lucretili` alarm explanation for `R2a_tilt_step` and its linked threats ['lucretili-conventillo.landslide.site', 'lucretili-conventillo.subsidence.site', 'lucretili-conventillo.earthquake.site']
@@ -623,6 +626,7 @@ Authored content flagged `needs_review`:
 - `lucretili` alarm explanation for `R9b_temp_st` and its linked threats []
 - `lucretili` mission picks per level
 - `content/monuments/ranverso.json` story: History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).
+- `content/history/ranverso.json` (the whole story, 4 chapters): check every fact and the Greek: Founded in 1188 by Count Humbert III of Savoy for the Hospital Brothers of Saint Anthony (Antonines); A hospital and a stop for pilgrims and travellers on the road from Turin to the Alps; The brothers cared for people with 'Saint Anthony's fire' (ergotism, from spoiled rye); their sign was the tau cross; Frescoes by Giacomo Jaquerio in the early 1400s, including the Ascent to Calvary; Main altarpiece by Defendente Ferrari, 1531; Owned today by the Fondazione Ordine Mauriziano and open to visitors
 - `content/monuments/ranverso.json`: all 26 plain-language threat texts are placeholders (check science and Greek)
 - `ranverso` discussion prompt "One ARGUS soil-moisture sensor here showed almost the same v...": From the R4b_soil_low alarms (values 2.457 to 2.476 against a limit of 5, sensor A8610A333526680F). A stuck sensor is our reading, not confirmed by ARGUS, so the prompt asks rather than states. It replaces replaying this alarm in the Low level.
 - `ranverso` discussion prompt "Several ARGUS sensors sit next to the left altar inside the ...": Based on alarm variable names ('in_left_altar_hum', 'altar_tilt_z'). Check with the Ranverso team; 'Αγία Τράπεζα' for a Catholic side altar may need a better word.
@@ -630,6 +634,7 @@ Authored content flagged `needs_review`:
 - `ranverso` alarm explanation for `R4b_soil_low` and its linked threats ['ranverso.water.groundwater', 'ranverso.incorrect-rh.prolonged-dry-periods']
 - `ranverso` mission picks per level
 - `content/monuments/schenkenberg.json` story: 'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.
+- `content/history/schenkenberg.json` (the whole story, 4 chapters): check every fact and the Greek: Schenkenberg Castle on a wooded hill above Thalheim, canton of Aargau; Built in the 1200s; Later under the city of Bern, whose bailiffs governed the area from the castle; Abandoned in the 1700s when the bailiffs moved to another castle; Walls repaired and made safe in the 1900s; open to walkers today
 - `content/monuments/schenkenberg.json`: all 11 plain-language threat texts are placeholders (check science and Greek)
 - `schenkenberg` discussion prompt "ARGUS put 4 vibration sensors here but no camera to watch th...": Counts from the ARGUS installed instruments (4 in the vibration card: vibration and accelerometer sensors; no camera).
 - `schenkenberg` discussion prompt "Experts scored plants cut back every year, every three years...": ABC magnitudes 12.0 (annually), 12.5 (every 3 years), 13.0 (untreated), all Extreme.
@@ -647,10 +652,77 @@ Authored content flagged `needs_review`:
 
 ## Languages
 
-The game's own text is written in English and Greek (380 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
+The game's own text is written in English and Greek (424 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
 
 | language | translated | missing (shown in English) | no longer used | needs review |
 |---|---|---|---|---|
-| de | 380 | 0 | 0 | yes |
-| es | 380 | 0 | 0 | yes |
-| it | 380 | 0 | 0 | yes |
+| de | 380 | 44 | 0 | yes |
+| es | 380 | 44 | 0 | yes |
+| it | 380 | 44 | 0 | yes |
+
+- `de` missing: "A sacred island"
+- `de` missing: "According to myth, Leto gave birth to Apollo and Artemis on Delos, hol..."
+- `de` missing: "A treasury and a cleansing"
+- `de` missing: "In 478 BC Athens and its allies formed an alliance and kept their shar..."
+- `de` missing: "A port full of traders"
+- `de` missing: "In 166 BC the Romans made Delos a free port, with no taxes. Traders fr..."
+- `de` missing: "Houses with mosaics"
+- `de` missing: "The rich traders decorated their homes. In the House of the Masks, the..."
+- `de` missing: "From ruins to a protected site"
+- `de` missing: "In 88 BC and again in 69 BC the island was attacked and looted, and sl..."
+- `de` missing: "A hill full of cellars"
+- `de` missing: "Baltanás is a small town in the Cerrato area of Palencia, in Castile, ..."
+- `de` missing: "Why underground"
+- `de` missing: "Deep in the earth the temperature stays cool and steady all year round..."
+- `de` missing: "The harvest and the wine press"
+- `de` missing: "In autumn the grapes were pressed inside the cellars, and their juice ..."
+- `de` missing: "A heritage that is at risk"
+- `de` missing: "Today the cellar district is protected as part of Spain's cultural her..."
+- `de` missing: "Hills near Rome"
+- `de` missing: "The Monti Lucretili are limestone hills north-east of Rome.
+
+Since 198..."
+- `es` missing: "A sacred island"
+- `es` missing: "According to myth, Leto gave birth to Apollo and Artemis on Delos, hol..."
+- `es` missing: "A treasury and a cleansing"
+- `es` missing: "In 478 BC Athens and its allies formed an alliance and kept their shar..."
+- `es` missing: "A port full of traders"
+- `es` missing: "In 166 BC the Romans made Delos a free port, with no taxes. Traders fr..."
+- `es` missing: "Houses with mosaics"
+- `es` missing: "The rich traders decorated their homes. In the House of the Masks, the..."
+- `es` missing: "From ruins to a protected site"
+- `es` missing: "In 88 BC and again in 69 BC the island was attacked and looted, and sl..."
+- `es` missing: "A hill full of cellars"
+- `es` missing: "Baltanás is a small town in the Cerrato area of Palencia, in Castile, ..."
+- `es` missing: "Why underground"
+- `es` missing: "Deep in the earth the temperature stays cool and steady all year round..."
+- `es` missing: "The harvest and the wine press"
+- `es` missing: "In autumn the grapes were pressed inside the cellars, and their juice ..."
+- `es` missing: "A heritage that is at risk"
+- `es` missing: "Today the cellar district is protected as part of Spain's cultural her..."
+- `es` missing: "Hills near Rome"
+- `es` missing: "The Monti Lucretili are limestone hills north-east of Rome.
+
+Since 198..."
+- `it` missing: "A sacred island"
+- `it` missing: "According to myth, Leto gave birth to Apollo and Artemis on Delos, hol..."
+- `it` missing: "A treasury and a cleansing"
+- `it` missing: "In 478 BC Athens and its allies formed an alliance and kept their shar..."
+- `it` missing: "A port full of traders"
+- `it` missing: "In 166 BC the Romans made Delos a free port, with no taxes. Traders fr..."
+- `it` missing: "Houses with mosaics"
+- `it` missing: "The rich traders decorated their homes. In the House of the Masks, the..."
+- `it` missing: "From ruins to a protected site"
+- `it` missing: "In 88 BC and again in 69 BC the island was attacked and looted, and sl..."
+- `it` missing: "A hill full of cellars"
+- `it` missing: "Baltanás is a small town in the Cerrato area of Palencia, in Castile, ..."
+- `it` missing: "Why underground"
+- `it` missing: "Deep in the earth the temperature stays cool and steady all year round..."
+- `it` missing: "The harvest and the wine press"
+- `it` missing: "In autumn the grapes were pressed inside the cellars, and their juice ..."
+- `it` missing: "A heritage that is at risk"
+- `it` missing: "Today the cellar district is protected as part of Spain's cultural her..."
+- `it` missing: "Hills near Rome"
+- `it` missing: "The Monti Lucretili are limestone hills north-east of Rome.
+
+Since 198..."

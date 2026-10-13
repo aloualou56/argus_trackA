@@ -60,7 +60,7 @@ npm run screenshots  # needs a build: plays the game in Edge, saves docs/screens
   message, never an empty page).
 
 It runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
-`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|offline|bad-data` (one
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|history|offline|bad-data` (one
 part). It also reports when map tiles cannot load, which is expected in sandboxes without internet.
 
 `web/dist` is a static site with relative paths: any static host serves it as is. The public copy is on a
@@ -88,6 +88,7 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `content/threat_sensor_map.json` | threat → sensor cards that can warn about it (for the score) | authored |
 | `content/monuments/<pilot>.json` | story, missions per level, plain threat texts, alarm explanations, discussion prompts, `no_alarm_note` | authored |
 | `content/coins.json` | coins per danger level (Low 12 to Catastrophic 16), the same at every monument | authored |
+| `content/history/<pilot>.json` | the whole story of each site, in chapters, read from the story screen; `check` lists the facts to verify | authored |
 | `content/quiz.json` | the 5 pre/post questions, answers and explanations | authored |
 | `content/citizen_checklist.json` | what visitors can watch for and how to report it | authored |
 | `content/map.json` | base maps for the board (satellite and street map, no API key) with attribution | authored |
@@ -174,6 +175,11 @@ shows the main signal and its share, not the anomaly score against its limit.
 
 ## Game rules (assumptions, need review)
 
+- **The whole story:** under the story text, "Read the whole story" opens the site's history, one chapter at a
+  time (4–5 per site); a chapter about one part of the site moves the map there. The last chapter, or "Back to the
+  dangers" on any chapter, returns to the story screen at its danger, focused, so the mission is one step away.
+  The chapters are written by the game team from general knowledge and every fact needs checking (`check` in each
+  file); the build refuses a chapter without its Greek or English, or one that points the map at an unknown place.
 - **Levels** are the ABC priority labels. Only labels the monument has are offered (Ranverso has no Catastrophic).
 - **Missions:** the first play of a level uses its hand-picked mission (same for a class). "Play again with new
   dangers" draws 3 other dangers of that level from its own pool (only dangers a card can warn about, one per name,
@@ -249,7 +255,7 @@ The full, generated list of assumptions and data quirks is in [docs/data_notes.m
 
 0. **The five photo captions** (`content/photos/credits.json`): each says what its photo shows; check them, and
    the Greek. The photos themselves and their credits come from Wikimedia Commons (see Photographs).
-1. **History and science text:** the five stories (facts not in the ARGUS data: e.g. the Delos myth, Greek names of
+1. **History and science text:** the five whole stories (`content/history/`, 22 chapters, every fact to check), the five stories (facts not in the ARGUS data: e.g. the Delos myth, Greek names of
    the Delos houses), all 99 plain-language threat texts, the quiz, the citizen checklist,
    alarm explanations, discussion prompts. Native-speaker check of all Greek.
 2. **Sensor cards:** names, sentences and costs; merged types (lux + UV + pyranometer; vibration + accelerometer;

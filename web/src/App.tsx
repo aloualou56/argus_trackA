@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { createCommunityStore } from "./community";
 import { classCodeFromUrl, loadClassCode, saveClassCode } from "./community/classCode";
 import { quizSummaryOf } from "./community/store";
-import { GameMap, type MapApi } from "./components/GameMap";
+import { GameMap, type MapApi, type MapMode } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
 import { SoundToggle } from "./components/SoundToggle";
@@ -15,6 +15,7 @@ import { canDrawMission, countPicks, detects, drawMission, isPlayable, ruleFor, 
 import type { Alarm, GameData, LatLng, LevelId, Monument, Picks, Placement } from "./game/types";
 import { isBaseLang, useI18n } from "./i18n";
 import { HistoricalEvent } from "./screens/HistoricalEvent";
+import { History } from "./screens/History";
 import { Home } from "./screens/Home";
 import { Mission } from "./screens/Mission";
 import { Observe, type ReportOnMap } from "./screens/Observe";
@@ -24,11 +25,13 @@ import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
 import { Teacher } from "./screens/Teacher";
 
-type Screen = "home" | "teacher" | "observe" | Step | "quizPre" | "quizPost";
+type Screen = "home" | "teacher" | "observe" | Step | "quizPre" | "quizPost" | "history";
 
 const isStep = (screen: Screen): screen is Step => (STEPS as readonly string[]).includes(screen);
 /** What the map shows behind the quiz screens. */
-const mapMode = (screen: Screen): Step => (screen === "quizPre" ? "story" : screen === "quizPost" ? "score" : (screen as Step));
+// The whole story has a map view of its own, so coming back to the story screen frames the site again.
+const mapMode = (screen: Screen): MapMode =>
+  screen === "quizPre" ? "story" : screen === "quizPost" ? "score" : screen === "history" ? "history" : (screen as Step);
 
 export interface Session {
   pilot: string;
@@ -127,6 +130,9 @@ export default function App() {
     setMessage((prev) => (prev === text ? `${text} ` : text));
   }, []);
 
+  // Where a screen should open instead of its top (the story's danger, after the whole story).
+  const returnTo = useRef<string | null>(null);
+
   // Move focus to the new screen's heading so keyboard and screen-reader users start there.
   useEffect(() => {
     const heading =
@@ -138,11 +144,20 @@ export default function App() {
             ? t("teacher.title")
             : screen === "observe"
               ? t("report.title")
-              : null;
+              : screen === "history"
+                ? t("history.heading")
+                : null;
     document.title =
       screen === "home" ? t("app.title") : `${heading ?? t(stepKey(screen as Step))} · ${t("app.title")}`;
     if (firstScreen.current) {
       firstScreen.current = false;
+      return;
+    }
+    const anchor = returnTo.current ? document.getElementById(returnTo.current) : null;
+    returnTo.current = null;
+    if (anchor) {
+      anchor.scrollIntoView({ block: "start" });
+      anchor.focus();
       return;
     }
     // The page is a fixed frame; the panel is what scrolls, so a new screen starts at its top.
@@ -362,6 +377,16 @@ export default function App() {
           />
         )}
         {screen === "story" && <Story {...props} />}
+        {screen === "history" && (
+          <History
+            {...props}
+            mapApi={mapApi}
+            onBack={() => {
+              returnTo.current = "hook-title";
+              setScreen("story");
+            }}
+          />
+        )}
         {screen === "mission" && (
           <Mission
             {...props}

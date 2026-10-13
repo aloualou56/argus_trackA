@@ -169,6 +169,19 @@ export interface Installed {
 }
 
 /** Site guide: a numbered part of the site. Position from real data, name and note authored. */
+export interface HistoryChapter {
+  title: Text;
+  text: Text;
+  /** A place of the site (Place.id) that the map moves to for this chapter. */
+  place: string | null;
+}
+
+export interface History {
+  chapters: HistoryChapter[];
+  authored: true;
+  needs_review: boolean;
+}
+
 export interface Place {
   id: string;
   n: number;
@@ -266,6 +279,8 @@ export interface Monument extends MonumentBase {
   discussion_prompts: Prompt[];
   /** Site guide, numbered on the map and listed in the mission. */
   places: Place[];
+  /** The whole story of the site, chapter by chapter (content/history/<pilot>.json). */
+  history?: History | null;
   /** Why this monument has no alarm to replay, when it has none. */
   no_alarm_note?: Prompt;
 }

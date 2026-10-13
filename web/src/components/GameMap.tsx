@@ -13,7 +13,8 @@ import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } 
 import { useI18n } from "../i18n";
 import { iconSvg } from "./Icon";
 
-export type MapMode = "overview" | "story" | "mission" | "reveal" | "event" | "score" | "report" | "replay";
+// "history": the whole story of a site; chapters move the map to the place they are about.
+export type MapMode = "overview" | "story" | "history" | "mission" | "reveal" | "event" | "score" | "report" | "replay";
 
 export interface MapApi {
   /** Centre of the current view: where the crosshair is. */
@@ -488,7 +489,7 @@ export function GameMap(props: Props) {
       if (reportPin) drawReportPin(reportPin, layers.player);
       return;
     }
-    if (mode === "story" || mode === "mission") drawPlaces(playable, layers.places);
+    if (mode === "story" || mode === "history" || mode === "mission") drawPlaces(playable, layers.places);
     // The alarm comes before the reveal: only the ARGUS sensor that raised it is shown, and your
     // sensors that would have caught it stand out from the rest.
     const alarmShown = (mode === "event" || mode === "replay") && alarm ? alarm : null;

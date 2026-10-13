@@ -35,11 +35,19 @@ export function Story({ mon, session, go }: ScreenProps) {
       <p className="lead" data-needs-review={mon.story.needs_review}>
         {pick(mon.story.text)}
       </p>
+      {mon.history && (
+        <p className="story-more">
+          <button type="button" className="btn btn-secondary" onClick={() => go("history")}>
+            {t("story.readMore")}
+            <Icon name="arrow" />
+          </button>
+        </p>
+      )}
 
       {hook && (
         <section className="sheet-note threat-hook" aria-labelledby="hook-title">
           <p className="eyebrow">{t("story.dangerLabel")}</p>
-          <h2 id="hook-title" data-needs-review={hook.plain.needs_review}>
+          <h2 id="hook-title" tabIndex={-1} data-needs-review={hook.plain.needs_review}>
             {pick(hook.plain.title)}
           </h2>
           <p data-needs-review={hook.plain.needs_review}>{pick(hook.plain.text)}</p>
