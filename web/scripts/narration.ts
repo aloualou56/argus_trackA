@@ -8,6 +8,14 @@
 //   npm run narration -- --prune                delete recordings no text uses any more
 //   npm run narration -- --sample "Κείμενο" --lang el [--provider elevenlabs] [--voice <id>]
 //                                               one test clip, to compare voices (web/narration-samples/)
+//   npm run narration -- --library --lang el [--gender female]
+//                                               ElevenLabs: the most used library voices of a language, with
+//                                               a free preview link for each (no credits)
+//   npm run narration -- --add <owner>:<voice> --name "Greek narrator"
+//                                               ElevenLabs: add a library voice to your account (prints its id)
+//
+// Before recording, ElevenLabs credits are checked: the run stops if the account has too few left
+// (--force records anyway, as far as the credits go).
 //
 // Keys come from environment variables only; never put them in a file in this repository:
 //   Azure:      AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (e.g. westeurope); AZURE_SPEECH_ENDPOINT optional
@@ -38,6 +46,8 @@ interface Settings {
   azure: { output_format: string; rate: string; voices: Record<NarratedLang, string | null> };
   elevenlabs: {
     model_id: string;
+    /** A cheaper or different model for some languages (e.g. Flash v2.5 costs half a credit per character). */
+    models?: Partial<Record<NarratedLang, string>>;
     output_format: string;
     voice_settings: Record<string, number | boolean>;
     voices: Record<NarratedLang, string | null>;
@@ -67,6 +77,14 @@ interface Service {
   check(): void;
   record(lang: NarratedLang, text: string): Promise<Buffer>;
   listVoices(lang: NarratedLang): Promise<void>;
+  /** Credits the service charges for these characters in this language. */
+  cost(lang: NarratedLang, characters: number): number;
+  /** Credits left in the account, when the service tells. */
+  balance(): Promise<number | null>;
+  /** Library voices of a language, most used first (ElevenLabs only). */
+  library?(lang: NarratedLang, gender?: string): Promise<void>;
+  /** Adds a library voice to the account and returns its id (ElevenLabs only). */
+  addVoice?(owner: string, voiceId: string, name: string): Promise<string>;
 }
 
 async function request(url: string, init: RequestInit): Promise<Response> {
@@ -115,6 +133,8 @@ function azure(): Service {
         console.log(`${v.ShortName}  ${v.Locale}  ${v.Gender}  ${v.VoiceType}`);
       }
     },
+    cost: (_lang, characters) => characters,
+    balance: async () => null,
   };
 }
 
@@ -122,29 +142,84 @@ function azure(): Service {
 function elevenlabs(): Service {
   const cfg = settings.elevenlabs;
   const key = process.env.ELEVENLABS_API_KEY ?? "";
-  const api = "https://api.elevenlabs.io";
+  // ELEVENLABS_API_URL (optional): another endpoint, e.g. a regional one.
+  const api = process.env.ELEVENLABS_API_URL ?? "https://api.elevenlabs.io";
+  const headers = { "xi-api-key": key };
+  const modelFor = (lang: NarratedLang) => cfg.models?.[lang] ?? cfg.model_id;
+  // Flash and Turbo cost half a credit per character; the v2.5 and v3 models accept the language.
+  const cheap = (model: string) => /flash|turbo/.test(model);
+  const takesLanguage = (model: string) => /v2_5|v3/.test(model);
   return {
-    voice: (lang) => (cfg.voices[lang] ? `${cfg.voices[lang]} ${cfg.model_id}` : null),
+    voice: (lang) => (cfg.voices[lang] ? `${cfg.voices[lang]} ${modelFor(lang)}` : null),
     check() {
       if (!key) throw new Error("Set ELEVENLABS_API_KEY (or use --dry-run).");
     },
     async record(lang, text) {
+      const model = modelFor(lang);
       const res = await request(`${api}/v1/text-to-speech/${cfg.voices[lang]}?output_format=${cfg.output_format}`, {
         method: "POST",
-        headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
-        body: JSON.stringify({ text, model_id: cfg.model_id, voice_settings: cfg.voice_settings }),
+        headers: { ...headers, "Content-Type": "application/json", Accept: "audio/mpeg" },
+        body: JSON.stringify({
+          text,
+          model_id: model,
+          voice_settings: cfg.voice_settings,
+          ...(takesLanguage(model) ? { language_code: lang } : {}),
+        }),
       });
       return Buffer.from(await res.arrayBuffer());
     },
     async listVoices() {
-      const res = await request(`${api}/v2/voices?page_size=100`, { headers: { "xi-api-key": key } });
+      const res = await request(`${api}/v2/voices?page_size=100`, { headers });
       const body = (await res.json()) as {
-        voices: { voice_id: string; name: string; verified_languages?: { language: string; accent?: string }[] }[];
+        voices: { voice_id: string; name: string; category?: string; verified_languages?: { language: string; accent?: string }[] }[];
       };
       for (const v of body.voices) {
         const languages = (v.verified_languages ?? []).map((l) => (l.accent ? `${l.language} (${l.accent})` : l.language));
-        console.log(`${v.voice_id}  ${v.name}${languages.length ? `  [${languages.join(", ")}]` : ""}`);
+        console.log(`${v.voice_id}  ${v.name}${v.category ? ` (${v.category})` : ""}${languages.length ? `  [${languages.join(", ")}]` : ""}`);
       }
+    },
+    cost: (lang, characters) => Math.ceil(characters * (cheap(modelFor(lang)) ? 0.5 : 1)),
+    async balance() {
+      const res = await request(`${api}/v1/user/subscription`, { headers });
+      const sub = (await res.json()) as { character_count?: number; character_limit?: number };
+      return typeof sub.character_limit === "number" ? sub.character_limit - (sub.character_count ?? 0) : null;
+    },
+    async library(lang, gender) {
+      const params = new URLSearchParams({ page_size: "100", language: lang, ...(gender ? { gender } : {}) });
+      const res = await request(`${api}/v1/shared-voices?${params}`, { headers });
+      type Shared = {
+        public_owner_id: string;
+        voice_id: string;
+        name: string;
+        gender?: string;
+        age?: string;
+        accent?: string;
+        descriptive?: string;
+        use_case?: string;
+        cloned_by_count?: number;
+        usage_character_count_1y?: number;
+        preview_url?: string;
+      };
+      const voices = ((await res.json()) as { voices: Shared[] }).voices ?? [];
+      // Most used first: a rough sign of a clean, reliable voice. The ear decides.
+      voices.sort(
+        (a, b) => (b.usage_character_count_1y ?? 0) - (a.usage_character_count_1y ?? 0) || (b.cloned_by_count ?? 0) - (a.cloned_by_count ?? 0),
+      );
+      console.log(`${lang}: ${voices.length} library voices; the 12 most used:`);
+      for (const v of voices.slice(0, 12)) {
+        const about = [v.gender, v.age, v.accent, v.descriptive, v.use_case].filter(Boolean).join(", ");
+        console.log(`\n  ${v.name}  (${about})  used by ${v.cloned_by_count ?? 0}`);
+        console.log(`    listen: ${v.preview_url ?? "-"}`);
+        console.log(`    add:    npm run narration -- --add ${v.public_owner_id}:${v.voice_id} --name "${v.name}"`);
+      }
+    },
+    async addVoice(owner, voiceId, name) {
+      const res = await request(`${api}/v1/voices/add/${owner}/${voiceId}`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ new_name: name }),
+      });
+      return ((await res.json()) as { voice_id: string }).voice_id;
     },
   };
 }
@@ -170,7 +245,10 @@ function wordsFor(lang: NarratedLang) {
  * content/narration.json. The clip's name still comes from the line as shown.
  */
 function sayAs(lang: NarratedLang, line: string): string {
-  const plain = line.replace(/[­​-‍⁠]/g, "").replace(/\s+·\s+/g, ", ");
+  const plain = line
+    .replace(/[\u00AD\u200B-\u200D\u2060]/g, "")
+    .replace(/([.;!?])\s+·\s+/g, "$1 ") // "Will the walls stand? · House of ..." needs no comma
+    .replace(/\s+·\s+/g, ", ");
   return Object.entries(settings.say_as[lang] ?? {}).reduce((text, [word, spoken]) => text.split(word).join(spoken), plain);
 }
 
@@ -226,11 +304,25 @@ async function main(): Promise<void> {
     for (const lang of langs) await service.listVoices(lang);
     return;
   }
+  if (flag("library")) {
+    service.check();
+    if (!service.library) throw new Error("--library is for ElevenLabs (add --provider elevenlabs).");
+    for (const lang of option("lang") ? langs : (["el"] as NarratedLang[])) await service.library(lang, option("gender"));
+    return;
+  }
+  const add = option("add");
+  if (add) {
+    service.check();
+    const [owner, voiceId] = add.split(":");
+    if (!service.addVoice || !owner || !voiceId) throw new Error("Use --add <owner>:<voice> with ElevenLabs (see --library).");
+    const id = await service.addVoice(owner, voiceId, option("name") ?? voiceId);
+    console.log(`added; its voice_id is ${id} (put it in content/narration.json, elevenlabs.voices)`);
+    return;
+  }
 
+  // 1. What each language needs.
   const manifest = readManifest();
-  let failures = 0;
-  let total = 0;
-  for (const lang of langs) {
+  const plans = langs.map((lang) => {
     const lines = linesToRecord(wordsFor(lang), data);
     const wanted = new Map(lines.map((line) => [narrationKey(lang, line), line]));
     if (flag("prune")) {
@@ -243,26 +335,43 @@ async function main(): Promise<void> {
     const missing = [...wanted].filter(([k, line]) => flag("redo") || !sameVoice || clips[k] !== line);
     const todo = missing.slice(0, limit);
     const chars = todo.reduce((n, [, line]) => n + sayAs(lang, line).length, 0);
-    total += chars;
+    const credits = service.cost(lang, chars);
     console.log(
-      `${lang}: ${lines.length} lines, ${lines.length - missing.length} already recorded, ${todo.length} to record now (${chars} characters)` +
+      `${lang}: ${lines.length} lines, ${lines.length - missing.length} already recorded, ${todo.length} to record now ` +
+        `(${chars} characters, ${credits} credits)` +
         (Object.keys(clips).length && !sameVoice ? " - the service or voice changed, so everything is recorded again" : ""),
     );
-    if (flag("dry-run")) {
-      if (flag("verbose")) todo.forEach(([k, line]) => console.log(`  ${k}  ${sayAs(lang, line)}`));
-      continue;
-    }
-    if (!todo.length) continue;
-    service.check();
-    if (!voice) throw new Error(`No ${provider} voice for ${lang} in content/narration.json (see --voices).`);
+    if (flag("verbose")) todo.forEach(([k, line]) => console.log(`  ${k}  ${sayAs(lang, line)}`));
+    return { lang, lines, todo, voice, sameVoice, credits };
+  });
+  const needed = plans.reduce((n, p) => n + p.credits, 0);
+  if (langs.length > 1) console.log(`total: ${needed} credits`);
+  if (flag("dry-run") || !needed) return;
 
+  // 2. Enough credits? (ElevenLabs tells; Azure's free tier is far larger than the game.)
+  service.check();
+  for (const p of plans) {
+    if (p.todo.length && !p.voice) throw new Error(`No ${provider} voice for ${p.lang} in content/narration.json (see --voices).`);
+  }
+  const left = await service.balance();
+  if (left !== null) {
+    console.log(`credits left in the account: ${left}`);
+    if (left < needed && !flag("force")) {
+      throw new Error(`Not enough credits (${needed} needed). Record fewer languages with --lang, or use --force.`);
+    }
+  }
+
+  // 3. Record.
+  let failures = 0;
+  for (const { lang, lines, todo, voice, sameVoice } of plans) {
+    if (!todo.length) continue;
     if (!sameVoice) {
       manifest.clips[lang] = {};
-      manifest.voices[lang] = { provider, voice };
+      manifest.voices[lang] = { provider, voice: voice! };
     }
     const target = (manifest.clips[lang] ??= {});
     mkdirSync(join(AUDIO, lang), { recursive: true });
-    // Two at a time: within the limits of the free tiers of both services.
+    // Two at a time: within the concurrency limits of every plan of both services.
     let next = 0;
     const worker = async () => {
       while (next < todo.length) {
@@ -280,7 +389,6 @@ async function main(): Promise<void> {
     };
     await Promise.all([worker(), worker()]);
   }
-  if (langs.length > 1) console.log(`total: ${total} characters`);
   if (failures) {
     console.error(`${failures} line(s) failed; run again to retry them.`);
     process.exitCode = 1;

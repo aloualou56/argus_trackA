@@ -1,6 +1,6 @@
 {
-  "_about": "AUTHORED by the game team. Settings for the recorded narration (web/scripts/narration.ts). 'provider' picks the service: 'azure' (Microsoft Azure Speech, default: natural Greek voices, the free tier covers all five languages) or 'elevenlabs'. List the voices a service offers with `npm run narration -- --voices --lang el` in web/. 'say_as' changes how a word is pronounced in the recording only (the screen keeps the original), e.g. the project name ARGUS, which a Greek voice may otherwise spell out. After changing the provider, a voice or the settings, run with `--redo`. Needs review: the voices (listen to a few lines first) and the pronunciation of ARGUS in Greek.",
-  "provider": "azure",
+  "_about": "AUTHORED by the game team. Settings for the recorded narration (web/scripts/narration.ts). 'provider' picks the service: 'elevenlabs' (default; the team's paid account) or 'azure' (Microsoft Azure Speech, free tier). ElevenLabs: Greek and English use eleven_multilingual_v2 (best quality, 1 credit per character); Italian, Spanish and German use eleven_flash_v2_5 (half a credit), so all five fit about 90,000 credits. Find voices with `npm run narration -- --library --lang el` (free previews), add one with --add, and put its voice_id under elevenlabs.voices. 'say_as' changes how a word is pronounced in the recording only (the screen keeps the original), e.g. the project name ARGUS. After changing the provider, a model, a voice or the settings, run with `--redo`. Needs review: the voices (listen first) and the pronunciation of ARGUS in Greek.",
+  "provider": "elevenlabs",
   "azure": {
     "output_format": "audio-24khz-48kbitrate-mono-mp3",
     "rate": "-5%",
@@ -14,6 +14,11 @@
   },
   "elevenlabs": {
     "model_id": "eleven_multilingual_v2",
+    "models": {
+      "it": "eleven_flash_v2_5",
+      "es": "eleven_flash_v2_5",
+      "de": "eleven_flash_v2_5"
+    },
     "output_format": "mp3_44100_128",
     "voice_settings": {
       "stability": 0.6,

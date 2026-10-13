@@ -536,40 +536,43 @@ python3 -I tools/class_server.py --lan --online-maps   # allow satellite and str
 - Over plain `http://` on a school network browsers offer no service worker, so there the game needs the server
   for each page load (on 127.0.0.1 it still works offline after the first visit).
 
-## Recorded narration (Azure or ElevenLabs)
+## Recorded narration (ElevenLabs or Azure)
 
 "Read aloud" plays natural recorded voices in all five languages, recorded once and shipped as MP3 files in
-`web/public/audio/` (with `manifest.json`). The default service is **Microsoft Azure Speech** (neural voices: Athina
-for Greek, Sonia, Elsa, Elvira and Leni for English, Italian, Spanish and Swiss German); its free tier (about
-500,000 characters a month) covers everything. **ElevenLabs** is the alternative (`"provider": "elevenlabs"`).
-The words come from `web/src/audio/narration.ts`, the same code the screens use, so a recording always matches the
-screen. Each line is one clip named by a hash of its words: when a text changes, only that line is recorded again,
-and until then it is read by the device's voice. 231 lines per language, about 130,000 characters in all.
+`web/public/audio/` (with `manifest.json`). The team records with **ElevenLabs** (paid account): Greek and English
+with `eleven_multilingual_v2` (best quality, 1 credit per character), Italian, Spanish and German with
+`eleven_flash_v2_5` (half a credit), about **90,000 credits** for all five. **Microsoft Azure Speech** is the free
+alternative (`"provider": "azure"`). The words come from `web/src/audio/narration.ts`, the same code the screens use,
+so a recording always matches the screen. Each line is one clip named by a hash of its words: when a text changes,
+only that line is recorded again, and until then it is read by the device's voice. 231 lines per language.
 
 ```sh
 cd web
-npm run narration -- --dry-run                 # what would be recorded and how many characters (free, no key)
-# Azure: create a "Speech" resource in the Azure portal (free F0 tier), then
-#   Windows PowerShell:  $env:AZURE_SPEECH_KEY="..."; $env:AZURE_SPEECH_REGION="westeurope"
-#   macOS/Linux:         export AZURE_SPEECH_KEY=... AZURE_SPEECH_REGION=westeurope
-npm run narration -- --voices --lang el        # the voices for a language (to change one in content/narration.json)
-npm run narration -- --lang el --limit 5       # five Greek lines first: listen in web/public/audio/el/
-npm run narration                              # everything that is missing, all five languages
-npm run narration -- --prune                   # remove recordings no text uses any more
+npm run narration -- --dry-run                       # lines, characters and credits (free, no key)
+# Windows PowerShell:  $env:ELEVENLABS_API_KEY="..."     macOS/Linux:  export ELEVENLABS_API_KEY=...
+npm run narration -- --library --lang el             # the most used Greek library voices, with free preview links
+npm run narration -- --add <owner>:<voice> --name "Greek narrator"   # add one to the account; prints its voice_id
+npm run narration -- --voices                        # the voices in the account (incl. ElevenLabs' own)
+npm run narration -- --sample "Καλώς ήρθες, φύλακα!" --voice <voice_id>   # one test clip (web/narration-samples/)
+#   put the chosen voice_id per language in content/narration.json (elevenlabs.voices)
+npm run narration -- --lang el --limit 5             # five Greek lines first: listen in web/public/audio/el/
+npm run narration                                    # everything that is missing, all five languages
+npm run narration -- --prune                         # remove recordings no text uses any more
 ```
 
-- Keys are read from environment variables only (`AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`, or
-  `ELEVENLABS_API_KEY`); never put them in a file of this repository.
-- `content/narration.json`: the service, one voice per language, the speaking rate (a little slower, for children)
-  and `say_as` pronunciation fixes used only in the recording (e.g. ARGUS → «Άργκους» in Greek; needs review).
-  Invisible hyphenation marks and " · " are cleaned before recording. After changing the service, a voice or the
-  settings, run with `--redo`.
+- Before recording, the account's ElevenLabs credits are checked; the run stops if they are too few (`--force`
+  records anyway, as far as they go).
+- Keys are read from environment variables only (`ELEVENLABS_API_KEY`, or `AZURE_SPEECH_KEY` and
+  `AZURE_SPEECH_REGION`); never put them in a file of this repository.
+- `content/narration.json`: the service, models, one voice per language, voice settings and `say_as` pronunciation
+  fixes used only in the recording (e.g. ARGUS → «Άργκους» in Greek; needs review). Invisible hyphenation marks and
+  " · " are cleaned before recording. After changing the service, a model, a voice or the settings, run with `--redo`.
 - Italian, Spanish and German use the translated content in `web/public/data/i18n/`, as the game does.
 - Progress is saved after every clip, so an interrupted run continues where it stopped; failed lines are retried
   on the next run. Then commit `web/public/audio/`.
 - Offline: clips are not downloaded up front; each one is kept by the service worker the first time it plays.
-- Licence: check the service's terms before publishing (ElevenLabs' free plan requires attribution and is
-  non-commercial; Azure's terms allow using the generated audio in your application).
+- Licence: a paid ElevenLabs plan includes a commercial licence; check the terms of the voices you choose from the
+  library (some owners set conditions) before publishing.
 
 ## Offline
 
