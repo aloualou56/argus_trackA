@@ -3,6 +3,7 @@ import type { ScreenProps } from "../App";
 import type { MapApi } from "../components/GameMap";
 import { Icon } from "../components/Icon";
 import { ReadAloud } from "../components/ReadAloud";
+import { chapterNarration } from "../audio/narration";
 import { useI18n } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -17,7 +18,8 @@ interface Props extends ScreenProps {
  * the danger on the story screen, where the mission starts.
  */
 export function History({ mon, onBack, mapApi, announce }: Props) {
-  const { t, pick } = useI18n();
+  const i18n = useI18n();
+  const { t, pick } = i18n;
   const chapters = mon.history?.chapters ?? [];
   const [index, setIndex] = useState(0);
   const chapter = chapters[index];
@@ -57,7 +59,7 @@ export function History({ mon, onBack, mapApi, announce }: Props) {
         <h2 id="chapter-title" tabIndex={-1} ref={title} data-needs-review={mon.history?.needs_review}>
           {pick(chapter.title)}
         </h2>
-        <ReadAloud text={`${pick(chapter.title)}.\n${pick(chapter.text)}`} />
+        <ReadAloud text={chapterNarration(i18n, chapter)} />
         {pick(chapter.text)
           .split("\n\n")
           .map((paragraph, i) => (

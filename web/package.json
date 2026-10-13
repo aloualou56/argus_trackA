@@ -12,7 +12,8 @@
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "data": "python3 -I ../tools/build_game_data.py",
     "class": "python3 -I ../tools/class_server.py",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "narration": "node node_modules/vite-node/vite-node.mjs scripts/narration.ts --"
   },
   "dependencies": {
     "@fontsource-variable/commissioner": "5.3.0",

@@ -21,7 +21,8 @@ function offline(): Plugin {
         );
       const files = walk(outDir)
         .map((f) => relative(outDir, f).split(sep).join("/"))
-        .filter((f) => f !== "sw.js" && !f.endsWith(".map"))
+        // Recorded narration is kept as it is played, not stored up front (see sw-template.js).
+        .filter((f) => f !== "sw.js" && !f.endsWith(".map") && !f.startsWith("audio/"))
         .sort();
       const hash = createHash("sha256");
       for (const f of files) hash.update(f).update(readFileSync(join(outDir, f)));

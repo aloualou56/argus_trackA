@@ -2,12 +2,14 @@ import type { ScreenProps } from "../App";
 import { budgetFor, formatCoords, missionScenarios } from "../game/logic";
 import { Icon } from "../components/Icon";
 import { ReadAloud } from "../components/ReadAloud";
+import { storyNarration } from "../audio/narration";
 import { PhotoCredit } from "../components/PhotoCredit";
 import { LevelBadge, LevelBars, levelKey } from "../components/LevelBadge";
 import { useI18n } from "../i18n";
 
 export function Story({ mon, session, go }: ScreenProps) {
-  const { t, tn, pick } = useI18n();
+  const i18n = useI18n();
+  const { t, tn, pick } = i18n;
   // The story card shows a danger of this mission, at the chosen level where it has one (the
   // monument's own hook when it is in the mission): a Low game never opens on a Catastrophic danger.
   const mission = missionScenarios(mon, session.level, session.mission);
@@ -37,11 +39,7 @@ export function Story({ mon, session, go }: ScreenProps) {
         {pick(mon.story.text)}
       </p>
       <div className="story-more">
-        <ReadAloud
-          text={[pick(mon.story.text), hook && `${t("story.dangerLabel")}: ${pick(hook.plain.title)}. ${pick(hook.plain.text)}`]
-            .filter(Boolean)
-            .join("\n")}
-        />
+        <ReadAloud text={storyNarration(i18n, mon, hook)} />
         {mon.history && (
           <button type="button" className="btn btn-secondary" onClick={() => go("history")}>
             {t("story.readMore")}
