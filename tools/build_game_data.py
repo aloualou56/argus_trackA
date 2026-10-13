@@ -790,11 +790,6 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         ctx = alarm_context.get(alarm["rule"])
         alarm["context"] = ({"links": ctx.get("links", []), "why": ctx.get("why"), "authored": True,
                              "needs_review": bool(ctx.get("needs_review"))} if ctx else None)
-        after = consequences.get(alarm["rule"])
-        if alarm["context"] and after:
-            # What happens over the years if nobody ever notices (score screen), and the drawing of it.
-            alarm["context"]["consequence"] = {"picture": after["picture"], "text": after["text"],
-                                               "needs_review": bool(consequences.get("needs_review", True))}
     entry.update({
         "display_name": pack["display_name"],
         "place": pack["place"],
@@ -810,6 +805,18 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         entry["no_alarm_note"] = dict(pack["no_alarm_note"], authored=True)
     if pack.get("guardian"):
         entry["guardian"] = dict({k: v for k, v in pack["guardian"].items() if not k.startswith("_")}, authored=True)
+    if consequences:
+        # What happens over the years if nobody ever notices, per alarm rule (score screen): once per
+        # rule, not copied into each alarm (one rule can raise many alarms).
+        entry["consequences"] = {rule: {"picture": c["picture"], "text": c["text"],
+                                        "needs_review": bool(consequences.get("needs_review", True))}
+                                 for rule, c in consequences.items() if not rule.startswith("_") and isinstance(c, dict)
+                                 and "picture" in c}
+    if pack.get("report_to"):
+        # Who to tell about a visitor's observation: from the bodies' own official websites.
+        to = pack["report_to"]
+        entry["report_to"] = {"checked": to["checked"], "needs_review": bool(to.get("needs_review", True)),
+                              "contacts": to["contacts"], "authored": True}
     return entry, stats
 
 
@@ -972,11 +979,29 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         for alarm in mon["alarms"]:
             if not alarm["context"]:
                 problems.append(f"{mon['pilot_key']}: no alarm_context for rule {alarm['rule']}")
-            elif not alarm["context"].get("consequence"):
+            elif alarm["rule"] not in mon.get("consequences", {}):
                 problems.append(f"{mon['pilot_key']}: no consequence for rule {alarm['rule']}")
-            elif alarm["context"]["consequence"]["picture"] not in CONSEQUENCE_PICTURES:
+            elif mon["consequences"][alarm["rule"]]["picture"] not in CONSEQUENCE_PICTURES:
                 problems.append(f"{mon['pilot_key']}: consequence of {alarm['rule']} has an unknown picture "
                                 f"(one of {', '.join(CONSEQUENCE_PICTURES)})")
+        report_to = mon.get("report_to")
+        if not report_to or not report_to["contacts"]:
+            problems.append(f"{mon['pilot_key']}: no report_to contacts (who to tell about an observation)")
+        else:
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(report_to.get("checked", ""))):
+                problems.append(f"{mon['pilot_key']}: report_to needs the date it was checked (YYYY-MM-DD)")
+            for c in report_to["contacts"]:
+                who = f"{mon['pilot_key']} report_to '{(c.get('name') or {}).get('en')}'"
+                for field in ("name", "role"):
+                    if not all((c.get(field) or {}).get(lang) for lang in ("en", "el")):
+                        problems.append(f"{who}: {field} needs both en and el")
+                if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[a-z]{2,}", c.get("email", "")):
+                    problems.append(f"{who}: email missing or malformed")
+                if c.get("phone") and not re.fullmatch(r"\+\d[\d ]{6,18}", c["phone"]):
+                    problems.append(f"{who}: phone must be international, e.g. +30 210 3310966")
+                for field in ("url", "source"):
+                    if not str(c.get(field, "")).startswith("https://"):
+                        problems.append(f"{who}: {field} must be an https:// page")
         guardian = mon.get("guardian")
         if not guardian:
             problems.append(f"{mon['pilot_key']}: no guardian")
@@ -1316,6 +1341,11 @@ def collect_review_items(content: Content) -> List[str]:
         if pack.get("consequences", {}).get("needs_review", True) and pack.get("consequences"):
             items.append(f"`{pilot}` consequences (what happens if nobody notices, per alarm rule): check the science "
                          "and the Greek, and that each drawing fits")
+        if pack.get("report_to", {}).get("needs_review", True) and pack.get("report_to"):
+            to = pack["report_to"]
+            names = ", ".join(c["name"]["en"] for c in to["contacts"])
+            items.append(f"`{pilot}` who to tell (checked {to['checked']}): {names}: call or write once to confirm"
+                         + (f" ({to['review_note']})" if to.get("review_note") else ""))
         if (pack.get("guardian") or {}).get("needs_review", True) and pack.get("guardian"):
             name = pack["guardian"]["name"]["en"]
             items.append(f"`{pilot}` imaginary guardian {name}: name, role and words (Greek too)")

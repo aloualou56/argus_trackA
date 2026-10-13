@@ -84,6 +84,28 @@
       }
     }
   },
+  "report_to": {
+    "_about": "AUTHORED. Who to tell about something a visitor saw (observation report): the bodies responsible for the monument, with the contact details on their own official websites, checked on the date below. 'source' is the page they were taken from.",
+    "needs_review": true,
+    "checked": "2026-10-13",
+    "contacts": [
+      {
+        "name": {
+          "en": "Monti Lucretili Regional Park (Ente Parco)",
+          "el": "Περιφερειακό Πάρκο Ορέων Λουκρετίλι (Ente Parco)"
+        },
+        "role": {
+          "en": "The body that runs the park and looks after the hills and the places in them.",
+          "el": "Ο φορέας που διαχειρίζεται το πάρκο και φροντίζει τους λόφους και τους τόπους τους."
+        },
+        "email": "info@parcolucretili.it",
+        "phone": "+39 0774 637027",
+        "url": "https://www.parks.it/parco.monti.lucretili/contatti.php",
+        "source": "https://www.parks.it/parco.monti.lucretili/contatti.php"
+      }
+    ],
+    "review_note": "The park body is the first contact for the whole area; Horace's villa may also have a Ministry of Culture office of its own (not checked)."
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Lucretili has no Low or Medium scenarios. The Catastrophic mission includes the loss of dry-stone-walling knowledge on purpose: no sensor can warn about it, which the score screen teaches (it is not scored).",
     "Catastrophic priority": [

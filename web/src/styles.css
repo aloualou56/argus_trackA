@@ -4779,3 +4779,48 @@ html.a11y-contrast .guardian-words::before {
     display: none;
   }
 }
+
+/* ---- who to tell: the bodies responsible for the monument (observation report) */
+.report-to {
+  margin: 1.25rem 0;
+  padding: 0.9rem 0 0;
+  border-top: 2px solid var(--ink);
+}
+.report-to h2 {
+  margin-top: 0;
+}
+.report-to-list {
+  list-style: none;
+  margin: 0.75rem 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.report-contact {
+  padding: 0.8rem 1rem;
+  background: var(--tint);
+  border-radius: var(--radius);
+}
+.report-contact h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1.15rem;
+}
+.report-contact p {
+  margin: 0 0 0.6rem;
+}
+.report-contact-actions {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+.report-contact-email {
+  margin: 0.5rem 0 0 !important;
+  overflow-wrap: anywhere;
+}
+.report-card-to {
+  display: block;
+  overflow-wrap: anywhere;
+}
+html.a11y-contrast .report-contact {
+  border: 2px solid var(--ink);
+}

@@ -56,6 +56,41 @@
       }
     }
   },
+  "report_to": {
+    "_about": "AUTHORED. Who to tell about something a visitor saw (observation report): the bodies responsible for the monument, with the contact details on their own official websites, checked on the date below. 'source' is the page they were taken from.",
+    "needs_review": true,
+    "checked": "2026-10-13",
+    "contacts": [
+      {
+        "name": {
+          "en": "Aargauer Heimatschutz",
+          "el": "Aargauer Heimatschutz"
+        },
+        "role": {
+          "en": "The heritage society that owns the ruin of Schenkenberg.",
+          "el": "Ο σύλλογος προστασίας της κληρονομιάς στον οποίο ανήκει το ερείπιο του Σένκενμπεργκ."
+        },
+        "email": "info@heimatschutz-ag.ch",
+        "url": "https://www.heimatschutz-ag.ch/was-wir-tun/bergruine-schenkenberg",
+        "source": "https://www.heimatschutz-ag.ch/was-wir-tun/bergruine-schenkenberg"
+      },
+      {
+        "name": {
+          "en": "Heritage office of the canton of Aargau (Kantonale Denkmalpflege)",
+          "el": "Υπηρεσία μνημείων του καντονιού Άαργκαου (Kantonale Denkmalpflege)"
+        },
+        "role": {
+          "en": "The canton's office that protects listed monuments; the ruin is on its list.",
+          "el": "Η υπηρεσία του καντονιού που προστατεύει τα κηρυγμένα μνημεία· το ερείπιο είναι στον κατάλογό της."
+        },
+        "email": "denkmalpflege@ag.ch",
+        "phone": "+41 62 835 23 40",
+        "url": "https://www.ag.ch/de/themen/kultur-sport/kultur/denkmalpflege",
+        "source": "https://www.ag.ch/de/themen/kultur-sport/kultur/denkmalpflege"
+      }
+    ],
+    "review_note": "The society's pages give two different phone numbers (056 210 95 05, 079 775 56 71), so no phone is shown for it."
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Schenkenberg has 2 Low, 1 Medium, 2 High and 6 Extreme scenarios, so missions borrow from the next level up or down, never two levels away: Medium takes one Low and one High danger.",
     "Extreme priority": [

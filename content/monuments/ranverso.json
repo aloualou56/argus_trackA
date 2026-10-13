@@ -50,6 +50,28 @@
       }
     }
   },
+  "report_to": {
+    "_about": "AUTHORED. Who to tell about something a visitor saw (observation report): the bodies responsible for the monument, with the contact details on their own official websites, checked on the date below. 'source' is the page they were taken from.",
+    "needs_review": true,
+    "checked": "2026-10-13",
+    "contacts": [
+      {
+        "name": {
+          "en": "Fondazione Ordine Mauriziano",
+          "el": "Fondazione Ordine Mauriziano"
+        },
+        "role": {
+          "en": "The foundation that owns the Precettoria of Sant'Antonio di Ranverso and looks after it.",
+          "el": "Το ίδρυμα στο οποίο ανήκει το Σαντ' Αντόνιο ντι Ρανβέρσο και που το φροντίζει."
+        },
+        "email": "ranverso@biglietteria.ordinemauriziano.it",
+        "phone": "+39 011 6200603",
+        "url": "https://www.ordinemauriziano.it/precettoria-sant-antonio-ranverso/visita-ranverso/",
+        "source": "https://www.ordinemauriziano.it/precettoria-sant-antonio-ranverso/visita-ranverso/"
+      }
+    ],
+    "review_note": "Older pages of the foundation give 011 9367450 and ranverso@ordinemauriziano.it; the newer visit page gives these."
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Ranverso has only 2 Extreme scenarios, so the Extreme mission borrows the strongest High one. Ranverso has no Catastrophic scenarios.",
     "Extreme priority": ["ranverso.water.groundwater", "ranverso.pests.woodworms", "ranverso.incorrect-rh.prolonged-wet-periods"],

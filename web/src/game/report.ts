@@ -226,3 +226,19 @@ export function isReport(value: unknown): value is ObservationReport {
     typeof r.hasPhoto === "boolean"
   );
 }
+
+// ---------------------------------------------------------------- telling the people responsible
+
+/**
+ * A mailto: link that opens the visitor's own email app with the card written in. The game sends
+ * nothing itself: the visitor sees the message and decides whether to send it (and adds a photo).
+ */
+export function mailtoLink(to: string, subject: string, lines: string[]): string {
+  // Line breaks as CRLF, the form email programs expect in a mailto body (RFC 6068).
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\r\n"))}`;
+}
+
+/** A tel: link for a number written in international format ("+30 210 3310966" -> "tel:+302103310966"). */
+export function telLink(phone: string): string {
+  return `tel:${phone.replace(/[^\d+]/g, "")}`;
+}

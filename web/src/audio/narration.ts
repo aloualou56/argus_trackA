@@ -75,7 +75,7 @@ export function guardianBack(w: Words, mon: Monument, alarm: Alarm | null, detec
 
 /** Score screen: the guardian back (first day), then what happens over the years if nobody notices. */
 export function endingNarration(w: Words, mon: Monument, alarm: Alarm | null, detected: boolean, firstDay: boolean): string {
-  const consequence = alarm?.context?.consequence;
+  const consequence = alarm ? mon.consequences?.[alarm.rule] : undefined;
   return [
     firstDay && guardianBack(w, mon, alarm, detected),
     consequence && w.t(detected ? "consequence.caught" : "consequence.missed"),

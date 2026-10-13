@@ -604,6 +604,7 @@ Authored content flagged `needs_review`:
 - `content/history/baltanas.json` (the whole story, 4 chapters): check every fact and the Greek: Baltanás is the main town of the Cerrato area of Palencia, in Castile; 374 cellars on the hill (the same number as the story screen); The vents of the cellars are called 'zarceras'; Grapes pressed and wine made in the cellars; cellars used as meeting places; The cellar district is protected as a 'Bien de Interés Cultural'
 - `content/monuments/baltanas.json`: all 5 plain-language threat texts are placeholders (check science and Greek)
 - `baltanas` discussion prompt "ARGUS put 7 thermometers and 6 humidity sensors in the cella...": Counts from the ARGUS installed instruments for Baltanas.
+- `baltanas` who to tell (checked 2026-10-13): Town council of Baltanás (Ayuntamiento de Baltanás): call or write once to confirm
 - `baltanas` imaginary guardian Tomás: name, role and words (Greek too)
 - `baltanas` mission picks per level
 - `content/monuments/delos.json` story: Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses).
@@ -615,6 +616,7 @@ Authored content flagged `needs_review`:
 - `delos` alarm explanation for `DL_soil_moisture` and its linked threats ['delos-masks.water-rise.site', 'delos-masks.salinity.site', 'delos-masks.rh-fluctuations.site']
 - `delos` alarm explanation for `R2_wind` and its linked threats ['delos-masks.wind-erosion.site', 'delos-fournoi.wind-erosion.site']
 - `delos` consequences (what happens if nobody notices, per alarm rule): check the science and the Greek, and that each drawing fits
+- `delos` who to tell (checked 2026-10-13): Ephorate of Antiquities of Cyclades: call or write once to confirm
 - `delos` imaginary guardian Manolis: name, role and words (Greek too)
 - `delos` mission picks per level
 - `content/monuments/lucretili.json` story: Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic).
@@ -628,6 +630,7 @@ Authored content flagged `needs_review`:
 - `lucretili` alarm explanation for `R8_baro` and its linked threats []
 - `lucretili` alarm explanation for `R9b_temp_st` and its linked threats []
 - `lucretili` consequences (what happens if nobody notices, per alarm rule): check the science and the Greek, and that each drawing fits
+- `lucretili` who to tell (checked 2026-10-13): Monti Lucretili Regional Park (Ente Parco): call or write once to confirm (The park body is the first contact for the whole area; Horace's villa may also have a Ministry of Culture office of its own (not checked).)
 - `lucretili` imaginary guardian Franco: name, role and words (Greek too)
 - `lucretili` mission picks per level
 - `content/monuments/ranverso.json` story: History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme).
@@ -638,6 +641,7 @@ Authored content flagged `needs_review`:
 - `ranverso` alarm explanation for `R2_rain_7d` and its linked threats ['ranverso.water.groundwater', 'ranverso.water.flooding', 'ranverso.incorrect-rh.prolonged-wet-periods', 'ranverso.physical-forces.storm']
 - `ranverso` alarm explanation for `R4b_soil_low` and its linked threats ['ranverso.water.groundwater', 'ranverso.incorrect-rh.prolonged-dry-periods']
 - `ranverso` consequences (what happens if nobody notices, per alarm rule): check the science and the Greek, and that each drawing fits
+- `ranverso` who to tell (checked 2026-10-13): Fondazione Ordine Mauriziano: call or write once to confirm (Older pages of the foundation give 011 9367450 and ranverso@ordinemauriziano.it; the newer visit page gives these.)
 - `ranverso` imaginary guardian Giulio: name, role and words (Greek too)
 - `ranverso` mission picks per level
 - `content/monuments/schenkenberg.json` story: 'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw.
@@ -648,6 +652,7 @@ Authored content flagged `needs_review`:
 - `schenkenberg` alarm explanation for `R2_crack_step` and its linked threats ['schenkenberg.freeze-thaw.masonry', 'schenkenberg.earthquake.475y', 'schenkenberg.plant-growth.untreated-30y']
 - `schenkenberg` alarm explanation for `R3_vib_zscore` and its linked threats ['schenkenberg.wind-storm.walls', 'schenkenberg.earthquake.475y']
 - `schenkenberg` consequences (what happens if nobody notices, per alarm rule): check the science and the Greek, and that each drawing fits
+- `schenkenberg` who to tell (checked 2026-10-13): Aargauer Heimatschutz, Heritage office of the canton of Aargau (Kantonale Denkmalpflege): call or write once to confirm (The society's pages give two different phone numbers (056 210 95 05, 079 775 56 71), so no phone is shown for it.)
 - `schenkenberg` imaginary guardian Urs: name, role and words (Greek too)
 - `schenkenberg` mission picks per level
 - `content/citizen_checklist.json`: what visitors should look out for and how to report it
@@ -661,10 +666,10 @@ Authored content flagged `needs_review`:
 
 ## Languages
 
-The game's own text is written in English and Greek (456 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
+The game's own text is written in English and Greek (468 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
 
 | language | translated | missing (shown in English) | no longer used | needs review |
 |---|---|---|---|---|
-| de | 456 | 0 | 0 | yes |
-| es | 456 | 0 | 0 | yes |
-| it | 456 | 0 | 0 | yes |
+| de | 468 | 0 | 0 | yes |
+| es | 468 | 0 | 0 | yes |
+| it | 468 | 0 | 0 | yes |

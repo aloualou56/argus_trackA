@@ -134,8 +134,6 @@ export interface Alarm {
     why: Text;
     authored: true;
     needs_review: boolean;
-    /** What happens over the years if nobody ever notices, and the drawing that shows it (score screen). */
-    consequence?: Consequence;
   } | null;
 }
 
@@ -155,6 +153,25 @@ export interface Guardian {
   handover: Text;
   /** Said when the player's sensors caught the day's alarm; absent where no alarm can be replayed. */
   back_caught?: Text;
+  authored: true;
+  needs_review: boolean;
+}
+
+/** A body responsible for a monument, to tell about a visitor's observation (official website, checked). */
+export interface ReportContact {
+  name: Text;
+  role: Text;
+  email: string;
+  /** International format; absent where the official pages disagree. */
+  phone?: string;
+  url: string;
+  source: string;
+}
+
+export interface ReportTo {
+  /** The day the details were checked on the official websites (YYYY-MM-DD). */
+  checked: string;
+  contacts: ReportContact[];
   authored: true;
   needs_review: boolean;
 }
@@ -311,6 +328,10 @@ export interface Monument extends MonumentBase {
   /** Why this monument has no alarm to replay, when it has none. */
   no_alarm_note?: Prompt;
   guardian?: Guardian;
+  /** Per alarm rule: what happens over the years if nobody ever notices, and its drawing (score screen). */
+  consequences?: Record<string, Consequence>;
+  /** Who to tell about something a visitor saw. */
+  report_to?: ReportTo;
 }
 
 /** Pre/post quiz question (content/quiz.json). */

@@ -63,6 +63,27 @@
       }
     }
   },
+  "report_to": {
+    "_about": "AUTHORED. Who to tell about something a visitor saw (observation report): the bodies responsible for the monument, with the contact details on their own official websites, checked on the date below. 'source' is the page they were taken from.",
+    "needs_review": true,
+    "checked": "2026-10-13",
+    "contacts": [
+      {
+        "name": {
+          "en": "Ephorate of Antiquities of Cyclades",
+          "el": "Εφορεία Αρχαιοτήτων Κυκλάδων"
+        },
+        "role": {
+          "en": "The Ministry of Culture service that looks after the antiquities of the Cyclades, Delos among them.",
+          "el": "Η υπηρεσία του Υπουργείου Πολιτισμού που φροντίζει τις αρχαιότητες των Κυκλάδων, μαζί και της Δήλου."
+        },
+        "email": "efakyk@culture.gr",
+        "phone": "+30 210 3310966",
+        "url": "https://cyclades.culture.gov.gr/epikoinonia/",
+        "source": "https://cyclades.culture.gov.gr/epikoinonia/"
+      }
+    ]
+  },
   "missions": {
     "_about": "Three scenario keys per priority level, mixing the two houses and avoiding repeats of the same kind of threat. Delos has only 1 Extreme scenario, so that mission borrows two High ones.",
     "Catastrophic priority": [

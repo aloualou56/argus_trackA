@@ -180,7 +180,7 @@ export function Score({
         const replayed = rule ? alarm : null;
         const firstDay = session.day === 0;
         const back = firstDay ? guardianBack(i18n, mon, replayed, detected) : null;
-        const consequence = replayed?.context?.consequence;
+        const consequence = replayed ? mon.consequences?.[replayed.rule] : undefined;
         const narration = endingNarration(i18n, mon, replayed, detected, firstDay);
         const after = consequence && (
           <section className="consequence" aria-labelledby="consequence-title">

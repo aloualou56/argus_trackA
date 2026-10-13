@@ -480,6 +480,14 @@ it: "Report something you saw", on the first screen and on the score screen.
   assessment in the snapshot (a Delos test record). `web/tests/report.test.ts` checks our export field by field
   against that real record. What a visitor cannot know stays empty (severity, asset state); the spot and the
   checklist item sit under an added `citizen_observation` key. The photo is not in the file.
+- **Who to tell** (`report_to` in `content/monuments/<pilot>.json`): under the card, the bodies responsible for
+  the monument, with the contact details from their own official websites (each with its source page and the day
+  it was checked, 13 Oct 2026): the Ephorate of Antiquities of Cyclades (Delos), the town council of Baltanás, the
+  Monti Lucretili park body, the Fondazione Ordine Mauriziano (Ranverso), and the Aargauer Heimatschutz (owner)
+  with the cantonal heritage office of Aargau (Schenkenberg). "Send it by email" opens the visitor's own email app
+  with the card written in (a `mailto:` link): the visitor reads it, adds a photo and sends it, or not. The game
+  still sends nothing itself. Where official pages give different phone numbers, only the email is shown. A safety
+  line says to call 112 first if someone could get hurt. Needs review: one call or email to each body to confirm.
 - **Open question for ARGUS:** nothing loads these files into ARGUS. Whether ARGUS would accept citizen records,
   and through which channel, is theirs to decide; the file is a proposal in their own format.
 

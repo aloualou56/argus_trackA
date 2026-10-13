@@ -34,6 +34,27 @@
       "el": "Γεια σου, είμαι ο Τομάς. Η οικογένειά μου έχει ένα κελάρι σε αυτόν τον λόφο εδώ και τέσσερις γενιές. Σήμερα πρέπει να λείψω, οπότε τα κελάρια είναι στα χέρια σου. Πρόσεχε το έδαφος για μένα: αν κουνηθεί, τα κελάρια μπορεί να καταρρεύσουν."
     }
   },
+  "report_to": {
+    "_about": "AUTHORED. Who to tell about something a visitor saw (observation report): the bodies responsible for the monument, with the contact details on their own official websites, checked on the date below. 'source' is the page they were taken from.",
+    "needs_review": true,
+    "checked": "2026-10-13",
+    "contacts": [
+      {
+        "name": {
+          "en": "Town council of Baltanás (Ayuntamiento de Baltanás)",
+          "el": "Δήμος Μπαλτανάς (Ayuntamiento de Baltanás)"
+        },
+        "role": {
+          "en": "The town council of Baltanás, the town of the cellar quarter.",
+          "el": "Ο δήμος της Μπαλτανάς, της πόλης με τη συνοικία των κελαριών."
+        },
+        "email": "administracion@baltanas.es",
+        "phone": "+34 979 790 049",
+        "url": "https://baltanas.es/contacto/",
+        "source": "https://baltanas.es/contacto/"
+      }
+    ]
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Baltanas has no Low or Catastrophic scenarios and lists flooding.structural-wood three times; missions use each key once. A mission borrows only from the next level up or down (Medium borrows a High one, not the Extreme cave-in), so a level never shows a danger two levels more serious than the one chosen.",
     "Extreme priority": [

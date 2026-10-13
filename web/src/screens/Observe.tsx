@@ -10,12 +10,14 @@ import { Icon } from "../components/Icon";
 import { isPlayable } from "../game/logic";
 import {
   localDay,
+  mailtoLink,
   makeReport,
   nearestPlace,
   NOTE_MAX,
   OTHER_ITEM,
   reportFileName,
   reportProblems,
+  telLink,
   toArgusDocumentation,
   type ObservationReport,
   type ReportProblem,
@@ -159,6 +161,21 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
   if (card) {
     const cardMon = monuments.find((m) => m.pilot_key === card.monument) ?? mon;
     const cardPhoto = photo?.forCard === card.id ? photo.url : null;
+    const reportTo = cardMon.report_to;
+    const monName = pick(cardMon.display_name);
+    // The email the visitor's own app opens with: the card in words, and the exact spot.
+    const mailLines = [
+      t("report.mailHello", { name: monName }),
+      "",
+      `${t("report.cardWhat")}: ${itemText(card.item)}`,
+      ...(card.note ? [`${t("report.cardNote")}: ${card.note}`] : []),
+      `${t("report.cardWhere")}: ${where(cardMon, [card.lat, card.lng])}`,
+      `${t("report.cardWhen")}: ${date(card.day)}`,
+      t("report.cardId", { id: card.id }),
+      "",
+      t("report.mailOutro"),
+    ];
+    const mailSubject = t("report.mailSubject", { name: monName, id: card.id });
     return (
       <div className="screen observe">
         <h1 tabIndex={-1}>{t("report.title")}</h1>
@@ -196,10 +213,58 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
               <dt>{t("report.cardWhen")}</dt>
               <dd>{date(card.day)}</dd>
             </div>
+            {/* On the printed card too: who to give it to when no guard is there. */}
+            {reportTo && (
+              <div>
+                <dt>{t("report.cardTo")}</dt>
+                <dd>
+                  {reportTo.contacts.map((c) => (
+                    <span key={c.email} className="report-card-to">
+                      {pick(c.name)} · {c.email}
+                      {c.phone && ` · ${c.phone}`}
+                    </span>
+                  ))}
+                </dd>
+              </div>
+            )}
           </dl>
           {cardPhoto && <img className="report-photo" src={cardPhoto} alt={t("report.photoAlt")} />}
           <p className="report-card-staff">{t("report.cardStaff")}</p>
         </section>
+
+        {reportTo && (
+          <section className="report-to" aria-labelledby="report-to-title">
+            <h2 id="report-to-title">{t("report.toTitle")}</h2>
+            <p>{t("report.toFirst")}</p>
+            <ul className="report-to-list">
+              {reportTo.contacts.map((c) => (
+                <li key={c.email} className="report-contact">
+                  <h3 data-needs-review={reportTo.needs_review}>{pick(c.name)}</h3>
+                  <p data-needs-review={reportTo.needs_review}>{pick(c.role)}</p>
+                  <div className="actions report-contact-actions">
+                    <a className="btn btn-primary" href={mailtoLink(c.email, mailSubject, mailLines)}>
+                      {t("report.toEmail")}
+                    </a>
+                    {c.phone && (
+                      <a className="btn btn-secondary" href={telLink(c.phone)}>
+                        {t("report.toCall", { phone: c.phone })}
+                      </a>
+                    )}
+                    <a className="btn btn-quiet" href={c.url} target="_blank" rel="noopener noreferrer">
+                      {t("report.toSite")}
+                    </a>
+                  </div>
+                  <p className="small report-contact-email">{c.email}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="small">{t("report.toEmailHelp")}</p>
+            <p className="note">
+              <strong>{t("report.toSafety")}</strong>
+            </p>
+            <p className="small">{t("report.toChecked", { date: date(reportTo.checked) })}</p>
+          </section>
+        )}
 
         <p className="citizen-report" data-needs-review={data.checklist.needs_review}>
           <strong>{pick(data.checklist.report)}</strong>

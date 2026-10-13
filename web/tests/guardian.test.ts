@@ -30,7 +30,7 @@ describe("the guardian and the consequences", () => {
   it("every replayable alarm says what would happen if nobody noticed, with a drawing the game has", () => {
     for (const mon of monuments) {
       for (const alarm of mon.alarms) {
-        const c = alarm.context?.consequence;
+        const c = mon.consequences?.[alarm.rule];
         expect(c, `${mon.pilot_key} ${alarm.rule}`).toBeTruthy();
         expect(CONSEQUENCE_PICTURES).toContain(c!.picture);
         expect(c!.text.el && c!.text.en).toBeTruthy();
@@ -46,8 +46,8 @@ describe("the guardian and the consequences", () => {
         expect(storyNarration(w, mon, undefined).split("\n")[0]).toBe(handover);
         if (!isBaseLang(lang)) expect(handover).not.toBe(mon.guardian!.handover.en);
         for (const alarm of mon.alarms) {
-          const consequence = w.pick(alarm.context!.consequence!.text);
-          if (!isBaseLang(lang)) expect(consequence).not.toBe(alarm.context!.consequence!.text.en);
+          const consequence = w.pick(mon.consequences![alarm.rule].text);
+          if (!isBaseLang(lang)) expect(consequence).not.toBe(mon.consequences![alarm.rule].text.en);
         }
       }
     });
@@ -61,9 +61,10 @@ describe("the guardian and the consequences", () => {
     expect(guardianBack(w, delos, alarm, false)).toBe(w.t("guardian.backMissed"));
     expect(guardianBack(w, delos, null, false)).toBe(w.t("guardian.backQuiet"));
     const first = endingNarration(w, delos, alarm, true, true).split("\n");
-    expect(first).toEqual([delos.guardian!.back_caught!.en, w.t("consequence.caught"), alarm.context!.consequence!.text.en]);
+    const text = delos.consequences![alarm.rule].text.en;
+    expect(first).toEqual([delos.guardian!.back_caught!.en, w.t("consequence.caught"), text]);
     const later = endingNarration(w, delos, alarm, false, false).split("\n");
-    expect(later).toEqual([w.t("consequence.missed"), alarm.context!.consequence!.text.en]);
+    expect(later).toEqual([w.t("consequence.missed"), text]);
     expect(endingNarration(w, delos, null, false, true)).toBe(w.t("guardian.backQuiet"));
   });
 });
