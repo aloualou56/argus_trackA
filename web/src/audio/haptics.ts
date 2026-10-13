@@ -1,7 +1,7 @@
 // Vibration that follows the game's sounds, for phones (Android browsers; iPhones have no
 // vibration in the browser). It helps players who cannot hear the sounds, or play with them off
-// in class. Like the sounds, it never says anything the screen does not show as well, and the
-// same button turns both on and off (sounds.ts).
+// in class. Like the sounds, it never says anything the screen does not show as well. It has its
+// own switch in the accessibility menu, remembered on this device.
 
 import type { SoundName } from "./sounds";
 
@@ -18,6 +18,39 @@ const PATTERNS: Record<SoundName, number[]> = {
 // the three waves, then the answer: three quick pulses if the sensors caught it, one long one if not.
 const CAUGHT = [50, 70, 50, 70, 120];
 const MISSED = [350];
+
+const STORAGE_KEY = "guardian.vibrate";
+let enabled = savedEnabled();
+const listeners = new Set<(on: boolean) => void>();
+
+function savedEnabled(): boolean {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) !== "off";
+  } catch {
+    return true;
+  }
+}
+
+export function vibrationOn(): boolean {
+  return enabled;
+}
+
+export function setVibrationOn(on: boolean): void {
+  enabled = on;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, on ? "on" : "off");
+  } catch {
+    // not remembered, still applies to this visit
+  }
+  if (!on) buzzStop();
+  listeners.forEach((listener) => listener(on));
+}
+
+/** Calls `listener` whenever vibration is turned on or off; returns the way to stop listening. */
+export function onVibrationChange(listener: (on: boolean) => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
 
 function canVibrate(): boolean {
   return typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
@@ -48,11 +81,12 @@ export function buzzStop(): void {
 }
 
 export function buzz(name: SoundName): void {
-  run(PATTERNS[name]);
+  if (enabled) run(PATTERNS[name]);
 }
 
 /** The replay's pulses; the returned function stops them (for "See the answer" before the end). */
 export function buzzReplay(caught: boolean, still: boolean): () => void {
+  if (!enabled) return () => {};
   const answer = caught ? CAUGHT : MISSED;
   // starts with a pause ([0 ms on, 300 ms off, 25 on, 575 off, ...]): the waves at 0.3, 0.9 and 1.5 s,
   // the answer at 2.3 s, as in the sound

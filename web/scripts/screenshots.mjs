@@ -56,11 +56,48 @@ function startServer() {
   });
 }
 
-async function checkPage(page, label) {
-  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+/** WCAG 2.4.11: a focused control is never hidden entirely under the page's own bars or cards. */
+async function checkFocusVisible(page, label) {
+  const hidden = await page.evaluate(() => {
+    const sel = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
+    const panel = document.querySelector(".board-panel");
+    const keep = { active: document.activeElement, panel: panel?.scrollTop ?? 0, page: window.scrollY };
+    const items = [...document.querySelectorAll(sel)].filter((e) => {
+      if (e.closest("[inert], .leaflet-marker-pane, .leaflet-popup-pane")) return false; // map pins: spread apart, checked by axe
+      if (!e.getClientRects().length || getComputedStyle(e).visibility === "hidden") return false;
+      return true;
+    });
+    const out = [];
+    for (const e of items) {
+      e.focus();
+      if (document.activeElement !== e) continue;
+      const r = e.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) continue; // visually hidden, e.g. a skip link before it is shown
+      const points = [[0.5, 0.5], [0.15, 0.2], [0.85, 0.2], [0.15, 0.8], [0.85, 0.8]];
+      const seen = points.some(([fx, fy]) => {
+        const x = r.left + r.width * fx;
+        const y = r.top + r.height * fy;
+        if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return false;
+        const hit = document.elementFromPoint(x, y);
+        return !!hit && (hit === e || e.contains(hit) || hit.contains(e));
+      });
+      if (!seen) out.push(`${e.tagName.toLowerCase()}.${String(e.className).split(" ")[0]} "${(e.getAttribute("aria-label") || e.textContent || "").trim().slice(0, 30)}"`);
+    }
+    keep.active?.focus?.();
+    if (panel) panel.scrollTop = keep.panel;
+    window.scrollTo(0, keep.page);
+    return out;
+  });
+  if (hidden.length) note(`${label}: focused but hidden (WCAG 2.4.11): ${hidden.slice(0, 4).join(", ")}${hidden.length > 4 ? ` and ${hidden.length - 4} more` : ""}`);
+}
+
+async function checkPage(page, label, { focus = true } = {}) {
+  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"]).analyze();
   for (const v of axe.violations) {
     note(`${label}: axe ${v.id} (${v.impact}) on ${v.nodes.length} node(s): ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(" | ")}`);
   }
+  // (not while a menu is open on purpose: tabbing out of it closes it)
+  if (focus) await checkFocusVisible(page, label);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 0) note(`${label}: horizontal overflow of ${overflow}px`);
   // Fixed frame: the page never scrolls, and scrolling the panel leaves the top bar and the map in place.
@@ -554,11 +591,15 @@ async function checkSound(browser, lang) {
   }, lang);
   const page = await context.newPage();
   const notes = () => page.evaluate(() => window.__notes);
-  // A phone names vibration too ("Sound and vibration").
-  const toggle = page.getByRole("button", { name: t["sound.labelVibrate"], exact: true });
+  // Sound and vibration are two switches in the accessibility menu (and in the phone's "?" card).
+  const menu = page.getByRole("button", { name: t["a11y.title"] });
+  const soundBox = page.locator(".a11y-panel").getByRole("checkbox", { name: t["a11y.sound"] });
   await page.goto(URL_BASE);
   await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
-  if ((await toggle.getAttribute("aria-pressed")) !== "true") note(`${prefix}: sound is not on at first`);
+  await menu.click();
+  if (!(await soundBox.isChecked())) note(`${prefix}: sound is not on at first`);
+  if (!(await page.locator(".a11y-panel").getByRole("checkbox", { name: t["a11y.vibration"] }).count())) note(`${prefix}: no vibration switch on a phone`);
+  await page.keyboard.press("Escape");
   if ((await notes()) !== 0) note(`${prefix}: sound before the player did anything`);
   await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
@@ -571,20 +612,29 @@ async function checkSound(browser, lang) {
   const buzzes = () => page.evaluate(() => window.__buzz.filter((p) => !(p.length === 1 && p[0] === 0)).length);
   const afterPlaceBuzz = await buzzes();
   if (!(afterPlaceBuzz > 0)) note(`${prefix}: placing a sensor did not vibrate`);
-  // While placing sensors on a phone the top band is hidden: the sound button is in the "?" card.
+  // While placing sensors on a phone the top band is hidden: the switches are in the "?" card.
+  // Sound off keeps vibrating; vibration off stops it too.
   await page.getByRole("button", { name: t["mission.help"] }).click();
-  const cardToggle = page.locator(".help-card .sound-toggle");
-  await cardToggle.click();
-  if ((await cardToggle.getAttribute("aria-pressed")) !== "false") note(`${prefix}: the sound button did not turn sound off`);
+  const card = page.locator(".help-card");
+  await card.getByRole("checkbox", { name: t["a11y.sound"] }).uncheck();
   await page.keyboard.press("Escape");
   await add("rain_gauge").click();
   if ((await notes()) !== afterPlace) note(`${prefix}: sound with sound turned off`);
-  if ((await buzzes()) !== afterPlaceBuzz) note(`${prefix}: vibration with sound and vibration turned off`);
+  if (!((await buzzes()) > afterPlaceBuzz)) note(`${prefix}: sound off also stopped vibration (it has its own switch)`);
+  await page.getByRole("button", { name: t["mission.help"] }).click();
+  await card.getByRole("checkbox", { name: t["a11y.vibration"] }).uncheck();
+  await page.keyboard.press("Escape");
+  const offBuzz = await buzzes();
+  await add("temperature").click();
+  if ((await buzzes()) !== offBuzz) note(`${prefix}: vibration with vibration turned off`);
   await page.reload();
   await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
-  if ((await toggle.getAttribute("aria-pressed")) !== "false") note(`${prefix}: "sound off" was not remembered`);
-  await checkPage(page, `${prefix} home`);
-  await toggle.click();
+  await menu.click();
+  if (await soundBox.isChecked()) note(`${prefix}: "sound off" was not remembered`);
+  await checkPage(page, `${prefix} home, menu open`, { focus: false });
+  await soundBox.check();
+  await page.locator(".a11y-panel").getByRole("checkbox", { name: t["a11y.vibration"] }).check();
+  await page.keyboard.press("Escape");
   await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
   await page.getByRole("button", { name: t["home.start"] }).click();
   await preQuiz(page, t); // a reload is a new visit: the quiz comes first again
@@ -756,6 +806,83 @@ async function checkReadAloud(browser, lang) {
   const none = await open([["de-DE", "other"]]);
   if (await none.page.getByRole("button", { name: t["speech.read"] }).count()) note(`${prefix}: "${t["speech.read"]}" offered with no ${lang} voice`);
   await none.context.close();
+}
+
+// The accessibility menu: each setting reaches the page and is remembered; Escape closes it and
+// gives the focus back. Then the phone screens at the largest text, with high contrast and wide
+// spacing: nothing scrolls sideways, the placing screen's map controls are not under its bars, the
+// sensor card shows its whole text, and a pin moves to the cross without dragging (WCAG 2.5.7).
+async function checkA11yMenu(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-a11y`;
+  console.log(`\n${prefix}`);
+  // (a device that does not already ask for less motion, so the menu's own switch can be tried)
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "no-preference" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  await page.goto(URL_BASE);
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  const menu = page.getByRole("button", { name: t["a11y.title"] });
+  await menu.click();
+  const panel = page.locator(".a11y-panel");
+  await panel.getByRole("radio", { name: t["a11y.sizeLarger"] }).check();
+  await panel.getByRole("checkbox", { name: t["a11y.contrast"] }).check();
+  await panel.getByRole("checkbox", { name: t["a11y.spacing"] }).check();
+  await panel.getByRole("checkbox", { name: t["a11y.motion"] }).check();
+  const root = () => page.evaluate(() => `${document.documentElement.style.fontSize} ${[...document.documentElement.classList].sort().join(" ")}`);
+  const want = "150% a11y-contrast a11y-motion a11y-spacing";
+  if ((await root()) !== want) note(`${prefix}: settings not applied (${await root()})`);
+  await checkPage(page, `${prefix} menu`, { focus: false });
+  await shot(page, `${prefix}-1-menu`);
+  await page.keyboard.press("Escape");
+  if (await panel.isVisible()) note(`${prefix}: Escape does not close the menu`);
+  if ((await page.evaluate(() => document.activeElement?.className)) !== "a11y-toggle") note(`${prefix}: closing the menu loses the focus`);
+  await page.reload();
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  if ((await root()) !== want) note(`${prefix}: settings not remembered (${await root()})`);
+  await checkPage(page, `${prefix} home, large text`);
+  await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
+  await page.getByRole("heading", { level: 1, name: ranverso.display_name[lang] }).waitFor();
+  await checkPage(page, `${prefix} story, large text`);
+  await toMission(page, t);
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();
+  await page.waitForTimeout(400);
+  const layout = await page.evaluate(() => {
+    const box = (sel) => document.querySelector(sel)?.getBoundingClientRect();
+    const head = box(".dock-head");
+    const tray = box(".tray");
+    const under = [".leaflet-control-zoom", ".map-switch", ".places-toggle", ".leaflet-control-attribution"]
+      .filter((sel) => {
+        const r = box(sel);
+        return r && r.width && ((head && r.top < head.bottom - 1) || (tray && r.bottom > tray.top + 1));
+      });
+    const info = document.querySelector(".tray-info > span");
+    return { under, infoCut: !!info && info.scrollHeight > info.clientHeight + 2 };
+  });
+  if (layout.under.length) note(`${prefix}: under the placing screen's bars at large text: ${layout.under.join(", ")}`);
+  if (layout.infoCut) note(`${prefix}: the sensor card cuts its text at large text`);
+  await checkPage(page, `${prefix} mission, large text`);
+  await shot(page, `${prefix}-2-mission`);
+  // move a placed sensor to the cross without dragging it
+  // (the cross stays in the middle of the screen: a tap on the map moves the map under it)
+  const mapBox = await page.locator(".board-map .map").boundingBox();
+  await page.mouse.click(mapBox.x + mapBox.width * 0.7, mapBox.y + mapBox.height * 0.45);
+  await page.waitForTimeout(400);
+  const pinBefore = await page.locator(".pin-you").first().boundingBox();
+  await page.locator(".pin-you").first().click();
+  await page.getByRole("button", { name: t["map.moveHere"] }).click();
+  await page.waitForTimeout(300);
+  const pinAfter = await page.locator(".pin-you").first().boundingBox();
+  const cross = await page.locator(".crosshair").boundingBox().catch(() => null);
+  const near = cross && Math.hypot(pinAfter.x + pinAfter.width / 2 - (cross.x + cross.width / 2), pinAfter.y + pinAfter.height / 2 - (cross.y + cross.height / 2));
+  if (!(near < 20) || Math.hypot(pinAfter.x - pinBefore.x, pinAfter.y - pinBefore.y) < 5) note(`${prefix}: "${t["map.moveHere"]}" did not move the sensor to the cross`);
+  // back to the defaults
+  await page.getByRole("button", { name: t["mission.help"] }).click();
+  await page.keyboard.press("Escape");
+  await page.evaluate(() => localStorage.removeItem("guardian.a11y"));
+  await context.close();
 }
 
 async function playEveryMonument(browser, lang) {
@@ -1022,6 +1149,7 @@ try {
   if (!only || only === "week") for (const lang of ["el", "en"]) await checkWeekReplay(browser, lang);
   if (!only || only === "history") for (const lang of ["el", "en"]) await checkHistory(browser, lang);
   if (!only || only === "read-aloud") for (const lang of ["el", "en"]) await checkReadAloud(browser, lang);
+  if (!only || only === "a11y") for (const lang of ["el", "en"]) await checkA11yMenu(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);

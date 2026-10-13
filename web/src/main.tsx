@@ -1,10 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { applySettings } from "./a11y/settings";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { LangProvider } from "./i18n";
 import "./fonts.css";
 import "./styles.css";
+
+// The accessibility settings this device chose (text size, contrast, motion, spacing), before
+// anything is drawn, so the page never flashes in the default look first.
+applySettings();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

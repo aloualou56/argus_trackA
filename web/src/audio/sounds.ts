@@ -1,9 +1,9 @@
 // Game sounds, made in the browser with the Web Audio API: no audio files to load, license or
 // cache, so they work offline too. Every sound answers something the player did (browsers allow
 // sound only after a tap) and says nothing the screen does not show as well, so the game is the
-// same with sound off. Phones also vibrate with each sound (haptics.ts). The player turns both on
-// or off with one button in the top bar; this device remembers it.
-import { buzz, buzzReplay, buzzStop } from "./haptics";
+// same with sound off. Phones also vibrate with each sound (haptics.ts, its own switch). Sound is
+// turned on or off in the accessibility menu; this device remembers it.
+import { buzz, buzzReplay } from "./haptics";
 
 export type SoundName = "place" | "drop" | "remove" | "deny" | "complete";
 
@@ -34,7 +34,6 @@ export function setSoundOn(on: boolean): void {
   } catch {
     // not remembered, still applies to this visit
   }
-  if (!on) buzzStop();
   if (!on && master && ctx) master.gain.setTargetAtTime(0, ctx.currentTime, 0.02);
   if (on && master && ctx) master.gain.setTargetAtTime(VOLUME, ctx.currentTime, 0.02);
   listeners.forEach((listener) => listener(on));
@@ -152,8 +151,8 @@ export const SOUNDS: Record<SoundName, (c: BaseAudioContext, out: AudioNode, t: 
 };
 
 export function play(name: SoundName): void {
+  buzz(name); // vibration has its own switch
   if (!enabled) return;
-  buzz(name);
   const audio = output();
   if (audio) SOUNDS[name](audio.ctx, audio.out, audio.ctx.currentTime + 0.01);
 }
@@ -191,9 +190,8 @@ export function renderReplay(c: BaseAudioContext, out: AudioNode, t: number, cau
 /** Plays the replay's sound; the returned function silences it (for "Skip"). */
 /** Plays the replay's sound and vibration; the returned function silences both (for "See the answer"). */
 export function playReplay(caught: boolean, still: boolean): () => void {
-  if (!enabled) return () => {};
   const stopBuzz = buzzReplay(caught, still);
-  const audio = output();
+  const audio = output(); // null with sound off
   if (!audio) return stopBuzz;
   const bus = audio.ctx.createGain();
   bus.connect(audio.out);

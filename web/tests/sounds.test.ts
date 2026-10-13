@@ -63,7 +63,7 @@ describe("sounds", () => {
     expect(s.soundOn()).toBe(false);
   });
 
-  it("vibrates with each sound on a phone, and not when turned off", async () => {
+  it("vibrates with each sound on a phone, with a switch of its own", async () => {
     const patterns: number[][] = [];
     vi.stubGlobal("navigator", { vibrate: (p: number[]) => patterns.push(p) });
     const s = await import("../src/audio/sounds");
@@ -75,11 +75,16 @@ describe("sounds", () => {
     expect(replay.reduce((a, b) => a + b, 0)).toBeGreaterThan(2300); // waves, then the answer at 2.3 s
     stop();
     expect(patterns[patterns.length - 1]).toEqual([0]); // stopped with the sound
+    // its own switch: sound off keeps vibrating, vibration off stops it
     s.setSoundOn(false);
+    s.play("remove");
+    expect(patterns[patterns.length - 1]).toEqual([12]);
+    const h = await import("../src/audio/haptics");
+    h.setVibrationOn(false);
     const count = patterns.length;
     s.play("place");
     s.playReplay(false, false);
-    expect(patterns.length).toBe(count + 0);
+    expect(patterns.length).toBe(count);
   });
 
   it("does nothing without the Web Audio API", async () => {

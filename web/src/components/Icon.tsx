@@ -67,6 +67,7 @@ const PATHS: Record<string, string> = {
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
   sound: '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18.2 6.4a7.6 7.6 0 0 1 0 11.2"/>',
+  access: '<circle cx="12" cy="4.6" r="2.1"/><path d="M4.5 8.6 12 10l7.5-1.4M12 10v4.6M12 14.6l-3.4 6.4M12 14.6l3.4 6.4"/>',
   stop: '<rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor"/>',
   sound_off: '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
   talk: '<path d="M4 5h16v11H9l-5 4z"/>',

@@ -5,7 +5,8 @@ import { quizSummaryOf } from "./community/store";
 import { GameMap, type MapApi, type MapMode } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
-import { SoundToggle } from "./components/SoundToggle";
+import { A11yMenu } from "./components/A11yMenu";
+import { motionReduced } from "./a11y/settings";
 import { play, playReplay } from "./audio/sounds";
 import { PhotoCredit } from "./components/PhotoCredit";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
@@ -31,7 +32,7 @@ const isStep = (screen: Screen): screen is Step => (STEPS as readonly string[]).
 /** What the map shows behind the quiz screens. */
 // The whole story has a map view of its own, so coming back to the story screen frames the site again.
 const mapMode = (screen: Screen): MapMode =>
-  screen === "quizPre" ? "story" : screen === "quizPost" ? "score" : screen === "history" ? "history" : (screen as Step);
+  screen === "quizPre" || screen === "quizPost" ? "story" : screen === "history" ? "history" : (screen as Step);
 
 export interface Session {
   pilot: string;
@@ -185,12 +186,7 @@ export default function App() {
   }, []);
   useEffect(() => {
     if (!replaying) return;
-    let still = false;
-    try {
-      still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    } catch {
-      // no media queries: play it
-    }
+    const still = motionReduced();
     // No time limit: the replay waits on its final picture until the player goes on (WCAG 2.2.1).
     const timer = window.setTimeout(() => {
       setReplayOver(true);
@@ -234,12 +230,7 @@ export default function App() {
     setReplaying(true);
     announce(t("replay.live"));
     const rule = ruleFor(data, playable, alarm);
-    let still = false;
-    try {
-      still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    } catch {
-      // no media queries: play it
-    }
+    const still = motionReduced();
     stopReplaySound.current = playReplay(!!rule && detects(rule, picks).detected, still);
   };
 
@@ -461,7 +452,7 @@ export default function App() {
             <span>{t("app.title")}</span>
           </button>
           <div className="topbar-tools">
-            <SoundToggle />
+            <A11yMenu />
             <LangMenu />
           </div>
         </div>
@@ -486,6 +477,7 @@ export default function App() {
             onMovePlacement={(id, at) => {
               movePlacement(id, at);
               play("drop");
+              announce(t("map.pinMoved"));
             }}
             onRemovePlacement={(id) => {
               removePlacement(id);

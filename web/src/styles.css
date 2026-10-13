@@ -119,7 +119,7 @@ main:focus {
   position: absolute;
   left: var(--gutter);
   top: -4rem;
-  z-index: 100;
+  z-index: 3000; /* above the phone's floating bars too */
   background: var(--primary);
   color: #fff;
   padding: 0.75rem 1rem;
@@ -1279,6 +1279,12 @@ textarea.input {
 .leaflet-control-attribution {
   font-size: 11px;
 }
+/* the credits' link is a target of its own: at least 24 px tall (WCAG 2.5.8) */
+.leaflet-control-attribution a {
+  display: inline-block;
+  min-height: 24px;
+  line-height: 24px;
+}
 
 .map-switch {
   position: absolute;
@@ -1286,6 +1292,8 @@ textarea.input {
   right: 10px;
   z-index: 1000;
   display: flex;
+  flex-wrap: wrap; /* large text: it wraps instead of covering the zoom buttons */
+  max-width: calc(100% - 76px);
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--edge);
@@ -1442,8 +1450,9 @@ textarea.input {
   position: relative;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  font-size: 0.9375rem;
+  width: 2em; /* 30 px at normal size; grows with large text */
+  height: 2em;
   border: 2px solid #fff;
   border-radius: 50%;
   color: #fff;
@@ -1638,8 +1647,8 @@ textarea.input {
 .place-num {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 1.9em; /* 26 px at normal size; grows with large text */
+  height: 1.9em;
   border: 2px solid var(--ink);
   border-radius: 50%;
   background: #fff;
@@ -1987,11 +1996,11 @@ html {
   right: -7px;
   display: grid;
   place-items: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 5px;
+  min-width: 1.85em;
+  height: 1.85em;
+  padding: 0 0.4em;
   border: 2px solid #fff;
-  border-radius: 11px;
+  border-radius: 999px;
   background: var(--you);
   color: #fff;
   font-size: 0.75rem;
@@ -2003,8 +2012,9 @@ html {
   left: -7px;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  font-size: 1rem;
+  width: 1.75em;
+  height: 1.75em;
   border: 2px solid var(--primary);
   border-radius: 50%;
   background: var(--surface);
@@ -2063,7 +2073,7 @@ body.is-dragging-sensor .board-map .map {
   top: 108px;
   left: 10px;
   z-index: 1100; /* inside the map: above Leaflet's panes and controls */
-  max-height: calc(100% - 118px);
+  max-height: calc(100% - 158px); /* it ends above the map's credits, so they are never covered */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -2086,10 +2096,10 @@ body.is-dragging-sensor .board-map .map {
 .places-count {
   display: grid;
   place-items: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 5px;
-  border-radius: 11px;
+  min-width: 1.85em;
+  height: 1.85em;
+  padding: 0 0.4em;
+  border-radius: 999px;
   background: var(--ink);
   color: #fff;
   font-size: 0.75rem;
@@ -3873,18 +3883,19 @@ b {
   }
 }
 
-/* ---- sound on or off, beside the language (src/audio/sounds.ts) */
+/* ---- the accessibility menu's button, beside the language (A11yMenu.tsx) */
 .topbar-tools {
   display: flex;
   flex: none;
   align-items: center;
   gap: 0.5rem;
 }
-.sound-toggle {
+.a11y-toggle {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  font-size: 1rem;
+  width: 2.75em;
+  height: 2.75em;
   padding: 0;
   border: 2px solid rgb(255 255 255 / 0.7);
   border-radius: var(--radius);
@@ -3892,11 +3903,12 @@ b {
   color: #fff;
   cursor: pointer;
 }
-.sound-toggle:hover {
+.a11y-toggle:hover,
+.a11y-toggle[aria-expanded="true"] {
   border-color: #fff;
   background: rgb(255 255 255 / 0.14);
 }
-/* A phone: with sound and language on the right, the title takes two short lines. */
+/* A phone: with the accessibility menu and the language on the right, the title takes two short lines. */
 @media (max-width: 30rem) {
   .brand,
   .brand:disabled {
@@ -3914,19 +3926,19 @@ b {
   .topbar-tools {
     gap: 0.35rem;
   }
-  .sound-toggle {
-    width: 40px;
-    height: 40px;
+  .a11y-toggle {
+    width: 2.5em;
+    height: 2.5em;
   }
 }
 @media (max-width: 59.99rem) and (orientation: landscape) and (max-height: 32rem) {
-  .sound-toggle {
-    width: 36px;
-    height: 36px;
+  .a11y-toggle {
+    width: 2.25em;
+    height: 2.25em;
   }
 }
 @media (forced-colors: active) {
-  .sound-toggle {
+  .a11y-toggle {
     border-color: ButtonText;
     color: ButtonText;
   }
@@ -3979,9 +3991,11 @@ b {
   }
 
   /* ---- top: coins, "?", Done */
+  /* coins, "?" and Done in a row that wraps: with large text the coins take a line of their own */
   .app.is-play .dock-head {
-    grid-template-columns: 1fr auto auto;
-    grid-template-areas: "coins help done";
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 0.45rem;
     margin-bottom: auto; /* everything after it goes to the bottom */
     padding: 0.35rem 0.35rem 0.35rem 0.7rem;
@@ -3998,13 +4012,20 @@ b {
     clip-path: inset(50%);
     white-space: nowrap;
   }
+  .app.is-play .dock-coins {
+    flex: 1 1 9rem;
+  }
+  .app.is-play .dock-done {
+    flex: none;
+  }
   .app.is-play .coins-text {
     font-size: 0.8rem;
+    overflow-wrap: anywhere;
   }
   .dock-help {
-    grid-area: help;
-    width: 40px;
-    min-height: 40px;
+    flex: none;
+    width: 2.2em;
+    min-height: 2.2em;
     padding: 0;
     border: 2px solid var(--ink);
     border-radius: 50%;
@@ -4043,18 +4064,23 @@ b {
     box-shadow: 0 4px 16px rgb(0 0 0 / 0.35);
   }
   .app.is-play .tile {
-    height: 5.5rem;
+    height: auto;
+    min-height: 5.5rem;
+  }
+  .app.is-play .tile-name {
+    -webkit-line-clamp: 4; /* the longest names, and large text, keep every word */
   }
 
   /* ---- the map's own controls step out of the bars' way */
+  /* between the floating bars, whatever their height (Mission.tsx measures it) */
   .app.is-play .board-map .leaflet-top {
-    top: 60px;
+    top: var(--top-bar-h, 60px);
   }
   .app.is-play .board-map .leaflet-bottom {
-    bottom: 128px;
+    bottom: calc(var(--strip-h, 124px) + 4px);
   }
   .app.is-play .map-switch {
-    top: 70px;
+    top: calc(var(--top-bar-h, 60px) + 10px);
   }
   .app.is-play .map-switch button {
     min-height: 36px;
@@ -4069,8 +4095,8 @@ b {
     font-size: 18px;
   }
   .app.is-play .places-float {
-    top: 150px;
-    max-height: calc(100% - 300px);
+    top: calc(var(--top-bar-h, 60px) + 90px);
+    max-height: calc(100% - var(--top-bar-h, 60px) - 140px - var(--strip-h, 124px)); /* above the credits */
   }
   .app.is-play .places-toggle {
     min-height: 36px;
@@ -4145,19 +4171,8 @@ b {
     width: 100%;
     margin-top: 1rem;
   }
-  .help-sound {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0.9rem 0 0;
-    font-weight: 700;
-  }
-  .help-card .sound-toggle {
-    border-color: var(--ink);
-    color: var(--ink);
-  }
-  .help-card .sound-toggle:hover {
-    background: var(--primary-soft);
+  .help-card .a11y-settings {
+    margin-top: 0.9rem;
   }
 }
 
@@ -4239,7 +4254,15 @@ b {
 @media (max-width: 39.99rem) {
   .app.is-play .tray-info {
     position: relative;
+    max-height: 40vh;
+    overflow-y: auto;
     padding-right: 2.6rem;
+  }
+  /* the whole description, never cut: the card stays until it is closed */
+  .app.is-play .tray-info > span {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
   }
   .tray-info-close {
     position: absolute;
@@ -4247,13 +4270,172 @@ b {
     right: 4px;
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    font-size: 1rem;
+    width: 2.25em;
+    height: 2.25em;
     padding: 0;
     border: 0;
     border-radius: 50%;
     background: var(--surface-2);
     color: var(--ink);
     cursor: pointer;
+  }
+}
+
+/* ================================================================== accessibility settings (A11yMenu.tsx) */
+/* The menu in the top band, and what its settings change on the whole page (a11y/settings.ts sets
+   the root font size and these classes on <html>). */
+
+/* Pins on the map are centred on their spot whatever their size, so large text keeps them there. */
+.leaflet-marker-icon > .pin,
+.leaflet-marker-icon > .place-pin,
+.leaflet-marker-icon > .site-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.topbar-tools {
+  position: relative;
+}
+.a11y-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 10;
+  width: min(24rem, calc(100vw - 2 * var(--gutter)));
+  max-height: calc(100vh - 6rem);
+  max-height: calc(100dvh - 6rem);
+  overflow-y: auto;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 10px 24px rgb(20 33 27 / 0.28);
+  color: var(--ink);
+  font-family: var(--text);
+  text-align: left;
+  text-transform: none;
+}
+.a11y-panel h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.2rem;
+}
+.a11y-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  border: 0;
+}
+.a11y-sizes legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+  font-weight: 700;
+}
+.a11y-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.2rem 0.7rem;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.a11y-size:has(input:checked) {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.a11y-switches {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.a11y-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.a11y-switch input,
+.a11y-size input {
+  flex: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: 0;
+  accent-color: var(--primary);
+}
+.a11y-switch input:disabled + .a11y-switch-label {
+  color: var(--muted);
+}
+.a11y-hint {
+  margin: -0.35rem 0 0 1.9rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.a11y-reset {
+  margin-top: 0.9rem;
+}
+.a11y-done {
+  width: 100%;
+  margin-top: 0.6rem;
+}
+
+/* ---- high contrast: darker ink everywhere, notes outlined, map labels solid */
+html.a11y-contrast {
+  --muted: var(--ink);
+  --edge: var(--ink);
+  --line: #3b4740;
+  --tint: #ffffff;
+  --surface-2: #ffffff;
+}
+html.a11y-contrast :is(.panel, .sheet-note, .learn, .tray-info, .choice) {
+  border: 2px solid var(--ink);
+}
+html.a11y-contrast :is(.leaflet-tooltip, .place-label, .site-label, .alarm-label, .map-coords, .leaflet-control-scale-line, .leaflet-control-attribution) {
+  border: 2px solid var(--ink);
+  background: #fff;
+  color: var(--ink);
+  opacity: 1;
+}
+html.a11y-contrast :is(main, .footer, .a11y-panel, .leaflet-control-attribution) a {
+  text-decoration: underline;
+}
+
+/* ---- less motion: as the device's own setting does (see "user preferences") */
+html.a11y-motion *,
+html.a11y-motion *::before,
+html.a11y-motion *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* ---- wider text spacing (the WCAG 1.4.12 kind): letters, words, lines and paragraphs */
+html.a11y-spacing :is(main, .help-card, .a11y-panel, .footer, .replay-banner) :is(p, li, dd, dt, label, legend, figcaption, td, th, h1, h2, h3, summary) {
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  word-spacing: 0.16em;
+}
+html.a11y-spacing main p {
+  margin-bottom: 1.2em;
+}
+
+/* Short map strips on small screens (the alarm, the score): the legend goes to the top right,
+   where the map picker would be (it is hidden there), so it never covers the zoom buttons. */
+@media (max-width: 59.99rem) {
+  .app:is([data-screen="event"], [data-screen="score"]) .map-legend {
+    top: 10px;
+    right: 10px;
+    bottom: auto;
+    left: auto;
+    max-width: calc(100% - 76px);
   }
 }

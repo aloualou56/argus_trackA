@@ -12,6 +12,7 @@ import { clusterPoints, countPicks, detects, formatCoords, nativeZoom, ruleFor }
 import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
 import { useI18n } from "../i18n";
 import { Icon, iconSvg } from "./Icon";
+import { motionReduced } from "../a11y/settings";
 
 // "history": the whole story of a site; chapters move the map to the place they are about.
 export type MapMode = "overview" | "story" | "history" | "mission" | "reveal" | "event" | "score" | "report" | "replay";
@@ -81,14 +82,6 @@ const MAP_MAX_ZOOM = 21;
 // zoom out further than the world filling the map (see fitWorld).
 const WORLD = L.latLngBounds([-85.0511, -180], [85.0511, 180]);
 
-function prefersReducedMotion(): boolean {
-  try {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch {
-    return false;
-  }
-}
-
 function savedBasemap(data: GameData): string {
   try {
     const saved = window.localStorage.getItem(BASEMAP_KEY);
@@ -138,7 +131,6 @@ export function GameMap(props: Props) {
   const zoomRef = useRef<L.Control.Zoom | null>(null);
   const latest = useRef(props);
   latest.current = props;
-  const reduced = useMemo(prefersReducedMotion, []);
   const [basemap, setBasemap] = useState(() => savedBasemap(data));
   const [tilesFailed, setTilesFailed] = useState(false);
   const [fellBack, setFellBack] = useState(false);
@@ -146,6 +138,12 @@ export function GameMap(props: Props) {
   const [moving, setMoving] = useState(false);
   const reticleRef = useRef<L.Marker | null>(null);
   const declutterRef = useRef<() => void>(() => {});
+  // Pins that would sit on top of each other when the map is zoomed out (the monuments on the
+  // overview, the sensors on the alarm, reveal and score screens) are drawn a few pixels apart, so
+  // each can still be tapped (WCAG 2.5.8, target size). Their true place is kept and used again at
+  // every zoom; the alarm's own sensor never moves, as its ring is drawn there. While placing
+  // sensors, a pin moved by the player is saved where it was dropped, not where it was drawn.
+  const spreadRef = useRef<{ marker: L.Marker; at: L.LatLng; size: number; fixed: boolean }[]>([]);
   const pinned = placements.filter((p) => p.lat !== null).length;
   const planLayer = data.basemaps.layers.find((l) => l.type === "vector");
   const activeLayer = data.basemaps.layers.find((l) => l.id === basemap) ?? data.basemaps.layers[0];
@@ -167,9 +165,9 @@ export function GameMap(props: Props) {
       maxBoundsViscosity: 1,
       zoomSnap: 0.5,
       keyboard: true,
-      zoomAnimation: !reduced,
-      fadeAnimation: !reduced,
-      markerZoomAnimation: !reduced,
+      zoomAnimation: !motionReduced(),
+      fadeAnimation: !motionReduced(),
+      markerZoomAnimation: !motionReduced(),
     }).setView([45, 10], 4);
     // The credits name the map data and pictures (required). The library's own badge is optional.
     map.attributionControl.setPrefix(false);
@@ -196,7 +194,7 @@ export function GameMap(props: Props) {
     map.on("move", () => reticleRef.current?.setLatLng(map.getCenter()));
     map.on("zoomend moveend resize", () => declutterRef.current());
     map.on("click", (e: L.LeafletMouseEvent) => {
-      if (latest.current.mode === "mission") map.panTo(e.latlng, { animate: !reduced });
+      if (latest.current.mode === "mission") map.panTo(e.latlng, { animate: !motionReduced() });
       // In the observation report, a tap marks the spot.
       if (latest.current.mode === "report") latest.current.onReportPin?.([e.latlng.lat, e.latlng.lng]);
     });
@@ -205,7 +203,7 @@ export function GameMap(props: Props) {
         const c = map.getCenter();
         return [c.lat, c.lng];
       },
-      focus: (at) => map.flyTo(at, Math.max(map.getZoom(), 18), { animate: !reduced, duration: 1.2 }),
+      focus: (at) => map.flyTo(at, Math.max(map.getZoom(), 18), { animate: !motionReduced(), duration: 1.2 }),
       latLngAt: (clientX, clientY) => {
         const box = map.getContainer().getBoundingClientRect();
         if (clientX < box.left || clientX > box.right || clientY < box.top || clientY > box.bottom) return null;
@@ -411,7 +409,7 @@ export function GameMap(props: Props) {
     // On a short map the margins shrink, or they would leave almost no room and push the view far out.
     const quarter = map.getSize().y / 4;
     const options = {
-      animate: !reduced,
+      animate: !motionReduced(),
       duration: 1.6,
       paddingTopLeft: L.point(70, Math.min(90, quarter)),
       paddingBottomRight: L.point(48, Math.min(84, quarter)), // clear of the legend and attribution
@@ -454,6 +452,7 @@ export function GameMap(props: Props) {
     const map = mapRef.current;
     if (!layers || !map) return;
     Object.values(layers).forEach((g) => g.clearLayers());
+    spreadRef.current = [];
 
     if (mode === "overview") {
       for (const m of data.monuments) {
@@ -480,8 +479,10 @@ export function GameMap(props: Props) {
           })
           .on("click", () => m.playable && latest.current.onSelectSite(m.pilot_key))
           .addTo(layers.sites);
+        spreadRef.current.push({ marker, at: L.latLng(m.map.center), size: 36, fixed: false });
         if (m.playable) label(marker, `${name}, ${place}`);
       }
+      requestAnimationFrame(() => declutterRef.current());
       return;
     }
     if (!playable) return;
@@ -506,6 +507,8 @@ export function GameMap(props: Props) {
       drawArgus(points, layers.argus);
     }
     drawPlayer(layers.player, map, alarmShown ? new Set(detection?.matched ?? []) : null);
+    // Spread these pins now: the camera may have finished moving before they were drawn.
+    requestAnimationFrame(() => declutterRef.current());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, pilot, placements, alarm, lang, data, reportPin, reportEditable]);
 
@@ -539,6 +542,7 @@ export function GameMap(props: Props) {
   declutterRef.current = () => {
     const node = containerRef.current;
     if (!node) return;
+    if (mapRef.current) spreadPins(mapRef.current);
     const furniture = node.parentElement?.querySelectorAll<HTMLElement>(
       ".leaflet-control-scale, .map-coords, .map-legend, .map-switch, .leaflet-control-zoom, .places-toggle, .crosshair-label",
     );
@@ -552,6 +556,81 @@ export function GameMap(props: Props) {
       else kept.push(r);
     }
   };
+
+  function spreadPins(map: L.Map) {
+    const pins = spreadRef.current;
+    if (!pins.length) return;
+    const at = pins.map((p) => map.latLngToLayerPoint(p.at));
+    // The map's own controls (zoom, legend, scale, credits, the map picker, "Places") never cover a
+    // pin either: a pin under one is moved out from under it.
+    const box = map.getContainer().getBoundingClientRect();
+    const blocks = [...(map.getContainer().parentElement?.querySelectorAll<HTMLElement>(
+      ".leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-scale, .map-coords, .map-legend, .map-switch, .places-toggle",
+    ) ?? [])]
+      .map((el) => el.getBoundingClientRect())
+      .filter((r) => r.width > 0 && r.height > 0)
+      .map((r) => ({
+        min: map.containerPointToLayerPoint([r.left - box.left - 2, r.top - box.top - 2]),
+        max: map.containerPointToLayerPoint([r.right - box.left + 2, r.bottom - box.top + 2]),
+      }));
+    for (let round = 0; round < 24; round++) {
+      let moved = false;
+      for (let i = 0; i < pins.length; i++) {
+        for (let j = i + 1; j < pins.length; j++) {
+          if (pins[i].fixed && pins[j].fixed) continue;
+          // A pin is a square target: two overlap unless they are apart along one of the axes, so
+          // they are pushed apart along the axis that needs the smaller move.
+          const room = (pins[i].size + pins[j].size) / 2 + 2;
+          const dx = at[j].x - at[i].x;
+          const dy = at[j].y - at[i].y;
+          const ox = room - Math.abs(dx);
+          const oy = room - Math.abs(dy);
+          if (ox <= 0 || oy <= 0) continue;
+          // (two pins on the same spot: the later one goes right, or down, the same at every zoom)
+          const [px, py] = ox <= oy ? [(dx < 0 ? -1 : 1) * ox, 0] : [0, (dy < 0 ? -1 : 1) * oy];
+          const [mi, mj] = pins[i].fixed ? [0, 1] : pins[j].fixed ? [1, 0] : [0.5, 0.5];
+          at[i] = at[i].subtract(L.point(px * mi, py * mi));
+          at[j] = at[j].add(L.point(px * mj, py * mj));
+          moved = true;
+        }
+      }
+      for (let i = 0; i < pins.length; i++) {
+        if (pins[i].fixed) continue;
+        const half = pins[i].size / 2;
+        for (const b of blocks) {
+          const left = at[i].x + half - b.min.x; // how far to move left to clear it
+          const right = b.max.x - (at[i].x - half);
+          const up = at[i].y + half - b.min.y;
+          const down = b.max.y - (at[i].y - half);
+          if (left <= 0 || right <= 0 || up <= 0 || down <= 0) continue;
+          const least = Math.min(left, right, up, down);
+          at[i] = at[i].add(
+            least === right ? L.point(right, 0) : least === left ? L.point(-left, 0) : least === down ? L.point(0, down) : L.point(0, -up),
+          );
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
+    pins.forEach((p, k) => p.marker.setLatLng(map.layerPointToLatLng(at[k])));
+  }
+
+  /** A pin's popup opens clear of the phone's floating bars while placing sensors (their heights
+      are measured by Mission.tsx); elsewhere there are none and nothing changes. */
+  function keepClearOfBars(marker: L.Marker) {
+    marker.on("popupopen", (e) => {
+      const host = containerRef.current?.parentElement;
+      if (!host) return;
+      const css = getComputedStyle(host);
+      const top = parseFloat(css.getPropertyValue("--top-bar-h")) || 0;
+      const bottom = parseFloat(css.getPropertyValue("--strip-h")) || 0;
+      if (!top && !bottom) return;
+      const popup = (e as L.PopupEvent).popup;
+      popup.options.autoPanPaddingTopLeft = L.point(12, top + 12);
+      popup.options.autoPanPaddingBottomRight = L.point(12, bottom + 12);
+      popup.update(); // pans again, with the bars in mind
+    });
+  }
 
   function pointNames(point: MapPoint): string {
     const counts = new Map<string, number>();
@@ -587,6 +666,7 @@ export function GameMap(props: Props) {
         .bindPopup(popup)
         .addTo(group);
       label(marker, `${t("map.argus", { names })}${temporary ? `. ${t("map.tempPosition")}` : ""}`);
+      spreadRef.current.push({ marker, at: L.latLng(point.lat, point.lon), size: PIN, fixed: isAlarm });
     }
   }
 
@@ -645,6 +725,15 @@ export function GameMap(props: Props) {
       const popup = el("div", "map-popup");
       popup.append(el("p", "map-popup-title", t("map.you", { name })));
       if (editable) {
+        // Moving a pin without dragging it (WCAG 2.5.7): to the cross, which a tap on the map moves.
+        const move = el("button", "btn btn-quiet map-popup-btn", t("map.moveHere")) as HTMLButtonElement;
+        move.type = "button";
+        move.addEventListener("click", () => {
+          map.closePopup();
+          const centre = map.getCenter();
+          latest.current.onMovePlacement(p.id, [centre.lat, centre.lng]);
+        });
+        popup.append(move);
         const remove = el("button", "btn btn-quiet map-popup-btn", t("map.remove")) as HTMLButtonElement;
         remove.type = "button";
         remove.addEventListener("click", () => {
@@ -672,6 +761,8 @@ export function GameMap(props: Props) {
         })
         .addTo(group);
       label(marker, t("map.you", { name }));
+      if (editable) keepClearOfBars(marker);
+      spreadRef.current.push({ marker, at: L.latLng(p.lat, p.lng), size: PIN, fixed: false });
     }
   }
 

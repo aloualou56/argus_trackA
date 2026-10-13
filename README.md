@@ -59,8 +59,8 @@ npm run screenshots  # needs a build: plays the game in Edge, saves docs/screens
 - the game offline, the game with map pictures blocked, and bad data (an older data pack, a crash on a screen: a
   message, never an empty page).
 
-It runs axe (WCAG 2.1 A/AA) on each screen. Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
-`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|history|read-aloud|offline|bad-data` (one
+It runs axe (WCAG 2.2 A/AA) on each screen and checks that no focused control is hidden under a bar or a card (WCAG 2.4.11). Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|history|read-aloud|a11y|offline|bad-data` (one
 part). It also reports when map tiles cannot load, which is expected in sandboxes without internet.
 
 `web/dist` is a static site with relative paths: any static host serves it as is. The public copy is on a
@@ -206,11 +206,11 @@ shows the main signal and its share, not the anomaly score against its limit.
   load or license and it works offline. Placing a sensor (a coin tick and two notes; a soft landing when dropped),
   removing one, "not enough coins", the alarm replay (a whoosh, a sonar ping per wave, then a rising chime when the
   sensors caught it or two falling notes when they missed it) and the score. Nothing plays before the player taps,
-  nothing is said only by sound, and the speaker button in the top bar turns it off (remembered on the device).
+  nothing is said only by sound, and the accessibility menu turns it off (remembered on the device).
 - **Vibration** (`web/src/audio/haptics.ts`): phones vibrate with each sound (a tick for a sensor, a double buzz for
   "not enough coins", a pulse per wave of the alarm replay, then three quick pulses when the sensors caught it or
-  one long one when they missed it). Android browsers only; iPhones have no vibration in the browser. On a phone
-  the same button turns sound and vibration on and off, and is named for both ("Sound and vibration").
+  one long one when they missed it). Android browsers only; iPhones have no vibration in the browser. It has its
+  own switch in the accessibility menu, so a class can play silently and still feel it.
 - **Read aloud** (`web/src/audio/speech.ts`, `ReadAloud.tsx`): on the story screen (the story and the mission's
   danger), on each chapter of the whole story and on the alarm screen (what was measured and the answer). It uses
   the device's own voices (the Web Speech API: no audio files, offline on phones), a little slower than usual. Only
@@ -389,7 +389,16 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   for screen readers and the page starts with what the game is, so the list of monuments comes sooner.
 - **Tiles** are a little wider and their icon a little smaller than before, so a name has room for three lines.
 
-## Accessibility (WCAG 2.1 AA target)
+## Accessibility (WCAG 2.2 AA target)
+
+**The accessibility menu** (the figure button in the top band, `web/src/components/A11yMenu.tsx`,
+`web/src/a11y/settings.ts`): text size (normal, large 125%, larger 150%), high contrast (darker text and outlines,
+solid map labels), less motion (the map jumps instead of flying, nothing animates; shown on and locked when the device
+already asks for it), wider text spacing (letters, words, lines and paragraphs, the WCAG 1.4.12 kind), sound and
+vibration (each with its own switch). Each choice is remembered on the device and applied before the page is drawn.
+It is a button and a panel of native controls: Escape closes it and gives the focus back, and tabbing out of it closes
+it too. While placing sensors on a phone the top band is hidden, so the "?" card has the sound and vibration
+switches.
 
 - Native controls only (radio groups, buttons, a real `<table>`); every step is keyboard-only playable.
 - The map is optional for playing: every map action also exists in the panel. The map itself is keyboard
@@ -403,9 +412,16 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   pulses three times and then stands still. With reduced motion nothing moves at all.
 - **Read aloud** on the story, each chapter and the alarm screen, in the game's language only (see Game rules), for
   younger players and anyone who reads slowly. **Vibration** on phones repeats what the sounds say.
-- Sound and vibration are never the only signal (what they say is on screen too), start only after a tap, and are
-  turned off together: in the top band, and in the "?" card while placing sensors on a phone. The choice is
-  remembered.
+- Sound and vibration are never the only signal (what they say is on screen too), start only after a tap, and each
+  can be turned off: in the accessibility menu, and in the "?" card while placing sensors on a phone.
+- **WCAG 2.2 additions:** a focused control is never hidden (2.4.11): the menu closes when focus leaves it, the skip
+  link shows above the phone's floating bars, pin popups open clear of them, and the harness checks every control of
+  every screen. A sensor on the map can be moved without dragging (2.5.7): "Move it to the cross" in its popup, with
+  the cross moved by a tap on the map. Targets are at least 24 px and never covered (2.5.8): map pins that would
+  overlap when zoomed out are drawn a few pixels apart (their true place comes back as you zoom in).
+- **Large text** (1.4.4, 1.4.10): at 150% from the menu, or a phone's own font size, buttons and badges grow with
+  their text (sizes in em), the phone's top bar wraps and the map's controls stay between the floating bars, the
+  sensor card shows its whole text, and map pins stay centred on their spot.
 - The phone's "how to" card is a modal `<dialog>`: focus moves into it, Escape closes it, and focus returns to "?"
   or to the screen's heading.
 - Disabled-looking steppers stay focusable (`aria-disabled`) and say why they cannot be used.
@@ -414,7 +430,8 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   two data series.
 - 48 px touch targets, mobile-first layout, no sideways scroll at 320 px, `prefers-reduced-motion` and
   forced-colours support, `lang` switches with the language.
-- `npm run screenshots` runs axe-core (WCAG 2.1 A/AA) on every screen, in both languages, on phone and desktop.
+- `npm run screenshots` runs axe-core (WCAG 2.2 A/AA) and the hidden-focus check on every screen, in both languages,
+  on phone and desktop, and the phone screens again at the largest text with high contrast and wide spacing.
   It catches about a third of real issues: a manual screen-reader pass (NVDA, VoiceOver, TalkBack) is still needed.
 
 ## Citizen observation report

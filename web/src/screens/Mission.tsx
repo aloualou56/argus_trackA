@@ -22,8 +22,8 @@ import {
 } from "../game/logic";
 import type { Card, LatLng, Placement, Scenario } from "../game/types";
 import { play } from "../audio/sounds";
-import { vibrationLikely } from "../audio/haptics";
-import { SoundToggle } from "../components/SoundToggle";
+import { motionReduced } from "../a11y/settings";
+import { A11ySettingsPanel } from "../components/A11yMenu";
 import { useI18n } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -120,6 +120,7 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
   // Closed at first: the numbered markers are on the map; the list opens on request.
   const [placesOpen, setPlacesOpen] = useState(false);
   const trayRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
   const stopWatching = useRef<() => void>(() => {});
   const suppressClick = useRef(false);
@@ -134,6 +135,31 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
   // The site guide floats inside the map (so it can never be taller than the map).
   const [mapSection, setMapSection] = useState<HTMLElement | null>(null);
   useEffect(() => setMapSection(document.querySelector<HTMLElement>(".board-map")), []);
+
+  // Upright phones: the map's own controls sit between the floating bars at the top and the bottom,
+  // however tall large text makes them (styles.css, "phone board", reads these two heights).
+  useEffect(() => {
+    const head = headRef.current;
+    const tray = trayRef.current;
+    if (!phone || !mapSection || !head || !tray) return;
+    const card = tray.parentElement?.querySelector<HTMLElement>(".tray-info"); // the sensor card, when open
+    const update = () => {
+      const map = mapSection.getBoundingClientRect();
+      const shown = card?.getBoundingClientRect();
+      // (a closed card is still there, hidden: its box is empty and does not count)
+      const bottom = Math.min(tray.getBoundingClientRect().top, shown && shown.height > 0 ? shown.top : Infinity);
+      mapSection.style.setProperty("--top-bar-h", `${Math.round(head.getBoundingClientRect().bottom - map.top)}px`);
+      mapSection.style.setProperty("--strip-h", `${Math.round(map.bottom - bottom)}px`);
+    };
+    update();
+    const watch = new ResizeObserver(update);
+    [head, tray, mapSection, card].forEach((node) => node && watch.observe(node));
+    return () => {
+      watch.disconnect();
+      mapSection.style.removeProperty("--top-bar-h");
+      mapSection.style.removeProperty("--strip-h");
+    };
+  }, [phone, mapSection, info, hint]);
 
   const place = (card: Card, droppedAt?: LatLng) => {
     const name = pick(card.name);
@@ -270,7 +296,7 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
   const jumpTo = (groupId: string) => {
     trayRef.current
       ?.querySelector<HTMLElement>(`[data-group="${groupId}"]`)
-      ?.scrollIntoView({ block: "nearest", inline: "start", behavior: "smooth" });
+      ?.scrollIntoView({ block: "nearest", inline: "start", behavior: motionReduced() ? "auto" : "smooth" });
   };
 
   const showPlace = (lat: number, lon: number, name: string) => {
@@ -448,11 +474,9 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
               </li>
             ))}
           </ul>
-          {/* The top band, with its sound button, is hidden while placing sensors on a phone. */}
-          <p className="help-sound">
-            <SoundToggle />
-            <span aria-hidden="true">{t(vibrationLikely() ? "sound.labelVibrate" : "sound.label")}</span>
-          </p>
+          {/* The top band, with the accessibility menu, is hidden while placing sensors on a phone:
+              its sound and vibration switches are here too. */}
+          <A11ySettingsPanel compact />
           <button type="button" className="btn btn-primary btn-big" autoFocus onClick={() => helpRef.current?.close()}>
             {t("mission.helpOk")}
           </button>
@@ -460,7 +484,7 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
       )}
 
       <div className="dock">
-        <div className="dock-head">
+        <div className="dock-head" ref={headRef}>
           <div className="dock-title">
             <p className="dock-step">{t("steps.current", { n: step, total: STEPS.length })}</p>
             <h1 tabIndex={-1}>{t("mission.heading")}</h1>
