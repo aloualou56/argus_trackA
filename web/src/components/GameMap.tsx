@@ -414,6 +414,15 @@ export function GameMap(props: Props) {
       paddingBottomRight: L.point(48, Math.min(84, quarter)), // clear of the legend and attribution
       maxZoom: MONUMENT_MAX_ZOOM,
     };
+    // While the alarm plays its banner covers the top of the map and "Skip" the bottom: the alarm and
+    // the player's sensors are framed between them, never under them.
+    if (mode === "replay" && containerRef.current?.parentElement) {
+      const box = containerRef.current.getBoundingClientRect();
+      const banner = containerRef.current.parentElement.querySelector(".replay-banner")?.getBoundingClientRect();
+      const skip = containerRef.current.parentElement.querySelector(".replay-skip")?.getBoundingClientRect();
+      if (banner) options.paddingTopLeft = L.point(70, banner.bottom - box.top + 24);
+      if (skip) options.paddingBottomRight = L.point(48, box.bottom - skip.top + 24);
+    }
     if (mode === "overview" || !mon?.map) {
       const centres = data.monuments.filter((m) => m.map).map((m) => m.map!.center);
       map.flyToBounds(L.latLngBounds(centres).pad(0.2), { ...options, maxZoom: 6 });

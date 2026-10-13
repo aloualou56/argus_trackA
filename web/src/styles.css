@@ -3782,9 +3782,9 @@ b {
 }
 .replay-banner {
   position: absolute;
-  top: 62px;
-  right: 62px;
-  left: 62px;
+  top: 10px;
+  right: 10px;
+  left: 62px; /* clear of the zoom buttons */
   z-index: 1000;
   max-width: 28rem;
   margin: 0 auto;
@@ -3828,6 +3828,24 @@ b {
 }
 .app.is-replay .places-float {
   display: none;
+}
+/* While the alarm plays, the map shows only it: no map picker over the banner. */
+.board-map.mode-replay .map-switch {
+  display: none;
+}
+/* An upright phone moves the map's own controls clear of the mission's floating bars; those bars
+   are gone while the alarm plays, so the controls go back to the edges (scale and credits off the
+   alarm, zoom off the banner). */
+@media (max-width: 39.99rem) {
+  .app.is-play.is-replay .board-map .leaflet-top {
+    top: 0;
+  }
+  .app.is-play.is-replay .board-map .leaflet-bottom {
+    bottom: 0;
+  }
+  .replay-banner {
+    font-size: 0.84rem;
+  }
 }
 /* Wide screens keep the panel in view while the alarm plays; it cannot be used until it ends. */
 .app.is-replay .board-panel {
