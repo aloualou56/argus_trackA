@@ -552,6 +552,7 @@ npm run narration -- --dry-run                       # lines, characters and cre
 # Windows PowerShell:  $env:ELEVENLABS_API_KEY="..."     macOS/Linux:  export ELEVENLABS_API_KEY=...
 npm run narration -- --library --lang el             # the most used Greek library voices, with free preview links
 npm run narration -- --add <owner>:<voice> --name "Greek narrator"   # add one to the account; prints its voice_id
+npm run narration -- --lang it,es,de --auto-voice   # pick a calm male narrator per language, save it, record
 npm run narration -- --voices                        # the voices in the account (incl. ElevenLabs' own)
 npm run narration -- --sample "Καλώς ήρθες, φύλακα!" --voice <voice_id>   # one test clip (web/narration-samples/)
 #   put the chosen voice_id per language in content/narration.json (elevenlabs.voices)

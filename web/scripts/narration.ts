@@ -13,6 +13,11 @@
 //                                               those matching a name), with a free preview link (no credits)
 //   npm run narration -- --add <owner>:<voice> --name "Greek narrator"
 //                                               ElevenLabs: add a library voice to your account (prints its id)
+//   npm run narration -- --lang it,es,de --auto-voice [--choice 2]
+//                                               ElevenLabs: for each language without a voice, pick a calm male
+//                                               narrator from the library, add it, save it in content/narration.json,
+//                                               then record. --choice N takes the N-th best instead (and replaces
+//                                               a voice already set). With --dry-run: pick and save, record nothing.
 //
 // Before recording, ElevenLabs credits are checked: the run stops if the account has too few left
 // (--force records anyway, as far as the credits go).
@@ -85,6 +90,16 @@ interface Service {
   library?(lang: NarratedLang, gender?: string, search?: string): Promise<void>;
   /** Adds a library voice to the account and returns its id (ElevenLabs only). */
   addVoice?(owner: string, voiceId: string, name: string): Promise<string>;
+  /** Library narrators of a language that suit the game, best first (ElevenLabs only). */
+  narrators?(lang: NarratedLang): Promise<Narrator[]>;
+}
+
+interface Narrator {
+  owner: string;
+  id: string;
+  name: string;
+  about: string;
+  preview: string;
 }
 
 async function request(url: string, init: RequestInit): Promise<Response> {
@@ -214,15 +229,94 @@ function elevenlabs(): Service {
       }
     },
     async addVoice(owner, voiceId, name) {
-      const res = await request(`${api}/v1/voices/add/${owner}/${voiceId}`, {
-        method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify({ new_name: name }),
-      });
-      return ((await res.json()) as { voice_id: string }).voice_id;
+      try {
+        const res = await request(`${api}/v1/voices/add/${owner}/${voiceId}`, {
+          method: "POST",
+          headers: { ...headers, "Content-Type": "application/json" },
+          body: JSON.stringify({ new_name: name }),
+        });
+        return ((await res.json()) as { voice_id: string }).voice_id;
+      } catch (e) {
+        // Already in the account (e.g. added on an earlier run): use that one.
+        const res = await request(`${api}/v1/voices`, { headers });
+        const mine = ((await res.json()) as { voices: { voice_id: string; name: string; sharing?: { original_voice_id?: string } }[] }).voices;
+        const found = mine.find((v) => v.sharing?.original_voice_id === voiceId || v.name === name);
+        if (found) return found.voice_id;
+        throw e;
+      }
+    },
+    async narrators(lang) {
+      type Shared = {
+        public_owner_id: string;
+        voice_id: string;
+        name: string;
+        gender?: string;
+        age?: string;
+        accent?: string;
+        descriptive?: string;
+        use_case?: string;
+        language?: string;
+        locale?: string;
+        verified_languages?: { language: string; locale?: string; accent?: string; preview_url?: string }[];
+        usage_character_count_1y?: number;
+        cloned_by_count?: number;
+        preview_url?: string;
+      };
+      const searches: Record<string, string>[] = [
+        { use_cases: "informative_educational" },
+        { use_cases: "narrative_story" },
+        {},
+        ...(NARRATOR_NAMES[lang] ?? []).map((search) => ({ search })),
+      ];
+      const found = new Map<string, Shared>();
+      for (const extra of searches) {
+        const params = new URLSearchParams({ page_size: "100", language: lang, gender: "male", ...extra });
+        const res = await request(`${api}/v1/shared-voices?${params}`, { headers });
+        for (const v of ((await res.json()) as { voices?: Shared[] }).voices ?? []) found.set(v.voice_id, v);
+      }
+      const native = NATIVE_LOCALE[lang];
+      const score = (v: Shared): number | null => {
+        const verified = v.verified_languages?.find((l) => l.language === lang);
+        // A native speaker of the language, reading calmly: no characters, adverts or shouting.
+        if ((v.language ?? verified?.language) !== lang || v.gender !== "male") return null;
+        const words = `${v.name} ${v.descriptive ?? ""} ${v.accent ?? ""}`.toLowerCase();
+        if (/intense|excited|aggressive|intimidat|horror|sports|commentat|asmr|whisper|child|hyped|sassy|villain/.test(words)) return null;
+        if (!["informative_educational", "narrative_story", "conversational"].includes(v.use_case ?? "")) return null;
+        const voiceLocale = verified?.locale ?? v.locale ?? "";
+        let s = { informative_educational: 3, narrative_story: 2, conversational: 0 }[v.use_case as string] ?? 0;
+        if (/calm|professional|warm|pleasant|confident|wise|formal|clear|relaxed/.test(words)) s += 1;
+        if (v.age === "middle_aged") s += 1;
+        if (voiceLocale === native) s += 2;
+        else if (voiceLocale && !voiceLocale.startsWith(lang)) s -= 1;
+        if (lang === "es" && /latin|mexic|argentin|colombia|venezuel|chile/.test(`${words} ${voiceLocale.toLowerCase()}`) && !/es-es/i.test(voiceLocale)) s -= 3;
+        if ((NARRATOR_NAMES[lang] ?? []).some((n) => v.name.toLowerCase().startsWith(n.toLowerCase()))) s += 2;
+        return s + Math.log10((v.usage_character_count_1y ?? 0) + 1) / 10;
+      };
+      return [...found.values()]
+        .map((v) => ({ v, s: score(v) }))
+        .filter((x): x is { v: Shared; s: number } => x.s !== null)
+        .sort((a, b) => b.s - a.s)
+        .map(({ v }) => ({
+          owner: v.public_owner_id,
+          id: v.voice_id,
+          name: v.name,
+          about: [v.age, v.accent, v.descriptive, v.use_case, v.verified_languages?.find((l) => l.language === lang)?.locale ?? v.locale]
+            .filter(Boolean)
+            .join(", "),
+          preview: v.verified_languages?.find((l) => l.language === lang)?.preview_url ?? v.preview_url ?? "-",
+        }));
     },
   };
 }
+
+/** The accent the game speaks in each language (German: standard German, which Swiss schools teach too). */
+const NATIVE_LOCALE: Record<NarratedLang, string> = { el: "el-GR", en: "en-GB", it: "it-IT", es: "es-ES", de: "de-DE" };
+/** Narrators that voice reviews and the ElevenLabs language pages recommend; picked first when they fit. */
+const NARRATOR_NAMES: Partial<Record<NarratedLang, string[]>> = {
+  it: ["Adamo", "Giuseppe"],
+  es: ["David Martin", "Alberto"],
+  de: ["Otto", "Marc Weber"],
+};
 
 // --provider and --voice override content/narration.json for this run (e.g. to try a voice).
 const provider = (option("provider") ?? settings.provider) as Settings["provider"];
@@ -306,6 +400,39 @@ async function sample(text: string): Promise<void> {
   }
 }
 
+/** Writes one ElevenLabs voice into content/narration.json, leaving the rest of the file as it is. */
+function saveVoice(lang: NarratedLang, voiceId: string): void {
+  const file = join(web, "..", "content", "narration.json");
+  const text = readFileSync(file, "utf8");
+  const start = text.indexOf('"voices"', text.search(/"elevenlabs"\s*:\s*\{/));
+  const end = text.indexOf("}", start);
+  const block = text.slice(start, end).replace(new RegExp(`("${lang}"\\s*:\\s*)(null|"[^"]*")`), `$1"${voiceId}"`);
+  writeFileSync(file, text.slice(0, start) + block + text.slice(end));
+}
+
+/** --auto-voice: a narrator for every language that has none (or the --choice-th best for each). */
+async function autoVoices(): Promise<void> {
+  if (provider !== "elevenlabs" || !service.narrators || !service.addVoice) throw new Error("--auto-voice is for ElevenLabs.");
+  service.check();
+  const choice = Number(option("choice") ?? 1);
+  for (const lang of langs) {
+    if (settings.elevenlabs.voices[lang] && !option("choice")) continue;
+    const list = await service.narrators(lang);
+    const pick = list[choice - 1];
+    if (!pick) throw new Error(`${lang}: no fitting narrator found in the library (choose one with --library --lang ${lang}).`);
+    const id = await service.addVoice(pick.owner, pick.id, pick.name);
+    settings.elevenlabs.voices[lang] = id;
+    saveVoice(lang, id);
+    console.log(`${lang}: ${pick.name} (${pick.about})`);
+    console.log(`    listen: ${pick.preview}`);
+    console.log(`    saved in content/narration.json as ${id}`);
+    const others = list.filter((v) => v !== pick).slice(0, 3);
+    if (others.length) {
+      console.log(`    others: ${others.map((v) => `${list.indexOf(v) + 1}. ${v.name}`).join(" | ")}  (--lang ${lang} --auto-voice --choice N)`);
+    }
+  }
+}
+
 async function main(): Promise<void> {
   const sampleText = option("sample");
   if (sampleText) return sample(sampleText);
@@ -329,6 +456,8 @@ async function main(): Promise<void> {
     console.log(`added; its voice_id is ${id} (put it in content/narration.json, elevenlabs.voices)`);
     return;
   }
+
+  if (flag("auto-voice")) await autoVoices();
 
   // 1. What each language needs.
   const manifest = readManifest();
