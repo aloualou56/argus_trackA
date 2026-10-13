@@ -3813,17 +3813,24 @@ b {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+/* Centred with margins, not with a transform: a pressed main button moves down 2px with its own
+   transform, which would replace a centring one and pull the button out from under the finger, so
+   the tap was lost. One line, above the scale bar and the credits. */
 .replay-skip {
   position: absolute;
-  bottom: 34px;
-  left: 50%;
+  bottom: 56px;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  min-height: 44px;
-  padding: 0.4rem 1.2rem;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  min-height: 48px;
+  margin: 0 auto;
+  padding: 0.4rem 1.3rem;
   border: 2px solid var(--ink);
   background: var(--surface);
   color: var(--ink);
-  transform: translateX(-50%);
+  white-space: nowrap;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
 }
 .app.is-replay .places-float {
@@ -4216,11 +4223,14 @@ b {
 .screen.event > .read-aloud {
   margin: 0 0 0.9rem;
 }
+/* Once it has played, the button is the way on: the main button's colour. */
 .replay-skip.is-over {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-color: var(--ink);
+  border-color: var(--primary-deep);
+  background: var(--primary);
+  color: #fff;
 }
 /* Phones: the card that says what a sensor does stays until the next tap, or this close button. */
 .tray-info-close {

@@ -311,7 +311,22 @@ async function play(browser, lang, vpName) {
   const moving = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length);
   if (moving) note(`${prefix}: ${moving} animation(s) still running 6 s after the replay ended`);
   if ((await page.evaluate(() => document.activeElement?.className ?? "")).indexOf("replay-skip") < 0) note(`${prefix}: "${t["replay.continue"]}" lost the focus`);
-  await answer.click();
+  if (vpName === "phone") {
+    // A real finger, off-centre (on the first word): pressing must not move the button away from it.
+    const box = await answer.boundingBox();
+    const cdp = await context.newCDPSession(page);
+    const at = { x: box.x + box.width * 0.2, y: box.y + box.height / 2 };
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [at] });
+    await page.waitForTimeout(120);
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    const opened = await page.locator(".screen.event h1").waitFor({ timeout: 3000 }).then(() => true, () => false);
+    if (!opened) {
+      note(`${prefix}: a finger tap on "${t["replay.continue"]}" did not open the answer`);
+      await answer.click();
+    }
+  } else {
+    await answer.click();
+  }
   await page.getByRole("heading", { level: 1, name: t["event.heading"] }).waitFor();
   await expectFocusOnHeading(page, `${prefix} event`);
   // Before the reveal, the alarm's map shows only the ARGUS sensor that raised it.
