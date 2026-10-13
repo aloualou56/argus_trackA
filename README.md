@@ -11,9 +11,10 @@ see the class's choices next to what ARGUS really installed.
 
 Status (13 Oct 2026): **all five ARGUS monuments are playable** (Delos, Baltanás, Monti Lucretili, Sant'Antonio di
 Ranverso, Schenkenberg), in Greek and English, offline after the first visit, with sound, and with a full-screen map
-for placing sensors on phones. A public copy runs on a Raspberry Pi and updates itself on every push to `main` (see
-Publishing). Italian, Spanish and German are machine translations waiting for native speakers (see Languages). All
-authored text still needs human review (see below). For teachers: [docs/teacher_guide.md](docs/teacher_guide.md).
+for placing sensors on phones. **Play it: <http://pi-address.invalid/>**, a public copy on a Raspberry
+Pi that updates itself on every push to `main` (see Publishing). Italian, Spanish and German are machine translations
+waiting for native speakers (see Languages). All authored text still needs human review (see below). For teachers:
+[docs/teacher_guide.md](docs/teacher_guide.md).
 
 | Monument | Levels | Real alarm replayed |
 |---|---|---|
@@ -587,6 +588,8 @@ a message with a reload button instead of an empty page.
 
 ## Publishing: the public copy on a Raspberry Pi
 
+**The game online: <http://pi-address.invalid/>**
+
 Every push to `main` goes live by itself, about two minutes later, and only if the tests pass.
 
 ```
@@ -604,8 +607,8 @@ Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/gua
   nginx: the Pi's Debian 11 no longer gets security updates, so its nginx would be an old one, while Caddy is a
   current official release, checked against its published checksums.
 - **The tunnel** is playit.gg (the agent runs as `playit.service`): a TCP tunnel to `127.0.0.1:8080`, created in the
-  playit.gg dashboard. Its address is plain `http://`, so the offline mode, which browsers allow only over
-  `https://`, is off there; the game itself works fully.
+  playit.gg dashboard; its address is <http://pi-address.invalid/>. It is plain `http://`, so the
+  offline mode, which browsers allow only over `https://`, is off there; the game itself works fully.
 - Setup, logs and how to set up a new Pi: [tools/pi/README.md](tools/pi/README.md).
 
 ## Next steps (to 24 October)
@@ -614,8 +617,8 @@ Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/gua
 |---|---|
 | 14 Oct | Review authored content (stories, Greek, threat texts, primary cards, quiz, checklist, units); fix from feedback |
 | 15 Oct | Keep an eye on the offline check (`npm run screenshots`): it failed in earlier runs and passes now, cause not identified |
-| 13 Oct | Done: the public copy on the Raspberry Pi, updated on every push (see Publishing) |
-| 16 Oct | Create the playit tunnel and share its address; set up Supabase (optional); test a class code across two devices |
+| 13 Oct | Done: the public copy on the Raspberry Pi, updated on every push, at <http://pi-address.invalid/> (see Publishing) |
+| 16 Oct | Set up Supabase (optional); test a class code across two devices |
 | 20 Oct | Plan the Pi's operating-system upgrade (Debian 11 no longer gets security updates) |
 | 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor and the meaning of the AI alarms |
 | 22 Oct | **Playtest** with a class or visitors (pre/post quiz gives the evidence); manual screen-reader and keyboard audit |
