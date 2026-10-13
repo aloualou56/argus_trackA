@@ -756,6 +756,8 @@ async function checkReadAloud(browser, lang) {
     const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
     await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
     await context.addInitScript(fakeVoices, voices);
+    // The recorded narration would play instead of the device's voice: test the device's voice here.
+    await context.route("**/audio/**", (route) => route.abort());
     const page = await context.newPage();
     await page.goto(URL_BASE);
     await page.getByRole("radio", { name: new RegExp(ranverso.display_name[lang]) }).check();

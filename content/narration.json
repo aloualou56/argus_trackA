@@ -47,8 +47,17 @@
       "18ο αιώνα": "δέκατο όγδοο αιώνα"
     },
     "en": {},
-    "it": {},
-    "es": {},
-    "de": {}
+    "it": {
+      "I secolo a.C. Il": "primo secolo avanti Cristo. Il",
+      "a.C.": "avanti Cristo"
+    },
+    "es": {
+      "siglo I a. C. Su": "siglo primero antes de Cristo. Su",
+      "a. C.": "antes de Cristo"
+    },
+    "de": {
+      "1. Jahrhundert v. Chr. Sein": "ersten Jahrhundert vor Christus. Sein",
+      "v. Chr.": "vor Christus"
+    }
   }
 }

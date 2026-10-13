@@ -18,6 +18,44 @@
     "needs_review": true,
     "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw."
   },
+  "guardian": {
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "needs_review": true,
+    "name": {
+      "en": "Urs",
+      "el": "Ουρς"
+    },
+    "role": {
+      "en": "Volunteer who looks after the castle ruins",
+      "el": "Εθελοντής που φροντίζει τα ερείπια του κάστρου"
+    },
+    "handover": {
+      "en": "Grüezi! I'm Urs. With other volunteers I look after the ruins of Schenkenberg: we cut back the plants and check the walls. Today I can't come up the hill, so the castle is yours. Watch the cracks for me!",
+      "el": "Grüezi! Είμαι ο Ουρς. Με άλλους εθελοντές φροντίζουμε τα ερείπια του Σένκενμπεργκ: κόβουμε τα φυτά και ελέγχουμε τους τοίχους. Σήμερα δεν μπορώ να ανέβω στον λόφο, οπότε το κάστρο είναι δικό σου. Πρόσεχε τις ρωγμές για μένα!"
+    },
+    "back_caught": {
+      "en": "I'm back! Your sensors noticed in time, so we could check the walls before a stone came loose. Today you were a real guardian.",
+      "el": "Γύρισα! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε ελέγξαμε τους τοίχους πριν ξεκολλήσει κάποια πέτρα. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    }
+  },
+  "consequences": {
+    "_about": "AUTHORED. Per alarm rule: what happens over the years if nobody ever notices (score screen), and the drawing that shows it (before / after): mosaic, floor, stone, lean, tree, fresco or crack.",
+    "needs_review": true,
+    "R2_crack_step": {
+      "picture": "crack",
+      "text": {
+        "en": "Water gets into the crack, freezes in winter and pushes it wider. Roots follow. Year after year the crack grows, until stones fall out of the wall.",
+        "el": "Το νερό μπαίνει στη ρωγμή, παγώνει τον χειμώνα και την ανοίγει κι άλλο. Ακολουθούν οι ρίζες. Χρόνο με τον χρόνο η ρωγμή μεγαλώνει, ώσπου πέφτουν πέτρες από τον τοίχο."
+      }
+    },
+    "R3_vib_zscore": {
+      "picture": "crack",
+      "text": {
+        "en": "A tall wall standing on its own that shakes again and again loosens its stones and the mortar between them. Cracks open, and in the end the top of the wall can fall.",
+        "el": "Ένας ψηλός τοίχος που στέκει μόνος και κουνιέται ξανά και ξανά χαλαρώνει τις πέτρες του και το κονίαμα ανάμεσά τους. Ανοίγουν ρωγμές, και στο τέλος η κορυφή του τοίχου μπορεί να πέσει."
+      }
+    }
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Schenkenberg has 2 Low, 1 Medium, 2 High and 6 Extreme scenarios, so missions borrow from the next level up or down, never two levels away: Medium takes one Low and one High danger.",
     "Extreme priority": [

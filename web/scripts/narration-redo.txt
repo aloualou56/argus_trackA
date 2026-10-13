@@ -1,0 +1,26 @@
+# Clips to record again: npm run narration -- --redo-list scripts/narration-redo.txt
+# Found on 13 Oct 2026 by transcribing every clip with Whisper and comparing it with its text,
+# and by measuring silences. One "lang/key" per line; the rest of a line is a note.
+el/1hwtvfddn15  garbled after «ταυ»
+el/16g29rpw4f9  2.4 s pauses in the middle of the sentence
+el/0epett822sq  2.1 s pause in the middle of the sentence
+es/2biqwr1rjg1  3.4 s pause in the middle of the sentence
+es/0r9lebf61tx  3.4 s pause in the middle of the sentence
+it/035ywjran5d  could not be transcribed: listen
+it/0euxgww0apf  could not be transcribed: listen
+it/2015ijotehi  could not be transcribed: listen
+it/0h4tkre77pb  "a.C." now spelled out (say_as)
+it/1bodgfysgcv  "a.C." now spelled out (say_as)
+it/1qhtcvb60gn  "a.C." now spelled out (say_as)
+it/21xaii5da98  "a.C." now spelled out (say_as)
+it/2cwsfol5gt5  "a.C." now spelled out (say_as)
+es/0fy6msrgvn8  "a. C." now spelled out (say_as)
+es/0r573274v8r  "a. C." now spelled out (say_as)
+es/1dfc5iqduv7  "a. C." now spelled out (say_as)
+es/1pfpt60gypx  "a. C." now spelled out (say_as)
+es/2fo0au6y3ps  "a. C." now spelled out (say_as)
+de/0jdckx563sx  "v. Chr." now spelled out (say_as)
+de/0lin23uwiyx  "v. Chr." now spelled out (say_as)
+de/0uk3qef2plw  "v. Chr." now spelled out (say_as)
+de/0zlv15jfry0  "v. Chr." now spelled out (say_as)
+de/18f7mb3rvf3  "v. Chr." now spelled out (say_as)

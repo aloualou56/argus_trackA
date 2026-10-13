@@ -18,6 +18,51 @@
     "needs_review": true,
     "review_note": "Myth and 'whole island is an archaeological site' are general knowledge, not ARGUS data. Greek house names (Οικία των Προσωπείων, Οικία των Φούρνων) need an archaeologist's check. 'Biggest danger = salt' comes from the data (salinity, highest ABC magnitude 15.0, Catastrophic, both houses)."
   },
+  "guardian": {
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "needs_review": true,
+    "name": {
+      "en": "Manolis",
+      "el": "Μανώλης"
+    },
+    "role": {
+      "en": "Guard at the archaeological site of Delos",
+      "el": "Φύλακας στον αρχαιολογικό χώρο της Δήλου"
+    },
+    "handover": {
+      "en": "Welcome to Delos! I'm Manolis, and I have guarded these old houses for twenty years. Today I have to leave the island, so I am handing my watch over to you. Will you look after the mosaics for me?",
+      "el": "Καλώς ήρθες στη Δήλο! Είμαι ο Μανώλης και φυλάω αυτά τα αρχαία σπίτια είκοσι χρόνια. Σήμερα πρέπει να φύγω από το νησί, γι' αυτό σου παραδίδω τη βάρδια μου. Θα μου προσέχεις τα ψηφιδωτά;"
+    },
+    "back_caught": {
+      "en": "I'm back! I heard your sensors noticed in time. Thanks to you, we could check the houses before the damage spread. Today you were a real guardian.",
+      "el": "Γύρισα! Έμαθα ότι οι αισθητήρες σου το πρόσεξαν εγκαίρως. Χάρη σε σένα ελέγξαμε τα σπίτια πριν απλωθεί η ζημιά. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    }
+  },
+  "consequences": {
+    "_about": "AUTHORED. Per alarm rule: what happens over the years if nobody ever notices (score screen), and the drawing that shows it (before / after): mosaic, floor, stone, lean, tree, fresco or crack.",
+    "needs_review": true,
+    "DL_soil_moisture": {
+      "picture": "mosaic",
+      "text": {
+        "en": "Water rises from the ground into the mosaic and brings salt with it. When it dries, the salt grows into crystals that push the small stones apart, until they come loose and are lost.",
+        "el": "Το νερό ανεβαίνει από το έδαφος στο ψηφιδωτό και φέρνει μαζί του αλάτι. Όταν στεγνώνει, το αλάτι γίνεται κρύσταλλοι που σπρώχνουν τις ψηφίδες να ανοίξουν, ώσπου ξεκολλούν και χάνονται."
+      }
+    },
+    "DL_humidity": {
+      "picture": "mosaic",
+      "text": {
+        "en": "Damp that goes up and down makes the salt in the walls and floors swell and shrink, again and again. The plaster crumbles, and the small stones of the mosaic come loose.",
+        "el": "Η υγρασία που ανεβοκατεβαίνει κάνει το αλάτι στους τοίχους και στα δάπεδα να φουσκώνει και να ξεφουσκώνει, ξανά και ξανά. Ο σοβάς θρυμματίζεται και οι ψηφίδες του ψηφιδωτού ξεκολλούν."
+      }
+    },
+    "R2_wind": {
+      "picture": "stone",
+      "text": {
+        "en": "Wind full of sand and salt works like sandpaper. Year after year, the carved edges of the stone grow round and smooth, and the details disappear.",
+        "el": "Ο άνεμος γεμάτος άμμο και αλάτι δουλεύει σαν γυαλόχαρτο. Χρόνο με τον χρόνο, οι σκαλισμένες ακμές της πέτρας στρογγυλεύουν και οι λεπτομέρειες χάνονται."
+      }
+    }
+  },
   "missions": {
     "_about": "Three scenario keys per priority level, mixing the two houses and avoiding repeats of the same kind of threat. Delos has only 1 Extreme scenario, so that mission borrows two High ones.",
     "Catastrophic priority": [

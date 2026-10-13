@@ -129,7 +129,34 @@ export interface Alarm {
   episode: { rule: string; start: string; end: string; alarm_count: number; flat_signal: boolean };
   /** What ARGUS recorded as the decision for this alarm (its own English text); null for AI alarms. */
   decision: { decision_id: number; text: string; urgency: string | null } | null;
-  context: { links: string[]; why: Text; authored: true; needs_review: boolean } | null;
+  context: {
+    links: string[];
+    why: Text;
+    authored: true;
+    needs_review: boolean;
+    /** What happens over the years if nobody ever notices, and the drawing that shows it (score screen). */
+    consequence?: Consequence;
+  } | null;
+}
+
+/** The drawings of components/Consequence.tsx, before and after. */
+export type ConsequencePicture = "mosaic" | "floor" | "stone" | "lean" | "tree" | "fresco" | "crack";
+
+export interface Consequence {
+  picture: ConsequencePicture;
+  text: Text;
+  needs_review: boolean;
+}
+
+/** An imaginary guardian of the monument: hands the watch over (story) and comes back (score). */
+export interface Guardian {
+  name: Text;
+  role: Text;
+  handover: Text;
+  /** Said when the player's sensors caught the day's alarm; absent where no alarm can be replayed. */
+  back_caught?: Text;
+  authored: true;
+  needs_review: boolean;
 }
 
 export interface InstalledByCard {
@@ -283,6 +310,7 @@ export interface Monument extends MonumentBase {
   history?: History | null;
   /** Why this monument has no alarm to replay, when it has none. */
   no_alarm_note?: Prompt;
+  guardian?: Guardian;
 }
 
 /** Pre/post quiz question (content/quiz.json). */

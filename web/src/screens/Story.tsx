@@ -4,6 +4,7 @@ import { Icon } from "../components/Icon";
 import { ReadAloud } from "../components/ReadAloud";
 import { storyNarration } from "../audio/narration";
 import { PhotoCredit } from "../components/PhotoCredit";
+import { GuardianSays } from "../components/Guardian";
 import { LevelBadge, LevelBars, levelKey } from "../components/LevelBadge";
 import { useI18n } from "../i18n";
 
@@ -25,6 +26,16 @@ export function Story({ mon, session, go }: ScreenProps) {
       <p className="place">{pick(mon.place)}</p>
       {/* Where the ARGUS sensors are, as a map sheet would print it. */}
       {mon.map && <p className="coords">{formatCoords(mon.map.center)}</p>}
+      {/* An imaginary guardian hands the watch over; they come back on the score screen. */}
+      {mon.guardian && (
+        <GuardianSays
+          mon={mon}
+          headingId="guardian-title"
+          eyebrow={t("guardian.label")}
+          title={pick(mon.guardian.name)}
+          text={pick(mon.guardian.handover)}
+        />
+      )}
       {mon.photo && (
         <figure className="story-photo">
           {/* The caption beside it says what the photo shows, so the picture itself is not read out twice. */}

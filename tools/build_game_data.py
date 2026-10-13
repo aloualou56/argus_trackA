@@ -785,10 +785,16 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         return entry, stats
 
     alarm_context = pack.get("alarm_context", {})
+    consequences = pack.get("consequences", {})
     for alarm in alarms:
         ctx = alarm_context.get(alarm["rule"])
         alarm["context"] = ({"links": ctx.get("links", []), "why": ctx.get("why"), "authored": True,
                              "needs_review": bool(ctx.get("needs_review"))} if ctx else None)
+        after = consequences.get(alarm["rule"])
+        if alarm["context"] and after:
+            # What happens over the years if nobody ever notices (score screen), and the drawing of it.
+            alarm["context"]["consequence"] = {"picture": after["picture"], "text": after["text"],
+                                               "needs_review": bool(consequences.get("needs_review", True))}
     entry.update({
         "display_name": pack["display_name"],
         "place": pack["place"],
@@ -802,6 +808,8 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
     })
     if pack.get("no_alarm_note"):
         entry["no_alarm_note"] = dict(pack["no_alarm_note"], authored=True)
+    if pack.get("guardian"):
+        entry["guardian"] = dict({k: v for k, v in pack["guardian"].items() if not k.startswith("_")}, authored=True)
     return entry, stats
 
 
@@ -964,6 +972,18 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         for alarm in mon["alarms"]:
             if not alarm["context"]:
                 problems.append(f"{mon['pilot_key']}: no alarm_context for rule {alarm['rule']}")
+            elif not alarm["context"].get("consequence"):
+                problems.append(f"{mon['pilot_key']}: no consequence for rule {alarm['rule']}")
+            elif alarm["context"]["consequence"]["picture"] not in CONSEQUENCE_PICTURES:
+                problems.append(f"{mon['pilot_key']}: consequence of {alarm['rule']} has an unknown picture "
+                                f"(one of {', '.join(CONSEQUENCE_PICTURES)})")
+        guardian = mon.get("guardian")
+        if not guardian:
+            problems.append(f"{mon['pilot_key']}: no guardian")
+        else:
+            for field in ("name", "role", "handover") + (("back_caught",) if mon["alarms"] else ()):
+                if not all((guardian.get(field) or {}).get(lang) for lang in ("en", "el")):
+                    problems.append(f"{mon['pilot_key']}: guardian {field} needs both en and el")
         for prompt in mon["discussion_prompts"]:
             if not prompt.get("en") or not prompt.get("el"):
                 problems.append(f"{mon['pilot_key']}: discussion prompt missing a language")
@@ -1151,6 +1171,9 @@ def render_language_notes(data: Dict[str, Any], packs: Dict[str, Dict[str, Any]]
     return "\n".join(out)
 
 
+# The drawings of web/src/components/Consequence.tsx.
+CONSEQUENCE_PICTURES = ("mosaic", "floor", "stone", "lean", "tree", "fresco", "crack")
+
 PLACE_MAX_DISTANCE_M = 3000  # a place further than this from the monument's sensors is a typo
 
 
@@ -1290,6 +1313,12 @@ def collect_review_items(content: Content) -> List[str]:
         for rule, ctx in sorted(pack.get("alarm_context", {}).items()):
             if ctx.get("needs_review"):
                 items.append(f"`{pilot}` alarm explanation for `{rule}` and its linked threats {ctx.get('links')}")
+        if pack.get("consequences", {}).get("needs_review", True) and pack.get("consequences"):
+            items.append(f"`{pilot}` consequences (what happens if nobody notices, per alarm rule): check the science "
+                         "and the Greek, and that each drawing fits")
+        if (pack.get("guardian") or {}).get("needs_review", True) and pack.get("guardian"):
+            name = pack["guardian"]["name"]["en"]
+            items.append(f"`{pilot}` imaginary guardian {name}: name, role and words (Greek too)")
         items.append(f"`{pilot}` mission picks per level")
     if content.raw["checklist"].get("needs_review"):
         items.append("`content/citizen_checklist.json`: what visitors should look out for and how to report it")

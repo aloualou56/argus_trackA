@@ -50,9 +50,37 @@ export function narrationKey(lang: string, line: string): string {
 
 // ---------------------------------------------------------------- the texts read aloud
 
-/** Story screen: the monument's story, then the danger shown on its card. */
+/** Story screen: the guardian hands the watch over, the monument's story, then the danger shown on its card. */
 export function storyNarration(w: Words, mon: Monument, hook: Scenario | undefined): string {
-  return [mon.story.text && w.pick(mon.story.text), hook && `${w.t("story.dangerLabel")}: ${w.pick(hook.plain.title)}. ${w.pick(hook.plain.text)}`]
+  return [
+    mon.guardian && w.pick(mon.guardian.handover),
+    mon.story.text && w.pick(mon.story.text),
+    hook && `${w.t("story.dangerLabel")}: ${w.pick(hook.plain.title)}. ${w.pick(hook.plain.text)}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+/**
+ * What the guardian says on coming back (the first day only): thanks when the player's sensors caught
+ * the day's alarm, comfort when they missed it, and a quiet day where no alarm can be replayed.
+ */
+export function guardianBack(w: Words, mon: Monument, alarm: Alarm | null, detected: boolean): string | null {
+  const g = mon.guardian;
+  if (!g) return null;
+  if (!alarm) return w.t("guardian.backQuiet");
+  if (!detected) return w.t("guardian.backMissed");
+  return g.back_caught ? w.pick(g.back_caught) : null;
+}
+
+/** Score screen: the guardian back (first day), then what happens over the years if nobody notices. */
+export function endingNarration(w: Words, mon: Monument, alarm: Alarm | null, detected: boolean, firstDay: boolean): string {
+  const consequence = alarm?.context?.consequence;
+  return [
+    firstDay && guardianBack(w, mon, alarm, detected),
+    consequence && w.t(detected ? "consequence.caught" : "consequence.missed"),
+    consequence && w.pick(consequence.text),
+  ]
     .filter(Boolean)
     .join("\n");
 }
@@ -122,7 +150,11 @@ export function allNarrations(w: Words, data: GameData): string[] {
     for (const s of mon.scenarios) texts.push(storyNarration(w, mon, s));
     for (const chapter of mon.history?.chapters ?? []) texts.push(chapterNarration(w, chapter));
     texts.push(noAlarmNarration(w, mon));
+    texts.push(endingNarration(w, mon, null, false, true));
     for (const alarm of mon.alarms) {
+      for (const detected of [true, false]) {
+        for (const firstDay of [true, false]) texts.push(endingNarration(w, mon, alarm, detected, firstDay));
+      }
       const rule = ruleFor(data, mon, alarm);
       if (!rule) continue;
       for (const detection of possibleDetections(rule)) texts.push(eventNarration(w, data, alarm, rule, detection));

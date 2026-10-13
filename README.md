@@ -445,6 +445,22 @@ switches.
   on phone and desktop, and the phone screens again at the largest text with high contrast and wide spacing.
   It catches about a third of real issues: a manual screen-reader pass (NVDA, VoiceOver, TalkBack) is still needed.
 
+## The guardian and what happens if nobody notices
+
+Each monument has an **imaginary guardian** (`guardian` in `content/monuments/<pilot>.json`): Manolis, a guard on
+Delos; Tomás, whose family keeps a cellar in Baltanás; Franco, a ranger in the Monti Lucretili park; Giulio, who opens
+the church of Ranverso to visitors; Urs, a volunteer at Schenkenberg. On the story screen the guardian hands the watch
+over to the player; on the score screen (first day) they come back: thanks when the player's sensors caught the real
+alarm, comfort when ARGUS caught it alone, a quiet day where no alarm can be replayed. The game says plainly under
+each guardian that the character is imaginary and that the monument, the dangers and the alarms are real.
+
+Under it, **"If nobody had noticed"** (`consequences` in the same file, one per alarm rule): what that kind of
+damage does over the years when nobody ever notices, with two drawings side by side, today and years later
+(`web/src/components/Consequence.tsx`: mosaic, floor, stone, lean, tree, fresco, crack). The drawings explain; the
+caption says they are not pictures of the site. Both are read aloud with the recorded voices once recorded (until
+then, with the device's voice). Needs review: the guardians' words and the science of each consequence (listed in
+`docs/data_notes.md`).
+
 ## Citizen observation report
 
 The checklist at the end of the game tells visitors what to look out for. The observation report lets them act on
@@ -554,6 +570,7 @@ npm run narration -- --dry-run                       # lines, characters and cre
 npm run narration -- --library --lang el             # the most used Greek library voices, with free preview links
 npm run narration -- --add <owner>:<voice> --name "Greek narrator"   # add one to the account; prints its voice_id
 npm run narration -- --lang it,es,de --auto-voice   # pick a calm male narrator per language, save it, record
+npm run narration -- --redo-list scripts/narration-redo.txt   # record again the clips a listening check found faulty
 npm run narration -- --voices                        # the voices in the account (incl. ElevenLabs' own)
 npm run narration -- --sample "Καλώς ήρθες, φύλακα!" --voice <voice_id>   # one test clip (web/narration-samples/)
 #   put the chosen voice_id per language in content/narration.json (elevenlabs.voices)

@@ -2,6 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { summaryOf, topCard, type CommunityStore, type Summary } from "../community/store";
 import { DayStrip } from "../components/DayStrip";
+import { ConsequenceDrawings } from "../components/Consequence";
+import { GuardianSays } from "../components/Guardian";
+import { ReadAloud } from "../components/ReadAloud";
+import { endingNarration, guardianBack } from "../audio/narration";
 import { Icon } from "../components/Icon";
 import { challengeOutcome, challengeQuery } from "../game/challenge";
 import {
@@ -62,7 +66,8 @@ export function Score({
   onImprove,
   onNextDay,
 }: Props) {
-  const { t, pick, list, number } = useI18n();
+  const i18n = useI18n();
+  const { t, pick, list, number } = i18n;
   const cards = useMemo(() => cardById(data), [data]);
   const threats = missionScenarios(mon, session.level, session.mission);
   const alarm = week[session.day] ?? null;
@@ -169,6 +174,48 @@ export function Score({
         </ul>
         {!result.alarm && <p className="small">{t("score.scaled")}</p>}
       </div>
+
+      {/* The guardian comes back (first day), and what the day's alarm would have led to if nobody noticed. */}
+      {(() => {
+        const replayed = rule ? alarm : null;
+        const firstDay = session.day === 0;
+        const back = firstDay ? guardianBack(i18n, mon, replayed, detected) : null;
+        const consequence = replayed?.context?.consequence;
+        const narration = endingNarration(i18n, mon, replayed, detected, firstDay);
+        const after = consequence && (
+          <section className="consequence" aria-labelledby="consequence-title">
+            <h2 id="consequence-title">{t("consequence.title")}</h2>
+            <p>{t(detected ? "consequence.caught" : "consequence.missed")}</p>
+            <ConsequenceDrawings picture={consequence.picture} />
+            <p className="lead" data-needs-review={consequence.needs_review}>
+              {pick(consequence.text)}
+            </p>
+          </section>
+        );
+        if (back && mon.guardian) {
+          return (
+            <>
+              <GuardianSays
+                mon={mon}
+                headingId="guardian-back-title"
+                title={t("guardian.backTitle", { name: pick(mon.guardian.name) })}
+                text={back}
+              >
+                <ReadAloud text={narration} />
+              </GuardianSays>
+              {after}
+            </>
+          );
+        }
+        return (
+          after && (
+            <>
+              {after}
+              <ReadAloud text={narration} />
+            </>
+          )
+        );
+      })()}
 
       {/* The second turn: improve the network, and (optionally) stay on duty for another day. */}
       <section className="panel week" aria-labelledby="week-title">

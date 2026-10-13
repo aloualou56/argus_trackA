@@ -12,6 +12,44 @@
     "needs_review": true,
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme)."
   },
+  "guardian": {
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "needs_review": true,
+    "name": {
+      "en": "Giulio",
+      "el": "Τζούλιο"
+    },
+    "role": {
+      "en": "Opens the old church to visitors",
+      "el": "Ανοίγει την παλιά εκκλησία στους επισκέπτες"
+    },
+    "handover": {
+      "en": "Buongiorno! I'm Giulio. I open this old church to visitors, and I know every painting on its walls. Today I have to be away, so the monastery is yours to watch. Mind the water: it is the paintings' worst enemy.",
+      "el": "Buongiorno! Είμαι ο Τζούλιο. Ανοίγω αυτή την παλιά εκκλησία στους επισκέπτες και ξέρω κάθε τοιχογραφία της. Σήμερα πρέπει να λείψω, οπότε το μοναστήρι το προσέχεις εσύ. Πρόσεχε το νερό: είναι ο χειρότερος εχθρός των τοιχογραφιών."
+    },
+    "back_caught": {
+      "en": "I'm back! Your sensors noticed in time, so we could check the walls before the damp reached the paintings. Today you were a real guardian.",
+      "el": "Γύρισα! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε ελέγξαμε τους τοίχους πριν φτάσει η υγρασία στις τοιχογραφίες. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    }
+  },
+  "consequences": {
+    "_about": "AUTHORED. Per alarm rule: what happens over the years if nobody ever notices (score screen), and the drawing that shows it (before / after): mosaic, floor, stone, lean, tree, fresco or crack.",
+    "needs_review": true,
+    "R2_rain_7d": {
+      "picture": "fresco",
+      "text": {
+        "en": "Water from the soaked ground climbs up into the walls. It leaves a damp band with white salt along its edge, and the paintings above it flake and fade.",
+        "el": "Το νερό από το μουσκεμένο έδαφος σκαρφαλώνει μέσα στους τοίχους. Αφήνει μια υγρή ζώνη με άσπρο αλάτι στην άκρη της, και οι τοιχογραφίες από πάνω ξεφλουδίζουν και ξεθωριάζουν."
+      }
+    },
+    "R4b_soil_low": {
+      "picture": "fresco",
+      "text": {
+        "en": "When the ground dries out and then gets wet again, the water in the walls moves up and down and carries salt. The salt stays behind, and the paint above it flakes off.",
+        "el": "Όταν το έδαφος στεγνώνει και μετά ξαναβρέχεται, το νερό στους τοίχους ανεβοκατεβαίνει και κουβαλά αλάτι. Το αλάτι μένει πίσω και η μπογιά από πάνω του ξεφλουδίζει."
+      }
+    }
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Ranverso has only 2 Extreme scenarios, so the Extreme mission borrows the strongest High one. Ranverso has no Catastrophic scenarios.",
     "Extreme priority": ["ranverso.water.groundwater", "ranverso.pests.woodworms", "ranverso.incorrect-rh.prolonged-wet-periods"],

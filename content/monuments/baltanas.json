@@ -18,6 +18,22 @@
     "needs_review": true,
     "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme)."
   },
+  "guardian": {
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "needs_review": true,
+    "name": {
+      "en": "Tomás",
+      "el": "Τομάς"
+    },
+    "role": {
+      "en": "Keeper of a family wine cellar in the hill",
+      "el": "Φροντίζει το οικογενειακό κελάρι στον λόφο"
+    },
+    "handover": {
+      "en": "Hello, I'm Tomás. My family has kept a wine cellar in this hill for four generations. Today I have to be away, so the cellars are in your hands. Watch the ground for me: if it moves, the cellars can cave in.",
+      "el": "Γεια σου, είμαι ο Τομάς. Η οικογένειά μου έχει ένα κελάρι σε αυτόν τον λόφο εδώ και τέσσερις γενιές. Σήμερα πρέπει να λείψω, οπότε τα κελάρια είναι στα χέρια σου. Πρόσεχε το έδαφος για μένα: αν κουνηθεί, τα κελάρια μπορεί να καταρρεύσουν."
+    }
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Baltanas has no Low or Catastrophic scenarios and lists flooding.structural-wood three times; missions use each key once. A mission borrows only from the next level up or down (Medium borrows a High one, not the Extreme cave-in), so a level never shows a danger two levels more serious than the one chosen.",
     "Extreme priority": [

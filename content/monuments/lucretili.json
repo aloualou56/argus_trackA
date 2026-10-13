@@ -18,6 +18,72 @@
     "needs_review": true,
     "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic)."
   },
+  "guardian": {
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "needs_review": true,
+    "name": {
+      "en": "Franco",
+      "el": "Φράνκο"
+    },
+    "role": {
+      "en": "Ranger in the Monti Lucretili park",
+      "el": "Φύλακας στο πάρκο των Ορέων Λουκρετίλι"
+    },
+    "handover": {
+      "en": "Ciao! I'm Franco, a ranger in the Monti Lucretili park. Today I have to walk the far side of the mountains, so I am leaving these hills to you: the poet's villa, the castle and the rooms carved in the rock. Keep an eye on the slopes!",
+      "el": "Ciao! Είμαι ο Φράνκο, φύλακας στο πάρκο των Ορέων Λουκρετίλι. Σήμερα πρέπει να περπατήσω την άλλη πλευρά των βουνών, οπότε σου αφήνω αυτούς τους λόφους: την έπαυλη του ποιητή, το κάστρο και τα δωμάτια που είναι σκαμμένα στον βράχο. Πρόσεχε τις πλαγιές!"
+    },
+    "back_caught": {
+      "en": "I'm back from the mountains! Your sensors noticed in time, so we could go and look before things got worse. Today you were a real guardian.",
+      "el": "Γύρισα από τα βουνά! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε πήγαμε να δούμε πριν γίνουν τα πράγματα χειρότερα. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    }
+  },
+  "consequences": {
+    "_about": "AUTHORED. Per alarm rule: what happens over the years if nobody ever notices (score screen), and the drawing that shows it (before / after): mosaic, floor, stone, lean, tree, fresco or crack.",
+    "needs_review": true,
+    "R5_visitors": {
+      "picture": "floor",
+      "text": {
+        "en": "Thousands of feet walking the same way wear a path into an old floor. The stones grow smooth and low, and the pattern fades where everyone steps.",
+        "el": "Χιλιάδες πόδια που περπατούν από τον ίδιο δρόμο ανοίγουν μονοπάτι σε ένα παλιό δάπεδο. Οι πέτρες λειαίνονται και χαμηλώνουν, και το σχέδιο σβήνει εκεί που πατάνε όλοι."
+      }
+    },
+    "R2a_tilt_step": {
+      "picture": "lean",
+      "text": {
+        "en": "If the slope keeps sliding, the wall leans a little more each year. One day it cracks open and falls, and the rooms behind it lose their protection.",
+        "el": "Αν η πλαγιά συνεχίσει να γλιστράει, ο τοίχος γέρνει λίγο ακόμα κάθε χρόνο. Μια μέρα ανοίγει και πέφτει, και τα δωμάτια πίσω του μένουν απροστάτευτα."
+      }
+    },
+    "R7_wind": {
+      "picture": "tree",
+      "text": {
+        "en": "A tree that nobody cuts back can lose a big branch, or fall, in the next storm. Falling on the old walls, it knocks their top stones down.",
+        "el": "Ένα δέντρο που κανείς δεν κλαδεύει μπορεί να χάσει ένα μεγάλο κλαδί, ή να πέσει, στην επόμενη καταιγίδα. Πέφτοντας πάνω στους παλιούς τοίχους, ρίχνει τις πέτρες της κορυφής τους."
+      }
+    },
+    "R9b_temp_st": {
+      "picture": "stone",
+      "text": {
+        "en": "Stone and plaster grow when warm and shrink when cool. Fast changes, again and again, open tiny cracks: flakes fall off the surface, and the carved shapes wear away.",
+        "el": "Η πέτρα και ο σοβάς μεγαλώνουν στη ζέστη και μικραίνουν στο κρύο. Οι γρήγορες αλλαγές, ξανά και ξανά, ανοίγουν μικρές ρωγμές: η επιφάνεια ξεφλουδίζει και τα σκαλισμένα σχήματα φθείρονται."
+      }
+    },
+    "R4c_hum_rapid_1h": {
+      "picture": "fresco",
+      "text": {
+        "en": "When the damp changes fast, the paint and the wall under it move differently. The paint lifts in small flakes, and pieces of the painting fall off.",
+        "el": "Όταν η υγρασία αλλάζει γρήγορα, η μπογιά και ο τοίχος από κάτω κινούνται διαφορετικά. Η μπογιά σηκώνεται σε μικρά λέπια και κομμάτια της τοιχογραφίας πέφτουν."
+      }
+    },
+    "R8_baro": {
+      "picture": "tree",
+      "text": {
+        "en": "A storm brings strong wind and heavy rain. Branches that nobody cut back fall on the walls, and water runs into every crack.",
+        "el": "Μια καταιγίδα φέρνει δυνατό αέρα και πολλή βροχή. Κλαδιά που κανείς δεν έκοψε πέφτουν στους τοίχους και το νερό τρέχει μέσα σε κάθε ρωγμή."
+      }
+    }
+  },
   "missions": {
     "_about": "Three scenario keys per priority level. Lucretili has no Low or Medium scenarios. The Catastrophic mission includes the loss of dry-stone-walling knowledge on purpose: no sensor can warn about it, which the score screen teaches (it is not scored).",
     "Catastrophic priority": [
