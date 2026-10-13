@@ -1142,7 +1142,7 @@ const browser = await chromium.launch({
 });
 try {
   const only = process.env.SCREENSHOT_ONLY; // e.g. "monuments" to run just that part
-  if (!only) for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
+  if (!only || only === "play") for (const lang of ["el", "en"]) for (const vp of Object.keys(VIEWPORTS)) await play(browser, lang, vp);
   if (!only) for (const lang of ["el", "en"]) await playLowLevel(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playKeepsChosenLevel(browser, lang);
   if (!only || only === "sound") for (const lang of ["el", "en"]) await checkSound(browser, lang);

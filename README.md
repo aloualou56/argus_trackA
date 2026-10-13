@@ -60,7 +60,7 @@ npm run screenshots  # needs a build: plays the game in Edge, saves docs/screens
   message, never an empty page).
 
 It runs axe (WCAG 2.2 A/AA) on each screen and checks that no focused control is hidden under a bar or a card (WCAG 2.4.11). Options: `BROWSER_CHANNEL=chrome`, `BROWSER_PATH=/path/to/chromium`,
-`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=monuments|imagery|class|week|sound|history|read-aloud|a11y|offline|bad-data` (one
+`SCREENSHOT_DIR=...` (save elsewhere), `SCREENSHOT_ONLY=play|monuments|imagery|class|week|sound|history|read-aloud|a11y|offline|bad-data` (one
 part). It also reports when map tiles cannot load, which is expected in sandboxes without internet.
 
 `web/dist` is a static site with relative paths: any static host serves it as is. The public copy is on a
@@ -396,6 +396,10 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
 solid map labels), less motion (the map jumps instead of flying, nothing animates; shown on and locked when the device
 already asks for it), wider text spacing (letters, words, lines and paragraphs, the WCAG 1.4.12 kind), sound and
 vibration (each with its own switch). Each choice is remembered on the device and applied before the page is drawn.
+The text size grows the page's text, not the map's own furniture (labels, legend, buttons, pins): on a phone the map
+is a strip, and furniture half as big again would bury it, so its sizes are divided by `--text-scale`; what the map's
+labels say is also in the panel, which does grow. The top band puts its buttons below the title when the title needs
+the room.
 It is a button and a panel of native controls: Escape closes it and gives the focus back, and tabbing out of it closes
 it too. While placing sensors on a phone the top band is hidden, so the "?" card has the sound and vibration
 switches.
@@ -475,6 +479,7 @@ native speaker has checked yet**; the game says so in its footer in those langua
   satellite position receiver (GNSS), which would need four lines; its full name shows in the info line.
 - A first visit starts in the browser's language when the game speaks it, otherwise in Greek. The choice in the
   language menu is remembered on the device.
+- The whole story's chapters (`content/history/`) are translated too (all 424 content texts in each language).
 - To add a language: add it to `Lang` in `web/src/game/types.ts`, `LANGS` in `web/src/i18n/index.tsx` and
   `TRANSLATION_LANGS` in `tools/build_game_data.py`, then add the two files above.
 

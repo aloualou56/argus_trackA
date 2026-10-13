@@ -561,6 +561,12 @@ export function GameMap(props: Props) {
     const pins = spreadRef.current;
     if (!pins.length) return;
     const at = pins.map((p) => map.latLngToLayerPoint(p.at));
+    // A pin with its popup open stays where it is drawn: moving it would move the popup, which pans
+    // the map, which would move the pin again.
+    const held = pins.map((p) => p.fixed || p.marker.isPopupOpen());
+    pins.forEach((p, k) => {
+      if (p.marker.isPopupOpen()) at[k] = map.latLngToLayerPoint(p.marker.getLatLng());
+    });
     // The map's own controls (zoom, legend, scale, credits, the map picker, "Places") never cover a
     // pin either: a pin under one is moved out from under it.
     const box = map.getContainer().getBoundingClientRect();
@@ -569,15 +575,18 @@ export function GameMap(props: Props) {
     ) ?? [])]
       .map((el) => el.getBoundingClientRect())
       .filter((r) => r.width > 0 && r.height > 0)
+      // (12 px clear: a small target, such as the credits' link, needs no other target within 12 px)
       .map((r) => ({
-        min: map.containerPointToLayerPoint([r.left - box.left - 2, r.top - box.top - 2]),
-        max: map.containerPointToLayerPoint([r.right - box.left + 2, r.bottom - box.top + 2]),
+        min: map.containerPointToLayerPoint([r.left - box.left - 12, r.top - box.top - 12]),
+        max: map.containerPointToLayerPoint([r.right - box.left + 12, r.bottom - box.top + 12]),
       }));
-    for (let round = 0; round < 24; round++) {
+    const intoBlock = (c: L.Point, size: number) =>
+      blocks.some((b) => c.x + size / 2 > b.min.x && c.x - size / 2 < b.max.x && c.y + size / 2 > b.min.y && c.y - size / 2 < b.max.y);
+    for (let round = 0; round < 200; round++) { // (a crowded map near its controls needs many small steps)
       let moved = false;
       for (let i = 0; i < pins.length; i++) {
         for (let j = i + 1; j < pins.length; j++) {
-          if (pins[i].fixed && pins[j].fixed) continue;
+          if (held[i] && held[j]) continue;
           // A pin is a square target: two overlap unless they are apart along one of the axes, so
           // they are pushed apart along the axis that needs the smaller move.
           const room = (pins[i].size + pins[j].size) / 2 + 2;
@@ -587,15 +596,22 @@ export function GameMap(props: Props) {
           const oy = room - Math.abs(dy);
           if (ox <= 0 || oy <= 0) continue;
           // (two pins on the same spot: the later one goes right, or down, the same at every zoom)
-          const [px, py] = ox <= oy ? [(dx < 0 ? -1 : 1) * ox, 0] : [0, (dy < 0 ? -1 : 1) * oy];
-          const [mi, mj] = pins[i].fixed ? [0, 1] : pins[j].fixed ? [1, 0] : [0.5, 0.5];
+          const [mi, mj] = held[i] ? [0, 1] : held[j] ? [1, 0] : [0.5, 0.5];
+          const across: [number, number] = [(dx < 0 ? -1 : 1) * ox, 0];
+          const along: [number, number] = [0, (dy < 0 ? -1 : 1) * oy];
+          // The shorter way apart, unless it pushes a pin into a control: then the other way.
+          const lands = ([qx, qy]: [number, number]) =>
+            !intoBlock(at[i].subtract(L.point(qx * mi, qy * mi)), pins[i].size) &&
+            !intoBlock(at[j].add(L.point(qx * mj, qy * mj)), pins[j].size);
+          const [first, second] = ox <= oy ? [across, along] : [along, across];
+          const [px, py] = lands(first) || !lands(second) ? first : second;
           at[i] = at[i].subtract(L.point(px * mi, py * mi));
           at[j] = at[j].add(L.point(px * mj, py * mj));
           moved = true;
         }
       }
       for (let i = 0; i < pins.length; i++) {
-        if (pins[i].fixed) continue;
+        if (held[i]) continue;
         const half = pins[i].size / 2;
         for (const b of blocks) {
           const left = at[i].x + half - b.min.x; // how far to move left to clear it
@@ -612,7 +628,11 @@ export function GameMap(props: Props) {
       }
       if (!moved) break;
     }
-    pins.forEach((p, k) => p.marker.setLatLng(map.layerPointToLatLng(at[k])));
+    // Only pins that really move: moving a pin moves its open popup, which pans the map, which
+    // spreads the pins again; an unchanged pin left alone ends that loop.
+    pins.forEach((p, k) => {
+      if (map.latLngToLayerPoint(p.marker.getLatLng()).distanceTo(at[k]) > 0.5) p.marker.setLatLng(map.layerPointToLatLng(at[k]));
+    });
   }
 
   /** A pin's popup opens clear of the phone's floating bars while placing sensors (their heights

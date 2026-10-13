@@ -145,6 +145,7 @@ main:focus {
 }
 .topbar-inner {
   display: flex;
+  flex-wrap: wrap; /* large text: the buttons go below the title rather than over it */
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
@@ -1279,12 +1280,7 @@ textarea.input {
 .leaflet-control-attribution {
   font-size: 11px;
 }
-/* the credits' link is a target of its own: at least 24 px tall (WCAG 2.5.8) */
-.leaflet-control-attribution a {
-  display: inline-block;
-  min-height: 24px;
-  line-height: 24px;
-}
+
 
 .map-switch {
   position: absolute;
@@ -1307,7 +1303,7 @@ textarea.input {
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem / var(--text-scale, 1));
   font-weight: 650;
   cursor: pointer;
 }
@@ -1378,7 +1374,7 @@ textarea.input {
   border-radius: 3px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem / var(--text-scale, 1));
   font-weight: 650;
   white-space: nowrap;
   pointer-events: none;
@@ -1395,7 +1391,7 @@ textarea.input {
   padding: 0.35rem 0.6rem;
   border-radius: 0.5rem;
   background: rgb(255 255 255 / 0.95);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem / var(--text-scale, 1));
   font-weight: 600;
 }
 .legend-you,
@@ -1428,7 +1424,7 @@ textarea.input {
   border: 1px solid var(--edge);
   border-radius: 0.5rem;
   background: var(--surface);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem / var(--text-scale, 1));
   line-height: 1.35;
 }
 .map-notice p {
@@ -1442,7 +1438,7 @@ textarea.input {
   border-radius: 0.4rem;
   background: transparent;
   color: var(--ink);
-  font-size: 1.4rem;
+  font-size: calc(1.4rem / var(--text-scale, 1));
   cursor: pointer;
 }
 
@@ -1450,7 +1446,7 @@ textarea.input {
   position: relative;
   display: grid;
   place-items: center;
-  font-size: 0.9375rem;
+  font-size: calc(0.9375rem / var(--text-scale, 1));
   width: 2em; /* 30 px at normal size; grows with large text */
   height: 2em;
   border: 2px solid #fff;
@@ -1501,14 +1497,14 @@ textarea.input {
 .alarm-label,
 .site-label {
   font: inherit;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem / var(--text-scale, 1));
   font-weight: 700;
   color: var(--ink);
 }
 /* long names (Greek especially) wrap instead of running off the map */
 .leaflet-tooltip.alarm-label {
   width: max-content;
-  max-width: 11rem;
+  max-width: min(calc(11rem / var(--text-scale, 1)), 42vw); /* fits beside the ring on a narrow map */
   white-space: normal;
 }
 .site-label.is-soon {
@@ -1653,7 +1649,7 @@ textarea.input {
   border-radius: 50%;
   background: #fff;
   color: var(--ink);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem / var(--text-scale, 1));
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
@@ -1665,7 +1661,7 @@ textarea.input {
 }
 .place-label {
   font: inherit;
-  font-size: 0.8rem;
+  font-size: calc(0.8rem / var(--text-scale, 1));
   font-weight: 700;
   color: var(--ink);
 }
@@ -2090,7 +2086,7 @@ body.is-dragging-sensor .board-map .map {
   border: 1px solid var(--edge);
   background: var(--surface);
   color: var(--ink);
-  font-size: 0.9rem;
+  font-size: calc(0.9rem / var(--text-scale, 1));
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
 }
 .places-count {
@@ -2102,7 +2098,7 @@ body.is-dragging-sensor .board-map .map {
   border-radius: 999px;
   background: var(--ink);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem / var(--text-scale, 1));
   font-weight: 800;
 }
 .places-panel {
@@ -3034,7 +3030,7 @@ b {
 }
 .site-label {
   font-family: var(--display);
-  font-size: 1.2rem;
+  font-size: calc(1.2rem / var(--text-scale, 1));
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1;
@@ -3049,7 +3045,7 @@ b {
   border-top: 0;
   background: rgb(255 255 255 / 0.88);
   color: var(--ink);
-  font-size: 0.68rem;
+  font-size: calc(0.68rem / var(--text-scale, 1));
   line-height: 1.5;
   text-shadow: none;
   text-transform: none; /* "m" and "km" are units, not words */
@@ -3075,7 +3071,7 @@ b {
   border-radius: 3px;
   background: rgb(255 255 255 / 0.88);
   color: var(--ink);
-  font-size: 0.68rem;
+  font-size: calc(0.68rem / var(--text-scale, 1));
   white-space: nowrap;
   pointer-events: none;
 }
@@ -3913,7 +3909,6 @@ b {
   .brand,
   .brand:disabled {
     flex: 1 1 auto;
-    min-width: 0;
     font-size: clamp(1rem, 4.6vw, 1.25rem);
     line-height: 0.95;
     white-space: normal;
@@ -4085,7 +4080,7 @@ b {
   .app.is-play .map-switch button {
     min-height: 36px;
     padding: 0 0.5rem;
-    font-size: 0.75rem;
+    font-size: calc(0.75rem / var(--text-scale, 1));
   }
   .app.is-play .leaflet-bar a,
   .app.is-play .leaflet-touch .leaflet-bar a {
@@ -4101,7 +4096,7 @@ b {
   .app.is-play .places-toggle {
     min-height: 36px;
     padding: 0.25rem 0.55rem;
-    font-size: 0.82rem;
+    font-size: calc(0.82rem / var(--text-scale, 1));
   }
   .app.is-play .board-map .map-coords {
     display: none;
@@ -4298,6 +4293,7 @@ b {
 
 .topbar-tools {
   position: relative;
+  margin-left: auto; /* on a second row, still at the right */
 }
 .a11y-panel {
   position: absolute;
@@ -4439,3 +4435,8 @@ html.a11y-spacing main p {
     max-width: calc(100% - 76px);
   }
 }
+
+/* The menu's text size (a11y/settings.ts) grows the page's text, not the map's own furniture: on a
+   phone the map is a strip, and labels, legend, buttons and pins half as big again would bury it.
+   Those sizes are divided by --text-scale, so the map looks the same; what its labels say is also
+   in the panel, which does grow. (A phone's own font-size setting still grows everything.) */

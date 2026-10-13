@@ -39,6 +39,9 @@ export function applySettings(s: A11ySettings = current): void {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
   root.style.fontSize = s.textSize === 100 ? "" : `${s.textSize}%`;
+  // (the map's furniture divides its sizes by this, so the map keeps its normal size: styles.css)
+  if (s.textSize === 100) root.style.removeProperty("--text-scale");
+  else root.style.setProperty("--text-scale", String(s.textSize / 100));
   root.classList.toggle("a11y-contrast", s.contrast);
   root.classList.toggle("a11y-motion", s.lessMotion);
   root.classList.toggle("a11y-spacing", s.spacing);
