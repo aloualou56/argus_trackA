@@ -19,7 +19,7 @@
   },
   "de": {
    "provider": "elevenlabs",
-   "voice": "IWm8DnJ4NGjFI7QAM5lM eleven_flash_v2_5"
+   "voice": "IWm8DnJ4NGjFI7QAM5lM eleven_multilingual_v2"
   }
  },
  "clips": {
