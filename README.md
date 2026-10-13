@@ -213,9 +213,8 @@ shows the main signal and its share, not the anomaly score against its limit.
   own switch in the accessibility menu, so a class can play silently and still feel it.
 - **Read aloud** (`web/src/audio/narration.ts`, `speech.ts`, `ReadAloud.tsx`): on the story screen (the story and
   the mission's danger), on each chapter of the whole story and on the alarm screen (what was measured and the
-  answer). Greek and English play **recorded voices** (ElevenLabs, see "Recorded narration" below), line by line;
-  any line without a recording, and the other languages, use the device's own voice (the Web Speech API), a little
-  slower than usual. A device with neither offers no "Read aloud" rather than reading Greek with an English voice.
+  answer). All five languages play **recorded voices** (see "Recorded narration" below), line by line; any line
+  without a recording uses the device's own voice (the Web Speech API), a little slower than usual. A device with neither offers no "Read aloud" rather than reading Greek with an English voice.
   It stops on a second press, on a new chapter and on leaving the screen.
 - **Order and the alarm replay:** story → mission → a real alarm → reveal → score. After "Done" (and after "Go on to
   day N" in a week on duty, for each later day) the day's real alarm plays on the map for about three seconds (less
@@ -537,35 +536,40 @@ python3 -I tools/class_server.py --lan --online-maps   # allow satellite and str
 - Over plain `http://` on a school network browsers offer no service worker, so there the game needs the server
   for each page load (on 127.0.0.1 it still works offline after the first visit).
 
-## Recorded narration (ElevenLabs)
+## Recorded narration (Azure or ElevenLabs)
 
-"Read aloud" plays studio-quality voices for Greek and English, recorded once with ElevenLabs and shipped as MP3
-files in `web/public/audio/` (with `manifest.json`). The words come from `web/src/audio/narration.ts`, the same code
-the screens use, so a recording always matches the screen. Each line is one clip named by a hash of its words: when a
-text changes, only that line is recorded again, and until then it is read by the device's voice. About 230 lines per
-language, about 27,000 characters in Greek and 23,000 in English (ElevenLabs bills per character).
+"Read aloud" plays natural recorded voices in all five languages, recorded once and shipped as MP3 files in
+`web/public/audio/` (with `manifest.json`). The default service is **Microsoft Azure Speech** (neural voices: Athina
+for Greek, Sonia, Elsa, Elvira and Leni for English, Italian, Spanish and Swiss German); its free tier (about
+500,000 characters a month) covers everything. **ElevenLabs** is the alternative (`"provider": "elevenlabs"`).
+The words come from `web/src/audio/narration.ts`, the same code the screens use, so a recording always matches the
+screen. Each line is one clip named by a hash of its words: when a text changes, only that line is recorded again,
+and until then it is read by the device's voice. 231 lines per language, about 130,000 characters in all.
 
 ```sh
 cd web
 npm run narration -- --dry-run                 # what would be recorded and how many characters (free, no key)
-# Windows PowerShell:  $env:ELEVENLABS_API_KEY="..."   macOS/Linux:  export ELEVENLABS_API_KEY=...
-npm run narration -- --voices                  # the voices in your ElevenLabs account
-#   put one voice_id per language in content/narration.json (a native Greek voice for "el")
+# Azure: create a "Speech" resource in the Azure portal (free F0 tier), then
+#   Windows PowerShell:  $env:AZURE_SPEECH_KEY="..."; $env:AZURE_SPEECH_REGION="westeurope"
+#   macOS/Linux:         export AZURE_SPEECH_KEY=... AZURE_SPEECH_REGION=westeurope
+npm run narration -- --voices --lang el        # the voices for a language (to change one in content/narration.json)
 npm run narration -- --lang el --limit 5       # five Greek lines first: listen in web/public/audio/el/
-npm run narration                              # everything that is missing, both languages
+npm run narration                              # everything that is missing, all five languages
 npm run narration -- --prune                   # remove recordings no text uses any more
 ```
 
-- The key is read from `ELEVENLABS_API_KEY` only; never put it in a file of this repository.
-- `content/narration.json`: model (`eleven_multilingual_v2`), voice settings (a little slower, for children) and
-  `say_as` pronunciation fixes used only in the recording (e.g. ARGUS → «Άργκους» in Greek; needs review).
-  Invisible hyphenation marks and " · " are cleaned before recording. After changing a voice or settings, run with
-  `--redo`.
+- Keys are read from environment variables only (`AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`, or
+  `ELEVENLABS_API_KEY`); never put them in a file of this repository.
+- `content/narration.json`: the service, one voice per language, the speaking rate (a little slower, for children)
+  and `say_as` pronunciation fixes used only in the recording (e.g. ARGUS → «Άργκους» in Greek; needs review).
+  Invisible hyphenation marks and " · " are cleaned before recording. After changing the service, a voice or the
+  settings, run with `--redo`.
+- Italian, Spanish and German use the translated content in `web/public/data/i18n/`, as the game does.
 - Progress is saved after every clip, so an interrupted run continues where it stopped; failed lines are retried
-  on the next run.
+  on the next run. Then commit `web/public/audio/`.
 - Offline: clips are not downloaded up front; each one is kept by the service worker the first time it plays.
-- Licence: on a free ElevenLabs plan the audio needs attribution to ElevenLabs and is non-commercial; a paid plan
-  gives a commercial licence. Check before publishing.
+- Licence: check the service's terms before publishing (ElevenLabs' free plan requires attribution and is
+  non-commercial; Azure's terms allow using the generated audio in your application).
 
 ## Offline
 

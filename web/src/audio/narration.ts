@@ -1,4 +1,4 @@
-// Recorded narration (ElevenLabs voices for Greek and English, made by scripts/narration.ts).
+// Recorded narration in all five languages (Azure or ElevenLabs voices, made by scripts/narration.ts).
 //
 // What the game reads aloud is built here, by the same functions for the screens and for the script
 // that records it, so a recording always matches the words on screen. Each line of a text is one
@@ -17,8 +17,8 @@ import type { I18n } from "../i18n";
 
 type Words = Pick<I18n, "lang" | "t" | "pick" | "list" | "date">;
 
-/** Languages with recorded voices; the others use the device's voice. */
-export const NARRATED_LANGS = ["el", "en"] as const;
+/** Languages with recorded voices (a language without recordings uses the device's voice). */
+export const NARRATED_LANGS = ["el", "en", "it", "es", "de"] as const;
 export type NarratedLang = (typeof NARRATED_LANGS)[number];
 
 /** The lines of a text, each read (and recorded) on its own. */
@@ -140,9 +140,8 @@ export function linesToRecord(w: Words, data: GameData): string[] {
 
 export interface NarrationManifest {
   version: 1;
-  /** Which voice read each language (shown in the credits). */
-  voices: Partial<Record<NarratedLang, { name: string; voice_id: string }>>;
-  model: string;
+  /** Which service and voice read each language (for the credits, and to know when to record again). */
+  voices: Partial<Record<NarratedLang, { provider: string; voice: string }>>;
   /** Recorded lines per language: key -> the exact words (for review and pruning). */
   clips: Partial<Record<NarratedLang, Record<string, string>>>;
 }

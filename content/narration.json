@@ -1,20 +1,40 @@
 {
-  "_about": "AUTHORED by the game team. Settings for the recorded narration (web/scripts/narration.ts, ElevenLabs). Choose one voice per language: run `npm run narration -- --voices` in web/ to list the voices of your ElevenLabs account, then put the voice_id and name here. A native Greek voice for el sounds much better than an English voice speaking Greek. 'say_as' changes how a word is pronounced in the recording only (the screen keeps the original): e.g. the project name ARGUS, which a Greek voice may otherwise spell out. Changing a voice, the model or the settings needs `--redo` to record everything again with them. Needs review: the pronunciation of ARGUS in Greek.",
-  "model_id": "eleven_multilingual_v2",
-  "output_format": "mp3_44100_64",
-  "voice_settings": {
-    "stability": 0.55,
-    "similarity_boost": 0.8,
-    "style": 0.1,
-    "use_speaker_boost": true,
-    "speed": 0.95
+  "_about": "AUTHORED by the game team. Settings for the recorded narration (web/scripts/narration.ts). 'provider' picks the service: 'azure' (Microsoft Azure Speech, default: natural Greek voices, the free tier covers all five languages) or 'elevenlabs'. List the voices a service offers with `npm run narration -- --voices --lang el` in web/. 'say_as' changes how a word is pronounced in the recording only (the screen keeps the original), e.g. the project name ARGUS, which a Greek voice may otherwise spell out. After changing the provider, a voice or the settings, run with `--redo`. Needs review: the voices (listen to a few lines first) and the pronunciation of ARGUS in Greek.",
+  "provider": "azure",
+  "azure": {
+    "output_format": "audio-24khz-48kbitrate-mono-mp3",
+    "rate": "-5%",
+    "voices": {
+      "el": "el-GR-AthinaNeural",
+      "en": "en-GB-SoniaNeural",
+      "it": "it-IT-ElsaNeural",
+      "es": "es-ES-ElviraNeural",
+      "de": "de-CH-LeniNeural"
+    }
   },
-  "voices": {
-    "el": { "voice_id": null, "name": null },
-    "en": { "voice_id": null, "name": null }
+  "elevenlabs": {
+    "model_id": "eleven_multilingual_v2",
+    "output_format": "mp3_44100_64",
+    "voice_settings": {
+      "stability": 0.55,
+      "similarity_boost": 0.8,
+      "style": 0.1,
+      "use_speaker_boost": true,
+      "speed": 0.95
+    },
+    "voices": {
+      "el": null,
+      "en": null,
+      "it": null,
+      "es": null,
+      "de": null
+    }
   },
   "say_as": {
     "el": { "ARGUS": "Άργκους" },
-    "en": {}
+    "en": {},
+    "it": {},
+    "es": {},
+    "de": {}
   }
 }

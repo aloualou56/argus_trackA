@@ -12,9 +12,18 @@ import {
 } from "../src/audio/narration";
 import { cardById, detects, isPlayable, ruleFor } from "../src/game/logic";
 import type { GameData } from "../src/game/types";
-import { makeI18n } from "../src/i18n";
+import { isBaseLang, makeI18n, type ContentPack } from "../src/i18n";
 
 const data = JSON.parse(readFileSync(new URL("../public/data/game_data.json", import.meta.url), "utf8")) as GameData;
+
+/** The words of a language as the game has them, with the translated content for it, es and de. */
+function wordsFor(lang: (typeof NARRATED_LANGS)[number]) {
+  if (isBaseLang(lang)) return makeI18n(lang);
+  const pack = JSON.parse(readFileSync(new URL(`../public/data/i18n/${lang}.json`, import.meta.url), "utf8")) as {
+    strings: ContentPack;
+  };
+  return makeI18n(lang, pack.strings);
+}
 
 describe("narration texts", () => {
   it("are read line by line", () => {
@@ -29,9 +38,10 @@ describe("narration texts", () => {
 
   for (const lang of NARRATED_LANGS) {
     it(`cover every monument in ${lang}, with no unfilled placeholder`, () => {
-      const lines = linesToRecord(makeI18n(lang), data);
+      const w = wordsFor(lang);
+      const lines = linesToRecord(w, data);
       for (const mon of data.monuments.filter(isPlayable)) {
-        expect(lines, mon.pilot_key).toContain(mon.story.text[lang].replace(/\s+/g, " ").trim());
+        expect(lines, mon.pilot_key).toContain(narrationParts(w.pick(mon.story.text))[0]);
       }
       for (const line of lines) {
         expect(line).not.toMatch(/\{\w+\}/);
@@ -40,7 +50,7 @@ describe("narration texts", () => {
     });
 
     it(`include what the alarm screen says for any network the player can build (${lang})`, () => {
-      const w = makeI18n(lang);
+      const w = wordsFor(lang);
       const lines = new Set(linesToRecord(w, data));
       const ids = [...cardById(data).keys()];
       let seed = 7;
@@ -59,6 +69,15 @@ describe("narration texts", () => {
       }
     });
   }
+
+  it("are translated, not English, in Italian, Spanish and German", () => {
+    const english = new Set(linesToRecord(makeI18n("en"), data));
+    for (const lang of ["it", "es", "de"] as const) {
+      const lines = linesToRecord(wordsFor(lang), data);
+      const same = lines.filter((line) => english.has(line)).length;
+      expect(same / lines.length, lang).toBeLessThan(0.1);
+    }
+  });
 
   it("are the same words for the screens and the recordings", () => {
     const w = makeI18n("el");
