@@ -2531,17 +2531,15 @@ b {
 .is-info .status-tag {
   color: var(--muted);
 }
-/* The alarm's answer keeps its tint; its verdict moves from a side stripe to the rule above. */
+/* The alarm's answer is a tinted block with no stripe or rule: its icon (a tick or a cross) and
+   its first word ("Yes" / "No") carry the verdict. */
 .result {
   border-radius: 0;
 }
-.result.is-yes {
-  border-left: 0;
-  border-top: 4px solid var(--yes);
-}
+.result.is-yes,
 .result.is-no {
   border-left: 0;
-  border-top: 4px dashed var(--no);
+  border-top: 0;
 }
 .argus-quote {
   background: var(--surface);

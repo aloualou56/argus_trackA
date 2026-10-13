@@ -308,8 +308,9 @@ The game is played on a map of real monuments, so it looks like one: a survey sh
 - **Blocks, not cards:** notes are tinted blocks on the white sheet. Inverted (survey green) blocks are kept for
   the player's next move: the mission on the story screen and the week on duty.
 - **Notes with a rule above, never a stripe at the side:** the danger on the story screen and every note that
-  carries a verdict (what each danger needed, quiz answers, the decision, the alarm) sit under a rule. The rule's
-  line says the verdict as well as its colour: solid = yes, dashed = no, double = partly.
+  carries a verdict (what each danger needed, quiz answers, the decision) sit under a rule. The rule's line says
+  the verdict as well as its colour: solid = yes, dashed = no, double = partly. The alarm's answer is the exception:
+  a tinted block with no rule, whose tick or cross and first word ("Yes" / "No") say it.
 - **A rating is a scale, not a badge:** what is rated in small capitals, then five rising steps and the level in
   words (`web/src/components/LevelBadge.tsx`). The experts' rating wears the ARGUS vermilion, because it is ARGUS
   data like the vermilion pins on the map.
