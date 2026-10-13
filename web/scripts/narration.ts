@@ -280,6 +280,16 @@ function prune(manifest: NarrationManifest, lang: NarratedLang, wanted: Map<stri
   }
 }
 
+/**
+ * The start of a line for the progress log, cut at a whole word with "…" and its full length: the whole
+ * line is always what is recorded (see --dry-run --verbose for the full texts).
+ */
+function preview(line: string, max = 70): string {
+  if (line.length <= max) return line;
+  const cut = line.slice(0, max);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), 40))}… (${line.length} characters, recorded in full)`;
+}
+
 // ---------------------------------------------------------------- main
 
 /** One clip of any text, to listen to a voice before recording everything with it. */
@@ -380,10 +390,10 @@ async function main(): Promise<void> {
           writeFileSync(join(AUDIO, lang, `${k}.mp3`), await service.record(lang, sayAs(lang, line)));
           target[k] = line;
           writeManifest(manifest); // progress is kept if the run stops
-          console.log(`  ${lang} ${Object.keys(target).length}/${lines.length}  ${line.slice(0, 70)}`);
+          console.log(`  ${lang} ${Object.keys(target).length}/${lines.length}  ${preview(line)}`);
         } catch (e) {
           failures++;
-          console.error(`  failed: ${line.slice(0, 70)}\n    ${(e as Error).message}`);
+          console.error(`  failed: ${preview(line)}\n    ${(e as Error).message}`);
         }
       }
     };
