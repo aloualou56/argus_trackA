@@ -8,9 +8,9 @@
 //   npm run narration -- --prune                delete recordings no text uses any more
 //   npm run narration -- --sample "Κείμενο" --lang el [--provider elevenlabs] [--voice <id>]
 //                                               one test clip, to compare voices (web/narration-samples/)
-//   npm run narration -- --library --lang el [--gender female]
-//                                               ElevenLabs: the most used library voices of a language, with
-//                                               a free preview link for each (no credits)
+//   npm run narration -- --library --lang el [--gender female] [--search "name"]
+//                                               ElevenLabs: the most used library voices of a language (or
+//                                               those matching a name), with a free preview link (no credits)
 //   npm run narration -- --add <owner>:<voice> --name "Greek narrator"
 //                                               ElevenLabs: add a library voice to your account (prints its id)
 //
@@ -82,7 +82,7 @@ interface Service {
   /** Credits left in the account, when the service tells. */
   balance(): Promise<number | null>;
   /** Library voices of a language, most used first (ElevenLabs only). */
-  library?(lang: NarratedLang, gender?: string): Promise<void>;
+  library?(lang: NarratedLang, gender?: string, search?: string): Promise<void>;
   /** Adds a library voice to the account and returns its id (ElevenLabs only). */
   addVoice?(owner: string, voiceId: string, name: string): Promise<string>;
 }
@@ -184,8 +184,8 @@ function elevenlabs(): Service {
       const sub = (await res.json()) as { character_count?: number; character_limit?: number };
       return typeof sub.character_limit === "number" ? sub.character_limit - (sub.character_count ?? 0) : null;
     },
-    async library(lang, gender) {
-      const params = new URLSearchParams({ page_size: "100", language: lang, ...(gender ? { gender } : {}) });
+    async library(lang, gender, search) {
+      const params = new URLSearchParams({ page_size: "100", language: lang, ...(gender ? { gender } : {}), ...(search ? { search } : {}) });
       const res = await request(`${api}/v1/shared-voices?${params}`, { headers });
       type Shared = {
         public_owner_id: string;
@@ -205,7 +205,7 @@ function elevenlabs(): Service {
       voices.sort(
         (a, b) => (b.usage_character_count_1y ?? 0) - (a.usage_character_count_1y ?? 0) || (b.cloned_by_count ?? 0) - (a.cloned_by_count ?? 0),
       );
-      console.log(`${lang}: ${voices.length} library voices; the 12 most used:`);
+      console.log(`${lang}${search ? ` "${search}"` : ""}: ${voices.length} library voices; the 12 most used:`);
       for (const v of voices.slice(0, 12)) {
         const about = [v.gender, v.age, v.accent, v.descriptive, v.use_case].filter(Boolean).join(", ");
         console.log(`\n  ${v.name}  (${about})  used by ${v.cloned_by_count ?? 0}`);
@@ -317,7 +317,7 @@ async function main(): Promise<void> {
   if (flag("library")) {
     service.check();
     if (!service.library) throw new Error("--library is for ElevenLabs (add --provider elevenlabs).");
-    for (const lang of option("lang") ? langs : (["el"] as NarratedLang[])) await service.library(lang, option("gender"));
+    for (const lang of option("lang") ? langs : (["el"] as NarratedLang[])) await service.library(lang, option("gender"), option("search"));
     return;
   }
   const add = option("add");
