@@ -4440,3 +4440,18 @@ html.a11y-spacing main p {
    phone the map is a strip, and labels, legend, buttons and pins half as big again would bury it.
    Those sizes are divided by --text-scale, so the map looks the same; what its labels say is also
    in the panel, which does grow. (A phone's own font-size setting still grows everything.) */
+
+/* Phones and small tablets: the game's name shows in the top band only on the first screen (it
+   is in the tab title on every screen). Elsewhere the band keeps the mark and its buttons on one
+   row, so the map has more room; the name stays for screen readers, as the mark button's name.
+   Wide screens have the room and keep it everywhere. */
+@media (max-width: 59.99rem) {
+  .app:not([data-screen="home"]) .brand > span:not(.brand-mark) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

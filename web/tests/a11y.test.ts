@@ -38,7 +38,7 @@ describe("accessibility settings", () => {
   it("are remembered, and anything odd that was saved is ignored", async () => {
     fakePage({ "guardian.a11y": JSON.stringify({ textSize: 125, contrast: true, lessMotion: "yes", spacing: false }) });
     let a = await import("../src/a11y/settings");
-    expect(a.getSettings()).toEqual({ textSize: 125, contrast: true, lessMotion: false, spacing: false });
+    expect(a.getSettings()).toEqual({ textSize: 125, contrast: true, lessMotion: false, spacing: false, fullScreen: true });
     vi.resetModules();
     fakePage({ "guardian.a11y": "{not json" });
     a = await import("../src/a11y/settings");

@@ -11,10 +11,12 @@ export interface A11ySettings {
   contrast: boolean;
   lessMotion: boolean;
   spacing: boolean;
+  /** Phones: the game goes full screen when a game starts (a11y/fullscreen.ts). */
+  fullScreen: boolean;
 }
 
 const KEY = "guardian.a11y";
-export const DEFAULTS: A11ySettings = { textSize: 100, contrast: false, lessMotion: false, spacing: false };
+export const DEFAULTS: A11ySettings = { textSize: 100, contrast: false, lessMotion: false, spacing: false, fullScreen: true };
 export const TEXT_SIZES: TextSize[] = [100, 125, 150];
 
 function load(): A11ySettings {
@@ -25,6 +27,7 @@ function load(): A11ySettings {
       contrast: saved.contrast === true,
       lessMotion: saved.lessMotion === true,
       spacing: saved.spacing === true,
+      fullScreen: saved.fullScreen !== false,
     };
   } catch {
     return { ...DEFAULTS };

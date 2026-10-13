@@ -845,6 +845,10 @@ async function checkA11yMenu(browser, lang) {
   await page.getByRole("button", { name: t["home.start"] }).click();
   await preQuiz(page, t);
   await page.getByRole("heading", { level: 1, name: ranverso.display_name[lang] }).waitFor();
+  // Start on a phone: the game has the whole screen (the menu's "Full screen", on by default).
+  if (!(await page.evaluate(() => !!document.fullscreenElement))) note(`${prefix}: "${t["home.start"]}" did not go full screen on a phone`);
+  // Phones only: away from the first screen the top band shows the mark without the game's name.
+  if (await page.locator(".brand > span:not(.brand-mark)").evaluate((e) => e.getBoundingClientRect().width > 2)) note(`${prefix}: the game's name still shows in the top band`);
   await checkPage(page, `${prefix} story, large text`);
   await toMission(page, t);
   await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "rain_gauge") }), exact: true }).click();

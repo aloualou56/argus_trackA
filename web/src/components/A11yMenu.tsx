@@ -7,6 +7,7 @@ import {
   useA11ySettings,
   type TextSize,
 } from "../a11y/settings";
+import { enterFullscreen, exitFullscreen, fullscreenAvailable } from "../a11y/fullscreen";
 import { onVibrationChange, setVibrationOn, vibrationLikely, vibrationOn } from "../audio/haptics";
 import { onSoundChange, play, setSoundOn, soundOn } from "../audio/sounds";
 import { useI18n, type MessageKey } from "../i18n";
@@ -51,6 +52,21 @@ export function A11ySettingsPanel({ compact = false }: { compact?: boolean }) {
             set: (on: boolean) => setSettings({ lessMotion: on }),
           },
           { key: "spacing", label: "a11y.spacing" as const, hint: "a11y.spacingHint" as const, checked: settings.spacing, set: (on: boolean) => setSettings({ spacing: on }) },
+          ...(fullscreenAvailable()
+            ? [
+                {
+                  key: "fullscreen",
+                  label: "a11y.fullscreen" as const,
+                  hint: "a11y.fullscreenHint" as const,
+                  checked: settings.fullScreen,
+                  set: (on: boolean) => {
+                    setSettings({ fullScreen: on });
+                    if (on) enterFullscreen();
+                    else exitFullscreen();
+                  },
+                },
+              ]
+            : []),
         ]),
     {
       key: "sound",
@@ -97,7 +113,7 @@ export function A11ySettingsPanel({ compact = false }: { compact?: boolean }) {
             </label>
             {s.hint && (
               <p id={`${id}-${s.key}-hint`} className="a11y-hint">
-                {t(s.hint)}
+                {t(s.hint, { start: t("home.start") })}
               </p>
             )}
           </li>

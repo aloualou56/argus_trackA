@@ -6,7 +6,8 @@ import { GameMap, type MapApi, type MapMode } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
 import { A11yMenu } from "./components/A11yMenu";
-import { motionReduced } from "./a11y/settings";
+import { enterFullscreen } from "./a11y/fullscreen";
+import { getSettings, motionReduced } from "./a11y/settings";
 import { play, playReplay } from "./audio/sounds";
 import { PhotoCredit } from "./components/PhotoCredit";
 import { Progress, STEPS, stepKey, type Step } from "./components/Progress";
@@ -235,6 +236,8 @@ export default function App() {
   };
 
   const start = (pilot: string, level: LevelId, mission?: string[], beat: number | null = null) => {
+    // Phones: the whole screen for the game (from this tap: browsers allow it only from one).
+    if (getSettings().fullScreen) enterFullscreen();
     const started = data?.monuments.find((m) => m.pilot_key === pilot);
     const own = started && isPlayable(started) ? (started.levels.find((l) => l.id === level)?.mission ?? []) : [];
     setGame({ ...fresh(), pilot, level, mission: mission ?? own, beat });

@@ -399,7 +399,13 @@ vibration (each with its own switch). Each choice is remembered on the device an
 The text size grows the page's text, not the map's own furniture (labels, legend, buttons, pins): on a phone the map
 is a strip, and furniture half as big again would bury it, so its sizes are divided by `--text-scale`; what the map's
 labels say is also in the panel, which does grow. The top band puts its buttons below the title when the title needs
-the room.
+the room. On phones and small tablets the game's name shows in the top band only on the first screen (it is in the
+tab title everywhere, and stays the mark button's name for screen readers); wide screens keep it.
+
+**Full screen on phones** (`web/src/a11y/fullscreen.ts`): pressing Start on a phone or small tablet puts the game in
+full screen (the browser's address bar and buttons step aside; the phone's back button leaves it). Browsers allow it
+only from a tap, hence Start. The menu's "Full screen" switch, shown only where the browser can do it, turns it off or
+on. Android browsers can; iPhones do not let a web page go full screen, so nothing changes there.
 It is a button and a panel of native controls: Escape closes it and gives the focus back, and tabbing out of it closes
 it too. While placing sensors on a phone the top band is hidden, so the "?" card has the sound and vibration
 switches.
