@@ -18,3 +18,6 @@ web/dist/
 
 # Records kept by tools/class_server.py on the teacher's computer (anonymous, but a class's own).
 class_data/
+
+# Test clips from `npm run narration -- --sample` (to compare voices; not part of the game).
+web/narration-samples/

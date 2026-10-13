@@ -6,6 +6,8 @@
 //   npm run narration                           record every line that has no recording yet
 //   npm run narration -- --redo                 record everything again (after changing a voice or settings)
 //   npm run narration -- --prune                delete recordings no text uses any more
+//   npm run narration -- --sample "Κείμενο" --lang el [--provider elevenlabs] [--voice <id>]
+//                                               one test clip, to compare voices (web/narration-samples/)
 //
 // Keys come from environment variables only; never put them in a file in this repository:
 //   Azure:      AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (e.g. westeurope); AZURE_SPEECH_ENDPOINT optional
@@ -147,7 +149,10 @@ function elevenlabs(): Service {
   };
 }
 
-const service = settings.provider === "elevenlabs" ? elevenlabs() : azure();
+// --provider and --voice override content/narration.json for this run (e.g. to try a voice).
+const provider = (option("provider") ?? settings.provider) as Settings["provider"];
+if (option("voice")) for (const lang of langs) settings[provider].voices[lang] = option("voice")!;
+const service = provider === "elevenlabs" ? elevenlabs() : azure();
 
 // ---------------------------------------------------------------- texts and manifest
 
@@ -199,7 +204,23 @@ function prune(manifest: NarrationManifest, lang: NarratedLang, wanted: Map<stri
 
 // ---------------------------------------------------------------- main
 
+/** One clip of any text, to listen to a voice before recording everything with it. */
+async function sample(text: string): Promise<void> {
+  service.check();
+  const dir = join(web, "narration-samples");
+  mkdirSync(dir, { recursive: true });
+  for (const lang of option("lang") ? langs : (["el"] as NarratedLang[])) {
+    const voice = settings[provider].voices[lang];
+    if (!voice) throw new Error(`No ${provider} voice for ${lang}: add --voice <id> (see --voices).`);
+    const file = join(dir, `${provider}-${lang}-${voice.replace(/[^\w.-]+/g, "_")}.mp3`);
+    writeFileSync(file, await service.record(lang, sayAs(lang, text)));
+    console.log(`wrote ${file}`);
+  }
+}
+
 async function main(): Promise<void> {
+  const sampleText = option("sample");
+  if (sampleText) return sample(sampleText);
   if (flag("voices")) {
     service.check();
     for (const lang of langs) await service.listVoices(lang);
@@ -218,7 +239,7 @@ async function main(): Promise<void> {
     }
     const clips = manifest.clips[lang] ?? {};
     const voice = service.voice(lang);
-    const sameVoice = manifest.voices[lang]?.provider === settings.provider && manifest.voices[lang]?.voice === voice;
+    const sameVoice = manifest.voices[lang]?.provider === provider && manifest.voices[lang]?.voice === voice;
     const missing = [...wanted].filter(([k, line]) => flag("redo") || !sameVoice || clips[k] !== line);
     const todo = missing.slice(0, limit);
     const chars = todo.reduce((n, [, line]) => n + sayAs(lang, line).length, 0);
@@ -233,11 +254,11 @@ async function main(): Promise<void> {
     }
     if (!todo.length) continue;
     service.check();
-    if (!voice) throw new Error(`No ${settings.provider} voice for ${lang} in content/narration.json (see --voices).`);
+    if (!voice) throw new Error(`No ${provider} voice for ${lang} in content/narration.json (see --voices).`);
 
     if (!sameVoice) {
       manifest.clips[lang] = {};
-      manifest.voices[lang] = { provider: settings.provider, voice };
+      manifest.voices[lang] = { provider, voice };
     }
     const target = (manifest.clips[lang] ??= {});
     mkdirSync(join(AUDIO, lang), { recursive: true });
