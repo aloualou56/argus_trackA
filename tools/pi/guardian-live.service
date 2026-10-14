@@ -1,0 +1,31 @@
+[Unit]
+Description=Guardian for a Day: the newest from ARGUS for the first screen
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Its own user, which can write only its state folder: it talks to the internet, so it gets
+# nothing else (not the site, not the deploy key).
+User=guardian-live
+Group=guardian-live
+StateDirectory=guardian-live
+StateDirectoryMode=0755
+ExecStart=/usr/bin/python3 -I /usr/local/bin/guardian-live --out /var/lib/guardian-live
+# The first run reads everything (a couple of minutes); later runs a page or two.
+TimeoutStartSec=15min
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=

@@ -1,0 +1,11 @@
+[Unit]
+Description=Guardian for a Day: read the newest from ARGUS every 15 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+RandomizedDelaySec=1min
+Unit=guardian-live.service
+
+[Install]
+WantedBy=timers.target

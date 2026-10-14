@@ -45,6 +45,21 @@ export interface RuleEntry {
   unit: string | null;
   unit_confirmed: boolean;
   needs_review: boolean;
+  /** A rule's own range of believable values, narrower than its sensor's (e.g. a daily range). */
+  plausible?: [number, number];
+}
+
+/** How the data build decides that an ARGUS alarm can be shown (tools/build_game_data.py, build_alarms):
+ *  the newest alarms on the first screen (game/live.ts) are kept by the same rules. */
+export interface AlarmFilter {
+  /** An AI alarm counts only when one signal drives at least this share of it. */
+  dl_min_share: number;
+  /** That signal's name -> the pseudo-rule it stands for (first match). */
+  dl_features: { match: string; rule: string }[];
+  /** Believable values of an expert-rule alarm, by its first card. */
+  plausible: Record<string, [number, number]>;
+  /** Cards on which a reading of exactly 0 is a sensor dropout. */
+  zero_is_suspect: string[];
 }
 
 export interface Scenario {
@@ -386,6 +401,7 @@ export interface GameData {
   mission_size: number;
   cards: { currency: string; groups: CardGroup[]; cards: Card[] };
   rule_sensor_map: Record<string, RuleEntry>;
+  alarm_filter: AlarmFilter;
   quiz: { questions: QuizQuestion[]; authored: true; needs_review: boolean };
   checklist: { items: ChecklistItem[]; report: Text; authored: true; needs_review: boolean };
   basemaps: { default: string; layers: Basemap[]; world: string | null };

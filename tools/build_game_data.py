@@ -1026,8 +1026,20 @@ def public_cards(content: Content) -> Dict[str, Any]:
 
 
 def public_rule_map(content: Content) -> Dict[str, Any]:
-    keep = ("detect_with", "measures", "unit", "unit_confirmed", "needs_review")
+    keep = ("detect_with", "measures", "unit", "unit_confirmed", "needs_review", "plausible")
     return {key: {k: v for k, v in entry.items() if k in keep} for key, entry in sorted(content.rules.items())}
+
+
+def public_alarm_filter(content: Content) -> Dict[str, Any]:
+    """How build_alarms decides that an alarm can be shown (its step 2), for the alarms ARGUS raises
+    after the snapshot: the newest readings on the home screen (web/src/game/live.ts) keep exactly
+    the ones the game would. Each rule's own range is in rule_sensor_map ('plausible')."""
+    return {
+        "dl_min_share": DL_MIN_SHARE,
+        "dl_features": [{"match": p["match"], "rule": p["rule"]} for p in content.dl_features],
+        "plausible": {card: list(lo_hi) for card, lo_hi in sorted(PLAUSIBLE_RANGES.items())},
+        "zero_is_suspect": sorted(ZERO_IS_SUSPECT),
+    }
 
 
 def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
@@ -1063,6 +1075,7 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
         "mission_size": MISSION_SIZE,
         "cards": public_cards(content),
         "rule_sensor_map": public_rule_map(content),
+        "alarm_filter": public_alarm_filter(content),
         "quiz": {"questions": content.raw["quiz"]["questions"], "authored": True,
                  "needs_review": bool(content.raw["quiz"].get("needs_review"))},
         "checklist": {"items": content.raw["checklist"]["items"], "report": content.raw["checklist"]["report"],

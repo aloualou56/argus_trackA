@@ -4824,3 +4824,50 @@ html.a11y-contrast .guardian-words::before {
 html.a11y-contrast .report-contact {
   border: 2px solid var(--ink);
 }
+
+/* ================================================================== live from ARGUS (LiveArgus.tsx) */
+/* On the first screen, the newest from ARGUS for the chosen monument: a tinted note like the others.
+   Its dot, when the data is from the last day and a half, pulses three times and then stays still
+   (nothing moves for more than five seconds); it is decoration, the heading says "live" in words. */
+.live-argus h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.live-dot {
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: live-pulse 1.6s ease-out 3;
+}
+@keyframes live-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgb(11 93 75 / 0.5);
+  }
+  to {
+    box-shadow: 0 0 0 0.65rem rgb(11 93 75 / 0);
+  }
+}
+.live-where {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.live-raised.is-active,
+.live-raised.is-escalated {
+  color: var(--no);
+}
+.live-source {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+@media (forced-colors: active) {
+  .live-dot {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}

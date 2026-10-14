@@ -31,6 +31,9 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== "GET" || url.origin !== self.location.origin) return; // tiles, shared store: network only
+  // The newest from ARGUS (written by the Pi every 15 minutes): network only, never stored, so an
+  // old copy is never shown as new; offline, the first screen simply goes without it.
+  if (url.pathname.includes("/live/")) return;
   if (request.mode === "navigate") {
     // The page: newest when online, the stored copy when offline. Query strings (?class=...) share it.
     event.respondWith(

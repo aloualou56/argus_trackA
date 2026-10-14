@@ -11,7 +11,8 @@ see the class's choices next to what ARGUS really installed.
 
 Status (13 Oct 2026): **all five ARGUS monuments are playable** (Delos, Baltanás, Monti Lucretili, Sant'Antonio di
 Ranverso, Schenkenberg), in Greek and English, offline after the first visit, with sound, and with a full-screen map
-for placing sensors on phones. **Play it: <http://pi-address.invalid/>**, a public copy on a
+for placing sensors on phones, and a "Live from ARGUS" box on the first screen with ARGUS's newest checks of each
+danger (see Publishing). **Play it: <http://pi-address.invalid/>**, a public copy on a
 Raspberry Pi that updates itself on every push to `main` (see Publishing). Italian, Spanish and German are machine
 translations waiting for native speakers (see Languages). All authored text still needs human review (see below). For
 teachers: [docs/teacher_guide.md](docs/teacher_guide.md).
@@ -97,6 +98,7 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `content/translations/<lang>.json` | Italian, Spanish and German content, keyed by the exact English text | machine-translated |
 | `tools/build_game_data.py` | joins snapshot + content, de-duplicates and filters alarms, validates everything | code |
 | `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison, map distances (pure, tested) | code |
+| `web/src/game/live.ts` | "Live from ARGUS" on the first screen: what of the Pi's newest ARGUS file to show (pure, tested) | code |
 | `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws, including the alarm replay | code |
 | `web/src/audio/sounds.ts` | the game's sounds, made in the browser with the Web Audio API (no audio files) | code |
 | `web/src/community/` | anonymous records: device store, optional Supabase store with offline queue, class codes | code |
@@ -107,13 +109,15 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `web/src/runtime.ts` | settings the page gets from where it is served (class server, local-only mode) | code |
 | `web/sw-template.js` | offline service worker; `vite.config.ts` writes `dist/sw.js` with the file list | code |
 | `.github/workflows/site.yml` | tests and builds every push to `main`; puts the built site on the `site` branch | code |
-| `tools/pi/` | the Raspberry Pi that serves the public copy: update script, timer, Caddy, setup | code |
+| `tools/pi/` | the Raspberry Pi that serves the public copy: update script, timers, Caddy, setup | code |
+| `tools/pi/guardian_live.py` | on the Pi, every 15 minutes: the newest checks and alarms from the ARGUS API, as one small file | code |
 | `docs/brand/logo.png` | the original logo; the icons and the mark are made from it | brand |
 | `web/src/i18n/{el,en}.json` | every UI string; Greek is the default | authored |
 | `web/src/i18n/{it,es,de}.json` | the same strings in Italian, Spanish and German | machine-translated |
 
 The browser loads only `game_data.json` (about 255 KB of data, 50 KB compressed) and, for Italian, Spanish or German,
-one content pack (`data/i18n/<lang>.json`, 16 KB compressed). It never loads `asset-states.json`.
+one content pack (`data/i18n/<lang>.json`, 16 KB compressed). On the public copy it also reads `live/argus-now.json`
+(about 20 KB, 3 KB compressed), written by the Pi. It never loads `asset-states.json`.
 
 ### The map
 
@@ -621,6 +625,7 @@ Every push to `main` goes live by itself, about two minutes later, and only if t
 push to main ──► GitHub Actions (.github/workflows/site.yml): data tests, web tests, build
                     └─► branch "site": the built site only (web/dist, about 3 MB), one commit, replaced each time
 Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/guardian ──► Caddy :8080 ──► playit.gg tunnel
+ARGUS API ──► every 15 minutes guardian-live ──► /var/lib/guardian-live/public ──► Caddy, as /live/argus-now.json
 ```
 
 - **The repository stays private.** The Pi has a read-only deploy key and fetches only the `site` branch, so the
@@ -634,6 +639,13 @@ Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/gua
 - **The tunnel** is playit.gg (the agent runs as `playit.service`): a TCP tunnel to `127.0.0.1:8080`, created in the
   playit.gg dashboard; its address is <http://pi-address.invalid/>. It is plain `http://`,
   so the offline mode, which browsers allow only over `https://`, is off there; the game itself works fully.
+- **Live from ARGUS.** The snapshot stops in October 2026, but ARGUS keeps watching. Every 15 minutes the Pi
+  (`tools/pi/guardian_live.py`, its own sandboxed user) asks the ARGUS API, read-only, for the records added since
+  its last run, and writes the latest check of each danger and the newest sensor alarms to one small file. The first
+  screen shows, for the chosen monument, last night's check (the dangers above "quiet", or the one nearest its
+  limit) and the newest alarm the game can explain, picked by the same rules as the game's own alarms
+  (`web/src/game/live.ts`). The Pi reads ARGUS, not the players' browsers: one reader for every visitor, and the
+  game keeps working if ARGUS is down. With no file, a check older than two weeks or offline, the box is not shown.
 - Setup, logs and how to set up a new Pi: [tools/pi/README.md](tools/pi/README.md).
 
 ## Next steps (to 24 October)
@@ -645,7 +657,7 @@ Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/gua
 | 13 Oct | Done: the public copy on the Raspberry Pi, updated on every push, at <http://pi-address.invalid/> (see Publishing) |
 | 16 Oct | Set up Supabase (optional); test a class code across two devices |
 | 20 Oct | Plan the Pi's operating-system upgrade (Debian 11 no longer gets security updates) |
-| 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor and the meaning of the AI alarms |
+| 18 Oct | Decide base-map licences; ask ARGUS about units, the stuck soil sensor, the meaning of the AI alarms, and whether showing their newest checks and alarms on the public copy is fine |
 | 22 Oct | **Playtest** with a class or visitors (pre/post quiz gives the evidence); manual screen-reader and keyboard audit |
 | 23 Oct | Fixes, short video, submission text |
 | 24 Oct | Submit (deadline 25 Oct, 23:59 Athens) |
@@ -658,6 +670,7 @@ Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/gua
   data. It is read-only input, and the repository must stay private unless the challenge's data terms allow
   publishing it. `game_data.json` holds only the fields the game needs.
 - The public copy holds only the built site (see Publishing); the Pi's deploy key can read this repository and
-  nothing else, and cannot write to it.
+  nothing else, and cannot write to it. The Pi's live file holds only what the ARGUS API gives anyone (no token):
+  the latest risk checks and sensor alarms, as ARGUS gave them.
 - The API spec (`specs.json`) and `test_api.py` live outside this folder. Never copy tokens or credentials into this
   repository; `.gitignore` excludes `test_api.py`, `.env` and `*.token` as a safety net.

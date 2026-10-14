@@ -7,6 +7,7 @@ import {
   argusCards,
   cardById,
   detects,
+  formatReading,
   humanCards,
   judgeDecision,
   missionScenarios,
@@ -146,8 +147,7 @@ export function HistoricalEvent({ data, mon, session, go, onDecide, today, days 
 
   const names = (ids: string[], type: "conjunction" | "disjunction" = "conjunction") =>
     list(ids.map((id) => pick(cards.get(id)?.name)), type);
-  const withUnit = (v: number) =>
-    rule.unit === "%" ? `${number(v)}%` : rule.unit ? `${number(v)} ${rule.unit}` : number(v);
+  const withUnit = (v: number) => formatReading(v, rule.unit, number);
   const detection = detects(rule, session.picks);
   const missing = list(detection.missing.map((group) => names(group, "disjunction")));
   const caughtBy = argusCards(alarm);

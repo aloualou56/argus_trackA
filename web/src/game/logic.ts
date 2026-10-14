@@ -71,6 +71,19 @@ export function ruleFor(data: GameData, mon: Monument, alarm: Alarm): RuleEntry 
   return data.rule_sensor_map[`${mon.pilot_key}:${alarm.rule}`] ?? null;
 }
 
+/** Decimals for a sensor reading: enough that a value just over its limit never looks equal to it
+ *  (a crack of 0.1292 against 0.1 shows as 0.129, not 0.1; wind of 12.4333 as 12.4). */
+export function readingDigits(value: number): number {
+  const size = Math.abs(value);
+  return size < 1 ? 3 : size < 10 ? 2 : 1;
+}
+
+/** A sensor reading with its unit ("12.4 m/s", "85%"); the space before a unit never breaks. */
+export function formatReading(value: number, unit: string | null, number: (n: number, digits: number) => string): string {
+  const shown = number(value, readingDigits(value));
+  return unit === "%" ? `${shown}%` : unit ? `${shown}\u00a0${unit}` : shown;
+}
+
 // ---------------------------------------------------------------- budget
 
 export function spent(picks: Picks, cards: Map<string, Card>): number {

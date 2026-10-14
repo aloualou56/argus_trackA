@@ -5,7 +5,7 @@
 set -eu
 
 CLONE=/home/hakri/guardian-site   # a one-commit clone of the "site" branch
-WEB=/var/www/guardian             # what nginx serves
+WEB=/var/www/guardian             # what Caddy serves
 
 cd "$CLONE"
 git fetch -q --depth 1 origin site

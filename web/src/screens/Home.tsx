@@ -2,8 +2,9 @@ import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { normalizeClassCode } from "../community/classCode";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
+import { LiveArgus } from "../components/LiveArgus";
 import type { Challenge } from "../game/challenge";
-import { formatCoords } from "../game/logic";
+import { formatCoords, isPlayable } from "../game/logic";
 import type { GameData, Level, LevelId, LevelSummary } from "../game/types";
 import { useI18n } from "../i18n";
 
@@ -208,6 +209,9 @@ export function Home({
           </label>
         ))}
       </fieldset>
+
+      {/* The monitoring goes on: the newest from ARGUS for the chosen monument (when the Pi has it). */}
+      {mon && isPlayable(mon) && <LiveArgus data={data} mon={mon} />}
 
       {mon && (
         <fieldset className="choices choices-ladder">

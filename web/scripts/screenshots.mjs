@@ -140,6 +140,36 @@ async function retryWrite(action) {
   }
 }
 
+/**
+ * A test copy of the Pi's live file (tools/pi/guardian_live.py writes the real one, served as
+ * live/argus-now.json): last night's check of three of Delos's dangers and a wind alarm twelve days
+ * ago, with values copied from real ARGUS records. `raised` puts the first danger on watch.
+ */
+function liveFixture({ hoursAgo = 9, raised = false, alarm = true } = {}) {
+  const delos = data.monuments.find((m) => m.pilot_key === "delos");
+  const iso = (ms) => new Date(ms).toISOString().slice(0, 19);
+  const at = `${iso(Date.now() - hoursAgo * 3_600_000)}Z`;
+  const thresholds = { watch: 0.1, active: 0.25, escalated: 0.5 };
+  const scenarios = delos.scenarios.slice(0, 3).map((s, i) => ({
+    key: s.scenario_key,
+    state: raised && i === 0 ? "watch" : "inactive",
+    probability: raised && i === 0 ? 0.12 : [0.02, 0.0789, 0.001][i],
+    thresholds,
+    previous_state: "inactive",
+    evaluated_at: at,
+  }));
+  const wind = {
+    timestamp: iso(Date.now() - 12 * 86_400_000),
+    type: "EK",
+    rule: "R2_wind",
+    variables: [{ name: "300548_wind_speed_1", value: 12.4333, threshold: 12 }],
+    score: 0.509,
+    threshold: null,
+    top_feature: null,
+  };
+  return { schema: 1, checked_at: at, sites: { delos: { risk: { evaluated_at: at, scenarios }, alarms: alarm ? [wind] : [] } } };
+}
+
 /** Into the mission. An upright phone opens it with the "how to" card first: close it to play. */
 async function toMission(page, t) {
   await page.getByRole("button", { name: t["story.continue"] }).click();
@@ -203,6 +233,7 @@ async function play(browser, lang, vpName) {
       localStorage.setItem("guardian.lang", l);
     } catch {}
   }, lang);
+  await context.route("**/live/argus-now.json", (route) => route.fulfill({ json: liveFixture() }));
   const page = await context.newPage();
   const errors = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
@@ -213,6 +244,12 @@ async function play(browser, lang, vpName) {
   await page.goto(URL_BASE);
   await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
   if ((await page.getAttribute("html", "lang")) !== lang) note(`${prefix}: <html lang> is not ${lang}`);
+  // The newest from ARGUS for the chosen monument (Delos), under the list of monuments.
+  const liveBox = page.locator(".live-argus");
+  await liveBox.waitFor({ timeout: 10000 }).catch(() => note(`${prefix}: no "${t["live.title"]}" box on the first screen`));
+  if ((await liveBox.count()) && !(await liveBox.innerText()).includes(fill(t["live.quiet"], { n: 3 }))) {
+    note(`${prefix}: the live box does not say that 3 dangers were checked and none needs watching`);
+  }
   await checkMap(page, `${prefix} home`, ".site-pin", data.monuments.length);
   await checkPage(page, `${prefix} home`);
   await shot(page, `${prefix}-1-home`);
@@ -891,6 +928,58 @@ async function checkA11yMenu(browser, lang) {
   await context.close();
 }
 
+/** The newest from ARGUS on the first screen: what it says, its dot, and no box without a usable file. */
+async function checkLive(browser, lang) {
+  const t = dict[lang];
+  const prefix = `${lang}-phone-live`;
+  console.log(`\n${prefix}`);
+  const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "no-preference" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  let serve = liveFixture({ raised: true });
+  await context.route("**/live/argus-now.json", (route) =>
+    serve === null
+      ? route.fulfill({ status: 404, body: "" })
+      : typeof serve === "string"
+        ? route.fulfill({ status: 200, contentType: "text/html", body: serve })
+        : route.fulfill({ json: serve }),
+  );
+  const page = await context.newPage();
+  const errors = [];
+  // (a missing file is logged by the browser itself as a failed load; anything else is a problem)
+  page.on("console", (m) => m.type() === "error" && !m.location().url.includes("/live/") && errors.push(m.text()));
+  page.on("pageerror", (e) => errors.push(String(e)));
+  await page.goto(URL_BASE);
+  await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+  const box = page.locator(".live-argus");
+  await box.waitFor({ timeout: 10000 });
+  const heading = (await box.getByRole("heading", { level: 2 }).innerText()).trim();
+  if (heading !== t["live.title"]) note(`${prefix}: last night's check is called "${heading}", not "${t["live.title"]}"`);
+  const delos = data.monuments.find((m) => m.pilot_key === "delos");
+  const watched = fill(t["live.watch"], { names: `${delos.scenarios[0].plain.title[lang]} (12%)` });
+  const text = await box.innerText();
+  if (!text.includes(watched)) note(`${prefix}: the danger on watch is not named ("${watched}")`);
+  if (text.includes(t["live.closest"].split(":")[0])) note(`${prefix}: "closest to its limit" shown although a danger is on watch`);
+  if (!/12[.,]4 m\/s/.test(text)) note(`${prefix}: the wind alarm's reading (12.4 m/s) is missing`);
+  // The dot pulses three times and then stays still: nothing moves for more than five seconds.
+  const pulses = await page.evaluate(() => document.querySelector(".live-dot")?.getAnimations().map((a) => a.effect.getTiming().iterations));
+  if (!(pulses?.length === 1 && pulses[0] === 3)) note(`${prefix}: the live dot should pulse 3 times, found ${JSON.stringify(pulses)}`);
+  await checkPage(page, `${prefix} first screen`);
+  await box.evaluate((el) => el.scrollIntoView({ block: "end" }));
+  await page.waitForTimeout(300);
+  await retryWrite(() => page.screenshot({ path: join(outDir, `${prefix}.png`) }));
+  console.log(`  saved ${prefix}.png`);
+  // No box when ARGUS has not checked for two weeks, or the file is missing or is not the Pi's.
+  for (const [label, file] of [["two-week-old", liveFixture({ hoursAgo: 15 * 24, alarm: false })], ["missing", null], ["broken", "<!doctype html>"]]) {
+    serve = file;
+    await page.reload();
+    await page.getByRole("heading", { level: 1, name: t["app.title"] }).waitFor();
+    await page.waitForTimeout(1000);
+    if (await box.count()) note(`${prefix}: the live box shows with a ${label} file`);
+  }
+  if (errors.length) note(`${prefix}: console errors: ${errors.join(" | ")}`);
+  await context.close();
+}
+
 async function playEveryMonument(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -1156,6 +1245,7 @@ try {
   if (!only || only === "history") for (const lang of ["el", "en"]) await checkHistory(browser, lang);
   if (!only || only === "read-aloud") for (const lang of ["el", "en"]) await checkReadAloud(browser, lang);
   if (!only || only === "a11y") for (const lang of ["el", "en"]) await checkA11yMenu(browser, lang);
+  if (!only || only === "live") for (const lang of ["el", "en"]) await checkLive(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);

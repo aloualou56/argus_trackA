@@ -20,5 +20,14 @@
 	@hidden path */.*
 	respond @hidden 404
 
+	# The newest from ARGUS for the first screen, written every 15 minutes by guardian-live
+	# (tools/pi/guardian_live.py) outside the site's folder, which every new version replaces.
+	handle_path /live/* {
+		root * /var/lib/guardian-live/public
+		file_server {
+			hide .*
+		}
+	}
+
 	file_server
 }
