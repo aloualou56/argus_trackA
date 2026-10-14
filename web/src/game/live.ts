@@ -1,6 +1,6 @@
 // The newest from ARGUS, for the first screen: last night's check of each danger by its risk model,
 // and the newest sensor alarm the game can explain. The Raspberry Pi reads them from the ARGUS API
-// every 15 minutes and serves them as live/argus-now.json (tools/pi/guardian_live.py); this file
+// every 2 hours and serves them as live/argus-now.json (tools/pi/guardian_live.py); this file
 // decides what of that to show. Everything shown is ARGUS's own data with its date: with no file, an
 // old one, or nothing the game can explain, nothing is shown.
 import type { AlarmFilter, GameData, Monument, RuleEntry, Scenario } from "./types";
@@ -13,7 +13,7 @@ export const FRESH = 36 * HOUR;
 export const RISK_MAX_AGE = 14 * DAY;
 /** Older than this, the last sensor alarm is not news any more. */
 export const ALARM_MAX_AGE = 60 * DAY;
-/** The file is read again after this long (the Pi writes it every 15 minutes). */
+/** The file is read again after this long (the Pi writes it every 2 hours). */
 const REREAD = 10 * 60_000;
 
 export type RaisedState = "watch" | "active" | "escalated";

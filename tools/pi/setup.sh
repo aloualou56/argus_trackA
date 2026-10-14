@@ -34,4 +34,4 @@ systemctl daemon-reload
 systemctl enable --now caddy-guardian.service guardian-update.timer guardian-live.timer
 systemctl restart caddy-guardian.service # a changed Caddyfile (its admin API is off, so no reload)
 echo "caddy $(/usr/local/bin/caddy version | cut -d' ' -f1): $(systemctl is-active caddy-guardian)"
-echo "guardian-live timer: $(systemctl is-active guardian-live.timer) (every 15 minutes; systemctl list-timers guardian-live.timer)"
+echo "guardian-live timer: $(systemctl is-active guardian-live.timer) (every 2 hours; systemctl list-timers guardian-live.timer)"

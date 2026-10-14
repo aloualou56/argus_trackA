@@ -9,7 +9,7 @@ makes it reachable from the internet.
 push to main ──► GitHub Actions: data tests, web tests, build ──► branch "site" (web/dist only)
                                                                       │  every minute
 Raspberry Pi: guardian-update (git fetch) ──► /var/www/guardian ──► Caddy :8080 ──► playit tunnel
-ARGUS API ──► every 15 minutes: guardian-live ──► /var/lib/guardian-live/public ──┘  (as /live/)
+ARGUS API ──► every 2 hours: guardian-live ──► /var/lib/guardian-live/public ──► Caddy, as /live/
 ```
 
 The Pi also keeps the game's first screen up to date with ARGUS ("Live from ARGUS"): see
@@ -25,7 +25,7 @@ The Pi also keeps the game's first screen up to date with ARGUS ("Live from ARGU
 | every-minute timer | `/etc/systemd/system/guardian-update.{service,timer}` |
 | web server | Caddy (`/usr/local/bin/caddy`, official release), `/etc/caddy/Caddyfile` (from `Caddyfile`), `caddy-guardian.service`, port 8080 |
 | what is served | `/var/www/guardian` |
-| the newest from ARGUS | `/usr/local/bin/guardian-live` (from `guardian_live.py`), run every 15 minutes by `/etc/systemd/system/guardian-live.{service,timer}` as the system user `guardian-live`; writes `/var/lib/guardian-live/state.json` and `public/argus-now.json`, which Caddy serves as `/live/argus-now.json` |
+| the newest from ARGUS | `/usr/local/bin/guardian-live` (from `guardian_live.py`), run every 2 hours by `/etc/systemd/system/guardian-live.{service,timer}` as the system user `guardian-live`; writes `/var/lib/guardian-live/state.json` and `public/argus-now.json`, which Caddy serves as `/live/argus-now.json` |
 | tunnel | playit agent (`playit.service`), a TCP tunnel to `127.0.0.1:8080` |
 
 Caddy rather than nginx: the Pi runs Debian 11, whose security updates have ended, so its nginx
@@ -74,7 +74,7 @@ limit. The first screen shows the newest of this for the chosen monument ("Live 
 
 - **The Pi reads ARGUS, not the visitors' browsers.** `guardian-live` (Python, standard library)
   asks the ARGUS API (`http://api.argusservices.athenarc.gr`, read-only, no key) only for the
-  records added since its last run: a page or two every 15 minutes, all of them on the very first
+  records added since its last run: a page or two every 2 hours, all of them on the very first
   run (about two minutes). It keeps the latest check of each danger and the ten newest sensor
   alarms per monument, and writes them, as ARGUS gave them, to one small file (about 20 KB).
 - **The game decides what to show** (`web/src/game/live.ts`), so a new version of the game never

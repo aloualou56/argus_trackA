@@ -110,7 +110,7 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `web/sw-template.js` | offline service worker; `vite.config.ts` writes `dist/sw.js` with the file list | code |
 | `.github/workflows/site.yml` | tests and builds every push to `main`; puts the built site on the `site` branch | code |
 | `tools/pi/` | the Raspberry Pi that serves the public copy: update script, timers, Caddy, setup | code |
-| `tools/pi/guardian_live.py` | on the Pi, every 15 minutes: the newest checks and alarms from the ARGUS API, as one small file | code |
+| `tools/pi/guardian_live.py` | on the Pi, every 2 hours: the newest checks and alarms from the ARGUS API, as one small file | code |
 | `docs/brand/logo.png` | the original logo; the icons and the mark are made from it | brand |
 | `web/src/i18n/{el,en}.json` | every UI string; Greek is the default | authored |
 | `web/src/i18n/{it,es,de}.json` | the same strings in Italian, Spanish and German | machine-translated |
@@ -625,7 +625,7 @@ Every push to `main` goes live by itself, about two minutes later, and only if t
 push to main ──► GitHub Actions (.github/workflows/site.yml): data tests, web tests, build
                     └─► branch "site": the built site only (web/dist, about 3 MB), one commit, replaced each time
 Raspberry Pi: every minute guardian-update fetches "site" ──► /var/www/guardian ──► Caddy :8080 ──► playit.gg tunnel
-ARGUS API ──► every 15 minutes guardian-live ──► /var/lib/guardian-live/public ──► Caddy, as /live/argus-now.json
+ARGUS API ──► every 2 hours guardian-live ──► /var/lib/guardian-live/public ──► Caddy, as /live/argus-now.json
 ```
 
 - **The repository stays private.** The Pi has a read-only deploy key and fetches only the `site` branch, so the
@@ -639,7 +639,7 @@ ARGUS API ──► every 15 minutes guardian-live ──► /var/lib/guardian-l
 - **The tunnel** is playit.gg (the agent runs as `playit.service`): a TCP tunnel to `127.0.0.1:8080`, created in the
   playit.gg dashboard; its address is <http://pi-address.invalid/>. It is plain `http://`,
   so the offline mode, which browsers allow only over `https://`, is off there; the game itself works fully.
-- **Live from ARGUS.** The snapshot stops in October 2026, but ARGUS keeps watching. Every 15 minutes the Pi
+- **Live from ARGUS.** The snapshot stops in October 2026, but ARGUS keeps watching. Every 2 hours the Pi
   (`tools/pi/guardian_live.py`, its own sandboxed user) asks the ARGUS API, read-only, for the records added since
   its last run, and writes the latest check of each danger and the newest sensor alarms to one small file. The first
   screen shows, for the chosen monument, last night's check (the dangers above "quiet", or the one nearest its

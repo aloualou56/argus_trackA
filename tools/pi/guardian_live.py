@@ -2,7 +2,7 @@
 """The newest ARGUS readings for the game's first screen, as one small file the Pi serves.
 
 Every evening ARGUS's risk model checks each danger at each monument again, and its sensors raise
-an alarm when a reading crosses a limit. This script, run on the Raspberry Pi every 15 minutes
+an alarm when a reading crosses a limit. This script, run on the Raspberry Pi every 2 hours
 (guardian-live.timer), reads from the ARGUS API only the records added since its last run (GET
 requests, one page at a time with a short pause; the API pages are oldest first) and keeps, for
 each monument, the latest check of each danger and its newest sensor alarms. It writes them to
@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 API = "http://api.argusservices.athenarc.gr/api"  # the 'Production' server in the ARGUS specs.json
-USER_AGENT = "guardian-for-a-day-live/1 (read-only, every 15 minutes)"
+USER_AGENT = "guardian-for-a-day-live/1 (read-only, every 2 hours)"
 STATE_VERSION = 1
 SCHEMA = 1
 PAUSE = 0.5  # seconds between two pages
