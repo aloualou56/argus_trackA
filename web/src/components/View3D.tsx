@@ -219,6 +219,19 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
             : focus.kind === "floor"
               ? t("view3d.sizeFloor", { m: one(d.wear) })
               : t("view3d.sizePlants", { p: number(d.plants * 100, 0) });
+  // The same size in a few characters, next to the years.
+  const shortSize =
+    focus.kind === "mosaic" || focus.kind === "fresco"
+      ? `💧 ${one(d.damp)} m`
+      : focus.kind === "crack"
+        ? `⚡ +${one(d.crackMm)} mm`
+        : focus.kind === "lean"
+          ? `↗ +${number(d.lean, 1)}°`
+          : focus.kind === "stone"
+            ? `−${number(d.surfaceMm, 1)} mm`
+            : focus.kind === "floor"
+              ? `👣 ${one(d.wear)} m`
+              : `🌱 ${number(d.plants * 100, 0)}%`;
   const yearsText =
     years === 0 ? t("view3d.today") : years === 1 ? t("view3d.oneYear") : t("view3d.yearsN", { n: number(years, 0) });
   const panel = phase === "open";
@@ -247,46 +260,47 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
         </div>
         <button type="button" className="btn btn-secondary view3d-close" onClick={() => void close()}>
           <Icon name="cross" size={18} />
-          {t("view3d.close")}
+          <span className="view3d-close-text">{t("view3d.close")}</span>
         </button>
       </div>
       <div className="view3d-dock" ref={dockRef}>
         {panel && (
           <div className="view3d-panel">
-            <label className="view3d-years" htmlFor="view3d-years">
-              <span>{t("view3d.years")}</span>
-              <strong>{yearsText}</strong>
-            </label>
-            <input
-              id="view3d-years"
-              type="range"
-              min={0}
-              max={MAX_YEARS}
-              step={1}
-              value={years}
-              aria-valuetext={yearsText}
-              onChange={(e) => {
-                setPlaying(false);
-                setYears(Number(e.target.value));
-              }}
-            />
-            <div className="view3d-actions">
+            {/* One row for time: play, the slider, how many years and how big the damage is then. */}
+            <div className="view3d-time">
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="view3d-play"
                 aria-pressed={playing}
+                aria-label={t(playing ? "view3d.pause" : "view3d.play")}
+                title={t(playing ? "view3d.pause" : "view3d.play")}
                 onClick={() => {
                   if (!playing && years >= MAX_YEARS) setYears(0);
                   setPlaying(!playing);
                 }}
               >
-                {t(playing ? "view3d.pause" : "view3d.play")}
+                <span aria-hidden="true">{playing ? "⏸" : "▶"}</span>
               </button>
-              <button type="button" className="btn btn-secondary" aria-pressed={highlight} onClick={() => setHighlight(!highlight)}>
-                {t("view3d.highlight")}
-              </button>
+              <input
+                id="view3d-years"
+                type="range"
+                min={0}
+                max={MAX_YEARS}
+                step={1}
+                value={years}
+                aria-label={t("view3d.years")}
+                aria-valuetext={yearsText}
+                onChange={(e) => {
+                  setPlaying(false);
+                  setYears(Number(e.target.value));
+                }}
+              />
+              <strong className="view3d-years" aria-live="polite">
+                {yearsText}
+                {years > 0 && <span className="view3d-short"> · {shortSize}</span>}
+              </strong>
             </div>
-            {highlight && <p className="view3d-note view3d-legend">{t("view3d.legend")}</p>}
+            {/* One row for what is shown: nobody or ARGUS watching, and the red sign. */}
             <div className="view3d-modes">
               <button type="button" aria-pressed={!watched} onClick={() => setWatched(false)}>
                 {t("view3d.nobody")}
@@ -294,13 +308,24 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
               <button type="button" aria-pressed={watched} onClick={() => setWatched(true)}>
                 {t("view3d.watched")}
               </button>
+              <button
+                type="button"
+                className="view3d-sign"
+                aria-pressed={highlight}
+                aria-label={t("view3d.highlight")}
+                title={t("view3d.legend")}
+                onClick={() => setHighlight(!highlight)}
+              >
+                {t("view3d.highlightShort")}
+              </button>
             </div>
-            <p className="view3d-note" aria-live="polite">
-              {t(noteKey(focus.kind, watched))}
-            </p>
-            {years > 0 && <p className="view3d-note view3d-size">{sizeLine}</p>}
+            {/* The rest, for whoever asks: what the picture shows, how big and on what grounds, the dangers. */}
             <details className="view3d-dangers">
-              <summary>{t(loaded.assets.data.rooms.length ? "view3d.dangers" : "view3d.dangersHere")}</summary>
+              <summary>{t("view3d.more")}</summary>
+              <p className="view3d-note">{t(noteKey(focus.kind, watched))}</p>
+              {years > 0 && <p className="view3d-note">{sizeLine}</p>}
+              <p className="view3d-note view3d-legend">{t("view3d.legend")}</p>
+              <h3 className="view3d-dangers-title">{t(loaded.assets.data.rooms.length ? "view3d.dangers" : "view3d.dangersHere")}</h3>
               <p className="small">
                 {checkedAt ? t("view3d.checked", { when: formatWhen(new Date(checkedAt), new Date(), locale) }) : t("view3d.noCheck")}
               </p>
@@ -319,9 +344,11 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
             </details>
           </div>
         )}
-        <p className="view3d-credits">
-          {t(!argusModel ? "view3d.credits" : loaded.assets.data.cut_above_m != null ? "view3d.creditsArgus" : "view3d.creditsModel")}
-        </p>
+        {/* The sources in one line; all of them when asked. */}
+        <details className="view3d-credits">
+          <summary>{t("view3d.sources")}</summary>
+          <p>{t(!argusModel ? "view3d.credits" : loaded.assets.data.cut_above_m != null ? "view3d.creditsArgus" : "view3d.creditsModel")}</p>
+        </details>
       </div>
     </div>
   );

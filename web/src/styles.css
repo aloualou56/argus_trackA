@@ -4819,11 +4819,11 @@ html.a11y-spacing main p {
 }
 .view3d-panel {
   display: grid;
-  gap: 0.5rem;
-  width: min(34rem, calc(100% - 1.5rem));
-  max-height: 55vh;
+  gap: 0.45rem;
+  width: min(32rem, calc(100% - 1.5rem));
+  max-height: 50vh;
   overflow-y: auto;
-  padding: 0.7rem 0.9rem 0.8rem;
+  padding: 0.5rem 0.7rem 0.55rem;
   border: 2px solid var(--ink);
   border-radius: var(--radius);
   background: var(--surface);
@@ -4835,33 +4835,61 @@ html.a11y-spacing main p {
     transform: translateY(0.75rem);
   }
 }
-.view3d-years {
+/* Play, the slider, the years and the damage's size, in one row. */
+.view3d-time {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0 1rem;
-  font-weight: 650;
+  align-items: center;
+  gap: 0.55rem;
 }
-.view3d-panel input[type="range"] {
-  width: 100%;
+.view3d-time input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 4rem;
   min-height: 2rem;
+  margin: 0;
   accent-color: var(--primary);
 }
+.view3d-play {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.view3d-play[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--primary-deep);
+}
+.view3d-years {
+  flex: 0 0 auto;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+.view3d-short {
+  font-weight: 650;
+}
+/* Nobody / ARGUS watching and the red sign, in one row. */
 .view3d-modes {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 .view3d-modes button {
-  flex: 1 1 10rem;
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 44px;
-  padding: 0.4rem 0.75rem;
+  padding: 0.3rem 0.55rem;
   border: 2px solid var(--edge);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--ink);
   font: inherit;
+  font-size: 0.9rem;
   font-weight: 650;
+  line-height: 1.15;
   cursor: pointer;
 }
 .view3d-modes button[aria-pressed="true"] {
@@ -4869,27 +4897,19 @@ html.a11y-spacing main p {
   background: var(--primary-soft);
   color: var(--primary-deep);
 }
+.view3d-modes .view3d-sign {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.view3d-modes .view3d-sign[aria-pressed="true"] {
+  border-color: #c4123a;
+  background: #fde8ed;
+  color: #8a0c29;
+}
 .view3d-note {
-  margin: 0;
+  margin: 0.3rem 0 0;
   color: var(--muted);
   font-size: 0.85rem;
-}
-/* How big the damage drawn is, and what that rests on (View3D.tsx). */
-.view3d-size {
-  font-size: 0.85em;
-}
-/* "▶ Watch the years go by" and "Show the damage" (View3D.tsx). */
-.view3d-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0.25rem 0 0.4rem;
-}
-.view3d-actions button {
-  min-height: 44px;
-}
-.view3d-legend {
-  font-size: 0.85em;
 }
 .view3d-legend::before {
   content: "";
@@ -4900,6 +4920,10 @@ html.a11y-spacing main p {
   border-radius: 50%;
   background: #ff1f4d;
   vertical-align: -0.05em;
+}
+.view3d-dangers-title {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
 }
 .view3d-dangers summary {
   cursor: pointer;
@@ -4930,13 +4954,24 @@ html.a11y-spacing main p {
   text-transform: uppercase;
 }
 .view3d-credits {
-  align-self: stretch;
-  margin: 0;
-  padding: 0.15rem 0.5rem;
+  align-self: flex-end;
+  max-width: calc(100% - 1rem);
+  margin: 0 0.5rem 0.25rem;
+  border-radius: var(--radius);
   background: rgb(255 255 255 / 0.88);
   color: var(--muted);
   font-size: 0.7rem;
+}
+.view3d-credits summary {
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
   text-align: right;
+}
+.view3d-credits p {
+  max-height: 30vh;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0 0.5rem 0.3rem;
 }
 /* Wide screens keep the panel in view while the 3D view is open; it cannot be used until it closes. */
 .app.is-3d .board-panel {
@@ -4961,20 +4996,47 @@ html.a11y-spacing main p {
     display: none;
   }
 }
-/* Upright phones: a compact panel, so the house has room above it. */
+/* Upright phones: title and "back" in one row, the panel as small as it can be, so the monument
+   has the screen. */
 @media (max-width: 39.99rem) {
+  .view3d-top {
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+  .view3d-head {
+    flex: 1 1 auto;
+    padding: 0.4rem 0.6rem;
+  }
+  .view3d-head h2 {
+    font-size: 1rem;
+  }
+  .view3d-close {
+    flex: 0 0 auto;
+    min-width: 44px;
+    padding: 0 0.6rem;
+  }
+  .view3d-close-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
   .view3d-panel {
     gap: 0.35rem;
-    padding: 0.5rem 0.7rem 0.6rem;
-  }
-  .view3d-years,
-  .view3d-modes button,
-  .view3d-dangers summary {
-    font-size: 0.9rem;
+    width: calc(100% - 1rem);
+    padding: 0.45rem 0.55rem 0.5rem;
   }
   .view3d-modes button {
-    flex-basis: 7rem;
-    padding: 0.3rem 0.5rem;
+    padding: 0.25rem 0.4rem;
+    font-size: 0.82rem;
+  }
+  .view3d-years {
+    font-size: 0.85rem;
+  }
+  .view3d-dangers summary {
+    font-size: 0.9rem;
   }
   .view3d-note {
     font-size: 0.8rem;
@@ -4985,6 +5047,15 @@ html.a11y-spacing main p {
   .view3d-tag {
     max-width: 8.5rem;
     font-size: 0.68rem;
+  }
+  .view3d-kid {
+    max-width: 10rem;
+    font-size: 0.78rem;
+  }
+  .view3d-magnifier span {
+    padding: 0.05rem 0.3rem;
+    font-size: 0.66rem;
+    white-space: nowrap;
   }
 }
 /* The drawings' materials. */

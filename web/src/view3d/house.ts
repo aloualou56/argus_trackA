@@ -1068,13 +1068,15 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           (kind === "crack" || kind === "lean") && wallAt
             ? new THREE.Vector3(wallAt[0], src.y + 1.2, wallAt[1])
             : kind === "mosaic" && dampRoom
-              ? at(dampRoom.xy, 1.6)
+              ? at(dampRoom.xy, 3.4) // above the room's own label
               : kind === "stone"
                 ? at(onModel(houseCentre) ? houseCentre : focusXY, 4)
                 : src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1])) + 1.6),
         )
       : null;
-  const nearTop = tops.length ? tops.reduce((best, p) => (p.distanceTo(src) < best.distanceTo(src) ? p : best)) : null;
+  // the wall top nearest the damage, away from the rooms' labels so the two never cover each other
+  const freeTops = tops.filter((p) => data.rooms.every((r) => Math.hypot(p.x - r.xy[0], -p.z - r.xy[1]) > 4));
+  const nearTop = freeTops.length ? freeTops.reduce((best, p) => (p.distanceTo(src) < best.distanceTo(src) ? p : best)) : null;
   const kidPlants = options.damageLabel && nearTop ? kidTag(options.damageLabel(kind === "tree" ? "tree" : "plants"), nearTop.clone().setY(nearTop.y + 1)) : null;
 
   // ---------------------------------------------------------------- the camera: from straight above down to the rooms
