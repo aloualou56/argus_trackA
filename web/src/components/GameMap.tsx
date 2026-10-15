@@ -7,7 +7,7 @@
 // labels, and nothing animates when the user prefers reduced motion.
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject, type ReactNode } from "react";
 import { clusterPoints, countPicks, detects, formatCoords, nativeZoom, ruleFor } from "../game/logic";
 import type { Alarm, Basemap, GameData, LatLng, MapPoint, Monument, Placement } from "../game/types";
 import { useI18n } from "../i18n";
@@ -24,6 +24,10 @@ export interface MapApi {
   focus(at: LatLng): void;
   /** Map position under a screen point (for drag and drop), or null when the point is off the map. */
   latLngAt(clientX: number, clientY: number): LatLng | null;
+  /** Where the view is and how close: the 3D view starts from the very same picture. */
+  view(): { center: LatLng; zoom: number };
+  /** Blurs the map (the hand-over to and from the 3D view, styles.css). */
+  blur(on: boolean): void;
 }
 
 interface Props {
@@ -42,6 +46,12 @@ interface Props {
   onReportPin?: (at: LatLng) => void;
   /** "replay" mode (the real alarm playing after "Done"): the player skips the rest of it. */
   onReplaySkip?: () => void;
+  /** The 3D view (View3D.tsx): the map flies down onto this spot, then calls onArrived3d once its
+   *  tiles are in. Null: the screen's own view (and back to it after the 3D view). */
+  view3d?: { center: LatLng; zoom: number } | null;
+  onArrived3d?: () => void;
+  /** Drawn over the map (the 3D view); the map and its controls cannot be used meanwhile. */
+  overlay?: ReactNode;
   /** "replay" mode: the picture is complete, and the button goes on to the answer. */
   replayOver?: boolean;
 }
@@ -210,6 +220,11 @@ export function GameMap(props: Props) {
         const at = map.containerPointToLatLng([clientX - box.left, clientY - box.top]);
         return [at.lat, at.lng];
       },
+      view: () => {
+        const c = map.getCenter();
+        return { center: [c.lat, c.lng], zoom: map.getZoom() };
+      },
+      blur: (on) => map.getContainer().classList.toggle("is-blurred", on),
     };
     // Map furniture, as on a printed sheet: a true scale bar, and the position of the centre of the
     // view (in the mission, that is the spot under the cross). Decorative for screen readers: the
@@ -397,7 +412,7 @@ export function GameMap(props: Props) {
   }, [mode]);
 
   // ---------------------------------------------------------------- camera: only when the screen changes
-  const viewKey = `${mode}|${pilot}|${alarm?.id ?? ""}`;
+  const viewKey = `${mode}|${pilot}|${alarm?.id ?? ""}|${props.view3d ? "3d" : ""}`;
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -405,6 +420,36 @@ export function GameMap(props: Props) {
     // view below is framed for the size it had on the previous screen. (Wide screens keep the
     // map's size, and are left exactly as they were.)
     if (!window.matchMedia("(min-width: 60rem)").matches) map.invalidateSize({ pan: false });
+    // "Display in 3D": down onto the house. The 3D view takes over once the picture there is whole
+    // (its last tiles in, or after 1.5 s at most), so the blur never hides a half-drawn map.
+    const to3d = latest.current.view3d;
+    if (to3d) {
+      let done = false;
+      let timer = 0;
+      const arrived = () => {
+        if (done) return;
+        done = true;
+        window.clearTimeout(timer);
+        latest.current.onArrived3d?.();
+      };
+      const settle = () => {
+        window.clearTimeout(timer);
+        const tiles = tilesRef.current;
+        if (!tiles?.isLoading()) return arrived();
+        tiles.once("load", arrived);
+        timer = window.setTimeout(arrived, 1500);
+      };
+      const still = motionReduced();
+      map.once("moveend", settle);
+      timer = window.setTimeout(settle, still ? 500 : 4000); // should moveend never come
+      map.flyTo(to3d.center, to3d.zoom, { animate: !still, duration: 1.8 });
+      return () => {
+        done = true;
+        window.clearTimeout(timer);
+        map.off("moveend", settle);
+        tilesRef.current?.off("load", arrived);
+      };
+    }
     // Extra room top-left keeps markers and their labels clear of the zoom buttons and switch.
     // On a short map the margins shrink, or they would leave almost no room and push the view far out.
     const quarter = map.getSize().y / 4;
@@ -795,8 +840,17 @@ export function GameMap(props: Props) {
     }
   }
 
+  // Under the 3D view nothing of the map can be reached: not the map, its pins nor its controls.
+  const sectionRef = useRef<HTMLElement>(null);
+  const covered = !!props.overlay;
+  useLayoutEffect(() => {
+    for (const child of Array.from(sectionRef.current?.children ?? []) as HTMLElement[]) {
+      if (!child.classList.contains("view3d")) child.inert = covered;
+    }
+  }, [covered]);
+
   return (
-    <section className={`board-map mode-${mode}${isPlan ? " is-plan" : ""}`} aria-label={t("map.region")}>
+    <section ref={sectionRef} className={`board-map mode-${mode}${isPlan ? " is-plan" : ""}`} aria-label={t("map.region")}>
       <div ref={containerRef} className="map" />
       <p id="map-help" className="sr-only">
         {t("map.instructions")}
@@ -868,6 +922,7 @@ export function GameMap(props: Props) {
           </button>
         </div>
       )}
+      {props.overlay}
     </section>
   );
 }

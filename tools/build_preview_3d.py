@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Data for the 3D preview of the House of the Masks on Delos (web/public/preview-3d/data.json).
+"""Data for the game's 3D view of the House of the Masks on Delos (web/public/data/view3d/delos-masks.json).
 
 A prototype of "zoom from the game's map down into 3D, then see what years of unnoticed damp would
-do" (README, "3D preview"). Built only from data the game may use:
+do" (README, "3D view"; drawn by web/src/view3d). Built only from data the game may use:
 
   ruin and plots   the ruin's outline (historic=ruins) and the plot outlines, from OpenStreetMap
                    (content/backdrops/delos.json, ODbL)
@@ -11,13 +11,13 @@ do" (README, "3D preview"). Built only from data the game may use:
                    ("Room 215 - Theatrical Masks mosaic")
   origin           where ARGUS places its own 3D model of the house (asset-states,
                    spatial_representations.model_placements["delos-masks"]); checked by the tests
-  dangers          ARGUS's risk scenarios for this house (web/public/data/game_data.json); the page
+  dangers          ARGUS's risk scenarios for this house (web/public/data/game_data.json); the game
                    reads last night's check from the Pi (/live/argus-now.json) when it is served there
   photos           two mosaic photos from Wikimedia Commons, free licences (PHOTOS below)
 
 ARGUS does not publish the 3D models themselves (only their names and placements), so the walls are
 the outline at an assumed height, the room floors and panels have assumed sizes, and all damage is an
-illustration. Those assumptions are listed in README ("3D preview").
+illustration. Those assumptions are listed in README ("3D view").
 
     python3 -I tools/build_preview_3d.py [--live argus-now.json]   # --live: embed a copy of a check
 Standard library only.
@@ -36,7 +36,7 @@ BACKDROP = ROOT / "content" / "backdrops" / "delos.json"
 GAME_DATA = ROOT / "web" / "public" / "data" / "game_data.json"
 MONITORINGS = ROOT / "snapshot" / "monitorings.json"
 INSTRUMENTS = ROOT / "snapshot" / "installed-instruments.json"
-OUT = ROOT / "web" / "public" / "preview-3d" / "data.json"
+OUT = ROOT / "web" / "public" / "data" / "view3d" / "delos-masks.json"
 
 ORIGIN = {"lat": 37.39626, "lon": 25.26949, "height": 36.79}  # ARGUS's placement of its model "delos-masks"
 RUIN_OSM_ID = 384671023  # OpenStreetMap: building=yes, historic=ruins, the House of the Masks
@@ -154,7 +154,7 @@ def dangers(live: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
 def build(live: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     found = sensors()
     return {
-        "about": "Data for web/public/preview-3d, written by tools/build_preview_3d.py. See README, '3D preview'.",
+        "about": "Data for the game's 3D view (web/src/view3d), written by tools/build_preview_3d.py. See README, '3D view'.",
         "origin": {"lat": ORIGIN["lat"], "lon": ORIGIN["lon"]},
         "base_height": ORIGIN["height"],
         "metres_per_degree": metres_per_degree(),
@@ -170,7 +170,7 @@ def build(live: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--live", type=Path, help="a copy of the Pi's argus-now.json to embed (the page reads it live anyway)")
+    parser.add_argument("--live", type=Path, help="a copy of the Pi's argus-now.json to embed (the game reads it live anyway)")
     args = parser.parse_args(argv)
     live = json.loads(args.live.read_text(encoding="utf-8")) if args.live else None
     data = build(live)

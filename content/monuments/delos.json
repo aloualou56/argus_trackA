@@ -39,11 +39,11 @@
     }
   },
   "consequences": {
-    "_about": "AUTHORED. Per alarm rule: what happens over the years if nobody ever notices (score screen), and the drawing that shows it (before / after): mosaic, floor, stone, lean, tree, fresco or crack. view_3d (optional): a page of the site that shows the same damage in 3D at this monument, linked under the drawings ('preview-3d/': damp rising into the House of the Masks).",
+    "_about": "AUTHORED. Per alarm rule: what happens over the years if nobody ever notices (score screen), and the drawing that shows it (before / after): mosaic, floor, stone, lean, tree, fresco or crack. view_3d (optional): the game's 3D view of the same damage at this monument (web/public/data/view3d/<name>.json), opened by 'Display in 3D' under the drawings ('delos-masks': damp rising into the House of the Masks).",
     "needs_review": true,
     "DL_soil_moisture": {
       "picture": "mosaic",
-      "view_3d": "preview-3d/",
+      "view_3d": "delos-masks",
       "text": {
         "en": "Water rises from the ground into the mosaic and brings salt with it. When it dries, the salt grows into crystals that push the small stones apart, until they come loose and are lost.",
         "el": "Το νερό ανεβαίνει από το έδαφος στο ψηφιδωτό και φέρνει μαζί του αλάτι. Όταν στεγνώνει, το αλάτι γίνεται κρύσταλλοι που σπρώχνουν τις ψηφίδες να ανοίξουν, ώσπου ξεκολλούν και χάνονται."
@@ -51,7 +51,7 @@
     },
     "DL_humidity": {
       "picture": "mosaic",
-      "view_3d": "preview-3d/",
+      "view_3d": "delos-masks",
       "text": {
         "en": "Damp that goes up and down makes the salt in the walls and floors swell and shrink, again and again. The plaster crumbles, and the small stones of the mosaic come loose.",
         "el": "Η υγρασία που ανεβοκατεβαίνει κάνει το αλάτι στους τοίχους και στα δάπεδα να φουσκώνει και να ξεφουσκώνει, ξανά και ξανά. Ο σοβάς θρυμματίζεται και οι ψηφίδες του ψηφιδωτού ξεκολλούν."

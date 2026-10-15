@@ -47,7 +47,7 @@ OUT_NOTES = ROOT / "docs" / "data_notes.md"
 OUT_BACKDROPS = ROOT / "web" / "public" / "data" / "backdrops"
 OUT_TRANSLATIONS = ROOT / "web" / "public" / "data" / "i18n"
 OUT_PHOTOS = ROOT / "web" / "public" / "data" / "photos"
-WEB_PUBLIC = ROOT / "web" / "public"  # pages a consequence may link (view_3d) live here
+VIEW3D_DIR = ROOT / "web" / "public" / "data" / "view3d"  # the 3D views a consequence may open (view_3d)
 PHOTO_URL = "data/photos/{name}"  # relative to the web app
 # Licences a photo may carry: free to show with credit (some ask that copies stay under the same licence).
 PHOTO_LICENSES = ("CC0", "Public domain", "CC BY 2.0", "CC BY 3.0", "CC BY 4.0", "CC BY-SA 2.0", "CC BY-SA 3.0", "CC BY-SA 4.0")
@@ -808,8 +808,8 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         entry["guardian"] = dict({k: v for k, v in pack["guardian"].items() if not k.startswith("_")}, authored=True)
     if consequences:
         # What happens over the years if nobody ever notices, per alarm rule (score screen): once per
-        # rule, not copied into each alarm (one rule can raise many alarms). view_3d: a page of the site
-        # that shows the same damage in 3D at this monument (validate() checks it exists).
+        # rule, not copied into each alarm (one rule can raise many alarms). view_3d: the game's 3D view of
+        # the same damage at this monument (data/view3d/<name>.json; validate() checks it exists).
         entry["consequences"] = {rule: {"picture": c["picture"], "text": c["text"],
                                         "needs_review": bool(consequences.get("needs_review", True)),
                                         **({"view_3d": c["view_3d"]} if "view_3d" in c else {})}
@@ -1218,14 +1218,14 @@ def render_language_notes(data: Dict[str, Any], packs: Dict[str, Dict[str, Any]]
 CONSEQUENCE_PICTURES = ("mosaic", "floor", "stone", "lean", "tree", "fresco", "crack")
 
 
-def view_3d_problems(page: Any) -> List[str]:
-    """A consequence's view_3d must be a folder of the site with its own page, e.g. "preview-3d/"."""
-    if page is None:
+def view_3d_problems(name: Any) -> List[str]:
+    """A consequence's view_3d must name one of the game's 3D views, e.g. "delos-masks"."""
+    if name is None:
         return []
-    if not isinstance(page, str) or not re.fullmatch(r"[a-z0-9-]+(/[a-z0-9-]+)*/", page):
-        return [f"view_3d {page!r} is not a folder of the site like 'preview-3d/'"]
-    if not (WEB_PUBLIC / page / "index.html").is_file():
-        return [f"view_3d '{page}' has no page (web/public/{page}index.html)"]
+    if not isinstance(name, str) or not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name):
+        return [f"view_3d {name!r} is not the name of a 3D view like 'delos-masks'"]
+    if not (VIEW3D_DIR / f"{name}.json").is_file():
+        return [f"view_3d '{name}' has no data (web/public/data/view3d/{name}.json, tools/build_preview_3d.py)"]
     return []
 
 

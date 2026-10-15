@@ -4,6 +4,8 @@ import { summaryOf, topCard, type CommunityStore, type Summary } from "../commun
 import { DayStrip } from "../components/DayStrip";
 import { ConsequenceDrawings } from "../components/Consequence";
 import { GuardianSays } from "../components/Guardian";
+import { Open3dButton } from "../components/View3D";
+import { canShow3d, type Loaded } from "../view3d/preload";
 import { ReadAloud } from "../components/ReadAloud";
 import { endingNarration, guardianBack } from "../audio/narration";
 import { Icon } from "../components/Icon";
@@ -34,6 +36,8 @@ interface Props extends ScreenProps {
   onRecorded: () => void;
   /** Opens the observation report for this monument. */
   onReport: () => void;
+  /** "Display in 3D" under the drawings, once the view is loaded: the game opens it over the map. */
+  onView3d: (scene: string, loaded: Loaded) => void;
   /** The real alarms of the week on duty, one per day; today's is week[session.day]. Empty if none can be replayed. */
   week: Alarm[];
   /** Back to the mission with the same sensors and dangers; `total` is the score to compare with afterwards. */
@@ -62,6 +66,7 @@ export function Score({
   onQuiz,
   onRecorded,
   onReport,
+  onView3d,
   week,
   onImprove,
   onNextDay,
@@ -187,24 +192,8 @@ export function Score({
             <h2 id="consequence-title">{t("consequence.title")}</h2>
             <p>{t(detected ? "consequence.caught" : "consequence.missed")}</p>
             <ConsequenceDrawings picture={consequence.picture} />
-            {consequence.view_3d && (
-              // The same damage in 3D at this monument: a prototype page, in a new tab so the game stays here.
-              <div className="consequence-3d">
-                <a
-                  className="btn btn-secondary"
-                  href={`${import.meta.env.BASE_URL}${consequence.view_3d}`}
-                  target="_blank"
-                  rel="noopener"
-                  aria-describedby="consequence-3d-note"
-                >
-                  <Icon name="cube" />
-                  {t("consequence.view3d")}
-                </a>
-                <p className="small" id="consequence-3d-note">
-                  {t("consequence.view3dNote")}
-                </p>
-              </div>
-            )}
+            {/* The same damage in 3D at this monument, where this device can draw it. */}
+            {consequence.view_3d && canShow3d() && <Open3dButton scene={consequence.view_3d} data={data} onOpen={onView3d} />}
             <p className="lead" data-needs-review={consequence.needs_review}>
               {pick(consequence.text)}
             </p>

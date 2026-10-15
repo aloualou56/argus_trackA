@@ -4664,6 +4664,258 @@ html.a11y-spacing main p {
   min-width: 0;
   margin: 0;
 }
+
+/* ---- the 3D view (View3D.tsx), over the map, which first flies down onto the house. The hand-over
+   is a blur: the map blurs away while the 3D view, the same picture seen from straight above, comes
+   in from a blur; the same way back. With less motion both are instant (user preferences, below). */
+.board-map .map {
+  transition: filter 0.7s ease;
+}
+.board-map .map.is-blurred {
+  filter: blur(14px);
+}
+.view3d {
+  position: absolute;
+  inset: 0;
+  z-index: 1500; /* over the map's own controls */
+  opacity: 0;
+  filter: blur(14px);
+  pointer-events: none;
+  transition: opacity 0.7s ease, filter 0.7s ease;
+}
+.view3d.is-shown {
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;
+}
+.view3d-stage,
+.view3d-canvas,
+.view3d-labels {
+  position: absolute;
+  inset: 0;
+}
+/* The room labels sort themselves by depth (z-index): kept in the stage's own layer, under the
+   title and the panel, and out of the way of the pointer. They come in once the camera is down. */
+.view3d-stage {
+  z-index: 0;
+}
+.view3d-labels {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.view3d.is-open .view3d-labels {
+  opacity: 1;
+}
+.view3d-top,
+.view3d-dock {
+  z-index: 1;
+}
+.view3d-canvas:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+.view3d-tag {
+  max-width: 11rem;
+  padding: 0.1rem 0.45rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.2;
+  text-align: center;
+}
+.view3d-top {
+  position: absolute;
+  inset: 0.75rem 0.75rem auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+.view3d-top > * {
+  pointer-events: auto;
+}
+.view3d-head {
+  flex: 0 1 26rem;
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.view3d-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.15;
+}
+.view3d-head p {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.view3d-close {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+}
+.view3d-dock {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  pointer-events: none;
+}
+.view3d-dock > * {
+  pointer-events: auto;
+}
+.view3d-panel {
+  display: grid;
+  gap: 0.5rem;
+  width: min(34rem, calc(100% - 1.5rem));
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: 0.7rem 0.9rem 0.8rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+  animation: view3d-in 0.4s ease both;
+}
+@keyframes view3d-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+.view3d-years {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 1rem;
+  font-weight: 650;
+}
+.view3d-panel input[type="range"] {
+  width: 100%;
+  min-height: 2rem;
+  accent-color: var(--primary);
+}
+.view3d-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.view3d-modes button {
+  flex: 1 1 10rem;
+  min-height: 44px;
+  padding: 0.4rem 0.75rem;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+.view3d-modes button[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+}
+.view3d-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.view3d-dangers summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.view3d-dangers p {
+  margin: 0.3rem 0;
+}
+.view3d-dangers ul {
+  max-height: 11rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+.view3d-dangers li {
+  padding: 0.2rem 0;
+  border-top: 1px solid var(--line);
+}
+.view3d-level {
+  display: inline-block;
+  min-width: 6.5rem;
+  color: var(--argus-pin);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-transform: uppercase;
+}
+.view3d-credits {
+  align-self: stretch;
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  background: rgb(255 255 255 / 0.88);
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-align: right;
+}
+/* Wide screens keep the panel in view while the 3D view is open; it cannot be used until it closes. */
+.app.is-3d .board-panel {
+  opacity: 0.6;
+}
+/* Phones and small tablets: the whole screen, as while the alarm plays. */
+@media (max-width: 59.99rem) {
+  .app.is-3d .topbar,
+  .app.is-3d .board-panel {
+    display: none;
+  }
+  .app.is-3d[data-screen] .board-map {
+    flex: 1 1 auto;
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+  html:has(.app.is-3d) {
+    font-size: min(var(--text-size, 100%), 20px);
+  }
+  .view3d-head p {
+    display: none;
+  }
+}
+/* Upright phones: a compact panel, so the house has room above it. */
+@media (max-width: 39.99rem) {
+  .view3d-panel {
+    gap: 0.35rem;
+    padding: 0.5rem 0.7rem 0.6rem;
+  }
+  .view3d-years,
+  .view3d-modes button,
+  .view3d-dangers summary {
+    font-size: 0.9rem;
+  }
+  .view3d-modes button {
+    flex-basis: 7rem;
+    padding: 0.3rem 0.5rem;
+  }
+  .view3d-note {
+    font-size: 0.8rem;
+  }
+  .view3d-credits {
+    font-size: 0.62rem;
+  }
+  .view3d-tag {
+    max-width: 8.5rem;
+    font-size: 0.68rem;
+  }
+}
 /* The drawings' materials. */
 .cq-stone {
   fill: #d9cdb6;

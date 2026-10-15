@@ -34,10 +34,6 @@ self.addEventListener("fetch", (event) => {
   // The newest from ARGUS (written by the Pi every 2 hours): network only, never stored, so an
   // old copy is never shown as new; offline, the first screen simply goes without it.
   if (url.pathname.includes("/live/")) return;
-  // The 3D preview (linked from the score screen) loads its libraries, imagery and terrain from other
-  // servers, so it needs the internet anyway: network only, never stored, and never answered with
-  // the game's page when offline (the browser says it is offline instead).
-  if (url.pathname.includes("/preview-3d/")) return;
   if (request.mode === "navigate") {
     // The page: newest when online, the stored copy when offline. Query strings (?class=...) share it.
     event.respondWith(
@@ -94,6 +90,7 @@ self.addEventListener("fetch", (event) => {
     );
     return;
   }
-  // Built files have content hashes, so a stored copy is never out of date: stored first.
+  // Built files have content hashes, so a stored copy is never out of date: stored first. (The 3D
+  // view's code is not stored up front, vite.config.ts: it comes from the network when opened.)
   event.respondWith(caches.match(request, { cacheName: CACHE, ignoreSearch: true }).then((hit) => hit || fetch(request)));
 });

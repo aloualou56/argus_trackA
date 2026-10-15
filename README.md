@@ -103,6 +103,8 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `web/src/game/logic.ts` | budget, coverage, detection, score, reveal comparison, map distances (pure, tested) | code |
 | `web/src/game/live.ts` | "Live from ARGUS" on the first screen: what of the Pi's newest ARGUS file to show (pure, tested) | code |
 | `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws, including the alarm replay | code |
+| `web/src/view3d/`, `web/src/components/View3D.tsx` | the 3D view of a consequence ("Display in 3D"): loaded only when needed, over the map, which flies down first | code |
+| `tools/build_preview_3d.py` | the 3D view's data for the House of the Masks: OpenStreetMap outlines, ARGUS's 3D placements, the game's dangers | code |
 | `web/src/audio/sounds.ts` | the game's sounds, made in the browser with the Web Audio API (no audio files) | code |
 | `web/src/community/` | anonymous records: device store, optional Supabase store with offline queue, class codes | code |
 | `web/src/game/report.ts` | the citizen observation report: its rules and its export in ARGUS's format (pure, tested) | code |
@@ -120,7 +122,8 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 
 The browser loads only `game_data.json` (about 255 KB of data, 50 KB compressed) and, for Italian, Spanish or German,
 one content pack (`data/i18n/<lang>.json`, 16 KB compressed). On the public copy it also reads `live/argus-now.json`
-(about 20 KB, 3 KB compressed), written by the Pi. It never loads `asset-states.json`.
+(about 20 KB, 3 KB compressed), written by the Pi. A player who opens the 3D view also loads its code and
+`data/view3d/delos-masks.json` (14 KB). It never loads `asset-states.json`.
 
 ### The map
 
@@ -467,40 +470,53 @@ damage does over the years when nobody ever notices, with two drawings side by s
 caption says they are not pictures of the site. Both are read aloud with the recorded voices once recorded (until
 then, with the device's voice). Needs review: the guardians' words and the science of each consequence (listed in
 `docs/data_notes.md`). Where a consequence has `view_3d`, a **"Display in 3D"** button under the drawings opens
-that page in a new tab (Delos's damp alarms: the 3D preview below).
+the game's 3D view of that damage (Delos's damp alarms: the House of the Masks, below).
 
-## 3D preview (prototype): the House of the Masks
+## 3D view (prototype): the House of the Masks
 
-`/preview-3d/` on the public copy. The game's satellite map of Delos, a
-fly-in from the 2D map down into 3D, the House of the Masks with its four mosaic rooms and ARGUS's sensors,
-and a "years nobody noticed" slider that shows what unnoticed damp would do (damp rising in the walls with a
-line of salt, a stain spreading through the mosaics, salt crusts, lost tesserae, plants on the wall tops),
-next to "with ARGUS watching".
+On the score screen, under the "If nobody had noticed" drawings, **"Display in 3D"** appears when the day's
+alarm is one of Delos's damp alarms (`DL_soil_moisture`, `DL_humidity`: `view_3d` in
+`content/monuments/delos.json`, checked by the build): not for the wind alarm, which wears stone, nor for the
+other monuments, nor on a device without WebGL.
 
-- **In the game:** "Display in 3D" on the score screen, under the "If nobody had noticed" drawings, when the
-  day's alarm is one of Delos's damp alarms (`DL_soil_moisture`, `DL_humidity`: `view_3d` in
-  `content/monuments/delos.json`, checked by the build). Not for the wind alarm, which wears stone, nor for the
-  other monuments. It opens in a new tab, so the game stays where it was; the button says the page is a
-  prototype, in English for now, that needs the internet. The service worker never stores it, so offline the
-  browser says so instead of showing a half-loaded page.
-
+- **The way in, without a jump:** everything is loaded before anything moves. The view starts loading when the
+  button comes into sight (or is pointed at): its code and three.js (a file of their own, `assets/view3d-*.js`,
+  about 130 KB compressed), the house's data, its satellite and terrain tiles and the two mosaic photos; a tap
+  before that has finished says "Preparing the 3D view…" and goes on when it has. Then the scene is built and
+  drawn, unseen. Only then does the game's own map (the whole screen on phones, as for the alarm replay) fly
+  down onto the house; once its last tiles are in, the map blurs away while the 3D view comes in from a blur.
+  The 3D view starts from the very same picture: straight from above, north up, from the height where its
+  ground matches the map's scale, on the satellite tiles the map has just shown. Then the camera comes down to
+  the rooms. "Back to the map" (or Escape) goes the same way back, and the focus returns to the button. With
+  "less motion" every step is instant.
+- **In it:** the House of the Masks with its four mosaic rooms and ARGUS's 19 sensors at their heights; a "Years
+  nobody noticed" slider (0-50) that shows what unnoticed damp would do (damp rising in the walls with a line of
+  salt, a stain spreading through the mosaics, salt crusts, lost tesserae, plants on the wall tops), next to
+  "ARGUS watching" (a year's worth at most: the soil probes under Room 215 show it within months); the dangers
+  ARGUS rates at the house, with last night's check from the Pi. In the player's language; drag or pinch to look
+  around, or move the view with the arrow keys. While it is open, the rest of the game cannot be used (inert).
 - **Real:** the ground (the game's Esri imagery on AWS Terrain Tiles elevation); the ruin's outline and the
   plots (OpenStreetMap, `historic=ruins`); the four rooms (214 Dionysus, 215 Theatrical Masks, 216 Silenus,
   217 Dolphins) and the 19 sensors' positions and heights, from ARGUS's own 3D-viewer placements
   (`snapshot/monitorings.json`); the origin, ARGUS's placement of its model of the house; the 18 dangers ARGUS
-  rates there, with last night's check read from the Pi; photos of the Silenus and Dolphins mosaics (Wikimedia
-  Commons: Olaf Tausch, public domain; Kevin Stroup, CC BY 3.0).
+  rates there; photos of the Silenus and Dolphins mosaics (Wikimedia Commons: Olaf Tausch, public domain; Kevin
+  Stroup, CC BY 3.0).
 - **Assumed (needs review):** the walls' height (2.4 m; OpenStreetMap has the outline only), the floors' and
   panels' sizes, the patterns of rooms 214 and 215 (no straight-down photo), and all the damage: an
-  illustration, not a prediction, and the page says so.
+  illustration, not a prediction, and the view says so.
 - **Why not ARGUS's 3D models:** the API lists 3D Tiles models of all five monuments with their placements, but
   the files are on ARGUS's 3D viewer, which is not public. With them (and permission) they would replace the
   walls and floors; the rest stays.
-- **Data:** `python3 -I tools/build_preview_3d.py` writes `web/public/preview-3d/data.json` from files in this
-  repository (`--live argus-now.json` embeds a copy of a check for hosts without the Pi's file); tests in
-  `tools/tests/test_preview_3d.py`, including the origin against ARGUS's placement in the snapshot.
-- **Runs anywhere static:** three.js 0.169.0 and Leaflet 1.9.4 from jsDelivr, about 2 MB per visit (two photos,
-  16 imagery and 4 terrain tiles). With "less motion" the camera jumps instead of flying.
+- **Code and data:** `web/src/view3d/` (`house.ts` the scene, with three.js 0.169.0; `preload.ts` the loading;
+  `math.ts` the arithmetic, tested in `web/tests/view3d.test.ts`) and `web/src/components/View3D.tsx` (the view
+  and its button). `python3 -I tools/build_preview_3d.py` writes `web/public/data/view3d/delos-masks.json` from
+  files in this repository (`--live argus-now.json` embeds a copy of a check, shown where the Pi's file is not
+  served); tests in `tools/tests/test_preview_3d.py`, including the origin against ARGUS's placement in the
+  snapshot. `npm run screenshots` (part `view3d`) opens and closes it in Greek on a phone and in English on a
+  desktop.
+- **Needs the internet:** about 2 MB the first time it is opened (the 3D code, two photos, 16 imagery and 4
+  terrain tiles); none of it is stored for offline use. The first prototype's separate `/preview-3d/` page is
+  gone: the view is part of the game now.
 
 ## Citizen observation report
 
@@ -646,8 +662,8 @@ npm run narration -- --prune                         # remove recordings no text
 
 `npm run build` writes `dist/sw.js`, a small service worker with the list of built files. After one visit the game,
 its data and the drawn plan work without internet. Map pictures are never stored (their providers do not allow
-offline copies), nor is the 3D preview (`preview-3d/`, which needs the internet for its libraries and imagery
-anyway). A new build replaces the stored copy on the next visit. Built files have content hashes and are
+offline copies), nor is the 3D view (its code and data, `assets/view3d-*.js` and `data/view3d/`, which need the
+internet for their satellite and terrain tiles anyway). A new build replaces the stored copy on the next visit. Built files have content hashes and are
 served from the stored copy first; the data pack (`data/`) has none, so it comes from the network first and from the
 stored copy only offline. If the data pack's `schema_version` does not match the game (an earlier version's offline
 copy answered), the game removes its service worker and stored files and reloads once; a crash on any screen shows

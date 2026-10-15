@@ -26,6 +26,9 @@ import { Reveal } from "./screens/Reveal";
 import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
 import { Teacher } from "./screens/Teacher";
+import { View3D } from "./components/View3D";
+import { MAP_ZOOM } from "./view3d/math";
+import type { Loaded } from "./view3d/preload";
 
 type Screen = "home" | "teacher" | "observe" | Step | "quizPre" | "quizPost" | "history";
 
@@ -202,11 +205,32 @@ export default function App() {
     setReplaying(false);
     stopReplaySound.current();
   }, [screen, replaying]);
+  // "Display in 3D" (Score): the map flies down onto the house and the 3D view takes over
+  // (View3D.tsx). building: the scene is made, unseen, before the map moves; flying: the map zooms
+  // in; arrived: the 3D view may take over. Phones give it the whole screen; wide screens keep the
+  // panel in view, unusable meanwhile, as during the replay.
+  const [view3d, setView3d] = useState<{ scene: string; loaded: Loaded; stage: "building" | "flying" | "arrived" } | null>(null);
+  const in3d = view3d !== null;
+  const topbarRef = useRef<HTMLElement>(null);
+  const was3d = useRef(false);
+  useEffect(() => {
+    if (screen !== "score") setView3d(null);
+  }, [screen]);
+  useEffect(() => {
+    if (in3d) was3d.current = true;
+    else if (was3d.current) {
+      // Back where the player was: the button that opened it (the panel is usable again by now).
+      was3d.current = false;
+      document.getElementById("view3d-open")?.focus();
+    }
+  }, [in3d]);
+
   // While it plays, the panel stays in view on wide screens but cannot be used. (A layout effect:
   // it must be usable again before the next screen's heading takes the focus.)
   useLayoutEffect(() => {
-    if (panelRef.current) panelRef.current.inert = replaying;
-  }, [replaying]);
+    if (panelRef.current) panelRef.current.inert = replaying || in3d;
+    if (topbarRef.current) topbarRef.current.inert = in3d;
+  }, [replaying, in3d]);
 
   const data = load.state === "ready" ? load.data : null;
   const mon = data && game ? data.monuments.find((m) => m.pilot_key === game.pilot) : undefined;
@@ -421,6 +445,7 @@ export default function App() {
             onQuiz={() => setScreen("quizPost")}
             onRecorded={() => setGame((g) => (g ? { ...g, recorded: true } : g))}
             onReport={() => openReport(playable.pilot_key, "score")}
+            onView3d={(scene, loaded) => setView3d({ scene, loaded, stage: "building" })}
             week={week}
             onImprove={(total) => {
               // The first score of the day is the "before", however often the network is changed.
@@ -441,14 +466,14 @@ export default function App() {
 
   return (
     <div
-      className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}${replaying ? " is-replay" : ""}`}
+      className={`app${REVIEW_MODE ? " review" : ""}${inGame && screen === "mission" ? " is-play" : ""}${replaying ? " is-replay" : ""}${in3d ? " is-3d" : ""}`}
       // Small screens size the map by what the screen is for (styles.css, "small screens").
       data-screen={screen}
     >
       <a className="skip-link" href="#main">
         {t("app.skip")}
       </a>
-      <header className="topbar">
+      <header className="topbar" ref={topbarRef}>
         <div className="topbar-inner">
           <button type="button" className="brand" onClick={() => setScreen("home")} disabled={screen === "home"}>
             <BrandMark />
@@ -472,6 +497,21 @@ export default function App() {
             alarm={inGame && (screen === "event" || replaying) ? today : null}
             onReplaySkip={finishReplay}
             replayOver={replayOver}
+            view3d={view3d && view3d.stage !== "building" ? { center: view3d.loaded.assets.centre, zoom: MAP_ZOOM } : null}
+            onArrived3d={() => setView3d((v) => (v ? { ...v, stage: "arrived" } : v))}
+            overlay={
+              view3d &&
+              playable && (
+                <View3D
+                  mon={playable}
+                  loaded={view3d.loaded}
+                  mapApi={mapApi}
+                  arrived={view3d.stage === "arrived"}
+                  onReady={() => setView3d((v) => (v && v.stage === "building" ? { ...v, stage: "flying" } : v))}
+                  onClosed={() => setView3d(null)}
+                />
+              )
+            }
             apiRef={mapApi}
             onSelectSite={(pilot) => {
               setHomePilot(pilot);

@@ -981,22 +981,84 @@ async function checkLive(browser, lang) {
 }
 
 // "Display in 3D" under the "if nobody had noticed" drawings: exactly where the replayed alarm's
-// consequence links a 3D page (Delos's damp alarms), opening in a new tab, and the page answers.
-async function check3dLink(page, t, label, view3d) {
+// consequence has a 3D view (Delos's damp alarms), and its data answers.
+async function check3dButton(page, t, label, view3d) {
   const name = t["consequence.view3d"];
-  const link = page.getByRole("link", { name });
+  const button = page.getByRole("button", { name });
   if (!view3d) {
-    if (await link.count()) note(`${label} score: "${name}" where the consequence has no 3D page`);
+    if (await button.count()) note(`${label} score: "${name}" where the consequence has no 3D view`);
     return;
   }
-  if (!(await page.locator(".consequence-pair + .consequence-3d").getByRole("link", { name }).isVisible())) {
+  if (!(await page.locator(".consequence-pair + .consequence-3d").getByRole("button", { name }).isVisible())) {
     note(`${label} score: no "${name}" under the drawings`);
     return;
   }
-  const href = await link.getAttribute("href");
-  if (href !== `./${view3d}` || (await link.getAttribute("target")) !== "_blank") note(`${label} score: "${name}" goes to ${href}`);
-  const res = await page.request.get(new URL(href, page.url()).href);
-  if (!res.ok() || !(await res.text()).includes('src="./demo.js"')) note(`${label} score: the 3D page does not answer (${res.status()})`);
+  const res = await page.request.get(new URL(`data/view3d/${view3d}.json`, page.url()).href);
+  if (!res.ok()) note(`${label} score: the 3D view's data does not answer (${res.status()})`);
+}
+
+// The 3D view itself, once per language (Delos, the default level: its alarm is a damp one). With
+// less motion it opens and closes at once: over the map, which cannot be used meanwhile, focus on
+// its title, the slider and the switch work, no axe problems; Escape goes back, focus on the button.
+async function check3dView(browser, lang, vp) {
+  const t = dict[lang];
+  const prefix = `${lang}-${vp}-view3d`;
+  console.log(`\n${prefix}`);
+  const delos = data.monuments.find((m) => m.pilot_key === "delos");
+  const context = await browser.newContext({ ...VIEWPORTS[vp], reducedMotion: "reduce" });
+  await context.addInitScript((l) => localStorage.setItem("guardian.lang", l), lang);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  page.on("pageerror", (e) => errors.push(String(e)));
+  await page.goto(URL_BASE);
+  await page.getByRole("radio", { name: new RegExp(delos.display_name[lang]) }).check();
+  await page.getByRole("button", { name: t["home.start"] }).click();
+  await preQuiz(page, t);
+  await toMission(page, t);
+  await page.getByRole("button", { name: fill(t["mission.add"], { name: cardName(lang, "soil_moisture") }), exact: true }).click();
+  await page.getByRole("button", { name: t["mission.done"] }).click();
+  await passReplay(page);
+  await page.getByRole("button", { name: t["event.toReveal"] }).click();
+  await page.getByRole("button", { name: t["reveal.continue"] }).click();
+  await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
+  const open = page.getByRole("button", { name: t["consequence.view3d"] });
+  await open.click();
+  try {
+    await page.locator(".view3d.is-open").waitFor({ timeout: 60000 });
+  } catch {
+    note(`${prefix}: the 3D view did not open (${(await page.locator("#view3d-open-note").innerText().catch(() => "?")).trim()})`);
+    await context.close();
+    return;
+  }
+  const state = await page.evaluate(() => ({
+    focus: document.activeElement?.id,
+    panel: document.querySelector(".board-panel")?.inert,
+    map: document.querySelector(".board-map .map")?.inert,
+    canvas: !!document.querySelector(".view3d canvas"),
+  }));
+  if (state.focus !== "view3d-title") note(`${prefix}: focus on #${state.focus}, not the view's title`);
+  if (!state.panel || !state.map) note(`${prefix}: the game can still be used under the 3D view`);
+  if (!state.canvas) note(`${prefix}: no 3D canvas`);
+  if (!(await page.getByRole("dialog", { name: t["view3d.title"] }).isVisible())) note(`${prefix}: no dialog named "${t["view3d.title"]}"`);
+  await page.locator("#view3d-years").fill("40");
+  if (!(await page.locator(".view3d-years").innerText()).includes(fill(t["view3d.yearsN"], { n: 40 }))) note(`${prefix}: the slider does not say 40 years`);
+  await page.getByRole("button", { name: t["view3d.watched"] }).click();
+  if ((await page.getByRole("button", { name: t["view3d.watched"] }).getAttribute("aria-pressed")) !== "true") note(`${prefix}: "${t["view3d.watched"]}" not pressed`);
+  await page.getByRole("button", { name: t["view3d.nobody"] }).click();
+  await page.locator(".view3d-dangers summary").click();
+  await checkPage(page, prefix);
+  await shot(page, prefix);
+  await page.keyboard.press("Escape");
+  try {
+    await page.locator(".view3d").waitFor({ state: "detached", timeout: 15000 });
+  } catch {
+    note(`${prefix}: Escape does not close the 3D view`);
+  }
+  const back = await page.evaluate(() => document.activeElement?.id);
+  if (back !== "view3d-open") note(`${prefix}: after closing, focus on #${back}, not the button`);
+  if (errors.length) note(`${prefix}: console errors: ${errors.join(" | ")}`);
+  await context.close();
 }
 
 async function playEveryMonument(browser, lang) {
@@ -1058,7 +1120,7 @@ async function playEveryMonument(browser, lang) {
       await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
       await page.getByRole("button", { name: t["reveal.continue"] }).click();
       await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
-      await check3dLink(page, t, label, alarm && mon.consequences?.[alarm.rule]?.view_3d);
+      await check3dButton(page, t, label, alarm && mon.consequences?.[alarm.rule]?.view_3d);
       if (isDefault) {
         await checkPage(page, `${label} score`);
         await shot(page, `${lang}-phone-${mon.pilot_key}-6-score`);
@@ -1254,6 +1316,8 @@ const server = await startServer();
 const browser = await chromium.launch({
   ...(process.env.BROWSER_PATH ? { executablePath: process.env.BROWSER_PATH } : { channel: process.env.BROWSER_CHANNEL || "msedge" }),
   headless: true,
+  // The 3D view needs WebGL, which a headless browser without a graphics card draws in software.
+  args: ["--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
 });
 try {
   const only = process.env.SCREENSHOT_ONLY; // e.g. "monuments" to run just that part
@@ -1267,6 +1331,7 @@ try {
   if (!only || only === "a11y") for (const lang of ["el", "en"]) await checkA11yMenu(browser, lang);
   if (!only || only === "live") for (const lang of ["el", "en"]) await checkLive(browser, lang);
   if (!only || only === "monuments") for (const lang of ["el", "en"]) await playEveryMonument(browser, lang);
+  if (!only || only === "view3d") for (const [lang, vp] of [["el", "phone"], ["en", "desktop"]]) await check3dView(browser, lang, vp);
   if (!only || only === "imagery") await checkImageryDepth(browser);
   if (!only || only === "class") for (const lang of ["el", "en"]) await playClassAndTeacher(browser, lang);
   if (!only || only === "offline") await playOffline(browser, "el");

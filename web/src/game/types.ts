@@ -159,7 +159,7 @@ export interface Consequence {
   picture: ConsequencePicture;
   text: Text;
   needs_review: boolean;
-  /** A page of the site that shows the same damage in 3D at this monument (e.g. "preview-3d/"), linked under the drawings. */
+  /** The game's 3D view of the same damage at this monument (data/view3d/<name>.json), opened under the drawings. */
   view_3d?: string;
 }
 

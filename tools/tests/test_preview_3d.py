@@ -1,4 +1,4 @@
-"""Tests for the 3D preview's data (tools/build_preview_3d.py -> web/public/preview-3d/data.json).
+"""Tests for the 3D view's data (tools/build_preview_3d.py -> web/public/data/view3d/delos-masks.json).
 
 Run from the repo root:  python3 -I -m unittest discover -s tools/tests -t tools -v
 """

@@ -5,6 +5,9 @@ import { join, relative, resolve, sep } from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 
+/** The file name of the 3D view's code and three.js in the build (assets/view3d-<hash>.js). */
+const VIEW3D_CHUNK = "view3d";
+
 /** After a build, writes dist/sw.js from sw-template.js with the list of files and a version hash. */
 function offline(): Plugin {
   let outDir = "dist";
@@ -21,9 +24,10 @@ function offline(): Plugin {
         );
       const files = walk(outDir)
         .map((f) => relative(outDir, f).split(sep).join("/"))
-        // Recorded narration is kept as it is played, not stored up front; the 3D preview needs the
-        // internet anyway, so it is never stored (see sw-template.js).
-        .filter((f) => f !== "sw.js" && !f.endsWith(".map") && !f.startsWith("audio/") && !f.startsWith("preview-3d/"))
+        // Recorded narration is kept as it is played, not stored up front. The 3D view needs the
+        // internet anyway (its satellite and terrain tiles), so its code and data are not stored
+        // up front either: only a player who opens it loads them (see sw-template.js).
+        .filter((f) => f !== "sw.js" && !f.endsWith(".map") && !f.startsWith("audio/") && !f.startsWith(`assets/${VIEW3D_CHUNK}-`) && !f.startsWith("data/view3d/"))
         .sort();
       const hash = createHash("sha256");
       for (const f of files) hash.update(f).update(readFileSync(join(outDir, f)));
@@ -39,5 +43,12 @@ function offline(): Plugin {
 export default defineConfig({
   base: "./",
   plugins: [react(), offline()],
+  build: {
+    rollupOptions: {
+      // The 3D view and three.js in one file of their own, loaded only when a player opens the view.
+      // (Module ids use forward slashes on every system.)
+      output: { manualChunks: (id) => (/\/node_modules\/three\/|\/src\/view3d\/house\.ts$/.test(id) ? VIEW3D_CHUNK : undefined) },
+    },
+  },
   test: { environment: "node", include: ["tests/**/*.test.ts"] },
 });

@@ -337,19 +337,19 @@ class GameData(unittest.TestCase):
         delos = next(m for m in self.data["monuments"] if m["pilot_key"] == "delos")
         links = {rule: c.get("view_3d") for rule, c in delos["consequences"].items()}
         # The preview shows damp rising into the House of the Masks; wind wearing stone is not in it
-        self.assertEqual(links, {"DL_soil_moisture": "preview-3d/", "DL_humidity": "preview-3d/", "R2_wind": None})
+        self.assertEqual(links, {"DL_soil_moisture": "delos-masks", "DL_humidity": "delos-masks", "R2_wind": None})
         others = [m["pilot_key"] for m in self.data["monuments"] if m["pilot_key"] != "delos"
                   and any("view_3d" in c for c in (m.get("consequences") or {}).values())]
         self.assertEqual(others, [])
 
 
 class PureHelpers(unittest.TestCase):
-    def test_view_3d_must_be_a_page_of_the_site(self):
+    def test_view_3d_must_name_a_3d_view(self):
         self.assertEqual(b.view_3d_problems(None), [])
-        self.assertEqual(b.view_3d_problems("preview-3d/"), [])
-        for bad in ("preview-3d", "/preview-3d/", "../preview-3d/", "https://example.org/", "Preview-3D/", 3):
+        self.assertEqual(b.view_3d_problems("delos-masks"), [])
+        for bad in ("delos-masks/", "../delos-masks", "data/view3d/delos-masks.json", "Delos-Masks", "-masks", 3):
             self.assertTrue(b.view_3d_problems(bad), bad)
-        self.assertIn("has no page", b.view_3d_problems("no-such-page/")[0])
+        self.assertIn("has no data", b.view_3d_problems("no-such-view")[0])
 
     def test_parse_metadata(self):
         self.assertEqual(b.parse_metadata({"metadata": '{"a": 1}'}), {"a": 1})
