@@ -1,4 +1,4 @@
-# Οδηγός για εκπαιδευτικούς · Φύλακας για μια μέρα
+# Οδηγός για εκπαιδευτικούς · Prototype 1
 
 *English version below.*
 
@@ -72,7 +72,7 @@
 
 ---
 
-# Teacher guide · Guardian for a Day
+# Teacher guide · Prototype 1
 
 ## At a glance
 

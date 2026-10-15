@@ -1,4 +1,7 @@
-# Guardian for a Day · Φύλακας για μια μέρα
+# Prototype 1
+
+Formerly *Guardian for a Day · Φύλακας για μια μέρα*: the Pi's services and the code still use that name
+(`guardian-*`).
 
 A plain-language web game for the ARGUS Open Innovation Challenge 2026, Track A (Heritage and Citizen Science). The
 game is played on an interactive satellite map. The player picks a monument on a map of Europe, flies in, and places

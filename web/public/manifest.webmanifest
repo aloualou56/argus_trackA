@@ -1,6 +1,6 @@
 {
-  "name": "Φύλακας για μια μέρα · Guardian for a Day",
-  "short_name": "Φύλακας",
+  "name": "Prototype 1",
+  "short_name": "Prototype 1",
   "description": "A game about monitoring cultural heritage with real ARGUS data.",
   "lang": "el",
   "start_url": "./",
