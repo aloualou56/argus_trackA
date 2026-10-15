@@ -4843,6 +4843,10 @@ html.a11y-spacing main p {
   color: var(--muted);
   font-size: 0.85rem;
 }
+/* How big the damage drawn is, and what that rests on (View3D.tsx). */
+.view3d-size {
+  font-size: 0.85em;
+}
 .view3d-dangers summary {
   cursor: pointer;
   font-weight: 650;

@@ -491,12 +491,36 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   the Conventillo, the visitors, wind and heat at the Villa di Orazio); `web/tests/scenes3d.test.ts` checks that
   the view finds that very sensor.
 - **Each danger its own damage**, from that sensor, on the model's own surfaces (`damageAfter` in `math.ts`,
-  the picture of the consequence): damp rising under the mosaics (House of the Masks); damp, salt and paint
-  flaking off the walls (frescoes: Ranverso, the Conventillo); a path worn into the floor (visitors); the stone
-  bleached, pitted and crusted (wind, heat); a crack growing through the wall at the crackmeter or accelerometer
-  (Schenkenberg), following the wall's own line in the model; the wall at the tiltmeter leaning over, then
-  cracking (Conventillo); trees and bushes on the wall tops (storms, wind). Everywhere a little weathering and,
-  after 15 years, plants on the wall tops. "ARGUS watching" stops each at a year's worth.
+  the picture of the consequence): damp rising under the mosaics (House of the Masks); damp and salt in the
+  walls, the paint pushed off where they dry (frescoes: Ranverso, the Conventillo); a path worn into the floor
+  (visitors); the stone's surface worn (wind, heat); a crack opening through the wall at the crackmeter or
+  accelerometer (Schenkenberg), along the wall's own line in the model; the wall at the tiltmeter leaning
+  further (Conventillo); trees and bushes on the wall tops (storms, wind). After 15 years, plants on the wall
+  tops everywhere. "ARGUS watching" stops each at a year's worth. An orange ring marks where the sensor whose
+  alarm went off stands, and the camera comes to rest where it can see the damage: it checks, with rays
+  against ARGUS's model, that no building stands in between, close for millimetre damage (about 8 m for a
+  crack).
+- **How big the damage is: true sizes, said on the screen.** The view draws the damage at the sizes below and
+  says them under the slider ("The crack 25 mm wider and 2.5 m long, if it opens 0.5 mm a year: an
+  assumption…"). Nothing is enlarged to be seen; the camera goes closer instead. `RATES` in
+  `web/src/view3d/math.ts`:
+  - rising damp stops at 0.5-1.5 m above the ground in most walls, up to 2 m in stone masonry, a little higher
+    with salts, which leave a white band where the wall dries ([Hawkesbury City Council, heritage guidance](https://www.hawkesbury.nsw.gov.au/__data/assets/pdf_file/0004/248251/AT2toItem3.1.2-Heritage-Information-Sheet-Rising-Damp.pdf);
+    [TU Delft repository](https://repository.tudelft.nl/file/File_626ee100-e8b5-4e56-9d7b-76cfbb36a824?preview=1)): drawn
+    rising towards 1.5 m;
+  - marble and limestone lose about 0.5-5 mm of surface a century, more by the sea
+    ([marble tombstones, GSA 2002](https://gsa.confex.com/gsa/2002AM/webprogram/Paper45992.html);
+    [limestone, Haifa](https://cris.haifa.ac.il/en/publications/weathering-rates-of-limestone-tombstones-measured-in-haifa-israel/)):
+    0.05 mm a year, 2.5 mm in 50 years, too little to see from the camera, and the view says so;
+  - a crack: **assumed** 0.5 mm wider and 4 cm longer a year (frost in a ruin). ARGUS's crack readings have no
+    confirmed unit yet (`content/rule_sensor_map.json`); in a cared-for building, Florence's dome, cracks grow
+    about 6 mm a century ([summary of its monitoring](https://newtonexcelbach.com/2012/07/15/cracks-in-the-dome/));
+  - a lean: **assumed** 0.05° a year, 2.5° in 50 years; no source gives a rate, and a historic wall leaning
+    2-3° has been judged dangerous ([Sheffield City Council file note](https://democracy.sheffield.gov.uk/documents/s65492/Appendix_Rose%20Garden%20Caf%20Front%20Wall%20File%20Note_041223.pdf));
+  - the stain in the House of the Masks' floor spreads across the room (about 3 m), the paint comes away only
+    around and below the damp's tide line, and the worn path's reach is drawn, not measured: the view says so.
+  Needs review: a conservator's check of these sizes, and the crackmeter's and tiltmeter's units from ARGUS,
+  which would replace the two assumptions with measured rates.
 
 - **The way in, without a jump:** everything is loaded before anything moves. The view starts loading when the
   button comes into sight (or is pointed at): its code and three.js (a file of their own, `assets/view3d-*.js`,

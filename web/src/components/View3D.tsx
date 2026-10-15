@@ -184,6 +184,21 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
       watch: (risk ? check?.thresholds?.watch : null) ?? d.watch,
     };
   });
+  // How big the damage drawn is, and what that size rests on (math.ts, RATES).
+  const d = damageAfter(years, watched, focus.kind);
+  const one = (n: number) => number(n, n < 10 ? 1 : 0);
+  const sizeLine =
+    focus.kind === "mosaic" || focus.kind === "fresco"
+      ? t("view3d.sizeDamp", { h: one(d.damp) })
+      : focus.kind === "crack"
+        ? t("view3d.sizeCrack", { mm: one(d.crackMm), m: one(d.crackM) })
+        : focus.kind === "lean"
+          ? t("view3d.sizeLean", { deg: number(d.lean, 2) })
+          : focus.kind === "stone"
+            ? t("view3d.sizeStone", { mm: number(d.surfaceMm, 1) })
+            : focus.kind === "floor"
+              ? t("view3d.sizeFloor", { m: one(d.wear) })
+              : t("view3d.sizePlants", { p: number(d.plants * 100, 0) });
   const yearsText =
     years === 0 ? t("view3d.today") : years === 1 ? t("view3d.oneYear") : t("view3d.yearsN", { n: number(years, 0) });
   const panel = phase === "open";
@@ -243,6 +258,7 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
             <p className="view3d-note" aria-live="polite">
               {t(noteKey(focus.kind, watched))}
             </p>
+            {years > 0 && <p className="view3d-note view3d-size">{sizeLine}</p>}
             <details className="view3d-dangers">
               <summary>{t(loaded.assets.data.rooms.length ? "view3d.dangers" : "view3d.dangersHere")}</summary>
               <p className="small">

@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { isPlayable } from "../src/game/logic";
 import type { GameData } from "../src/game/types";
-import { cameraHeightFor, damageAfter, MAP_ZOOM, metresPerPixel, terrarium, tileLonLat, tileXY } from "../src/view3d/math";
+import { cameraHeightFor, damageAfter, RATES, MAP_ZOOM, metresPerPixel, terrarium, tileLonLat, tileXY } from "../src/view3d/math";
 
 const data = JSON.parse(readFileSync(new URL("../public/data/game_data.json", import.meta.url), "utf8")) as GameData;
 
@@ -40,7 +40,7 @@ describe("the 3D view", () => {
   });
 
   it("the damage grows with the years nobody noticed, and stays a year's worth with ARGUS watching", () => {
-    const nothing = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, weather: 0, crack: 0, lean: 0 };
+    const nothing = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, surfaceMm: 0, crackMm: 0, crackM: 0, lean: 0 };
     expect(damageAfter(0, false)).toEqual(nothing);
     const later = damageAfter(50, false);
     expect(later.damp).toBeGreaterThan(1); // over a metre up the walls
@@ -51,8 +51,8 @@ describe("the 3D view", () => {
     expect(damageAfter(50, true)).toEqual(damageAfter(1, false));
   });
 
-  it("each danger shows its own damage, growing with the years, a year's worth when watched", () => {
-    const own = { fresco: "flake", floor: "wear", stone: "weather", crack: "crack", lean: "lean", tree: "plants" } as const;
+  it("each danger shows its own damage, at its rate, a year's worth when watched", () => {
+    const own = { fresco: "flake", floor: "wear", stone: "surfaceMm", crack: "crackMm", lean: "lean", tree: "plants" } as const;
     for (const [kind, k] of Object.entries(own)) {
       const d = kind as keyof typeof own;
       expect(damageAfter(0, false, d)[k]).toBe(0);
@@ -60,8 +60,11 @@ describe("the 3D view", () => {
       expect(damageAfter(10, false, d)[k]).toBeGreaterThan(damageAfter(50, true, d)[k]);
       expect(damageAfter(50, true, d)).toEqual(damageAfter(1, false, d));
     }
-    expect(damageAfter(50, false, "lean").lean).toBe(6); // degrees
+    // the sources' sizes: rising damp under 1.5 m; a few millimetres of stone; the assumed crack and lean
+    expect(damageAfter(50, false).damp).toBeLessThanOrEqual(RATES.dampMaxM);
+    expect(damageAfter(50, false, "stone").surfaceMm).toBeCloseTo(2.5, 6);
+    expect(damageAfter(50, false, "crack").crackMm).toBeCloseTo(25, 6);
+    expect(damageAfter(50, false, "lean").lean).toBeCloseTo(2.5, 6);
     expect(damageAfter(50, false, "stone").damp).toBe(0); // only the danger's own damage
-    expect(damageAfter(50, false, null).weather).toBeGreaterThan(0);
   });
 });

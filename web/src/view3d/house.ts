@@ -535,7 +535,11 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       const row = Math.floor((-y - footprint.min.z) / CELL);
       if (col < 0 || row < 0 || col >= nx || row >= nz) return null;
       const h = cells[row * nx + col];
-      return h === Infinity ? null : h;
+      // a hole in the model's floor (under a sensor) would read the roof above it as the floor: within a
+      // metre around, the lowest point is
+      const low = lowestNear(x, y, 1);
+      if (h === Infinity) return low;
+      return low !== null && h - low > 1.5 ? low : h;
     };
     lowestNear = (x, y, r) => {
       let low = Infinity;
@@ -683,6 +687,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     wear: { value: 0 },
     weather: { value: 0 },
     crack: { value: 0 },
+    crackW: { value: 0 },
     lean: { value: 0 },
     source: { value: wallAt ? new THREE.Vector2(wallAt[0], wallAt[1]) : new THREE.Vector2(src.x, src.z) },
     sourceY: { value: src.y },
@@ -748,8 +753,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
         m.onBeforeCompile = (shader) => {
           Object.assign(shader.uniforms, {
             uWet: damage.wet, uLoss: damage.loss, uSalt: damage.salt, uDamp: damage.damp, uSource: damage.source,
-            uFlake: damage.flake, uWear: damage.wear, uWeather: damage.weather, uCrack: damage.crack, uLean: damage.lean,
+            uFlake: damage.flake, uWear: damage.wear, uWeather: damage.weather, uCrack: damage.crack, uCrackW: damage.crackW, uLean: damage.lean,
             uSourceY: damage.sourceY, uLeanDir: damage.leanDir, uWallDir: damage.wallDir, uGround: { value: floorY },
+            uReach: { value: VIEW },
           });
           shader.vertexShader = shader.vertexShader
             .replace(
@@ -762,7 +768,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               if (uLean > 0.0) {
                 // the wall by the tiltmeter leans over, more the higher it stands; a few metres along, not at all
                 vec4 wl = modelMatrix * vec4(transformed, 1.0);
-                float reachL = 1.0 - smoothstep(3.0, 7.0, distance(wl.xz, uSource));
+                float reachL = 1.0 - smoothstep(4.0, 10.0, distance(wl.xz, uSource));
                 float off = tan(uLean) * max(0.0, wl.y - uGround) * reachL;
                 transformed += inverse(mat3(modelMatrix)) * vec3(uLeanDir.x * off, 0.0, uLeanDir.y * off);
               }`,
@@ -774,7 +780,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uSourceY;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
@@ -785,62 +791,72 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               vec3 nW = normalize(vNormalW);
               float flatUp = smoothstep(0.80, 0.95, nW.y);
               float wall = 1.0 - flatUp;
-              float nearFloor = 1.0 - smoothstep(0.35, 1.0, vWorld.y - uGround);
+              // the stain is on the floors at the damp floor's level, never on a roof above it
+              float nearFloor = 1.0 - smoothstep(0.6, 1.6, abs(vWorld.y - uGround));
               diffuseColor.rgb = mix(base0, diffuseColor.rgb, flatUp * nearFloor);
               vec3 c = diffuseColor.rgb;
               // metres along the damaged wall from the sensor, and out of its line
               float along = dot(vWorld.xz - uSource, uWallDir);
               float across = abs(dot(vWorld.xz - uSource, uLeanDir));
-              float near = 1.0 - smoothstep(3.0, 18.0, distance(vWorld.xz, uSource));
-              float damp = uDamp * (0.25 + 0.75 * near) * wall;
+              float dist0 = distance(vWorld.xz, uSource);
+              // rising damp is where the ground is wet: around the sensor, fading over some 20 m
+              float near = 1.0 - smoothstep(3.0 * uReach, 20.0 * uReach, dist0);
+              float damp = uDamp * near * wall;
+              float y = vWorld.y - uGround;
+              float edge = damp * (1.0 + (vnoise(vec2(along * 0.8, vWorld.x + vWorld.z) * 1.2) - 0.5) * 0.3);
               if (damp > 0.0) {
-                float y = vWorld.y - uGround;
-                float edge = damp + (vnoise(vWorld.xz * 1.6 + vWorld.y) - 0.5) * 0.22;
-                float wetWall = 1.0 - smoothstep(edge - 0.05, edge + 0.02, y);
-                c *= mix(vec3(1.0), vec3(0.55, 0.53, 0.49), wetWall);
-                float band = smoothstep(0.07, 0.0, abs(y - edge - 0.035)) * smoothstep(0.15, 0.35, damp) * uSalt;
-                c = mix(c, vec3(0.97, 0.96, 0.93), band * (0.55 + 0.45 * vnoise(vWorld.xz * 11.0 + vWorld.y * 9.0)));
+                // damp rising in the walls from the ground: darker below a wavy tide line, with a white line
+                // of salt where it dries out
+                float wetWall = (1.0 - smoothstep(edge - 0.08, edge + 0.04, y)) * step(-0.3, y);
+                c *= mix(vec3(1.0), vec3(0.58, 0.56, 0.52), wetWall);
+                float band = smoothstep(0.08, 0.0, abs(y - edge - 0.04)) * uSalt * step(-0.3, y);
+                c = mix(c, vec3(0.95, 0.94, 0.91), band * (0.5 + 0.4 * vnoise(vWorld.xz * 11.0 + vWorld.y * 9.0)));
               }
               if (uFlake > 0.0) {
-                // paint and plaster coming away in flakes, from the damp walls near the sensor
-                float fl = uFlake * (1.0 - smoothstep(5.0, 16.0, distance(vWorld.xz, uSource))) * wall;
-                float flakeN = vnoise(vec2(along, vWorld.y) * 2.4 + 4.0) * 0.7 + vnoise(vec2(along, vWorld.y) * 9.0) * 0.3;
-                float gone = step(1.0 - fl * 0.75, flakeN);
-                float rim = smoothstep(0.96 - fl * 0.75, 1.0 - fl * 0.75, flakeN) * (1.0 - gone);
-                c = mix(c, vec3(0.80, 0.76, 0.68) * (0.9 + 0.2 * hash12(floor(vec2(along, vWorld.y) / 0.03))), gone);
-                c *= 1.0 - rim * 0.4;
+                // paint and plaster pushed off by the salt where the damp wall dries: around and below the tide
+                // line, the stone under it showing
+                float zone = (1.0 - smoothstep(edge + 0.1, edge + 0.4, y)) * step(-0.3, y);
+                float fl = uFlake * near * wall * zone;
+                vec2 w2 = vec2(vWorld.x + vWorld.z, vWorld.y);
+                float flakeN = vnoise(w2 * 1.3 + 4.0) * 0.6 + vnoise(w2 * 4.5) * 0.3 + vnoise(w2 * 14.0) * 0.1;
+                float gone = step(1.0 - fl * 0.85, flakeN);
+                float rim = smoothstep(0.95 - fl * 0.85, 1.0 - fl * 0.85, flakeN) * (1.0 - gone);
+                c = mix(c, mix(vec3(0.70, 0.52, 0.42), vec3(0.78, 0.74, 0.66), vnoise(w2 * 3.0)), gone);
+                c = mix(c, vec3(0.96, 0.95, 0.91), rim * 0.7);
               }
               if (uWear > 0.0) {
-                // a path worn by feet: the floor polished smooth and faded, then stones loosening
-                float rw = distance(vWorld.xz, uSource) + (vnoise(vWorld.xz * 1.1) - 0.5) * 0.8;
-                float worn = (1.0 - smoothstep(uWear - 0.5, uWear + 0.1, rw)) * flatUp;
+                // a path worn by feet: the floor polished smooth and pale, then stones loosening
+                float rw = dist0 + (vnoise(vWorld.xz * 0.7) - 0.5) * 1.5;
+                float worn = (1.0 - smoothstep(uWear - 0.8, uWear + 0.2, rw)) * flatUp;
                 float lum = dot(c, vec3(0.299, 0.587, 0.114));
-                c = mix(c, vec3(lum * 1.12) * vec3(1.02, 1.0, 0.95), worn * 0.6);
-                float gap = step(1.0 - uLoss * worn * 0.6, vnoise(vWorld.xz * 3.1 + 21.0));
-                c = mix(c, vec3(0.35, 0.32, 0.28), gap);
+                c = mix(c, vec3(min(1.0, lum * 1.3 + 0.06)) * vec3(1.02, 1.0, 0.94), worn * 0.7);
               }
               if (uWeather > 0.0) {
-                // weathered stone: bleached, pitted, and a dark crust where rain never washes it
+                // weathered stone: a few millimetres of its surface gone (uWeather 1 = 5 mm): paler, rain-
+                // streaked, its surface pitted and flaking in places
+                float w = uWeather * (0.55 + 0.45 * near);
                 float lum = dot(c, vec3(0.299, 0.587, 0.114));
-                float w = uWeather * (0.6 + 0.4 * near);
-                c = mix(c, vec3(lum) * vec3(1.05, 1.0, 0.93), w * 0.5);
+                c = mix(c, vec3(lum) * vec3(1.06, 1.0, 0.92), w * 0.6);
+                vec2 sw = vec2(vWorld.x + vWorld.z, vWorld.y);
+                float crust = smoothstep(0.52, 0.72, vnoise(sw * 0.6 + vWorld.xz * 0.2));
+                c = mix(c, vec3(0.16, 0.15, 0.13), w * 0.35 * crust * smoothstep(-0.15, -0.6, nW.y));
+                float streak = smoothstep(0.55, 0.85, vnoise(vec2(sw.x * 3.0, sw.y * 0.12)));
+                c *= 1.0 - streak * w * 0.3 * wall;
                 float pits = smoothstep(0.6, 0.8, vnoise(vWorld.xz * 5.0 + vWorld.y * 5.0) * 0.6 + vnoise((vWorld.xz + vWorld.y) * 17.0) * 0.4);
                 c *= 1.0 - pits * w * 0.5;
-                c = mix(c, vec3(0.20, 0.19, 0.17), w * 0.55 * smoothstep(-0.15, -0.6, nW.y));
               }
               if (uCrack > 0.0) {
-                // a crack through the wall at the sensor, wider in its middle, growing up and down
+                // a crack through the wall at the sensor, uCrackW metres wide in its middle, uCrack metres long
                 float yr = vWorld.y - uSourceY;
                 float halfLen = uCrack * 0.5;
-                float zig = (vnoise(vec2(yr * 1.7, 3.0)) - 0.5) * 0.9 + (vnoise(vec2(yr * 7.0, 9.0)) - 0.5) * 0.16;
+                float taper = 1.0 - clamp(abs(yr) / max(halfLen, 0.01), 0.0, 1.0);
+                float zig = (vnoise(vec2(yr * 1.2, 3.0)) - 0.5) * 1.2 + (vnoise(vec2(yr * 6.0, 9.0)) - 0.5) * 0.2;
                 float d = abs(along - zig);
-                float width = 0.008 + 0.03 * clamp(uCrack / 6.0, 0.0, 1.0) * (1.0 - clamp(abs(yr) / max(halfLen, 0.01), 0.0, 1.0));
-                float onWall = wall * (1.0 - smoothstep(halfLen - 0.15, halfLen + 0.1, abs(yr))) * (1.0 - smoothstep(0.8, 1.6, across));
-                c *= 1.0 - 0.3 * (1.0 - smoothstep(width * 2.0, width * 10.0, d)) * onWall;
-                c = mix(c, vec3(0.06, 0.05, 0.05), (1.0 - smoothstep(width, width * 1.8, d)) * onWall);
-                // stones loosened along it once it is long
-                float lost = step(0.78, vnoise(vec2(along, vWorld.y) * 3.5 + 7.0)) * (1.0 - smoothstep(0.1, 0.6, d)) * onWall * smoothstep(3.0, 6.0, uCrack);
-                c = mix(c, vec3(0.30, 0.27, 0.24), lost);
+                float width = max(0.002, uCrackW * (0.25 + 0.75 * taper));
+                float onWall = wall * (1.0 - smoothstep(halfLen - 0.2, halfLen + 0.1, abs(yr))) * (1.0 - smoothstep(1.2, 2.2, across));
+                // a shadowed edge either side, then the open crack itself
+                c *= 1.0 - 0.35 * (1.0 - smoothstep(width * 1.5, width * 6.0, d)) * onWall;
+                c = mix(c, vec3(0.04, 0.035, 0.03), (1.0 - smoothstep(width * 0.5, width, d)) * onWall);
               }
               diffuseColor.rgb = c;`,
             );
@@ -968,14 +984,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     [tops[i], tops[j]] = [tops[j], tops[i]];
   }
   const plants = new THREE.InstancedMesh(
-    new THREE.IcosahedronGeometry(0.16, 0),
+    new THREE.IcosahedronGeometry(model ? 0.3 : 0.16, 0), // over a real wall top, a tuft that can be seen
     new THREE.MeshStandardMaterial({ color: "#56703a", roughness: 1, flatShading: true }),
     Math.max(tops.length, 1),
   );
   const m4 = new THREE.Matrix4();
   const scale = new THREE.Vector3();
   const turn = new THREE.Quaternion();
-  const bushy = kind === "tree" ? 2.2 : 1; // trees and shrubs over the walls, not only weeds
+  const bushy = kind === "tree" ? 2.8 : 1; // trees and shrubs over the walls, not only weeds
   tops.forEach((p, i) => {
     const k = (0.6 + rnd() * 0.9) * bushy;
     scale.set(k * 1.3, k * 0.8, k * 1.1);
@@ -986,6 +1002,30 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // Its bounds are measured once, at the first frame, when no plant grows yet: never culled instead.
   plants.frustumCulled = false;
   scene.add(plants);
+
+  // Where the day's alarm went off: an orange ring on the ground (and a line up to the sensor when it is
+  // high on a wall), so the player knows where to look. Not for damage all over (stone, plants).
+  const marked = kind === "mosaic" || kind === "fresco" || kind === "floor" || kind === "crack" || kind === "lean";
+  if (marked && (focusSensor || at0)) {
+    const groundY = surface(focusXY[0], focusXY[1]);
+    const r = 1.2 * VIEW;
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(r - 0.2 * VIEW, r, 64),
+      new THREE.MeshBasicMaterial({ color: "#ff6a00", transparent: true, opacity: 0.9, depthWrite: false, side: THREE.DoubleSide }),
+    );
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.set(src.x, groundY + 0.08, src.z);
+    ring.renderOrder = 2;
+    scene.add(ring);
+    if (src.y - groundY > 2) {
+      const line = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(src.x, groundY + 0.08, src.z), src.clone()]),
+        new THREE.LineBasicMaterial({ color: "#ff6a00" }),
+      );
+      scene.add(line);
+    }
+  }
+
 
   // ---------------------------------------------------------------- the camera: from straight above down to the rooms
   const controls = new OrbitControls(camera, canvas);
@@ -1002,14 +1042,48 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const onModel = (xy: XY) => !model || floorAt(xy[0], xy[1]) !== null;
   const modelMiddle: XY = model ? [(footprint.min.x + footprint.max.x) / 2, -(footprint.min.z + footprint.max.z) / 2] : houseCentre;
   const local = kind === "mosaic" || kind === "fresco" || kind === "floor" || kind === "crack" || kind === "lean";
-  const endLook =
-    dampRoom && nextRoom
+  // On ARGUS's model of the House of the Masks, straight to the room of the damage (from above, over
+  // the cut walls, to see its floor).
+  const roomView = kind === "mosaic" && !!dampRoom && !!model;
+  const endLook = roomView
+    ? at(dampRoom!.xy, 0.2)
+    : dampRoom && nextRoom
       ? at([(dampRoom.xy[0] + nextRoom.xy[0]) / 2, (dampRoom.xy[1] + nextRoom.xy[1]) / 2], 0.4)
-      : local && (focusSensor || at0) && onModel(focusXY)
-        ? src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1]) + 0.4))
-        : at(onModel(houseCentre) ? houseCentre : modelMiddle, 0.4);
-  // about 28 m away (further over a bigger place), looking down at 34 degrees
-  const END_OFFSET = new THREE.Vector3(-14, 15.5, 18.5).multiplyScalar(VIEW);
+      : (kind === "crack" || kind === "lean") && wallAt
+        ? new THREE.Vector3(wallAt[0], Math.max(src.y, surface(focusXY[0], focusXY[1]) + 1), wallAt[1])
+        : local && (focusSensor || at0) && onModel(focusXY)
+          ? src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1]) + 0.4))
+          : at(onModel(houseCentre) ? houseCentre : modelMiddle, 0.4);
+  // How far away the camera comes to rest: a crack is millimetres wide and a lean a few degrees, so for
+  // them about 8 m; for damp, paint or a worn floor at the sensor, about 17 m; else about 28 m (further
+  // over a bigger place).
+  const close = (kind === "crack" || kind === "lean") && !!wallAt;
+  const restAt = close ? 8 : (kind === "mosaic" || kind === "fresco" || kind === "floor") && focusSensor && onModel(focusXY) ? Math.max(17, 14 * VIEW) : 28 * VIEW;
+  // From which side: the first of these from which nothing of ARGUS's model stands between the camera
+  // and the damage (a building, a wall, a roof; never what the cut leaves out), looking down at 34
+  // degrees from the south-west, or in front of the damaged wall; then from the other sides, then from
+  // higher up.
+  const cutTop = model && data.cut_above_m != null ? floorY + data.cut_above_m : Infinity;
+  const first = close ? Math.atan2(away.y, away.x) : Math.atan2(18.5, -14);
+  const sides = [0, 1, -1, 2, -2, 3, -3, 4].map((k) => first + (k * Math.PI) / 4);
+  const heights = roomView ? [55, 70] : close ? [25, 45, 70] : [34, 50, 70];
+  const ray = new THREE.Raycaster();
+  const clear = (dir: THREE.Vector3) => {
+    if (!model) return true;
+    ray.set(endLook, dir);
+    ray.far = restAt;
+    return !ray.intersectObject(model, true).some((h) => h.distance > 0.6 && h.point.y < cutTop);
+  };
+  let END_OFFSET = new THREE.Vector3(-14, 15.5, 18.5).normalize();
+  search: for (const h of heights) {
+    for (const az of sides) {
+      const e = (h * Math.PI) / 180;
+      const dir = new THREE.Vector3(Math.cos(e) * Math.cos(az), Math.sin(e), Math.cos(e) * Math.sin(az));
+      END_OFFSET = dir;
+      if (clear(dir)) break search;
+    }
+  }
+  END_OFFSET.multiplyScalar(restAt);
   const endPos = new THREE.Vector3();
   const topLook = at(houseCentre);
   const topPos = topLook.clone().setY(topLook.y + 200);
@@ -1127,8 +1201,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       damage.salt.value = d.salt;
       damage.flake.value = d.flake;
       damage.wear.value = d.wear;
-      damage.weather.value = d.weather;
-      damage.crack.value = d.crack;
+      damage.weather.value = Math.min(1, d.surfaceMm / 5);
+      damage.crack.value = d.crackM;
+      damage.crackW.value = d.crackMm / 1000;
       damage.lean.value = (d.lean * Math.PI) / 180;
       plants.count = Math.round(d.plants * tops.length);
     },

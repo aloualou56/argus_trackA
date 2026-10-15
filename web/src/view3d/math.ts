@@ -46,9 +46,9 @@ export function seeded(seed: number): () => number {
 /** What the illustration shows, each from 0 (nothing) upwards: how high damp has risen in the walls
  *  (metres), the radius of the stain in the floors (metres), the share of tesserae lost in it, how
  *  much salt has come out, and the share of the wall tops where plants have rooted. Then, for the
- *  other dangers: paint flaking off the walls (share), the radius of the path worn into a floor
- *  (metres), the stone's surface worn by weather (share), how long the crack has grown (metres) and
- *  how far the wall has leaned (degrees). */
+ *  other dangers: the share of the painted wall whose paint has come away, the radius of the path worn
+ *  into a floor (metres), the stone's surface lost (millimetres), the crack's width (millimetres) and
+ *  length (metres), and how much further the wall leans (degrees). */
 export interface Damage {
   damp: number;
   wet: number;
@@ -57,8 +57,9 @@ export interface Damage {
   plants: number;
   flake: number;
   wear: number;
-  weather: number;
-  crack: number;
+  surfaceMm: number;
+  crackMm: number;
+  crackM: number;
   lean: number;
 }
 
@@ -68,45 +69,66 @@ export type DamageKind = "mosaic" | "floor" | "stone" | "lean" | "tree" | "fresc
 
 const grow = (y: number, years: number) => (y > 0 ? 1 - Math.exp(-y / years) : 0);
 
+/** The rates behind the damage (README, "3D view: how big the damage is"). Measured where a source
+ *  measured it; an assumption, said as one on the screen, where nothing measured it. */
+export const RATES = {
+  /** Rising damp stops at 0.5-1.5 m above the ground in most walls (heritage guidance; up to 2 m in
+   *  stone masonry): it is drawn rising towards 1.5 m. */
+  dampMaxM: 1.5,
+  /** Marble and limestone lose about 0.5-5 mm of surface a century, more by the sea: the upper end,
+   *  for stone in wind and salt. */
+  surfaceMmPerYear: 0.05,
+  /** ASSUMED: an active crack in a ruin, opened by frost every winter. ARGUS's crack readings have no
+   *  confirmed unit yet; the Florence dome's cracks, in a cared-for building, grow about 6 mm a century. */
+  crackMmPerYear: 0.5,
+  crackMPerYear: 0.04,
+  /** ASSUMED: no source gives a rate. A historic wall leaning 2-3 degrees has been judged dangerous. */
+  leanDegPerYear: 0.05,
+};
+
 /** The damage after `years` in which nobody noticed. With ARGUS watching, the sensors show it within
- *  months and it is treated: never more than a year's worth. An illustration, not a prediction
- *  (README, "3D view"). "mosaic" is the House of the Masks: damp rising under its floors. */
+ *  months and it is treated: never more than a year's worth. An illustration of how big it would be,
+ *  at the rates above (README, "3D view"). "mosaic" is the House of the Masks: damp rising under its
+ *  floors. */
 export function damageAfter(years: number, watched: boolean, kind: DamageKind = "mosaic"): Damage {
   const y = watched ? Math.min(years, 1) : years;
-  const none = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, weather: 0, crack: 0, lean: 0 };
+  const none = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, surfaceMm: 0, crackMm: 0, crackM: 0, lean: 0 };
   const plants = y < 15 ? 0 : ((y - 15) / 35) * 0.45;
-  const weather = Math.min(0.35, y / 140); // every place weathers a little
+  const salt = Math.min(1, Math.max(0, (y - 1) / 10));
+  const damp = y > 0 ? 0.1 + (RATES.dampMaxM - 0.1) * grow(y, 15) : 0;
+  const surfaceMm = y * RATES.surfaceMmPerYear;
   switch (kind) {
     case "mosaic":
       return {
         ...none,
-        damp: y > 0 ? 0.1 + 1.1 * grow(y, 15) : 0, // up to about 1.2 m up the walls
-        wet: y > 0 ? 0.4 + 2.6 * grow(y, 18) : 0, // a stain up to about 3 m across the floor
+        damp,
+        wet: y > 0 ? 0.4 + 2.6 * grow(y, 18) : 0, // a stain spreading across the room, about 3 m out
         loss: Math.min(0.85, Math.max(0, (y - 3) / 40)),
-        salt: Math.min(1, Math.max(0, (y - 1) / 10)),
+        salt,
         plants,
+        surfaceMm,
       };
     case "fresco": // damp climbing the painted walls, salt at its edge, the paint coming away
+      return { ...none, damp, salt, flake: Math.min(0.6, Math.max(0, (y - 2) / 60)), plants, surfaceMm };
+    case "floor": // feet wearing a path: smooth and pale where people walk
+      return { ...none, wear: y > 0 ? 0.6 + 2.4 * grow(y, 20) : 0, plants, surfaceMm };
+    case "stone": // wind, salt and heat wearing the stone's surface
+      return { ...none, surfaceMm, plants };
+    case "crack": // a crack opening every winter
+      return { ...none, crackMm: y * RATES.crackMmPerYear, crackM: y > 0 ? 0.5 + y * RATES.crackMPerYear : 0, plants, surfaceMm };
+    case "lean": // the wall leaning a little more each year; its crack opening with it
       return {
         ...none,
-        damp: y > 0 ? 0.15 + 1.6 * grow(y, 15) : 0,
-        salt: Math.min(1, Math.max(0, (y - 1) / 10)),
-        flake: Math.min(0.9, Math.max(0, (y - 2) / 40)),
+        lean: y * RATES.leanDegPerYear,
+        crackMm: y > 10 ? (y - 10) * RATES.crackMmPerYear : 0,
+        crackM: y > 10 ? 0.5 + (y - 10) * RATES.crackMPerYear : 0,
         plants,
-        weather,
+        surfaceMm,
       };
-    case "floor": // feet wearing a path: smooth and low, then stones loosening
-      return { ...none, wear: y > 0 ? 0.6 + 3.4 * grow(y, 20) : 0, loss: Math.min(0.5, Math.max(0, (y - 10) / 60)), plants, weather };
-    case "stone": // wind, salt and heat wearing the stone's surface
-      return { ...none, weather: Math.min(1, y / 40), plants };
-    case "crack": // a crack growing every winter, stones loosening along it
-      return { ...none, crack: y > 0 ? 0.3 + 5.7 * grow(y, 25) : 0, plants, weather };
-    case "lean": // the wall leaning a little more each year, then cracking
-      return { ...none, lean: Math.min(6, y * 0.12), crack: y > 10 ? 4 * grow(y - 10, 25) : 0, plants, weather };
-    case "tree": // trees and plants growing over the walls
-      return { ...none, plants: y < 3 ? 0 : Math.min(0.9, ((y - 3) / 40) * 0.9), weather };
+    case "tree": // trees and bushes growing over the walls
+      return { ...none, plants: y < 3 ? 0 : Math.min(0.9, ((y - 3) / 40) * 0.9), surfaceMm };
     default:
-      return { ...none, plants, weather };
+      return { ...none, plants, surfaceMm };
   }
 }
 
