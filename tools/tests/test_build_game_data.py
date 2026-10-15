@@ -333,8 +333,24 @@ class GameData(unittest.TestCase):
         self.assertIn("## Assumptions needing human review", self.notes)
         self.assertIn("## Data quirks found", self.notes)
 
+    def test_delos_damp_consequences_link_the_3d_preview(self):
+        delos = next(m for m in self.data["monuments"] if m["pilot_key"] == "delos")
+        links = {rule: c.get("view_3d") for rule, c in delos["consequences"].items()}
+        # The preview shows damp rising into the House of the Masks; wind wearing stone is not in it
+        self.assertEqual(links, {"DL_soil_moisture": "preview-3d/", "DL_humidity": "preview-3d/", "R2_wind": None})
+        others = [m["pilot_key"] for m in self.data["monuments"] if m["pilot_key"] != "delos"
+                  and any("view_3d" in c for c in (m.get("consequences") or {}).values())]
+        self.assertEqual(others, [])
+
 
 class PureHelpers(unittest.TestCase):
+    def test_view_3d_must_be_a_page_of_the_site(self):
+        self.assertEqual(b.view_3d_problems(None), [])
+        self.assertEqual(b.view_3d_problems("preview-3d/"), [])
+        for bad in ("preview-3d", "/preview-3d/", "../preview-3d/", "https://example.org/", "Preview-3D/", 3):
+            self.assertTrue(b.view_3d_problems(bad), bad)
+        self.assertIn("has no page", b.view_3d_problems("no-such-page/")[0])
+
     def test_parse_metadata(self):
         self.assertEqual(b.parse_metadata({"metadata": '{"a": 1}'}), {"a": 1})
         self.assertEqual(b.parse_metadata({"metadata": None}), {})

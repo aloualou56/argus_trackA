@@ -466,15 +466,23 @@ damage does over the years when nobody ever notices, with two drawings side by s
 (`web/src/components/Consequence.tsx`: mosaic, floor, stone, lean, tree, fresco, crack). The drawings explain; the
 caption says they are not pictures of the site. Both are read aloud with the recorded voices once recorded (until
 then, with the device's voice). Needs review: the guardians' words and the science of each consequence (listed in
-`docs/data_notes.md`).
+`docs/data_notes.md`). Where a consequence has `view_3d`, a **"Display in 3D"** button under the drawings opens
+that page in a new tab (Delos's damp alarms: the 3D preview below).
 
 ## 3D preview (prototype): the House of the Masks
 
-`/preview-3d/` on the public copy, not linked from the game yet. The game's satellite map of Delos, a
+`/preview-3d/` on the public copy. The game's satellite map of Delos, a
 fly-in from the 2D map down into 3D, the House of the Masks with its four mosaic rooms and ARGUS's sensors,
 and a "years nobody noticed" slider that shows what unnoticed damp would do (damp rising in the walls with a
 line of salt, a stain spreading through the mosaics, salt crusts, lost tesserae, plants on the wall tops),
 next to "with ARGUS watching".
+
+- **In the game:** "Display in 3D" on the score screen, under the "If nobody had noticed" drawings, when the
+  day's alarm is one of Delos's damp alarms (`DL_soil_moisture`, `DL_humidity`: `view_3d` in
+  `content/monuments/delos.json`, checked by the build). Not for the wind alarm, which wears stone, nor for the
+  other monuments. It opens in a new tab, so the game stays where it was; the button says the page is a
+  prototype, in English for now, that needs the internet. The service worker never stores it, so offline the
+  browser says so instead of showing a half-loaded page.
 
 - **Real:** the ground (the game's Esri imagery on AWS Terrain Tiles elevation); the ruin's outline and the
   plots (OpenStreetMap, `historic=ruins`); the four rooms (214 Dionysus, 215 Theatrical Masks, 216 Silenus,
@@ -638,7 +646,8 @@ npm run narration -- --prune                         # remove recordings no text
 
 `npm run build` writes `dist/sw.js`, a small service worker with the list of built files. After one visit the game,
 its data and the drawn plan work without internet. Map pictures are never stored (their providers do not allow
-offline copies). A new build replaces the stored copy on the next visit. Built files have content hashes and are
+offline copies), nor is the 3D preview (`preview-3d/`, which needs the internet for its libraries and imagery
+anyway). A new build replaces the stored copy on the next visit. Built files have content hashes and are
 served from the stored copy first; the data pack (`data/`) has none, so it comes from the network first and from the
 stored copy only offline. If the data pack's `schema_version` does not match the game (an earlier version's offline
 copy answered), the game removes its service worker and stored files and reloads once; a crash on any screen shows

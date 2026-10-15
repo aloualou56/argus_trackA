@@ -375,6 +375,8 @@
   "consequence.before": "Oggi",
   "consequence.after": "Anni dopo, se nessuno se ne accorge",
   "consequence.drawing": "Disegni per spiegare, non immagini del sito.",
+  "consequence.view3d": "Visualizza in 3D",
+  "consequence.view3dNote": "Un prototipo, per ora in inglese: si apre in una nuova scheda e serve internet.",
   "history.heading": "La storia completa",
   "history.chapter": "Capitolo {n} di {total}",
   "history.next": "Avanti",

@@ -980,6 +980,25 @@ async function checkLive(browser, lang) {
   await context.close();
 }
 
+// "Display in 3D" under the "if nobody had noticed" drawings: exactly where the replayed alarm's
+// consequence links a 3D page (Delos's damp alarms), opening in a new tab, and the page answers.
+async function check3dLink(page, t, label, view3d) {
+  const name = t["consequence.view3d"];
+  const link = page.getByRole("link", { name });
+  if (!view3d) {
+    if (await link.count()) note(`${label} score: "${name}" where the consequence has no 3D page`);
+    return;
+  }
+  if (!(await page.locator(".consequence-pair + .consequence-3d").getByRole("link", { name }).isVisible())) {
+    note(`${label} score: no "${name}" under the drawings`);
+    return;
+  }
+  const href = await link.getAttribute("href");
+  if (href !== `./${view3d}` || (await link.getAttribute("target")) !== "_blank") note(`${label} score: "${name}" goes to ${href}`);
+  const res = await page.request.get(new URL(href, page.url()).href);
+  if (!res.ok() || !(await res.text()).includes('src="./demo.js"')) note(`${label} score: the 3D page does not answer (${res.status()})`);
+}
+
 async function playEveryMonument(browser, lang) {
   const t = dict[lang];
   const context = await browser.newContext({ ...VIEWPORTS.phone, reducedMotion: "reduce" });
@@ -1039,6 +1058,7 @@ async function playEveryMonument(browser, lang) {
       await page.getByRole("heading", { level: 1, name: t["reveal.heading"] }).waitFor();
       await page.getByRole("button", { name: t["reveal.continue"] }).click();
       await page.getByRole("heading", { level: 1, name: t["score.heading"] }).waitFor();
+      await check3dLink(page, t, label, alarm && mon.consequences?.[alarm.rule]?.view_3d);
       if (isDefault) {
         await checkPage(page, `${label} score`);
         await shot(page, `${lang}-phone-${mon.pilot_key}-6-score`);

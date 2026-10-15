@@ -47,6 +47,7 @@ OUT_NOTES = ROOT / "docs" / "data_notes.md"
 OUT_BACKDROPS = ROOT / "web" / "public" / "data" / "backdrops"
 OUT_TRANSLATIONS = ROOT / "web" / "public" / "data" / "i18n"
 OUT_PHOTOS = ROOT / "web" / "public" / "data" / "photos"
+WEB_PUBLIC = ROOT / "web" / "public"  # pages a consequence may link (view_3d) live here
 PHOTO_URL = "data/photos/{name}"  # relative to the web app
 # Licences a photo may carry: free to show with credit (some ask that copies stay under the same licence).
 PHOTO_LICENSES = ("CC0", "Public domain", "CC BY 2.0", "CC BY 3.0", "CC BY 4.0", "CC BY-SA 2.0", "CC BY-SA 3.0", "CC BY-SA 4.0")
@@ -807,9 +808,11 @@ def build_monument(snap: Snapshot, content: Content, pilot: str) -> Tuple[Dict[s
         entry["guardian"] = dict({k: v for k, v in pack["guardian"].items() if not k.startswith("_")}, authored=True)
     if consequences:
         # What happens over the years if nobody ever notices, per alarm rule (score screen): once per
-        # rule, not copied into each alarm (one rule can raise many alarms).
+        # rule, not copied into each alarm (one rule can raise many alarms). view_3d: a page of the site
+        # that shows the same damage in 3D at this monument (validate() checks it exists).
         entry["consequences"] = {rule: {"picture": c["picture"], "text": c["text"],
-                                        "needs_review": bool(consequences.get("needs_review", True))}
+                                        "needs_review": bool(consequences.get("needs_review", True)),
+                                        **({"view_3d": c["view_3d"]} if "view_3d" in c else {})}
                                  for rule, c in consequences.items() if not rule.startswith("_") and isinstance(c, dict)
                                  and "picture" in c}
     if pack.get("report_to"):
@@ -984,6 +987,8 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
             elif mon["consequences"][alarm["rule"]]["picture"] not in CONSEQUENCE_PICTURES:
                 problems.append(f"{mon['pilot_key']}: consequence of {alarm['rule']} has an unknown picture "
                                 f"(one of {', '.join(CONSEQUENCE_PICTURES)})")
+        for rule, c in (mon.get("consequences") or {}).items():
+            problems.extend(f"{mon['pilot_key']}: consequence of {rule}: {p}" for p in view_3d_problems(c.get("view_3d")))
         report_to = mon.get("report_to")
         if not report_to or not report_to["contacts"]:
             problems.append(f"{mon['pilot_key']}: no report_to contacts (who to tell about an observation)")
@@ -1211,6 +1216,18 @@ def render_language_notes(data: Dict[str, Any], packs: Dict[str, Dict[str, Any]]
 
 # The drawings of web/src/components/Consequence.tsx.
 CONSEQUENCE_PICTURES = ("mosaic", "floor", "stone", "lean", "tree", "fresco", "crack")
+
+
+def view_3d_problems(page: Any) -> List[str]:
+    """A consequence's view_3d must be a folder of the site with its own page, e.g. "preview-3d/"."""
+    if page is None:
+        return []
+    if not isinstance(page, str) or not re.fullmatch(r"[a-z0-9-]+(/[a-z0-9-]+)*/", page):
+        return [f"view_3d {page!r} is not a folder of the site like 'preview-3d/'"]
+    if not (WEB_PUBLIC / page / "index.html").is_file():
+        return [f"view_3d '{page}' has no page (web/public/{page}index.html)"]
+    return []
+
 
 PLACE_MAX_DISTANCE_M = 3000  # a place further than this from the monument's sensors is a typo
 

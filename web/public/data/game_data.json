@@ -3974,7 +3974,8 @@
       "en": "Water rises from the ground into the mosaic and brings salt with it. When it dries, the salt grows into crystals that push the small stones apart, until they come loose and are lost.",
       "el": "Το νερό ανεβαίνει από το έδαφος στο ψηφιδωτό και φέρνει μαζί του αλάτι. Όταν στεγνώνει, το αλάτι γίνεται κρύσταλλοι που σπρώχνουν τις ψηφίδες να ανοίξουν, ώσπου ξεκολλούν και χάνονται."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "preview-3d/"
     },
     "DL_humidity": {
      "picture": "mosaic",
@@ -3982,7 +3983,8 @@
       "en": "Damp that goes up and down makes the salt in the walls and floors swell and shrink, again and again. The plaster crumbles, and the small stones of the mosaic come loose.",
       "el": "Η υγρασία που ανεβοκατεβαίνει κάνει το αλάτι στους τοίχους και στα δάπεδα να φουσκώνει και να ξεφουσκώνει, ξανά και ξανά. Ο σοβάς θρυμματίζεται και οι ψηφίδες του ψηφιδωτού ξεκολλούν."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "preview-3d/"
     },
     "R2_wind": {
      "picture": "stone",

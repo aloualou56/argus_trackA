@@ -375,6 +375,8 @@
   "consequence.before": "Σήμερα",
   "consequence.after": "Χρόνια μετά, αν κανείς δεν προσέξει",
   "consequence.drawing": "Ζωγραφιές για να εξηγήσουν, όχι εικόνες του μνημείου.",
+  "consequence.view3d": "Προβολή σε 3D",
+  "consequence.view3dNote": "Πρωτότυπο, στα αγγλικά προς το παρόν: ανοίγει σε νέα καρτέλα και χρειάζεται ίντερνετ.",
   "history.heading": "Ολόκληρη η ιστορία",
   "history.chapter": "Κεφάλαιο {n} από {total}",
   "history.next": "Συνέχεια",

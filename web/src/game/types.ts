@@ -159,6 +159,8 @@ export interface Consequence {
   picture: ConsequencePicture;
   text: Text;
   needs_review: boolean;
+  /** A page of the site that shows the same damage in 3D at this monument (e.g. "preview-3d/"), linked under the drawings. */
+  view_3d?: string;
 }
 
 /** An imaginary guardian of the monument: hands the watch over (story) and comes back (score). */
