@@ -10,7 +10,7 @@ import type { GameData, Monument } from "../game/types";
 import { useI18n, type MessageKey } from "../i18n";
 import type { House, HouseRoom } from "../view3d/house";
 import { damageAfter, MAP_ZOOM, metresPerPixel } from "../view3d/math";
-import { preload3d, type Loaded } from "../view3d/preload";
+import { preload3d, type Focus3d, type Loaded } from "../view3d/preload";
 import type { MapApi } from "./GameMap";
 import { Icon } from "./Icon";
 
@@ -29,6 +29,9 @@ const wait = (ms: number) => new Promise<void>((done) => window.setTimeout(done,
 
 interface Props {
   mon: Monument;
+  /** The scene (data/view3d/<scene>.json) and what it is opened for: the day's danger, or none. */
+  scene: string;
+  focus: Focus3d;
   loaded: Loaded;
   mapApi: MutableRefObject<MapApi | null>;
   /** The map has flown down onto the house: the 3D view may take over. */
@@ -39,7 +42,13 @@ interface Props {
   onClosed: () => void;
 }
 
-export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Props) {
+/** The note under the years: what the day's danger does if nobody notices, or what ARGUS changes. */
+function noteKey(kind: Focus3d["kind"], watched: boolean): MessageKey {
+  if (kind === "mosaic") return watched ? "view3d.noteWatched" : "view3d.noteNobody";
+  return watched ? "view3d.noteWatchedAny" : (`view3d.noteNobody_${kind ?? "none"}` as MessageKey);
+}
+
+export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, onClosed }: Props) {
   const { t, pick, number, locale } = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -53,6 +62,11 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
   const [watched, setWatched] = useState(false);
   const [live, setLive] = useState<LiveFile | null>(null);
   const shown = phase === "swapping" || phase === "flying" || phase === "open" || phase === "closing";
+  // The place's name and the monument's ("House of the Masks · Delos"), or the monument's alone.
+  const placeId = mon.scenes_3d?.find((s) => s.scene === scene)?.place;
+  const place = placeId ? mon.places?.find((p) => p.id === placeId) : undefined;
+  const title = place ? `${pick(place.name)} · ${pick(mon.display_name)}` : pick(mon.display_name);
+  const argusModel = !!(loaded.assets.model && loaded.assets.grid);
 
   // Built and drawn once, unseen, at the picture the map will show when it has flown down.
   useEffect(() => {
@@ -63,9 +77,15 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
       const name = t(key);
       return t("view3d.room", { n: r.room, name: name === key ? r.name : name });
     };
+    const { origin, metres_per_degree: [kx, ky] } = loaded.assets.data;
+    const xy: [number, number] | null = focus.at ? [(focus.at[1] - origin.lon) * kx, (focus.at[0] - origin.lat) * ky] : null;
     let house: House;
     try {
-      house = loaded.house.createHouse(stage, loaded.assets, { roomLabel, canvasLabel: t("view3d.canvas") });
+      house = loaded.house.createHouse(stage, loaded.assets, {
+        roomLabel,
+        canvasLabel: t("view3d.canvasPlace", { place: title }),
+        focus: { serial: focus.serial, xy, kind: focus.kind },
+      });
     } catch {
       onClosed(); // no 3D on this device after all: the map stays as it was
       return;
@@ -75,7 +95,7 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
     fit();
     const resize = new ResizeObserver(fit);
     resize.observe(stage);
-    house.setDamage(damageAfter(0, false));
+    house.setDamage(damageAfter(0, false, focus.kind));
     house.matchMap({ center: loaded.assets.centre, metresPerPixel: metresPerPixel(loaded.assets.centre[0], MAP_ZOOM) });
     house.renderOnce();
     setPhase("ready");
@@ -117,8 +137,8 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
   }, [phase, shown]);
 
   useEffect(() => {
-    houseRef.current?.setDamage(damageAfter(years, watched));
-  }, [years, watched]);
+    houseRef.current?.setDamage(damageAfter(years, watched, focus.kind));
+  }, [years, watched, focus.kind]);
 
   // Once open, the rooms are framed between the title and the panel (which grows with the dangers).
   useEffect(() => {
@@ -186,9 +206,9 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
       <div className="view3d-top" ref={topRef}>
         <div className="view3d-head">
           <h2 id="view3d-title" ref={headingRef} tabIndex={-1}>
-            {t("view3d.title")}
+            {title}
           </h2>
-          <p>{t("view3d.sub")}</p>
+          <p>{t(argusModel ? "view3d.subArgus" : "view3d.sub")}</p>
         </div>
         <button type="button" className="btn btn-secondary view3d-close" onClick={() => void close()}>
           <Icon name="cross" size={18} />
@@ -221,14 +241,14 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
               </button>
             </div>
             <p className="view3d-note" aria-live="polite">
-              {t(watched ? "view3d.noteWatched" : "view3d.noteNobody")}
+              {t(noteKey(focus.kind, watched))}
             </p>
             <details className="view3d-dangers">
-              <summary>{t("view3d.dangers")}</summary>
+              <summary>{t(loaded.assets.data.rooms.length ? "view3d.dangers" : "view3d.dangersHere")}</summary>
               <p className="small">
                 {checkedAt ? t("view3d.checked", { when: formatWhen(new Date(checkedAt), new Date(), locale) }) : t("view3d.noCheck")}
               </p>
-              <ul tabIndex={0} aria-label={t("view3d.dangers")}>
+              <ul tabIndex={0} aria-label={t(loaded.assets.data.rooms.length ? "view3d.dangers" : "view3d.dangersHere")}>
                 {dangers.map((d) => (
                   <li key={d.key}>
                     <span className="view3d-level">{t(`level.${d.level}` as MessageKey)}</span> {d.title}{" "}
@@ -244,17 +264,31 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
           </div>
         )}
         <p className="view3d-credits">
-          {t(loaded.assets.model && loaded.assets.grid ? "view3d.creditsArgus" : "view3d.credits")}
+          {t(!argusModel ? "view3d.credits" : loaded.assets.data.cut_above_m != null ? "view3d.creditsArgus" : "view3d.creditsModel")}
         </p>
       </div>
     </div>
   );
 }
 
-/** "Display in 3D" under the drawings. The view starts loading as soon as the button comes into
- *  sight (or is pointed at), so a tap finds it ready; if it is not yet, the button says so and the
- *  view opens when it is. */
-export function Open3dButton({ scene, data, onOpen }: { scene: string; data: GameData; onOpen: (scene: string, loaded: Loaded) => void }) {
+/** "Display in 3D" under the drawings (or a place's name, `label`, for the other scenes of the
+ *  monument). The view starts loading as soon as the button comes into sight (or is pointed at), so a
+ *  tap finds it ready; if it is not yet, the button says so and the view opens when it is. */
+export function Open3dButton({
+  scene,
+  data,
+  focus,
+  onOpen,
+  label,
+  id = "view3d-open",
+}: {
+  scene: string;
+  data: GameData;
+  focus: Focus3d;
+  onOpen: (scene: string, loaded: Loaded, focus: Focus3d, from: string) => void;
+  label?: string;
+  id?: string;
+}) {
   const { t } = useI18n();
   const ref = useRef<HTMLButtonElement>(null);
   const [state, setState] = useState<"idle" | "waiting" | "failed">("idle");
@@ -278,29 +312,30 @@ export function Open3dButton({ scene, data, onOpen }: { scene: string; data: Gam
     preload3d(scene, data).then(
       (loaded) => {
         setState("idle");
-        onOpen(scene, loaded);
+        onOpen(scene, loaded, focus, id);
       },
       () => setState("failed"),
     );
   };
+  const note = state === "waiting" ? "consequence.view3dWait" : state === "failed" ? "consequence.view3dFailed" : label ? null : "consequence.view3dNote";
   return (
-    <div className="consequence-3d">
+    <div className={label ? "consequence-3d is-place" : "consequence-3d"}>
       <button
         ref={ref}
         type="button"
-        id="view3d-open"
+        id={id}
         className="btn btn-secondary"
-        aria-describedby="view3d-open-note"
+        aria-describedby={`${id}-note`}
         aria-disabled={state === "waiting" || undefined}
         onClick={open}
         onPointerEnter={warm}
         onFocus={warm}
       >
         <Icon name="cube" />
-        {t("consequence.view3d")}
+        {label ?? t("consequence.view3d")}
       </button>
-      <p className="small" id="view3d-open-note" role="status">
-        {t(state === "waiting" ? "consequence.view3dWait" : state === "failed" ? "consequence.view3dFailed" : "consequence.view3dNote")}
+      <p className="small" id={`${id}-note`} role="status">
+        {note && t(note)}
       </p>
     </div>
   );

@@ -3992,7 +3992,8 @@
       "en": "Wind full of sand and salt works like sandpaper. Year after year, the carved edges of the stone grow round and smooth, and the details disappear.",
       "el": "Ο άνεμος γεμάτος άμμο και αλάτι δουλεύει σαν γυαλόχαρτο. Χρόνο με τον χρόνο, οι σκαλισμένες ακμές της πέτρας στρογγυλεύουν και οι λεπτομέρειες χάνονται."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "delos-masks"
     }
    },
    "report_to": {
@@ -4382,6 +4383,12 @@
     "authored": true,
     "needs_review": true
    },
+   "scenes_3d": [
+    {
+     "scene": "delos-masks",
+     "place": "masks"
+    }
+   ],
    "photo": {
     "src": "data/photos/delos.jpg",
     "thumb": "data/photos/delos-thumb.jpg",

@@ -333,14 +333,37 @@ class GameData(unittest.TestCase):
         self.assertIn("## Assumptions needing human review", self.notes)
         self.assertIn("## Data quirks found", self.notes)
 
-    def test_delos_damp_consequences_link_the_3d_preview(self):
+    def test_each_danger_opens_the_3d_scene_of_its_sensor(self):
         delos = next(m for m in self.data["monuments"] if m["pilot_key"] == "delos")
         links = {rule: c.get("view_3d") for rule, c in delos["consequences"].items()}
-        # The preview shows damp rising into the House of the Masks; wind wearing stone is not in it
-        self.assertEqual(links, {"DL_soil_moisture": "delos-masks", "DL_humidity": "delos-masks", "R2_wind": None})
-        others = [m["pilot_key"] for m in self.data["monuments"] if m["pilot_key"] != "delos"
-                  and any("view_3d" in c for c in (m.get("consequences") or {}).values())]
-        self.assertEqual(others, [])
+        # damp rising into the House of the Masks; the wind wearing its stone, from the weather station by it
+        self.assertEqual(links, {"DL_soil_moisture": "delos-masks", "DL_humidity": "delos-masks", "R2_wind": "delos-masks"})
+        # a scene is offered only once ARGUS's model of it was taken (tools/fetch_argus_3d.py all)
+        for mon in self.data["monuments"]:
+            for s in mon.get("scenes_3d", []):
+                model = b.VIEW3D_DIR / f"{s['scene']}-model.json"
+                self.assertTrue(model.is_file() or s["scene"] == "delos-masks", s["scene"])
+
+    def test_scene_of_a_danger_is_where_its_sensor_stands(self):
+        scenes = json.loads((b.VIEW3D_DIR / "scenes.json").read_text(encoding="utf-8"))["scenes"]
+        mons = json.loads(json.dumps(self.data["monuments"]))
+        for mon in mons:
+            for c in (mon.get("consequences") or {}).values():
+                c.pop("view_3d", None)
+        ready = b.scenes_3d_ready
+        b.scenes_3d_ready = lambda: scenes  # as if every model had been taken
+        try:
+            b.attach_scenes_3d(mons)
+        finally:
+            b.scenes_3d_ready = ready
+        luc = next(m for m in mons if m["pilot_key"] == "lucretili")
+        links = {rule: c["view_3d"] for rule, c in luc["consequences"].items()}
+        self.assertEqual(links["R2a_tilt_step"], "lucretili-conventillo")  # the tiltmeter in the Conventillo
+        self.assertEqual(links["R5_visitors"], "lucretili-villa-orazio")  # the people counter at the villa's gate
+        self.assertEqual([s["place"] for s in luc["scenes_3d"]], ["villa", "conventillo", "montefalco"])
+        delos = next(m for m in mons if m["pilot_key"] == "delos")
+        self.assertEqual([s["scene"] for s in delos["scenes_3d"]], ["delos-masks", "delos-fournoi"])
+        self.assertTrue(all(m.get("scenes_3d") for m in mons if m["playable"]), "every mission has 3D")
 
 
 class PureHelpers(unittest.TestCase):

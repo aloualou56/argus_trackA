@@ -129,9 +129,10 @@ class Server:
 class FetchArgus3d(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
-        self.old = (f.CACHE, f.OUT_TERRAIN)
+        self.old = (f.CACHE, f.OUT_TERRAIN, f.SCENES)
         f.CACHE = self.tmp / "cache"
         f.OUT_TERRAIN = self.tmp / "out" / "terrain.json"
+        f.SCENES = self.tmp / "scenes.json"
         meta = {"tilejson": "2.1.0", "format": "quantized-mesh-1.0", "scheme": "tms", "projection": "EPSG:4326",
                 "tiles": ["{z}/{x}/{y}.terrain?v={version}"], "version": "1.0.0", "maxzoom": 17}
         layer = f.TerrainLayer(meta, "")
@@ -162,11 +163,28 @@ class FetchArgus3d(unittest.TestCase):
             files[f"/tiles/delos/house-of-masks/{name}.b3dm"] = b"b3dm" + bytes(1000)
         self.rtc = [round(v, 3) for v in house]
         files["/tiles/delos/house-of-masks/sub/near_hi.b3dm"] = make_b3dm(make_glb(), self.rtc)
+        # A model with no place of its own (local metres, z up): ARGUS's placement puts it.
+        local = {"asset": {"version": "1.0"}, "geometricError": 10, "root": {
+            "boundingVolume": {"box": [0, 0, 5, 20, 0, 0, 0, 20, 0, 0, 0, 5]}, "geometricError": 4,
+            "refine": "REPLACE", "content": {"uri": "lo.b3dm"},
+            "children": [{"boundingVolume": {"box": [0, 0, 5, 20, 0, 0, 0, 20, 0, 0, 0, 5]}, "geometricError": 0,
+                          "content": {"uri": "hi.b3dm"}}]}}
+        files["/tiles/other/monument/tileset.json"] = json.dumps(local).encode()
+        files["/tiles/other/monument/lo.b3dm"] = make_b3dm(make_glb(), [0, 0, 0])
+        files["/tiles/other/monument/hi.b3dm"] = make_b3dm(make_glb() + bytes(4000), [0, 0, 0])
+        kx, ky = f.metres_per_degree(HOUSE["lat"])
+        self.scenes = {"scenes": [
+            {"id": "delos-masks", "lat": HOUSE["lat"], "lon": HOUSE["lon"], "height": HOUSE["height"],
+             "hpr": [0, 1, 0], "scale": 1, "terrain": "/terrain/delos/", "radius": 30,
+             "tilesets": [{"id": "masks", "url": "/tiles/delos/house-of-masks/tileset.json"}]},
+            {"id": "other", "lat": HOUSE["lat"] + 100 / ky, "lon": HOUSE["lon"], "height": 500.0,
+             "hpr": [90, 0, 0], "scale": 0.5, "terrain": "/terrain/delos/", "radius": 30,
+             "tilesets": [{"id": "other", "url": "/tiles/other/monument/tileset.json"}]}]}
         self.server = Server(files)
 
     def tearDown(self):
         self.server.close()
-        f.CACHE, f.OUT_TERRAIN = self.old
+        f.CACHE, f.OUT_TERRAIN, f.SCENES = self.old
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def run_tool(self, *args):
@@ -217,6 +235,45 @@ class FetchArgus3d(unittest.TestCase):
         self.assertEqual(glb[:4], b"glTF")
         self.assertEqual(tile["rtc_center"], self.rtc)
         self.assertEqual((tile["vertices"], tile["extensions"]), (3, ["KHR_materials_unlit"]))
+
+    def all_scenes(self, *args):
+        f.SCENES.write_text(json.dumps(self.scenes))
+        return self.run_tool("all", "--max-terrain-radius", "100", "--spacing", "5", *args)
+
+    def test_all_takes_every_scene_terrain_and_model(self):
+        self.assertEqual(self.all_scenes(), 0)
+        out = f.OUT_TERRAIN.parent
+        for sid in ("delos-masks", "other"):
+            self.assertEqual(json.loads((out / f"{sid}-terrain.json").read_text())["level"], 17)
+        masks = json.loads((out / "delos-masks-model.json").read_text())
+        self.assertEqual((masks["placed"], [t["source"].rsplit("/", 1)[1] for t in masks["tiles"]]),
+                         ("georeferenced", ["near_hi.b3dm"]))
+        got = [p for m, p in self.server.seen if m == "GET" and p.endswith(".b3dm")]
+        self.assertNotIn("/tiles/delos/house-of-masks/far.b3dm", got, "nothing far from the place")
+        self.assertNotIn("/tiles/delos/house-of-masks/root.b3dm", got, "no coarser tile than needed")
+
+    def test_all_places_a_model_with_no_place_of_its_own_as_argus_does(self):
+        self.assertEqual(self.all_scenes("--scene", "other", "--no-terrain"), 0)
+        other = json.loads((f.OUT_TERRAIN.parent / "other-model.json").read_text())
+        self.assertEqual(other["placed"], "placed")
+        tile = other["tiles"][0]
+        self.assertTrue(tile["source"].endswith("hi.b3dm"))
+        scene = self.scenes["scenes"][1]
+        m = tile["transform"]
+        origin = f.lla_to_ecef(scene["lat"], scene["lon"], scene["height"])
+        self.assertLess(math.dist(f.apply(m, (0, 0, 0)), origin), 0.01)
+        # heading 90 degrees: the model's x (east) turns to the south; scale 0.5
+        lat, lon, h = f.ecef_to_lla(*f.apply(m, (10, 0, 0)))
+        kx, ky = f.metres_per_degree(scene["lat"])
+        self.assertAlmostEqual((lat - scene["lat"]) * ky, -5.0, delta=0.05)
+        self.assertAlmostEqual((lon - scene["lon"]) * kx, 0.0, delta=0.05)
+
+    def test_all_keeps_to_the_size_budget(self):
+        self.assertEqual(self.all_scenes("--scene", "other", "--no-terrain", "--scene-mb", "0.002"), 0)
+        other = json.loads((f.OUT_TERRAIN.parent / "other-model.json").read_text())
+        self.assertEqual([t["source"].rsplit("/", 1)[1] for t in other["tiles"]], ["lo.b3dm"])
+        self.assertNotIn("/tiles/other/monument/hi.b3dm",
+                         [p for m, p in self.server.seen if m == "GET"], "the bigger tile is never downloaded")
 
     def test_never_leaves_the_server(self):
         with self.assertRaises(SystemExit):

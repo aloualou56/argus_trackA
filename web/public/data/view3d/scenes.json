@@ -1,0 +1,1202 @@
+{
+ "_about": "The 3D view's scenes: one per model ARGUS places (tools/build_scenes_3d.py). Each scene's model and terrain are in <id>-model.json and <id>-terrain.json once tools/fetch_argus_3d.py has taken them. Sensors: metres east/north of the placement (xy), above it (h) and above the WGS84 ellipsoid (alt); the game puts them on its ground when a placement's height is off.",
+ "snapshot": "snapshot_2026-10-12",
+ "scenes": [
+  {
+   "id": "baltanas",
+   "pilot": "baltanas",
+   "lat": 41.938365,
+   "lon": -4.243854,
+   "height": 802.5,
+   "hpr": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/baltanas/",
+   "tilesets": [
+    {
+     "id": "baltanas-3d-tiles",
+     "label": "Cellar Town of Baltanás",
+     "url": "/tiles/baltanas/monument/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      46.95,
+      -46.98
+     ],
+     "h": -5.65,
+     "alt": 796.85,
+     "kind": "vibration",
+     "where": "Cellar 364 - Outside - car path",
+     "monitoring": 72,
+     "serial": "159313"
+    },
+    {
+     "xy": [
+      -5.05,
+      37.47
+     ],
+     "h": -1.12,
+     "alt": 801.38,
+     "kind": "airflow",
+     "where": "Cellar 88 - Chimney 4 Pasillo sisa3-sisa4",
+     "monitoring": 76,
+     "serial": "AF4-149421"
+    },
+    {
+     "xy": [
+      45.71,
+      -47.64
+     ],
+     "h": -5.66,
+     "alt": 796.84,
+     "kind": "other",
+     "where": "Cellar 364 - Outside - car path",
+     "monitoring": 79,
+     "serial": "A8610A34324D7F09"
+    },
+    {
+     "xy": [
+      42.56,
+      18.24
+     ],
+     "h": -5.5,
+     "alt": 797.0,
+     "kind": "other",
+     "where": "Cellar 193 - Lagar",
+     "monitoring": 80,
+     "serial": "151810"
+    },
+    {
+     "xy": [
+      42.23,
+      17.91
+     ],
+     "h": -5.5,
+     "alt": 797.0,
+     "kind": "other",
+     "where": "Cellar 193 - Lagar",
+     "monitoring": 81,
+     "serial": "151810"
+    },
+    {
+     "xy": [
+      42.73,
+      18.24
+     ],
+     "h": -5.5,
+     "alt": 797.0,
+     "kind": "other",
+     "where": "Cellar 193 - Lagar",
+     "monitoring": 82,
+     "serial": "151810"
+    },
+    {
+     "xy": [
+      46.54,
+      18.57
+     ],
+     "h": -5.41,
+     "alt": 797.09,
+     "kind": "other",
+     "where": "Cellar 193 - Entry",
+     "monitoring": 88,
+     "serial": "A8610A3230467704"
+    },
+    {
+     "xy": [
+      42.15,
+      18.24
+     ],
+     "h": -5.5,
+     "alt": 797.0,
+     "kind": "soil_moisture",
+     "where": "Cellar 193 - Lagar",
+     "monitoring": 92,
+     "serial": "151810"
+    }
+   ],
+   "radius": 81.4,
+   "metres_per_degree": [
+    82806.96293173905,
+    110540.0
+   ]
+  },
+  {
+   "id": "delos-fournoi",
+   "pilot": "delos",
+   "lat": 37.391398,
+   "lon": 25.269319,
+   "height": 36.8,
+   "hpr": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/delos/",
+   "tilesets": [
+    {
+     "id": "delos-fournoi-3d-tiles",
+     "label": "Delos Island - Oikia Fournon",
+     "url": "/tiles/delos/fournoi/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      -5.57,
+      74.17
+     ],
+     "h": -2.8,
+     "alt": 34.0,
+     "kind": "humidity",
+     "where": "Few meters away from the House of Fournoi",
+     "monitoring": 117,
+     "serial": "151815"
+    },
+    {
+     "xy": [
+      -5.57,
+      74.17
+     ],
+     "h": -2.8,
+     "alt": 34.0,
+     "kind": "other",
+     "where": "Few meters away from the House of Fournoi",
+     "monitoring": 123,
+     "serial": "151815"
+    },
+    {
+     "xy": [
+      28.74,
+      4.97
+     ],
+     "h": 0.2,
+     "alt": 37.0,
+     "kind": "soil_moisture",
+     "where": "Sensor placed on a plastered wall at the House of Fournoi",
+     "monitoring": 127,
+     "serial": "149678"
+    },
+    {
+     "xy": [
+      21.05,
+      10.94
+     ],
+     "h": 0.2,
+     "alt": 37.0,
+     "kind": "soil_moisture",
+     "where": "Sensor placed on a plastered wall at the House of Fournoi",
+     "monitoring": 128,
+     "serial": "149529"
+    },
+    {
+     "xy": [
+      -5.84,
+      74.17
+     ],
+     "h": -2.8,
+     "alt": 34.0,
+     "kind": "soil_moisture",
+     "where": "Few meters away from the House of Fournoi",
+     "monitoring": 129,
+     "serial": "151815"
+    },
+    {
+     "xy": [
+      -5.4,
+      74.28
+     ],
+     "h": -4.8,
+     "alt": 32.0,
+     "kind": "temperature",
+     "where": "Few meters away from the House of Fournoi",
+     "monitoring": 134,
+     "serial": "151815"
+    },
+    {
+     "xy": [
+      -5.4,
+      73.73
+     ],
+     "h": 1.2,
+     "alt": 38.0,
+     "kind": "weather_station",
+     "where": "Few meters away from the House of Fournoi",
+     "monitoring": 140,
+     "serial": "2CF7F1C0723001F4"
+    }
+   ],
+   "radius": 89.5,
+   "metres_per_degree": [
+    88444.38553065005,
+    110540.0
+   ]
+  },
+  {
+   "id": "delos-masks",
+   "pilot": "delos",
+   "lat": 37.39626,
+   "lon": 25.26949,
+   "height": 36.79,
+   "hpr": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/delos/",
+   "tilesets": [
+    {
+     "id": "delos-house-of-masks-3d-tiles",
+     "label": "Delos Island - House of Masks",
+     "url": "/tiles/delos/house-of-masks/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      -9.46,
+      10.83
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "airflow",
+     "where": "Room 215 - Theatrical Masks mosaic",
+     "monitoring": 110,
+     "serial": "109315"
+    },
+    {
+     "xy": [
+      -0.62,
+      10.17
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "airflow",
+     "where": "Room 214 - Dionysus mosaic",
+     "monitoring": 111,
+     "serial": "149405"
+    },
+    {
+     "xy": [
+      -16.54,
+      4.09
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "humidity",
+     "where": "Room 217 - Dolphins mosaic",
+     "monitoring": 113,
+     "serial": "151805"
+    },
+    {
+     "xy": [
+      -12.12,
+      11.83
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "humidity",
+     "where": "Room 216 - Seilinos mosaic",
+     "monitoring": 114,
+     "serial": "151809"
+    },
+    {
+     "xy": [
+      -9.29,
+      10.61
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "humidity",
+     "where": "Room 215 - Theatrical Masks mosaic",
+     "monitoring": 115,
+     "serial": "151836"
+    },
+    {
+     "xy": [
+      4.51,
+      4.86
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "humidity",
+     "where": "Room 214 - Dionysus mosaic",
+     "monitoring": 116,
+     "serial": "168439"
+    },
+    {
+     "xy": [
+      -16.89,
+      4.09
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "light_uv",
+     "where": "Room 217 - Dolphins mosaic",
+     "monitoring": 118,
+     "serial": "151805"
+    },
+    {
+     "xy": [
+      -12.47,
+      11.83
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "light_uv",
+     "where": "Room 216 - Seilinos mosaic",
+     "monitoring": 119,
+     "serial": "151809"
+    },
+    {
+     "xy": [
+      -9.64,
+      10.61
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "light_uv",
+     "where": "Room 215 - Theatrical Masks mosaic",
+     "monitoring": 120,
+     "serial": "151836"
+    },
+    {
+     "xy": [
+      4.86,
+      4.86
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "light_uv",
+     "where": "Room 214 - Dionysus mosaic",
+     "monitoring": 121,
+     "serial": "168439"
+    },
+    {
+     "xy": [
+      -0.71,
+      7.85
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "people_counter",
+     "where": "Above door of room 214 - Dionysus mosaic",
+     "monitoring": 122,
+     "serial": "2CF7F1C062800035"
+    },
+    {
+     "xy": [
+      -8.84,
+      10.17
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "soil_moisture",
+     "where": "Room 215 - Theatrical Masks mosaic",
+     "monitoring": 124,
+     "serial": "149368"
+    },
+    {
+     "xy": [
+      -9.37,
+      8.07
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "soil_moisture",
+     "where": "Room 215 - Theatrical Masks mosaic",
+     "monitoring": 125,
+     "serial": "149423"
+    },
+    {
+     "xy": [
+      32.55,
+      0.99
+     ],
+     "h": 2.31,
+     "alt": 39.1,
+     "kind": "soil_moisture",
+     "where": "Few meters away from the House of the Masks",
+     "monitoring": 126,
+     "serial": "149460"
+    },
+    {
+     "xy": [
+      -16.54,
+      3.87
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "temperature",
+     "where": "Room 217 - Dolphins mosaic",
+     "monitoring": 130,
+     "serial": "151805"
+    },
+    {
+     "xy": [
+      -12.12,
+      11.61
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "temperature",
+     "where": "Room 216 - Seilinos mosaic",
+     "monitoring": 131,
+     "serial": "151809"
+    },
+    {
+     "xy": [
+      -9.29,
+      10.39
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "temperature",
+     "where": "Room 215 - Theatrical Masks mosaic",
+     "monitoring": 132,
+     "serial": "151836"
+    },
+    {
+     "xy": [
+      4.42,
+      4.64
+     ],
+     "h": 1.31,
+     "alt": 38.1,
+     "kind": "temperature",
+     "where": "Room 214 - Dionysus mosaic",
+     "monitoring": 133,
+     "serial": "168439"
+    },
+    {
+     "xy": [
+      31.66,
+      0.99
+     ],
+     "h": 2.31,
+     "alt": 39.1,
+     "kind": "weather_station",
+     "where": "Few meters away from the House of the Masks",
+     "monitoring": 139,
+     "serial": "2CF7F1C061300548"
+    }
+   ],
+   "radius": 47.6,
+   "metres_per_degree": [
+    88438.6488345262,
+    110540.0
+   ]
+  },
+  {
+   "id": "lucretili-conventillo",
+   "pilot": "lucretili",
+   "lat": 42.02363,
+   "lon": 12.82738,
+   "height": 730.3,
+   "hpr": [
+    10.0,
+    0.0,
+    -20.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/lucretili/",
+   "tilesets": [
+    {
+     "id": "lucretili-italy-3d-tiles",
+     "label": "Monti Lucretili - Conventillo / Villa di Orazio",
+     "url": "/tiles/lucretili/italy/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      0.83,
+      0.0
+     ],
+     "h": 0.5,
+     "alt": 730.8,
+     "kind": "crackmeter",
+     "where": "Conventillo - Staircase access façade",
+     "monitoring": 141,
+     "serial": "177266"
+    },
+    {
+     "xy": [
+      3.8,
+      -0.22
+     ],
+     "h": 0.4,
+     "alt": 730.7,
+     "kind": "crackmeter",
+     "where": "Conventillo - First-storey crack",
+     "monitoring": 142,
+     "serial": "177253"
+    },
+    {
+     "xy": [
+      -0.25,
+      1.99
+     ],
+     "h": 2.87,
+     "alt": 733.17,
+     "kind": "crackmeter",
+     "where": "Conventillo - Sensor and logger on the same wall",
+     "monitoring": 143,
+     "serial": "177320"
+    },
+    {
+     "xy": [
+      0.83,
+      1.11
+     ],
+     "h": 1.7,
+     "alt": 732.0,
+     "kind": "humidity",
+     "where": "Conventillo - Main room, second floor",
+     "monitoring": 148,
+     "serial": "177239"
+    },
+    {
+     "xy": [
+      0.83,
+      0.55
+     ],
+     "h": 0.65,
+     "alt": 730.95,
+     "kind": "people_counter",
+     "where": "Conventillo - Main entrance",
+     "monitoring": 150,
+     "serial": "2CF7F1C062800056"
+    },
+    {
+     "xy": [
+      1.08,
+      0.55
+     ],
+     "h": 1.7,
+     "alt": 732.0,
+     "kind": "temperature",
+     "where": "Conventillo - Main room, second floor",
+     "monitoring": 153,
+     "serial": "177239"
+    },
+    {
+     "xy": [
+      0.83,
+      0.0
+     ],
+     "h": 0.6,
+     "alt": 730.9,
+     "kind": "tiltmeter",
+     "where": "Conventillo - Staircase access façade",
+     "monitoring": 155,
+     "serial": "152931"
+    },
+    {
+     "xy": [
+      3.31,
+      -1.11
+     ],
+     "h": 0.5,
+     "alt": 730.8,
+     "kind": "tiltmeter",
+     "where": "Conventillo - First floor, close to a window",
+     "monitoring": 156,
+     "serial": "153061"
+    },
+    {
+     "xy": [
+      0.33,
+      1.55
+     ],
+     "h": 2.8,
+     "alt": 733.1,
+     "kind": "tiltmeter",
+     "where": "Conventillo - Third floor, close to a window",
+     "monitoring": 157,
+     "serial": "152816"
+    },
+    {
+     "xy": [
+      2.81,
+      1.55
+     ],
+     "h": 2.6,
+     "alt": 732.9,
+     "kind": "vibration",
+     "where": "Montefalco Castle - External wall",
+     "monitoring": 158,
+     "serial": "152608"
+    }
+   ],
+   "radius": 30.0,
+   "metres_per_degree": [
+    82696.1546565814,
+    110540.0
+   ]
+  },
+  {
+   "id": "lucretili-montefalco",
+   "pilot": "lucretili",
+   "lat": 42.1009,
+   "lon": 12.820192,
+   "height": 76.7,
+   "hpr": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": 0.97,
+   "terrain": "/terrain/lucretili/",
+   "tilesets": [
+    {
+     "id": "lucretili-montefalco-3d-tiles",
+     "label": "Monti Lucretili - Montefalco Castle",
+     "url": "/tiles/lucretili/montefalco/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      -52.53,
+      38.03
+     ],
+     "h": 823.4,
+     "alt": 900.1,
+     "kind": "crackmeter",
+     "where": "Montefalco Castle - External wall",
+     "monitoring": 146,
+     "serial": "177310"
+    },
+    {
+     "xy": [
+      -38.82,
+      43.11
+     ],
+     "h": 822.3,
+     "alt": 899.0,
+     "kind": "crackmeter",
+     "where": "Montefalco Castle - External wall",
+     "monitoring": 147,
+     "serial": "177325"
+    },
+    {
+     "xy": [
+      -46.34,
+      36.81
+     ],
+     "h": 823.3,
+     "alt": 900.0,
+     "kind": "humidity",
+     "where": "Montefalco Castle - Exterior wall pole",
+     "monitoring": 149,
+     "serial": "177281"
+    },
+    {
+     "xy": [
+      -44.35,
+      34.82
+     ],
+     "h": 823.1,
+     "alt": 899.8,
+     "kind": "rain_gauge",
+     "where": "Montefalco Castle - Exterior wall pole",
+     "monitoring": 196,
+     "serial": "177281"
+    }
+   ],
+   "radius": 79.9,
+   "metres_per_degree": [
+    82595.57829220976,
+    110540.0
+   ]
+  },
+  {
+   "id": "lucretili-villa-orazio",
+   "pilot": "lucretili",
+   "lat": 42.065994,
+   "lon": 12.90125,
+   "height": 440.1,
+   "hpr": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/lucretili/",
+   "tilesets": [
+    {
+     "id": "lucretili-italy-3d-tiles",
+     "label": "Monti Lucretili - Conventillo / Villa di Orazio",
+     "url": "/tiles/lucretili/italy/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      0.46,
+      51.24
+     ],
+     "h": -8.9,
+     "alt": 431.2,
+     "kind": "crackmeter",
+     "where": "Villa di Orazio - Close to a mosaic",
+     "monitoring": 144,
+     "serial": "174156"
+    },
+    {
+     "xy": [
+      5.28,
+      39.69
+     ],
+     "h": -8.0,
+     "alt": 432.1,
+     "kind": "crackmeter",
+     "where": "Villa di Orazio - Perimetral wall enclosing a mosaic",
+     "monitoring": 145,
+     "serial": "177287"
+    },
+    {
+     "xy": [
+      28.86,
+      28.78
+     ],
+     "h": -3.41,
+     "alt": 436.69,
+     "kind": "people_counter",
+     "where": "Villa di Orazio - Entrance gate pillar",
+     "monitoring": 151,
+     "serial": "24E124600E450308"
+    },
+    {
+     "xy": [
+      -13.8,
+      41.23
+     ],
+     "h": -8.47,
+     "alt": 431.63,
+     "kind": "other",
+     "where": "Villa di Orazio - Gateway pole",
+     "monitoring": 152,
+     "serial": "177237"
+    },
+    {
+     "xy": [
+      29.57,
+      42.55
+     ],
+     "h": -3.29,
+     "alt": 436.81,
+     "kind": "weather_station",
+     "where": "Villa di Orazio - Gateway pillar",
+     "monitoring": 159,
+     "serial": "2CF7F1C072300286"
+    }
+   ],
+   "radius": 66.8,
+   "metres_per_degree": [
+    82641.0313381692,
+    110540.0
+   ]
+  },
+  {
+   "id": "ranverso",
+   "pilot": "ranverso",
+   "lat": 45.080871,
+   "lon": 7.449444,
+   "height": 354.55,
+   "hpr": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/ranverso/",
+   "tilesets": [
+    {
+     "id": "ranverso-3d-tiles",
+     "label": "Sant’Antonio di Ranverso Preceptory",
+     "url": "/tiles/ranverso/monument/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      30.97,
+      32.28
+     ],
+     "h": -13.84,
+     "alt": 340.71,
+     "kind": "humidity",
+     "where": null,
+     "monitoring": 51,
+     "serial": "168442"
+    },
+    {
+     "xy": [
+      29.95,
+      33.94
+     ],
+     "h": -10.83,
+     "alt": 343.72,
+     "kind": "humidity",
+     "where": null,
+     "monitoring": 52,
+     "serial": "174188"
+    },
+    {
+     "xy": [
+      -5.11,
+      37.14
+     ],
+     "h": -13.06,
+     "alt": 341.49,
+     "kind": "humidity",
+     "where": null,
+     "monitoring": 53,
+     "serial": "177315"
+    },
+    {
+     "xy": [
+      31.91,
+      34.27
+     ],
+     "h": -11.59,
+     "alt": 342.96,
+     "kind": "temperature",
+     "where": null,
+     "monitoring": 54,
+     "serial": "168442"
+    },
+    {
+     "xy": [
+      30.89,
+      32.39
+     ],
+     "h": -11.83,
+     "alt": 342.72,
+     "kind": "temperature",
+     "where": null,
+     "monitoring": 55,
+     "serial": "174188"
+    },
+    {
+     "xy": [
+      37.97,
+      27.97
+     ],
+     "h": -13.53,
+     "alt": 341.02,
+     "kind": "vibration",
+     "where": null,
+     "monitoring": 57,
+     "serial": "170894"
+    },
+    {
+     "xy": [
+      18.0,
+      19.68
+     ],
+     "h": -13.79,
+     "alt": 340.76,
+     "kind": "acoustic",
+     "where": null,
+     "monitoring": 58,
+     "serial": "raspi-100000007a1083f5"
+    },
+    {
+     "xy": [
+      -5.82,
+      27.86
+     ],
+     "h": -14.09,
+     "alt": 340.46,
+     "kind": "airflow",
+     "where": null,
+     "monitoring": 59,
+     "serial": "149248"
+    },
+    {
+     "xy": [
+      -7.15,
+      38.25
+     ],
+     "h": -14.04,
+     "alt": 340.51,
+     "kind": "airflow",
+     "where": null,
+     "monitoring": 60,
+     "serial": "A8610A3539387205"
+    },
+    {
+     "xy": [
+      17.37,
+      20.67
+     ],
+     "h": -13.86,
+     "alt": 340.69,
+     "kind": "other",
+     "where": null,
+     "monitoring": 61,
+     "serial": "A8610A3338359111"
+    },
+    {
+     "xy": [
+      31.13,
+      32.39
+     ],
+     "h": -13.59,
+     "alt": 340.96,
+     "kind": "light_uv",
+     "where": null,
+     "monitoring": 62,
+     "serial": "168442"
+    },
+    {
+     "xy": [
+      33.64,
+      31.95
+     ],
+     "h": -13.84,
+     "alt": 340.71,
+     "kind": "other",
+     "where": null,
+     "monitoring": 63,
+     "serial": "Svy 324160033"
+    },
+    {
+     "xy": [
+      -5.19,
+      37.25
+     ],
+     "h": -14.04,
+     "alt": 340.51,
+     "kind": "other",
+     "where": null,
+     "monitoring": 64,
+     "serial": "149361"
+    },
+    {
+     "xy": [
+      -5.03,
+      36.92
+     ],
+     "h": -14.56,
+     "alt": 339.99,
+     "kind": "rain_gauge",
+     "where": null,
+     "monitoring": 65,
+     "serial": "177315"
+    },
+    {
+     "xy": [
+      33.72,
+      31.95
+     ],
+     "h": -13.83,
+     "alt": 340.72,
+     "kind": "soil_moisture",
+     "where": null,
+     "monitoring": 66,
+     "serial": "A8610A34363D6617"
+    },
+    {
+     "xy": [
+      34.66,
+      33.94
+     ],
+     "h": -13.83,
+     "alt": 340.72,
+     "kind": "soil_moisture",
+     "where": null,
+     "monitoring": 67,
+     "serial": "A8610A333526680F"
+    },
+    {
+     "xy": [
+      39.77,
+      31.39
+     ],
+     "h": -13.72,
+     "alt": 340.83,
+     "kind": "tiltmeter",
+     "where": null,
+     "monitoring": 68,
+     "serial": "143276"
+    },
+    {
+     "xy": [
+      31.13,
+      35.81
+     ],
+     "h": -14.09,
+     "alt": 340.46,
+     "kind": "other",
+     "where": null,
+     "monitoring": 69,
+     "serial": "168442"
+    },
+    {
+     "xy": [
+      -5.03,
+      37.25
+     ],
+     "h": -13.84,
+     "alt": 340.71,
+     "kind": "weather_station",
+     "where": null,
+     "monitoring": 200,
+     "serial": "2CF7F1C0734001E8"
+    }
+   ],
+   "radius": 65.7,
+   "metres_per_degree": [
+    78603.944845279,
+    110540.0
+   ]
+  },
+  {
+   "id": "schenkenberg",
+   "pilot": "schenkenberg",
+   "lat": 47.442056,
+   "lon": 8.10074,
+   "height": 630.3,
+   "hpr": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": 1.0,
+   "terrain": "/terrain/schenkenberg/",
+   "tilesets": [
+    {
+     "id": "schenkenberg-3d-tiles",
+     "label": "Schenkenberg Castle",
+     "url": "/tiles/schenkenberg/monument/tileset.json"
+    }
+   ],
+   "sensors": [
+    {
+     "xy": [
+      19.05,
+      9.51
+     ],
+     "h": 15.69,
+     "alt": 645.99,
+     "kind": "vibration",
+     "where": "Schenkenberg tower - North wall",
+     "monitoring": 100,
+     "serial": "159070"
+    },
+    {
+     "xy": [
+      23.49,
+      10.72
+     ],
+     "h": 18.22,
+     "alt": 648.52,
+     "kind": "vibration",
+     "where": "Schenkenberg tower - North wall",
+     "monitoring": 101,
+     "serial": "152555"
+    },
+    {
+     "xy": [
+      22.14,
+      6.96
+     ],
+     "h": 17.88,
+     "alt": 648.18,
+     "kind": "vibration",
+     "where": "Schenkenberg tower - South wall",
+     "monitoring": 102,
+     "serial": "152479"
+    },
+    {
+     "xy": [
+      19.2,
+      7.63
+     ],
+     "h": 17.88,
+     "alt": 648.18,
+     "kind": "vibration",
+     "where": "Schenkenberg tower - South wall",
+     "monitoring": 103,
+     "serial": "175480"
+    },
+    {
+     "xy": [
+      21.01,
+      7.96
+     ],
+     "h": 12.7,
+     "alt": 643.0,
+     "kind": "other",
+     "where": null,
+     "monitoring": 105,
+     "serial": "2CF7F1C072600345"
+    },
+    {
+     "xy": [
+      21.01,
+      7.96
+     ],
+     "h": 13.2,
+     "alt": 643.5,
+     "kind": "crackmeter",
+     "where": null,
+     "monitoring": 106,
+     "serial": "149796"
+    },
+    {
+     "xy": [
+      19.42,
+      9.51
+     ],
+     "h": 18.22,
+     "alt": 648.52,
+     "kind": "tiltmeter",
+     "where": "North face",
+     "monitoring": 107,
+     "serial": "152914"
+    },
+    {
+     "xy": [
+      22.96,
+      7.3
+     ],
+     "h": 17.0,
+     "alt": 647.3,
+     "kind": "tiltmeter",
+     "where": "South face",
+     "monitoring": 108,
+     "serial": "152899"
+    },
+    {
+     "xy": [
+      22.59,
+      7.74
+     ],
+     "h": 20.9,
+     "alt": 651.2,
+     "kind": "weather_station",
+     "where": "Top of the tower",
+     "monitoring": 109,
+     "serial": "2CF7F1C072300226"
+    }
+   ],
+   "radius": 40.8,
+   "metres_per_degree": [
+    75289.66569940769,
+    110540.0
+   ]
+  }
+ ]
+}

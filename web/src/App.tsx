@@ -28,7 +28,7 @@ import { Story } from "./screens/Story";
 import { Teacher } from "./screens/Teacher";
 import { View3D } from "./components/View3D";
 import { MAP_ZOOM } from "./view3d/math";
-import type { Loaded } from "./view3d/preload";
+import type { Focus3d, Loaded } from "./view3d/preload";
 
 type Screen = "home" | "teacher" | "observe" | Step | "quizPre" | "quizPost" | "history";
 
@@ -209,7 +209,13 @@ export default function App() {
   // (View3D.tsx). building: the scene is made, unseen, before the map moves; flying: the map zooms
   // in; arrived: the 3D view may take over. Phones give it the whole screen; wide screens keep the
   // panel in view, unusable meanwhile, as during the replay.
-  const [view3d, setView3d] = useState<{ scene: string; loaded: Loaded; stage: "building" | "flying" | "arrived" } | null>(null);
+  const [view3d, setView3d] = useState<{
+    scene: string;
+    loaded: Loaded;
+    focus: Focus3d;
+    stage: "building" | "flying" | "arrived";
+  } | null>(null);
+  const opener = useRef("view3d-open");
   const in3d = view3d !== null;
   const topbarRef = useRef<HTMLElement>(null);
   const was3d = useRef(false);
@@ -221,7 +227,7 @@ export default function App() {
     else if (was3d.current) {
       // Back where the player was: the button that opened it (the panel is usable again by now).
       was3d.current = false;
-      document.getElementById("view3d-open")?.focus();
+      document.getElementById(opener.current)?.focus();
     }
   }, [in3d]);
 
@@ -445,7 +451,10 @@ export default function App() {
             onQuiz={() => setScreen("quizPost")}
             onRecorded={() => setGame((g) => (g ? { ...g, recorded: true } : g))}
             onReport={() => openReport(playable.pilot_key, "score")}
-            onView3d={(scene, loaded) => setView3d({ scene, loaded, stage: "building" })}
+            onView3d={(scene, loaded, focus, from) => {
+              opener.current = from; // the button that opened it has the focus again afterwards
+              setView3d({ scene, loaded, focus, stage: "building" });
+            }}
             week={week}
             onImprove={(total) => {
               // The first score of the day is the "before", however often the network is changed.
@@ -504,6 +513,8 @@ export default function App() {
               playable && (
                 <View3D
                   mon={playable}
+                  scene={view3d.scene}
+                  focus={view3d.focus}
                   loaded={view3d.loaded}
                   mapApi={mapApi}
                   arrived={view3d.stage === "arrived"}

@@ -45,25 +45,76 @@ export function seeded(seed: number): () => number {
 
 /** What the illustration shows, each from 0 (nothing) upwards: how high damp has risen in the walls
  *  (metres), the radius of the stain in the floors (metres), the share of tesserae lost in it, how
- *  much salt has come out, and the share of the wall tops where plants have rooted. */
+ *  much salt has come out, and the share of the wall tops where plants have rooted. Then, for the
+ *  other dangers: paint flaking off the walls (share), the radius of the path worn into a floor
+ *  (metres), the stone's surface worn by weather (share), how long the crack has grown (metres) and
+ *  how far the wall has leaned (degrees). */
 export interface Damage {
   damp: number;
   wet: number;
   loss: number;
   salt: number;
   plants: number;
+  flake: number;
+  wear: number;
+  weather: number;
+  crack: number;
+  lean: number;
 }
 
-/** The damage after `years` in which nobody noticed the damp. With ARGUS watching, the soil probes
- *  under the masks mosaic show it within months and it is treated: never more than a year's worth.
- *  An illustration, not a prediction (README, "3D view"). */
-export function damageAfter(years: number, watched: boolean): Damage {
+/** Which damage a 3D scene shows: the drawing of the day's danger (Consequence.tsx), or none when
+ *  the scene is only looked at (the years then only weather it and bring plants). */
+export type DamageKind = "mosaic" | "floor" | "stone" | "lean" | "tree" | "fresco" | "crack" | null;
+
+const grow = (y: number, years: number) => (y > 0 ? 1 - Math.exp(-y / years) : 0);
+
+/** The damage after `years` in which nobody noticed. With ARGUS watching, the sensors show it within
+ *  months and it is treated: never more than a year's worth. An illustration, not a prediction
+ *  (README, "3D view"). "mosaic" is the House of the Masks: damp rising under its floors. */
+export function damageAfter(years: number, watched: boolean, kind: DamageKind = "mosaic"): Damage {
   const y = watched ? Math.min(years, 1) : years;
-  return {
-    damp: y > 0 ? 0.1 + 1.1 * (1 - Math.exp(-y / 15)) : 0, // up to about 1.2 m up the walls
-    wet: y > 0 ? 0.4 + 2.6 * (1 - Math.exp(-y / 18)) : 0, // a stain up to about 3 m across the floor
-    loss: Math.min(0.85, Math.max(0, (y - 3) / 40)),
-    salt: Math.min(1, Math.max(0, (y - 1) / 10)),
-    plants: y < 15 ? 0 : ((y - 15) / 35) * 0.45,
-  };
+  const none = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, weather: 0, crack: 0, lean: 0 };
+  const plants = y < 15 ? 0 : ((y - 15) / 35) * 0.45;
+  const weather = Math.min(0.35, y / 140); // every place weathers a little
+  switch (kind) {
+    case "mosaic":
+      return {
+        ...none,
+        damp: y > 0 ? 0.1 + 1.1 * grow(y, 15) : 0, // up to about 1.2 m up the walls
+        wet: y > 0 ? 0.4 + 2.6 * grow(y, 18) : 0, // a stain up to about 3 m across the floor
+        loss: Math.min(0.85, Math.max(0, (y - 3) / 40)),
+        salt: Math.min(1, Math.max(0, (y - 1) / 10)),
+        plants,
+      };
+    case "fresco": // damp climbing the painted walls, salt at its edge, the paint coming away
+      return {
+        ...none,
+        damp: y > 0 ? 0.15 + 1.6 * grow(y, 15) : 0,
+        salt: Math.min(1, Math.max(0, (y - 1) / 10)),
+        flake: Math.min(0.9, Math.max(0, (y - 2) / 40)),
+        plants,
+        weather,
+      };
+    case "floor": // feet wearing a path: smooth and low, then stones loosening
+      return { ...none, wear: y > 0 ? 0.6 + 3.4 * grow(y, 20) : 0, loss: Math.min(0.5, Math.max(0, (y - 10) / 60)), plants, weather };
+    case "stone": // wind, salt and heat wearing the stone's surface
+      return { ...none, weather: Math.min(1, y / 40), plants };
+    case "crack": // a crack growing every winter, stones loosening along it
+      return { ...none, crack: y > 0 ? 0.3 + 5.7 * grow(y, 25) : 0, plants, weather };
+    case "lean": // the wall leaning a little more each year, then cracking
+      return { ...none, lean: Math.min(6, y * 0.12), crack: y > 10 ? 4 * grow(y - 10, 25) : 0, plants, weather };
+    case "tree": // trees and plants growing over the walls
+      return { ...none, plants: y < 3 ? 0 : Math.min(0.9, ((y - 3) / 40) * 0.9), weather };
+    default:
+      return { ...none, plants, weather };
+  }
+}
+
+/** An instrument's serial number from its name ("Installed Instrument Soil Moisture - 149368 (Room
+ *  215 ...)" -> "149368"), as ARGUS's 3D placements of its sensors name them too: the 3D view finds
+ *  the sensor of the day's alarm by it. */
+export function serialOf(name: string): string | null {
+  const i = name.indexOf(" - ");
+  if (i < 0) return null;
+  return name.slice(i + 3).split(" (")[0].trim() || null;
 }

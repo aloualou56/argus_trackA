@@ -1100,6 +1100,7 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
         if mon["playable"]:
             mon["places"] = resolve_places(mon, content.monuments[mon["pilot_key"]], content_dir)
             mon["history"] = public_history(mon, content.raw.get("history", {}).get(mon["pilot_key"]))
+    attach_scenes_3d(monuments)
     data["site_guide"] = {"where": content.raw["site_guide"]["where"], "authored": True,
                           "needs_review": bool(content.raw["site_guide"].get("needs_review"))}
     data["decisions"] = public_decisions(content)
@@ -1227,6 +1228,60 @@ def view_3d_problems(name: Any) -> List[str]:
     if not (VIEW3D_DIR / f"{name}.json").is_file():
         return [f"view_3d '{name}' has no data (web/public/data/view3d/{name}.json, tools/build_preview_3d.py)"]
     return []
+
+
+def scenes_3d_ready() -> List[Dict[str, Any]]:
+    """The game's 3D scenes (data/view3d/scenes.json, tools/build_scenes_3d.py) that can be shown: ARGUS's
+    model of the place was taken (<scene>-model.json, tools/fetch_argus_3d.py), or the scene's data has
+    the drawn walls that stand in for it (a ruin outline)."""
+    path = VIEW3D_DIR / "scenes.json"
+    if not path.is_file():
+        return []
+    ready = []
+    for scene in json.loads(path.read_text(encoding="utf-8"))["scenes"]:
+        data = VIEW3D_DIR / f"{scene['id']}.json"
+        if not data.is_file():
+            continue
+        drawn = any(s.get("kind") == "ruin" for s in json.loads(data.read_text(encoding="utf-8")).get("shapes", []))
+        if drawn or (VIEW3D_DIR / f"{scene['id']}-model.json").is_file():
+            ready.append(scene)
+    return ready
+
+
+def attach_scenes_3d(monuments: List[Dict[str, Any]]) -> None:
+    """Each monument's 3D scenes (scenes_3d: the place each shows, from the monument's own places), and
+    for each consequence without a view_3d of its own the scene where its alarm's sensor stands (the
+    nearest; the first scene of the monument when the alarm names no sensor)."""
+    scenes = scenes_3d_ready()
+    for mon in monuments:
+        mine = [s for s in scenes if s["pilot"] == mon["pilot_key"]]
+        if not mon["playable"] or not mine:
+            continue
+        place_ids = [p["id"] for p in mon.get("places") or []]
+
+        def place_of(scene):
+            words = [w for w in scene["id"].split("-") if w != mon["pilot_key"]]
+            return next((pid for pid in place_ids if any(w == pid or w.startswith(pid) for w in words)), None)
+
+        def points(scene):
+            kx, ky = scene["metres_per_degree"]
+            return [[scene["lat"], scene["lon"]]] + [[scene["lat"] + x["xy"][1] / ky, scene["lon"] + x["xy"][0] / kx]
+                                                     for x in scene["sensors"]]
+
+        for rule, c in (mon.get("consequences") or {}).items():
+            if "view_3d" in c:
+                continue
+            spots = [[i["lat"], i["lon"]] for a in mon["alarms"] if a["rule"] == rule
+                     for i in a["instruments"] if i.get("lat") is not None and i.get("lon") is not None]
+            if spots:
+                c["view_3d"] = min(mine, key=lambda s: min(metres_between(spot, p) for spot in spots
+                                                           for p in points(s)))["id"]
+            else:
+                c["view_3d"] = mine[0]["id"]
+        # The scenes the day's dangers open first (on Delos the House of the Masks, then Fournoi).
+        used = [c.get("view_3d") for c in (mon.get("consequences") or {}).values()]
+        mine.sort(key=lambda s: -used.count(s["id"]))
+        mon["scenes_3d"] = [{"scene": s["id"], "place": place_of(s)} for s in mine]
 
 
 PLACE_MAX_DISTANCE_M = 3000  # a place further than this from the monument's sensors is a typo

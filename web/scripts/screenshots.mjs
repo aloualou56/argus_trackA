@@ -1040,7 +1040,10 @@ async function check3dView(browser, lang, vp) {
   if (state.focus !== "view3d-title") note(`${prefix}: focus on #${state.focus}, not the view's title`);
   if (!state.panel || !state.map) note(`${prefix}: the game can still be used under the 3D view`);
   if (!state.canvas) note(`${prefix}: no 3D canvas`);
-  if (!(await page.getByRole("dialog", { name: t["view3d.title"] }).isVisible())) note(`${prefix}: no dialog named "${t["view3d.title"]}"`);
+  // named after the place and the monument, "House of the Masks · Delos"
+  const masks = delos.places.find((p) => p.id === delos.scenes_3d?.[0]?.place);
+  const title = masks ? `${masks.name[lang]} · ${delos.display_name[lang]}` : delos.display_name[lang];
+  if (!(await page.getByRole("dialog", { name: title }).isVisible())) note(`${prefix}: no dialog named "${title}"`);
   await page.locator("#view3d-years").fill("40");
   if (!(await page.locator(".view3d-years").innerText()).includes(fill(t["view3d.yearsN"], { n: 40 }))) note(`${prefix}: the slider does not say 40 years`);
   await page.getByRole("button", { name: t["view3d.watched"] }).click();

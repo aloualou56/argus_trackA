@@ -67,6 +67,13 @@ def to_local(lon: float, lat: float) -> List[float]:
     return [round((lon - ORIGIN["lon"]) * kx, 2), round((lat - ORIGIN["lat"]) * ky, 2)]
 
 
+def serial(name: str) -> str | None:
+    """An instrument's serial number from its name ("Installed Instrument Soil Moisture - 149368 (Room
+    215 ...)" -> "149368"): the game finds the sensor of an alarm by it."""
+    parts = name.split(" - ", 1)
+    return parts[1].split(" (")[0].strip() or None if len(parts) == 2 else None
+
+
 def metadata(record: Dict[str, Any]) -> Dict[str, Any]:
     raw = record.get("metadata")
     if isinstance(raw, dict):
@@ -117,6 +124,7 @@ def sensors() -> List[Dict[str, Any]]:
             "kind": next((k for word, k in KINDS if word in name.lower()), "other"),
             "room": room.group(1) if room else None,
             "room_name": room.group(2).strip() if room else None,
+            "serial": serial(name),
         })
     return sorted(out, key=lambda s: (s["room"] or "~", s["kind"], s["xy"]))
 
@@ -155,6 +163,10 @@ def build(live: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     found = sensors()
     return {
         "about": "Data for the game's 3D view (web/src/view3d), written by tools/build_preview_3d.py. See README, '3D view'.",
+        "scene": "delos-masks",
+        # ARGUS's model is cut this far above the floor: the modern shelters over the mosaics (5-6 m up)
+        # would hide the floors from above; the walls stand to about 3.5 m.
+        "cut_above_m": 4.3,
         "origin": {"lat": ORIGIN["lat"], "lon": ORIGIN["lon"]},
         "base_height": ORIGIN["height"],
         "metres_per_degree": metres_per_degree(),

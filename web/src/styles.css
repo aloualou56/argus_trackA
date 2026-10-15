@@ -4651,7 +4651,7 @@ html.a11y-spacing main p {
     grid-template-columns: 1fr;
   }
 }
-/* The same damage in 3D at this monument, where there is a page for it (Delos's damp alarms). */
+/* The same damage in 3D at this monument, at the place of the alarm's sensor (ARGUS's own model). */
 .consequence-3d {
   display: flex;
   flex-wrap: wrap;
@@ -4663,6 +4663,19 @@ html.a11y-spacing main p {
   flex: 1 1 14rem;
   min-width: 0;
   margin: 0;
+}
+/* The monument's other places in 3D (or all of them, where no alarm is replayed): one button each. */
+.consequence-3d-places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 0.75rem;
+}
+.consequence-3d-places .consequence-3d {
+  margin: 0;
+}
+.consequence-3d.is-place .small:empty {
+  display: none;
 }
 
 /* ---- the 3D view (View3D.tsx), over the map, which first flies down onto the house. The hand-over

@@ -159,7 +159,8 @@ export interface Consequence {
   picture: ConsequencePicture;
   text: Text;
   needs_review: boolean;
-  /** The game's 3D view of the same damage at this monument (data/view3d/<name>.json), opened under the drawings. */
+  /** The game's 3D view of the same damage at this monument (data/view3d/<name>.json), opened under the
+   *  drawings: the scene where the rule's sensor stands. */
   view_3d?: string;
 }
 
@@ -349,6 +350,9 @@ export interface Monument extends MonumentBase {
   consequences?: Record<string, Consequence>;
   /** Who to tell about something a visitor saw. */
   report_to?: ReportTo;
+  /** The game's 3D scenes of this monument (data/view3d/<scene>.json, ARGUS's own models), the one the
+   *  day's dangers open first; `place` is the place of `places` each shows (null: the monument itself). */
+  scenes_3d?: { scene: string; place: string | null }[];
 }
 
 /** Pre/post quiz question (content/quiz.json). */

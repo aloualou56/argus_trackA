@@ -8,14 +8,18 @@ import { cameraHeightFor, damageAfter, MAP_ZOOM, metresPerPixel, terrarium, tile
 const data = JSON.parse(readFileSync(new URL("../public/data/game_data.json", import.meta.url), "utf8")) as GameData;
 
 describe("the 3D view", () => {
-  it("only Delos's damp alarms open one, and its data is there", () => {
+  it("each danger opens the scene of its sensor, whose data is there", () => {
     const views = data.monuments.filter(isPlayable).flatMap((m) =>
       Object.entries(m.consequences ?? {})
         .filter(([, c]) => c.view_3d)
         .map(([rule, c]) => `${m.pilot_key} ${rule} ${c.view_3d}`),
     );
-    expect(views).toEqual(["delos DL_soil_moisture delos-masks", "delos DL_humidity delos-masks"]);
-    expect(existsSync(new URL("../public/data/view3d/delos-masks.json", import.meta.url))).toBe(true);
+    // Delos's damp alarms and its wind (weathering the stone) at the House of the Masks; the other
+    // monuments as soon as ARGUS's models of them are taken (tools/fetch_argus_3d.py all)
+    expect(views).toEqual(expect.arrayContaining(["delos DL_soil_moisture delos-masks", "delos DL_humidity delos-masks", "delos R2_wind delos-masks"]));
+    for (const v of views) {
+      expect(existsSync(new URL(`../public/data/view3d/${v.split(" ")[2]}.json`, import.meta.url)), v).toBe(true);
+    }
   });
 
   it("starts from the map's own picture: the camera height that shows the same ground", () => {
@@ -36,7 +40,8 @@ describe("the 3D view", () => {
   });
 
   it("the damage grows with the years nobody noticed, and stays a year's worth with ARGUS watching", () => {
-    expect(damageAfter(0, false)).toEqual({ damp: 0, wet: 0, loss: 0, salt: 0, plants: 0 });
+    const nothing = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, weather: 0, crack: 0, lean: 0 };
+    expect(damageAfter(0, false)).toEqual(nothing);
     const later = damageAfter(50, false);
     expect(later.damp).toBeGreaterThan(1); // over a metre up the walls
     expect(later.plants).toBeCloseTo(0.45, 6);
@@ -44,5 +49,19 @@ describe("the 3D view", () => {
       expect(damageAfter(20, false)[k]).toBeLessThanOrEqual(later[k]);
     }
     expect(damageAfter(50, true)).toEqual(damageAfter(1, false));
+  });
+
+  it("each danger shows its own damage, growing with the years, a year's worth when watched", () => {
+    const own = { fresco: "flake", floor: "wear", stone: "weather", crack: "crack", lean: "lean", tree: "plants" } as const;
+    for (const [kind, k] of Object.entries(own)) {
+      const d = kind as keyof typeof own;
+      expect(damageAfter(0, false, d)[k]).toBe(0);
+      expect(damageAfter(50, false, d)[k]).toBeGreaterThan(damageAfter(10, false, d)[k]);
+      expect(damageAfter(10, false, d)[k]).toBeGreaterThan(damageAfter(50, true, d)[k]);
+      expect(damageAfter(50, true, d)).toEqual(damageAfter(1, false, d));
+    }
+    expect(damageAfter(50, false, "lean").lean).toBe(6); // degrees
+    expect(damageAfter(50, false, "stone").damp).toBe(0); // only the danger's own damage
+    expect(damageAfter(50, false, null).weather).toBeGreaterThan(0);
   });
 });

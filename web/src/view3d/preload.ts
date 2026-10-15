@@ -3,6 +3,15 @@
 // terrain tiles and the mosaic photos. Score.tsx starts it when "Display in 3D" comes into view.
 import type { GameData } from "../game/types";
 import type { Assets } from "./house";
+import type { DamageKind } from "./math";
+
+/** What a 3D view opened from the score screen is about: the day's danger (its damage, and its
+ *  alarm's sensor: serial number and [lat, lon]), or nothing in particular (kind null). */
+export interface Focus3d {
+  kind: DamageKind;
+  serial: string | null;
+  at: [number, number] | null;
+}
 
 export interface Loaded {
   house: typeof import("./house");

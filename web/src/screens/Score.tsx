@@ -5,7 +5,8 @@ import { DayStrip } from "../components/DayStrip";
 import { ConsequenceDrawings } from "../components/Consequence";
 import { GuardianSays } from "../components/Guardian";
 import { Open3dButton } from "../components/View3D";
-import { canShow3d, type Loaded } from "../view3d/preload";
+import { canShow3d, type Focus3d, type Loaded } from "../view3d/preload";
+import { serialOf } from "../view3d/math";
 import { ReadAloud } from "../components/ReadAloud";
 import { endingNarration, guardianBack } from "../audio/narration";
 import { Icon } from "../components/Icon";
@@ -37,7 +38,7 @@ interface Props extends ScreenProps {
   /** Opens the observation report for this monument. */
   onReport: () => void;
   /** "Display in 3D" under the drawings, once the view is loaded: the game opens it over the map. */
-  onView3d: (scene: string, loaded: Loaded) => void;
+  onView3d: (scene: string, loaded: Loaded, focus: Focus3d, from: string) => void;
   /** The real alarms of the week on duty, one per day; today's is week[session.day]. Empty if none can be replayed. */
   week: Alarm[];
   /** Back to the mission with the same sensors and dangers; `total` is the score to compare with afterwards. */
@@ -187,17 +188,64 @@ export function Score({
         const back = firstDay ? guardianBack(i18n, mon, replayed, detected) : null;
         const consequence = replayed ? mon.consequences?.[replayed.rule] : undefined;
         const narration = endingNarration(i18n, mon, replayed, detected, firstDay);
-        const after = consequence && (
+        // The monument's places in 3D (ARGUS's own models): the day's danger at the place of its sensor,
+        // and the other places to look at.
+        const scenes = canShow3d() ? (mon.scenes_3d ?? []) : [];
+        const placeName = (place: string | null) => {
+          const p = place ? mon.places?.find((x) => x.id === place) : undefined;
+          return pick(p ? p.name : mon.display_name);
+        };
+        const sensor = replayed?.instruments.find((i) => i.lat != null && i.lon != null) ?? replayed?.instruments[0];
+        const dayFocus: Focus3d = {
+          kind: consequence?.picture ?? null,
+          serial: sensor ? serialOf(sensor.name) : null,
+          at: sensor && sensor.lat != null && sensor.lon != null ? [sensor.lat, sensor.lon] : null,
+        };
+        const looking: Focus3d = { kind: null, serial: null, at: null };
+        const others = scenes.filter((s) => s.scene !== consequence?.view_3d);
+        const placeButtons = (list: typeof scenes) => (
+          <div className="consequence-3d-places">
+            {list.map((s) => (
+              <Open3dButton
+                key={s.scene}
+                id={`view3d-open-${s.scene}`}
+                scene={s.scene}
+                data={data}
+                focus={looking}
+                label={placeName(s.place)}
+                onOpen={onView3d}
+              />
+            ))}
+          </div>
+        );
+        const after = consequence ? (
           <section className="consequence" aria-labelledby="consequence-title">
             <h2 id="consequence-title">{t("consequence.title")}</h2>
             <p>{t(detected ? "consequence.caught" : "consequence.missed")}</p>
             <ConsequenceDrawings picture={consequence.picture} />
             {/* The same damage in 3D at this monument, where this device can draw it. */}
-            {consequence.view_3d && canShow3d() && <Open3dButton scene={consequence.view_3d} data={data} onOpen={onView3d} />}
+            {consequence.view_3d && scenes.some((s) => s.scene === consequence.view_3d) && (
+              <Open3dButton scene={consequence.view_3d} data={data} focus={dayFocus} onOpen={onView3d} />
+            )}
             <p className="lead" data-needs-review={consequence.needs_review}>
               {pick(consequence.text)}
             </p>
+            {others.length > 0 && (
+              <>
+                <p className="small">{t("consequence.view3dAlso")}</p>
+                {placeButtons(others)}
+              </>
+            )}
           </section>
+        ) : (
+          scenes.length > 0 && (
+            // No danger of the day to show (no alarm to replay here): the monument itself, in 3D.
+            <section className="consequence" aria-labelledby="in3d-title">
+              <h2 id="in3d-title">{t("score.in3dTitle")}</h2>
+              <p>{t("score.in3dText")}</p>
+              {placeButtons(scenes)}
+            </section>
+          )
         );
         if (back && mon.guardian) {
           return (

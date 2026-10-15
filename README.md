@@ -105,6 +105,8 @@ content/*.json   ──┼─► tools/build_game_data.py ─► web/public/data
 | `web/src/components/GameMap.tsx` | the game board: one Leaflet map kept across screens; screens change what it draws, including the alarm replay | code |
 | `web/src/view3d/`, `web/src/components/View3D.tsx` | the 3D view of a consequence ("Display in 3D"): loaded only when needed, over the map, which flies down first | code |
 | `tools/build_preview_3d.py` | the 3D view's data for the House of the Masks: OpenStreetMap outlines, ARGUS's 3D placements, the game's dangers | code |
+| `tools/build_scenes_3d.py` | the 3D scenes of every monument, one per model ARGUS places: its model, sensors and dangers | code |
+| `tools/fetch_argus_3d.py` | takes each scene's terrain and model from ARGUS (`all`), only around the place, on the computer it runs on | code |
 | `web/src/audio/sounds.ts` | the game's sounds, made in the browser with the Web Audio API (no audio files) | code |
 | `web/src/community/` | anonymous records: device store, optional Supabase store with offline queue, class codes | code |
 | `web/src/game/report.ts` | the citizen observation report: its rules and its export in ARGUS's format (pure, tested) | code |
@@ -470,14 +472,31 @@ damage does over the years when nobody ever notices, with two drawings side by s
 caption says they are not pictures of the site. Both are read aloud with the recorded voices once recorded (until
 then, with the device's voice). Needs review: the guardians' words and the science of each consequence (listed in
 `docs/data_notes.md`). Where a consequence has `view_3d`, a **"Display in 3D"** button under the drawings opens
-the game's 3D view of that damage (Delos's damp alarms: the House of the Masks, below).
+the game's 3D view of that damage, at the place of the alarm's sensor (below).
 
-## 3D view (prototype): the House of the Masks
+## 3D view (prototype): every monument, on ARGUS's own models
 
-On the score screen, under the "If nobody had noticed" drawings, **"Display in 3D"** appears when the day's
-alarm is one of Delos's damp alarms (`DL_soil_moisture`, `DL_humidity`: `view_3d` in
-`content/monuments/delos.json`, checked by the build): not for the wind alarm, which wears stone, nor for the
-other monuments, nor on a device without WebGL.
+On the score screen, under the "If nobody had noticed" drawings, **"Display in 3D"** shows the day's danger in
+3D at the place of the sensor that raised its alarm, on ARGUS's own photogrammetric model of that place. Under it,
+the monument's other places in 3D (on Delos, the House of Fournoi). Where no alarm is replayed (Baltanás), "The
+monument in 3D" offers its places instead. Not on a device without WebGL.
+
+- **Every monument, one scene per place:** ARGUS places 8 models: Delos's House of the Masks and House of
+  Fournoi, Baltanás's cellar town, Monti Lucretili's Conventillo, Villa di Orazio and Montefalco Castle,
+  Sant'Antonio di Ranverso and Schenkenberg Castle. `python3 -I tools/build_scenes_3d.py` lists them from the
+  snapshot (`web/public/data/view3d/scenes.json`), each with its own model, its sensors (ARGUS's 3D placements,
+  with their serial numbers) and the dangers ARGUS rates for that place (`<scene>.json`); `tools/fetch_argus_3d.py
+  all` takes each one's model and terrain. The build (`tools/build_game_data.py`) offers a scene only once its
+  model is there, and opens each danger at the scene where its alarm's sensor stands (on Lucretili: the tilt at
+  the Conventillo, the visitors, wind and heat at the Villa di Orazio); `web/tests/scenes3d.test.ts` checks that
+  the view finds that very sensor.
+- **Each danger its own damage**, from that sensor, on the model's own surfaces (`damageAfter` in `math.ts`,
+  the picture of the consequence): damp rising under the mosaics (House of the Masks); damp, salt and paint
+  flaking off the walls (frescoes: Ranverso, the Conventillo); a path worn into the floor (visitors); the stone
+  bleached, pitted and crusted (wind, heat); a crack growing through the wall at the crackmeter or accelerometer
+  (Schenkenberg), following the wall's own line in the model; the wall at the tiltmeter leaning over, then
+  cracking (Conventillo); trees and bushes on the wall tops (storms, wind). Everywhere a little weathering and,
+  after 15 years, plants on the wall tops. "ARGUS watching" stops each at a year's worth.
 
 - **The way in, without a jump:** everything is loaded before anything moves. The view starts loading when the
   button comes into sight (or is pointed at): its code and three.js (a file of their own, `assets/view3d-*.js`,
@@ -504,9 +523,6 @@ other monuments, nor on a device without WebGL.
 - **Assumed (needs review):** the walls' height (2.4 m; OpenStreetMap has the outline only), the floors' and
   panels' sizes, the patterns of rooms 214 and 215 (no straight-down photo), and all the damage: an
   illustration, not a prediction, and the view says so.
-- **Why not ARGUS's 3D models:** the API lists 3D Tiles models of all five monuments with their placements, but
-  the files are on ARGUS's 3D viewer, which is not public. With them (and permission) they would replace the
-  walls and floors; the rest stays.
 - **Code and data:** `web/src/view3d/` (`house.ts` the scene, with three.js 0.169.0; `preload.ts` the loading;
   `math.ts` the arithmetic, tested in `web/tests/view3d.test.ts`) and `web/src/components/View3D.tsx` (the view
   and its button). `python3 -I tools/build_preview_3d.py` writes `web/public/data/view3d/delos-masks.json` from
@@ -517,6 +533,19 @@ other monuments, nor on a device without WebGL.
 - **Needs the internet:** about 2 MB the first time it is opened (the 3D code, two photos, 16 imagery and 4
   terrain tiles); none of it is stored for offline use. The first prototype's separate `/preview-3d/` page is
   gone: the view is part of the game now.
+- **Taking every scene** (on a computer with the internet, from the repository's folder):
+
+  ```
+  python tools/fetch_argus_3d.py all
+  python tools/build_game_data.py
+  ```
+
+  For each scene: the terrain around it and the finest cut of its model whose tiles fit 8 MB (`--scene-mb`;
+  sizes asked first with HEAD requests, coarse to fine, nothing bigger downloaded), at most 300 MB in all
+  (`--budget-mb`, never more than 5 GB). A tileset that says where it is on the Earth stays there; one in local
+  metres is put where ARGUS puts it (position, heading, pitch, roll, scale), as ARGUS's own viewer does. The 3D
+  view then levels each model onto ARGUS's terrain, leaving out what is not ground (cellars below it, wall tops)
+  and tilting it 3 degrees at most; ARGUS's sensors move with it.
 - **ARGUS's own terrain and 3D model** (`tools/fetch_argus_3d.py`): ARGUS lists its 3D data in its API
   (asset-states, `spatial_representations`): for Delos the terrain `/terrain/delos/` (Cesium quantized-mesh) and
   the House of the Masks `/tiles/delos/house-of-masks/tileset.json` (3D Tiles) on argus.athenarc.gr. The tool

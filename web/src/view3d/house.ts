@@ -11,15 +11,18 @@
 //               are a plain pattern, an illustration
 //   sensors     ARGUS's 3D placements (position and height)
 //   damage      an illustration, not a prediction (math.ts, damageAfter)
-// The data file is written by tools/build_preview_3d.py. ARGUS's own 3D models would replace the
-// walls and floors; everything else stays. This file and three.js load only when a player asks for
-// the view (view3d/preload.ts), so they never weigh on the game itself.
+// One file per place (<scene>.json): the House of the Masks' by tools/build_preview_3d.py (with its
+// rooms, outline and photos), every other place's by tools/build_scenes_3d.py (sensors and dangers;
+// ARGUS's model is its walls). The damage starts at the sensor that raised the day's alarm and is the
+// day's danger's own (math.ts, DamageKind): damp, paint flaking, a worn floor, weathered stone, a
+// crack, a leaning wall or plants. This file and three.js load only when a player asks for the view
+// (view3d/preload.ts), so they never weigh on the game itself.
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage } from "./math";
+import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage, type DamageKind } from "./math";
 
 type XY = [number, number];
 
@@ -40,13 +43,31 @@ export interface HouseDanger {
 }
 
 export interface HouseData {
+  /** The scene's name (data/view3d/<scene>.json). */
+  scene?: string;
   origin: { lat: number; lon: number };
   metres_per_degree: XY;
+  /** The ruin's outline (the drawn walls, where ARGUS's model is missing) and plot outlines; may be empty. */
   shapes: { kind: "ruin" | "site"; ring: XY[] }[];
-  sensors3d: { xy: XY; h: number; kind: string; room: string | null }[];
+  /** h: metres above ARGUS's placement of its model; alt: above the WGS84 ellipsoid, where given. */
+  sensors3d: { xy: XY; h: number; alt?: number; kind: string; room: string | null; serial?: string | null }[];
   rooms: HouseRoom[];
   dangers: HouseDanger[];
   risk_checked_at: string | null;
+  /** ARGUS's model is cut this far above the floor (the House of the Masks: the shelters over the mosaics). */
+  cut_above_m?: number | null;
+  /** How far away the camera comes to rest, metres (default 28). */
+  view_m?: number | null;
+}
+
+/** What the view is about: metres east and north of the origin, east and north. The middle of the
+ *  ruin, else of ARGUS's sensors there, else the origin (ARGUS's placement of its model). */
+export function sceneCentre(data: HouseData): XY {
+  const ruin = data.shapes.find((s) => s.kind === "ruin");
+  if (ruin) return centroid(ruin.ring);
+  const s = data.sensors3d;
+  if (!s.length) return [0, 0];
+  return [s.reduce((a, x) => a + x.xy[0], 0) / s.length, s.reduce((a, x) => a + x.xy[1], 0) / s.length];
 }
 
 interface Mosaic {
@@ -116,6 +137,23 @@ export function fitPlane(points: [number, number, number][]): [number, number, n
   const col = (i: number, v: number[]) => A.map((x, k) => (k % 3 === i ? v[Math.floor(k / 3)] : x));
   const B = [sxz, syz, sz];
   return [det3(col(0, B)) / d, det3(col(1, B)) / d, det3(col(2, B)) / d];
+}
+
+/** The plane through ARGUS's model's ground minus the terrain under it ([x, y, difference] per cell),
+ *  robust to what is not ground: cells far from the typical difference (a cellar below the ground, a
+ *  wall top) are left out, and the tilt is held within 3 degrees. */
+export function levelFit(points: [number, number, number][]): [number, number, number] {
+  if (!points.length) return [0, 0, 0];
+  const sorted = points.map((p) => p[2]).sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)];
+  const near = points.filter((p) => Math.abs(p[2] - median) < 2);
+  const [a, b] = fitPlane(near);
+  const max = Math.tan((3 * Math.PI) / 180);
+  const ca = Math.max(-max, Math.min(max, a));
+  const cb = Math.max(-max, Math.min(max, b));
+  // the offset again with the held tilt, through the middle of the points kept
+  const c = near.reduce((s, p) => s + p[2] - ca * p[0] - cb * p[1], 0) / near.length;
+  return [ca, cb, c];
 }
 
 /** The grid's heights (little-endian int16 in base64). */
@@ -250,8 +288,6 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
   const response = await fetch(dataUrl);
   if (!response.ok) throw new Error(`${dataUrl}: HTTP ${response.status}`);
   const data = (await response.json()) as HouseData;
-  const ruin = data.shapes.find((s) => s.kind === "ruin");
-  if (!ruin) throw new Error(`${dataUrl}: no ruin outline`);
   const [ground, dem, grid, model, photos] = await Promise.all([
     mosaic(data, IMAGERY_ZOOM, imagery, 2, false),
     mosaic(data, TERRAIN_ZOOM, TERRAIN, 1, true),
@@ -260,7 +296,8 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
     Promise.all(data.rooms.map(async (r) => [r.room, r.photo ? await loadImage(r.photo.url) : null] as const)),
   ]);
   if (!ground.loaded) throw new Error("no satellite pictures (offline?)");
-  const [cx, cy] = centroid(ruin.ring);
+  if (!data.shapes.some((s) => s.kind === "ruin") && !(model && grid)) throw new Error(`${dataUrl}: neither a model nor walls to draw`);
+  const [cx, cy] = sceneCentre(data);
   const [kx, ky] = data.metres_per_degree;
   return {
     data,
@@ -276,6 +313,10 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
 export interface HouseOptions {
   /** The words on a room's label, in the game's language. */
   roomLabel: (room: HouseRoom) => string;
+  /** The day's danger: its alarm's sensor (its serial number, as in the sensor's name; else where it
+   *  stands, metres east and north of the origin; neither: the soil probes of the House of the Masks,
+   *  or the middle of the place) and which damage it does. */
+  focus?: { serial: string | null; xy: XY | null; kind: DamageKind };
   /** The canvas's name for screen readers (it can be turned and moved with a mouse, touch or keys). */
   canvasLabel: string;
 }
@@ -359,9 +400,6 @@ function patternGlsl(size: number, emblem: boolean): string {
 const WALL_H = 2.4; // assumed: OpenStreetMap has the outline, not the height
 const FLOOR = 3.1; // assumed sizes (rooms 215 and 216 are 3.3 m apart)
 const PANEL = 1.35;
-/** How far above the floor ARGUS's model is cut (its walls stand to about 3.5 m, the shelters over
- *  the mosaics at 5-6 m). */
-const ROOF_CUT = 4.3;
 const NORTH = new THREE.Vector3(0, 0, -1);
 const SKY = new THREE.Vector3(0, 1, 0);
 
@@ -372,15 +410,26 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const model = grid ? assets.model : null;
   const { lat: LAT0, lon: LON0 } = data.origin;
   const [KX, KY] = data.metres_per_degree;
-  const ruin = data.shapes.find((s) => s.kind === "ruin")!;
+  const ruin = data.shapes.find((s) => s.kind === "ruin") ?? null;
   const sites = data.shapes.filter((s) => s.kind === "site");
   const rooms = new Map(data.rooms.map((r) => [r.room, r]));
-  const houseCentre = centroid(ruin.ring);
-  // The damp comes up where ARGUS's soil probes are (Room 215, under the Theatrical Masks mosaic).
-  const probe = data.sensors3d.find((s) => s.kind === "soil_moisture" && s.room && rooms.has(s.room));
-  const dampRoom = (probe?.room && rooms.get(probe.room)) || data.rooms[0];
+  const houseCentre = sceneCentre(data);
+  const kind: DamageKind = options.focus ? options.focus.kind : "mosaic";
   const dist = (a: XY, b: XY) => Math.hypot(a[0] - b[0], a[1] - b[1]);
-  const nextRoom = data.rooms.filter((r) => r !== dampRoom).sort((a, b) => dist(a.xy, dampRoom.xy) - dist(b.xy, dampRoom.xy))[0] ?? dampRoom;
+  // Where the damage starts: the sensor that raised the day's alarm; on the House of the Masks without
+  // one, ARGUS's soil probes (Room 215, under the Theatrical Masks mosaic); else the middle of the place.
+  const probe = data.sensors3d.find((s) => s.kind === "soil_moisture" && s.room && rooms.has(s.room));
+  const serial = options.focus?.serial;
+  const at0 = options.focus?.xy ?? null;
+  const focusSensor =
+    (serial ? data.sensors3d.find((s) => s.serial === serial) : undefined) ??
+    (at0 ? data.sensors3d.filter((s) => dist(s.xy, at0) < 4).sort((a, b) => dist(a.xy, at0) - dist(b.xy, at0))[0] : undefined);
+  const focusXY: XY = focusSensor?.xy ?? at0 ?? (probe?.room ? rooms.get(probe.room)?.xy : undefined) ?? data.rooms[0]?.xy ?? houseCentre;
+  // The rooms the camera comes down to: the one nearest the damage and the next one.
+  const byDistance = [...data.rooms].sort((a, b) => dist(a.xy, focusXY) - dist(b.xy, focusXY));
+  const dampRoom = byDistance[0] ?? null;
+  const nextRoom = byDistance[1] ?? dampRoom;
+  const VIEW = Math.max(1, Math.min(3.5, (data.view_m ?? 28) / 28)); // the scale of the place
 
   // ---------------------------------------------------------------- real ground: imagery and terrain
   const demPixels = dem.canvas.getContext("2d", { willReadFrequently: true })!.getImageData(0, 0, dem.canvas.width, dem.canvas.height).data;
@@ -422,19 +471,26 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // ARGUS's model, lowered with the ground (whose height 0 is the terrain at the origin). Its floor is
   // the lowest point of the model in each half-metre cell: inside a room, the floor; by a wall, the
   // floor at its foot (sensors stand at ARGUS's height above it).
-  const CELL = 0.5;
+  let CELL = 0.5;
   let floorAt: (x: number, y: number) => number | null = () => null;
+  let lowestNear: (x: number, y: number, r: number) => number | null = () => null;
   const footprint = new THREE.Box3();
+  const tops: THREE.Vector3[] = []; // wall tops, where plants root
+  const wallCells: XY[] = []; // [x, z] of the cells where the model stands as a wall, near the damage
   if (model) {
     let nx = 0;
     let nz = 0;
     let cells = new Float32Array(0);
+    let highs = new Float32Array(0);
     const measure = () => {
       model.updateMatrixWorld(true);
       footprint.setFromObject(model);
+      // half-metre cells; coarser over a big place, so the grid stays about a million cells at most
+      CELL = Math.max(0.5, Math.max(footprint.max.x - footprint.min.x, footprint.max.z - footprint.min.z) / 1000);
       nx = Math.ceil((footprint.max.x - footprint.min.x) / CELL) + 1;
       nz = Math.ceil((footprint.max.z - footprint.min.z) / CELL) + 1;
       cells = new Float32Array(nx * nz).fill(Infinity);
+      highs = new Float32Array(nx * nz).fill(-Infinity);
       const v = new THREE.Vector3();
       model.traverse((o) => {
         const mesh = o as THREE.Mesh;
@@ -445,15 +501,16 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
           const k = Math.floor((v.z - footprint.min.z) / CELL) * nx + Math.floor((v.x - footprint.min.x) / CELL);
           if (v.y < cells[k]) cells[k] = v.y;
+          if (v.y > highs[k]) highs[k] = v.y;
         }
       });
     };
     model.position.y = -(H0 ?? 0);
     measure();
-    // ARGUS places its model with a slight tilt that its own viewer corrects ("pitch 1°" for this house):
-    // here the model's ground is levelled onto ARGUS's terrain around it (a plane fitted to the
-    // difference, a fraction of a degree to a degree or two), so the two meet without a step.
-    const [a, b, c] = fitPlane(
+    // ARGUS places its models with a slight tilt that its own viewer corrects ("pitch 1°" for the House of
+    // the Masks), and some at a height of their own: here the model's ground is levelled onto ARGUS's
+    // terrain around it (a plane fitted to the difference), so the two meet without a step.
+    const [a, b, c] = levelFit(
       Array.from(cells, (h, k) => {
         if (h === Infinity) return null;
         const x = footprint.min.x + ((k % nx) + 0.5) * CELL;
@@ -475,6 +532,36 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       const h = cells[row * nx + col];
       return h === Infinity ? null : h;
     };
+    lowestNear = (x, y, r) => {
+      let low = Infinity;
+      const c0 = Math.floor((x - r - footprint.min.x) / CELL);
+      const r0 = Math.floor((-y - r - footprint.min.z) / CELL);
+      const n = Math.ceil((2 * r) / CELL);
+      for (let row = Math.max(0, r0); row <= Math.min(nz - 1, r0 + n); row++) {
+        for (let col = Math.max(0, c0); col <= Math.min(nx - 1, c0 + n); col++) low = Math.min(low, cells[row * nx + col]);
+      }
+      return low === Infinity ? null : low;
+    };
+    // Wall tops: cells where the model stands more than 1.2 m above its own ground with a drop of a metre
+    // beside them (a wall's top is narrow; a roof is not), under the cut where there is one. Every few
+    // cells, so the plants spread along them.
+    const cutY = data.cut_above_m != null ? (floorAt(focusXY[0], focusXY[1]) ?? 0) + data.cut_above_m : Infinity;
+    const step = Math.max(1, Math.round(1 / CELL));
+    const side = Math.max(1, Math.round(1.2 / CELL));
+    const highAt = (row: number, col: number) => (row < 0 || col < 0 || row >= nz || col >= nx ? -Infinity : highs[row * nx + col]);
+    for (let row = 0; row < nz; row += step) {
+      for (let col = 0; col < nx; col += step) {
+        const k = row * nx + col;
+        const drop = (r: number, c: number) => highAt(r, c) < highs[k] - 1;
+        const narrow = (drop(row - side, col) && drop(row + side, col)) || (drop(row, col - side) && drop(row, col + side));
+        const cx = footprint.min.x + (col + 0.5) * CELL;
+        const cz = footprint.min.z + (row + 0.5) * CELL;
+        if (highs[k] - cells[k] > 1.2 && Math.hypot(cx - focusXY[0], -cz - focusXY[1]) < 5) wallCells.push([cx, cz]);
+        if (highs[k] - cells[k] > 1.2 && highs[k] < cutY - 0.2 && narrow) {
+          tops.push(new THREE.Vector3(footprint.min.x + (col + 0.5) * CELL, highs[k] + 0.05, footprint.min.z + (row + 0.5) * CELL));
+        }
+      }
+    }
   }
   const surface = (x: number, y: number) => floorAt(x, y) ?? ground(x, y);
   const at = ([x, y]: XY, up = 0) => new THREE.Vector3(x, surface(x, y) + up, -y); // metres east/north -> scene
@@ -508,7 +595,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   sun.target.position.copy(centre3);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 1, far: 250 });
+  const reachShadow = 45 * VIEW;
+  Object.assign(sun.shadow.camera, { left: -reachShadow, right: reachShadow, top: reachShadow, bottom: -reachShadow, near: 1, far: 250 * VIEW });
   scene.add(sun, sun.target);
 
   const SEG = 128; // ground: the satellite picture, lifted onto the terrain
@@ -516,13 +604,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const gp = groundGeo.attributes.position;
   const gx0 = (imagery.west + imagery.east) / 2;
   const gy0 = (imagery.north + imagery.south) / 2;
-  // Under ARGUS's model the ground steps down out of sight, so it never covers the model's floors.
-  const hidden = (x: number, y: number) =>
-    !!model && x > footprint.min.x + 1.5 && x < footprint.max.x - 1.5 && -y > footprint.min.z + 1.5 && -y < footprint.max.z - 1.5;
+  // Under ARGUS's model the ground steps down out of sight (below the model's lowest point around it),
+  // so it never covers the model's floors; where the model has nothing, the ground is the terrain.
+  const reach = (Math.max(imagery.east - imagery.west, imagery.north - imagery.south) / SEG) * 0.75;
   for (let i = 0; i < gp.count; i++) {
     const x = gp.getX(i) + gx0;
     const y = gp.getY(i) + gy0;
-    gp.setZ(i, hidden(x, y) ? Math.min(ground(x, y), footprint.min.y - 0.5) : ground(x, y));
+    const low = model ? lowestNear(x, y, reach) : null;
+    gp.setZ(i, low === null ? ground(x, y) : Math.min(ground(x, y), low - 0.4));
   }
   groundGeo.computeVertexNormals();
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -541,13 +630,59 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   far.position.y = lowest - 0.2;
   scene.add(far);
 
-  const src = at(dampRoom.xy);
+  // ARGUS's sensors where ARGUS's own viewer shows them: with ARGUS's model, moved with it as it was
+  // levelled; else at ARGUS's height above the floor. A soil probe is in the ground.
+  function sensorAt(s: HouseData["sensors3d"][number]): THREE.Vector3 {
+    const floor = surface(s.xy[0], s.xy[1]);
+    if (s.kind === "soil_moisture") return at(s.xy, 0.05);
+    if (model && s.alt !== undefined) {
+      const p = new THREE.Vector3(s.xy[0], s.alt, -s.xy[1]).applyMatrix4(model.matrix);
+      // a placement far off the model's own (its height above the ground is not to be trusted then)
+      if (p.y < floor + 0.05 || p.y > floor + 60) p.y = floor + 1.3;
+      return p;
+    }
+    return at(s.xy, s.h);
+  }
+  // The point the damage starts from: the alarm's sensor, else the ground where it stands.
+  const src = focusSensor && focusSensor.kind !== "soil_moisture" ? sensorAt(focusSensor) : at(focusSensor ? focusXY : (dampRoom?.xy ?? focusXY));
+  // The wall at the damage: its direction from the model's own wall cells around it (their main axis),
+  // so a crack runs across it and it leans out of its own line, away from the middle of the place.
+  const away = new THREE.Vector2(focusXY[0] - houseCentre[0], -(focusXY[1] - houseCentre[1]));
+  if (away.lengthSq() < 0.01) away.set(1, 0);
+  away.normalize();
+  const along = new THREE.Vector2(-away.y, away.x);
+  if (wallCells.length >= 4) {
+    const mx = wallCells.reduce((a, c) => a + c[0], 0) / wallCells.length;
+    const mz = wallCells.reduce((a, c) => a + c[1], 0) / wallCells.length;
+    let sxx = 0, sxz = 0, szz = 0;
+    for (const [x, z] of wallCells) {
+      sxx += (x - mx) ** 2; sxz += (x - mx) * (z - mz); szz += (z - mz) ** 2;
+    }
+    const angle = 0.5 * Math.atan2(2 * sxz, sxx - szz);
+    along.set(Math.cos(angle), Math.sin(angle));
+    const out = new THREE.Vector2(-along.y, along.x);
+    away.copy(out.dot(away) < 0 ? out.negate() : out);
+  }
+  // A crack or a lean is in the wall itself: at the wall cell nearest the sensor.
+  const wallAt =
+    (kind === "crack" || kind === "lean") && wallCells.length
+      ? wallCells.reduce((best, c) => (Math.hypot(c[0] - src.x, c[1] - src.z) < Math.hypot(best[0] - src.x, best[1] - src.z) ? c : best))
+      : null;
+  const floorY = floorAt(focusXY[0], focusXY[1]) ?? ground(focusXY[0], focusXY[1]);
   const damage = {
     damp: { value: 0 },
     wet: { value: 0 },
     loss: { value: 0 },
     salt: { value: 0 },
-    source: { value: new THREE.Vector2(src.x, src.z) },
+    flake: { value: 0 },
+    wear: { value: 0 },
+    weather: { value: 0 },
+    crack: { value: 0 },
+    lean: { value: 0 },
+    source: { value: wallAt ? new THREE.Vector2(wallAt[0], wallAt[1]) : new THREE.Vector2(src.x, src.z) },
+    sourceY: { value: src.y },
+    leanDir: { value: away },
+    wallDir: { value: along },
   };
 
   // Walls: rubble masonry; damp darkens them from the ground up, with a line of salt at its edge
@@ -586,15 +721,16 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     };
     return m;
   }
-  // ARGUS's model of the house, its own photographs as its surfaces, and the same damage drawn on
-  // them: on the floors (flat and low) the damp stain, lost tesserae and salt; on the walls the damp
-  // rising from the floor with its line of salt.
+  // ARGUS's model, its own photographs as its surfaces, and the day's damage drawn on them: on the
+  // floors (flat and low) the damp stain, lost tesserae and salt, or a path worn by feet; on the walls
+  // damp rising from the ground with its line of salt, paint flaking, a crack growing from the sensor;
+  // everywhere the stone weathering; and the wall by a tiltmeter leaning.
   if (model) {
-    const floorY = floorAt(dampRoom.xy[0], dampRoom.xy[1]) ?? ground(dampRoom.xy[0], dampRoom.xy[1]);
-    // A cut above the walls: the modern shelters over the mosaics (5-6 m up in ARGUS's model) would
-    // hide the floors from above, so everything higher than the walls is left out, as in a cutaway.
-    renderer.localClippingEnabled = true;
-    const cut = new THREE.Plane(new THREE.Vector3(0, -1, 0), floorY + ROOF_CUT);
+    // A cut above the walls where the data asks for one: the modern shelters over the House of the
+    // Masks' mosaics (5-6 m up in ARGUS's model) would hide the floors from above.
+    const cutAbove = data.cut_above_m;
+    renderer.localClippingEnabled = cutAbove != null;
+    const cut = cutAbove != null ? [new THREE.Plane(new THREE.Vector3(0, -1, 0), floorY + cutAbove)] : [];
     const patched = new Set<THREE.Material>();
     model.traverse((o) => {
       const mesh = o as THREE.Mesh;
@@ -602,15 +738,30 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
         if (patched.has(m)) continue;
         patched.add(m);
-        m.clippingPlanes = [cut];
+        m.clippingPlanes = cut;
         m.clipShadows = true;
         m.onBeforeCompile = (shader) => {
           Object.assign(shader.uniforms, {
             uWet: damage.wet, uLoss: damage.loss, uSalt: damage.salt, uDamp: damage.damp, uSource: damage.source,
-            uGround: { value: floorY },
+            uFlake: damage.flake, uWear: damage.wear, uWeather: damage.weather, uCrack: damage.crack, uLean: damage.lean,
+            uSourceY: damage.sourceY, uLeanDir: damage.leanDir, uWallDir: damage.wallDir, uGround: { value: floorY },
           });
           shader.vertexShader = shader.vertexShader
-            .replace("#include <common>", "#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;")
+            .replace(
+              "#include <common>",
+              "#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;",
+            )
+            .replace(
+              "#include <begin_vertex>",
+              `#include <begin_vertex>
+              if (uLean > 0.0) {
+                // the wall by the tiltmeter leans over, more the higher it stands; a few metres along, not at all
+                vec4 wl = modelMatrix * vec4(transformed, 1.0);
+                float reachL = 1.0 - smoothstep(3.0, 7.0, distance(wl.xz, uSource));
+                float off = tan(uLean) * max(0.0, wl.y - uGround) * reachL;
+                transformed += inverse(mat3(modelMatrix)) * vec3(uLeanDir.x * off, 0.0, uLeanDir.y * off);
+              }`,
+            )
             .replace(
               "#include <worldpos_vertex>",
               "#include <worldpos_vertex>\nvWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvNormalW = normalize(mat3(modelMatrix) * objectNormal);",
@@ -618,7 +769,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround;\nuniform vec2 uSource;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uSourceY;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
@@ -626,19 +777,67 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               vec3 base0 = diffuseColor.rgb;
               vec3 col = base0;
               ${damageGlsl(false)}
-              float flatUp = smoothstep(0.80, 0.95, normalize(vNormalW).y);
+              vec3 nW = normalize(vNormalW);
+              float flatUp = smoothstep(0.80, 0.95, nW.y);
+              float wall = 1.0 - flatUp;
               float nearFloor = 1.0 - smoothstep(0.35, 1.0, vWorld.y - uGround);
               diffuseColor.rgb = mix(base0, diffuseColor.rgb, flatUp * nearFloor);
+              vec3 c = diffuseColor.rgb;
+              // metres along the damaged wall from the sensor, and out of its line
+              float along = dot(vWorld.xz - uSource, uWallDir);
+              float across = abs(dot(vWorld.xz - uSource, uLeanDir));
               float near = 1.0 - smoothstep(3.0, 18.0, distance(vWorld.xz, uSource));
-              float damp = uDamp * (0.25 + 0.75 * near) * (1.0 - flatUp);
+              float damp = uDamp * (0.25 + 0.75 * near) * wall;
               if (damp > 0.0) {
                 float y = vWorld.y - uGround;
                 float edge = damp + (vnoise(vWorld.xz * 1.6 + vWorld.y) - 0.5) * 0.22;
                 float wetWall = 1.0 - smoothstep(edge - 0.05, edge + 0.02, y);
-                diffuseColor.rgb *= mix(vec3(1.0), vec3(0.55, 0.53, 0.49), wetWall);
-                float band = smoothstep(0.07, 0.0, abs(y - edge - 0.035)) * smoothstep(0.15, 0.35, damp);
-                diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.97, 0.96, 0.93), band * (0.55 + 0.45 * vnoise(vWorld.xz * 11.0 + vWorld.y * 9.0)));
-              }`,
+                c *= mix(vec3(1.0), vec3(0.55, 0.53, 0.49), wetWall);
+                float band = smoothstep(0.07, 0.0, abs(y - edge - 0.035)) * smoothstep(0.15, 0.35, damp) * uSalt;
+                c = mix(c, vec3(0.97, 0.96, 0.93), band * (0.55 + 0.45 * vnoise(vWorld.xz * 11.0 + vWorld.y * 9.0)));
+              }
+              if (uFlake > 0.0) {
+                // paint and plaster coming away in flakes, from the damp walls near the sensor
+                float fl = uFlake * (1.0 - smoothstep(5.0, 16.0, distance(vWorld.xz, uSource))) * wall;
+                float flakeN = vnoise(vec2(along, vWorld.y) * 2.4 + 4.0) * 0.7 + vnoise(vec2(along, vWorld.y) * 9.0) * 0.3;
+                float gone = step(1.0 - fl * 0.75, flakeN);
+                float rim = smoothstep(0.96 - fl * 0.75, 1.0 - fl * 0.75, flakeN) * (1.0 - gone);
+                c = mix(c, vec3(0.80, 0.76, 0.68) * (0.9 + 0.2 * hash12(floor(vec2(along, vWorld.y) / 0.03))), gone);
+                c *= 1.0 - rim * 0.4;
+              }
+              if (uWear > 0.0) {
+                // a path worn by feet: the floor polished smooth and faded, then stones loosening
+                float rw = distance(vWorld.xz, uSource) + (vnoise(vWorld.xz * 1.1) - 0.5) * 0.8;
+                float worn = (1.0 - smoothstep(uWear - 0.5, uWear + 0.1, rw)) * flatUp;
+                float lum = dot(c, vec3(0.299, 0.587, 0.114));
+                c = mix(c, vec3(lum * 1.12) * vec3(1.02, 1.0, 0.95), worn * 0.6);
+                float gap = step(1.0 - uLoss * worn * 0.6, vnoise(vWorld.xz * 3.1 + 21.0));
+                c = mix(c, vec3(0.35, 0.32, 0.28), gap);
+              }
+              if (uWeather > 0.0) {
+                // weathered stone: bleached, pitted, and a dark crust where rain never washes it
+                float lum = dot(c, vec3(0.299, 0.587, 0.114));
+                float w = uWeather * (0.6 + 0.4 * near);
+                c = mix(c, vec3(lum) * vec3(1.05, 1.0, 0.93), w * 0.5);
+                float pits = smoothstep(0.6, 0.8, vnoise(vWorld.xz * 5.0 + vWorld.y * 5.0) * 0.6 + vnoise((vWorld.xz + vWorld.y) * 17.0) * 0.4);
+                c *= 1.0 - pits * w * 0.5;
+                c = mix(c, vec3(0.20, 0.19, 0.17), w * 0.55 * smoothstep(-0.15, -0.6, nW.y));
+              }
+              if (uCrack > 0.0) {
+                // a crack through the wall at the sensor, wider in its middle, growing up and down
+                float yr = vWorld.y - uSourceY;
+                float halfLen = uCrack * 0.5;
+                float zig = (vnoise(vec2(yr * 1.7, 3.0)) - 0.5) * 0.9 + (vnoise(vec2(yr * 7.0, 9.0)) - 0.5) * 0.16;
+                float d = abs(along - zig);
+                float width = 0.008 + 0.03 * clamp(uCrack / 6.0, 0.0, 1.0) * (1.0 - clamp(abs(yr) / max(halfLen, 0.01), 0.0, 1.0));
+                float onWall = wall * (1.0 - smoothstep(halfLen - 0.15, halfLen + 0.1, abs(yr))) * (1.0 - smoothstep(0.8, 1.6, across));
+                c *= 1.0 - 0.3 * (1.0 - smoothstep(width * 2.0, width * 10.0, d)) * onWall;
+                c = mix(c, vec3(0.06, 0.05, 0.05), (1.0 - smoothstep(width, width * 1.8, d)) * onWall);
+                // stones loosened along it once it is long
+                float lost = step(0.78, vnoise(vec2(along, vWorld.y) * 3.5 + 7.0)) * (1.0 - smoothstep(0.1, 0.6, d)) * onWall * smoothstep(3.0, 6.0, uCrack);
+                c = mix(c, vec3(0.30, 0.27, 0.24), lost);
+              }
+              diffuseColor.rgb = c;`,
             );
         };
       }
@@ -646,8 +845,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     scene.add(model);
   }
 
-  const tops: THREE.Vector3[] = [];
-  for (let i = 0; !model && i < ruin.ring.length - 1; i++) {
+  for (let i = 0; ruin && !model && i < ruin.ring.length - 1; i++) {
     const a2 = ruin.ring[i];
     const b2 = ruin.ring[i + 1];
     const a = at(a2);
@@ -676,7 +874,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // house's longest wall. Tesserae 4 cm.
   let axis = 0;
   let longest = 0;
-  for (let i = 0; i < ruin.ring.length - 1; i++) {
+  for (let i = 0; ruin && i < ruin.ring.length - 1; i++) {
     const [x1, y1] = ruin.ring[i];
     const [x2, y2] = ruin.ring[i + 1];
     const len = Math.hypot(x2 - x1, y2 - y1);
@@ -741,16 +939,19 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // ARGUS sensors at their 3D placements (vermilion squares, as on the game's map)
   const sensorMat = new THREE.MeshStandardMaterial({ color: "#a84300" });
   const postMat = new THREE.MeshStandardMaterial({ color: "#2b302d" });
+  const SIZE = 0.14 * VIEW; // seen from further away over a bigger place, a little bigger
   for (const s of data.sensors3d) {
     const soil = s.kind === "soil_moisture";
-    const h = soil ? 0.05 : s.h; // a soil probe is in the ground; the others at ARGUS's height above the floor
-    const cube = new THREE.Mesh(new THREE.BoxGeometry(0.14, soil ? 0.05 : 0.14, 0.14), sensorMat);
-    cube.position.copy(at(s.xy, h));
+    const p = sensorAt(s);
+    const cube = new THREE.Mesh(new THREE.BoxGeometry(SIZE, soil ? 0.05 : SIZE, SIZE), sensorMat);
+    cube.position.copy(p);
     cube.castShadow = true;
     scene.add(cube);
-    if (!soil) {
-      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, h), postMat);
-      post.position.copy(at(s.xy, h / 2));
+    // on a post where it stands on the ground; one higher up is fixed to the wall
+    const h = p.y - surface(s.xy[0], s.xy[1]);
+    if (!soil && h > 0.1 && h < 3) {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.01 * VIEW, 0.01 * VIEW, h), postMat);
+      post.position.copy(p).setY(p.y - h / 2);
       scene.add(post);
     }
   }
@@ -769,8 +970,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const m4 = new THREE.Matrix4();
   const scale = new THREE.Vector3();
   const turn = new THREE.Quaternion();
+  const bushy = kind === "tree" ? 2.2 : 1; // trees and shrubs over the walls, not only weeds
   tops.forEach((p, i) => {
-    const k = 0.6 + rnd() * 0.9;
+    const k = (0.6 + rnd() * 0.9) * bushy;
     scale.set(k * 1.3, k * 0.8, k * 1.1);
     plants.setMatrixAt(i, m4.compose(new THREE.Vector3(p.x + rnd() * 0.24 - 0.12, p.y - 0.05, p.z + rnd() * 0.24 - 0.12), turn, scale));
   });
@@ -788,8 +990,21 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   controls.minDistance = 2;
   controls.maxDistance = 400;
   controls.listenToKeyEvents(canvas); // arrow keys move the view while the canvas has the focus
-  const endLook = at([(dampRoom.xy[0] + nextRoom.xy[0]) / 2, (dampRoom.xy[1] + nextRoom.xy[1]) / 2], 0.4);
-  const END_OFFSET = new THREE.Vector3(-14, 15.5, 18.5); // about 28 m away, looking down at 34 degrees
+  // The camera comes to rest looking at the damage: between the two rooms nearest it where ARGUS names
+  // rooms, else at the alarm's sensor (or the middle of the place).
+  // rooms, else at the alarm's sensor where the damage is on the building by it (and ARGUS's model is
+  // there); for damage all over (weathered stone, plants) or a sensor off the model, at the building.
+  const onModel = (xy: XY) => !model || floorAt(xy[0], xy[1]) !== null;
+  const modelMiddle: XY = model ? [(footprint.min.x + footprint.max.x) / 2, -(footprint.min.z + footprint.max.z) / 2] : houseCentre;
+  const local = kind === "mosaic" || kind === "fresco" || kind === "floor" || kind === "crack" || kind === "lean";
+  const endLook =
+    dampRoom && nextRoom
+      ? at([(dampRoom.xy[0] + nextRoom.xy[0]) / 2, (dampRoom.xy[1] + nextRoom.xy[1]) / 2], 0.4)
+      : local && (focusSensor || at0) && onModel(focusXY)
+        ? src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1]) + 0.4))
+        : at(onModel(houseCentre) ? houseCentre : modelMiddle, 0.4);
+  // about 28 m away (further over a bigger place), looking down at 34 degrees
+  const END_OFFSET = new THREE.Vector3(-14, 15.5, 18.5).multiplyScalar(VIEW);
   const endPos = new THREE.Vector3();
   const topLook = at(houseCentre);
   const topPos = topLook.clone().setY(topLook.y + 200);
@@ -905,6 +1120,11 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       damage.wet.value = d.wet;
       damage.loss.value = d.loss;
       damage.salt.value = d.salt;
+      damage.flake.value = d.flake;
+      damage.wear.value = d.wear;
+      damage.weather.value = d.weather;
+      damage.crack.value = d.crack;
+      damage.lean.value = (d.lean * Math.PI) / 180;
       plants.count = Math.round(d.plants * tops.length);
     },
     resize(width, height) {
