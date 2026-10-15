@@ -517,6 +517,18 @@ other monuments, nor on a device without WebGL.
 - **Needs the internet:** about 2 MB the first time it is opened (the 3D code, two photos, 16 imagery and 4
   terrain tiles); none of it is stored for offline use. The first prototype's separate `/preview-3d/` page is
   gone: the view is part of the game now.
+- **ARGUS's own terrain and 3D model** (`tools/fetch_argus_3d.py`): ARGUS lists its 3D data in its API
+  (asset-states, `spatial_representations`): for Delos the terrain `/terrain/delos/` (Cesium quantized-mesh) and
+  the House of the Masks `/tiles/delos/house-of-masks/tileset.json` (3D Tiles) on argus.athenarc.gr. The tool
+  takes only the area around the house, from the computer it runs on (GET only, one request at a time with a
+  pause, robots.txt respected, ARGUS's host only), and keeps what it downloads in `argus_3d_cache/` (not in git).
+  `terrain` resamples the most detailed level around the house (±250 m) to a 2 m grid,
+  `web/public/data/view3d/delos-masks-terrain.json` (about 150 KB); the 3D view uses it where present and the AWS
+  tiles beyond it, lifted to ARGUS's datum (ellipsoid heights) so the two meet without a step. `model` first
+  only surveys the tileset (which tiles touch the house, at which detail, how big), and with `--download` takes
+  the chosen tiles around the house only (default at most 300 MB, never more than 5 GB). Turning those tiles
+  into the game's walls and floors comes next, once we see what they hold. `tools/tests/test_fetch_argus_3d.py`
+  runs the tool against a local copy of such a server.
 
 ## Citizen observation report
 

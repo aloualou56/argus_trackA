@@ -1,5 +1,7 @@
 // The 3D view of a house (README, "3D view"), built only from data the game may use:
-//   ground      the game's satellite picture (Esri) on real terrain (AWS Terrain Tiles)
+//   ground      the game's satellite picture (Esri) on real terrain: ARGUS's own terrain around the
+//               house where tools/fetch_argus_3d.py has taken it (<scene>-terrain.json), else AWS
+//               Terrain Tiles
 //   walls       the ruin's outline from OpenStreetMap (historic=ruins), height assumed
 //   rooms       ARGUS's own 3D sensor placements, which name the mosaic rooms
 //   mosaics     photos from Wikimedia Commons where a straight-down one exists; the other floors
@@ -59,7 +61,52 @@ export interface Assets {
   centre: [number, number];
   imagery: Mosaic;
   dem: Mosaic;
+  /** ARGUS's own terrain around the house, finer than the AWS tiles, when it was taken (optional). */
+  grid: TerrainGrid | null;
   photos: Map<string, HTMLImageElement>;
+}
+
+/** ARGUS terrain resampled to a regular grid (tools/fetch_argus_3d.py, <scene>-terrain.json). */
+export interface TerrainGrid {
+  spacing_m: number;
+  cols: number;
+  rows: number;
+  west_m: number;
+  north_m: number;
+  base_m: number;
+  heights_cm_int16_b64: string;
+}
+
+/** Height (metres, ARGUS's datum) at x metres east, y north of the origin; null outside the grid. */
+export function gridHeight(grid: TerrainGrid, heights: Int16Array, x: number, y: number): number | null {
+  const fc = (x - grid.west_m) / grid.spacing_m;
+  const fr = (grid.north_m - y) / grid.spacing_m;
+  const c0 = Math.floor(fc);
+  const r0 = Math.floor(fr);
+  if (c0 < 0 || r0 < 0 || c0 + 1 >= grid.cols || r0 + 1 >= grid.rows) return null;
+  const at = (c: number, r: number) => heights[r * grid.cols + c];
+  const h = [at(c0, r0), at(c0 + 1, r0), at(c0, r0 + 1), at(c0 + 1, r0 + 1)];
+  if (h.some((v) => v === -32768)) return null;
+  const tx = fc - c0;
+  const ty = fr - r0;
+  const v = (h[0] * (1 - tx) + h[1] * tx) * (1 - ty) + (h[2] * (1 - tx) + h[3] * tx) * ty;
+  return grid.base_m + v / 100;
+}
+
+/** The grid's heights (little-endian int16 in base64). */
+export function gridHeights(grid: TerrainGrid): Int16Array {
+  const bytes = Uint8Array.from(atob(grid.heights_cm_int16_b64), (ch) => ch.charCodeAt(0));
+  const view = new DataView(bytes.buffer);
+  return Int16Array.from({ length: bytes.length / 2 }, (_, i) => view.getInt16(i * 2, true));
+}
+
+async function loadGrid(url: string): Promise<TerrainGrid | null> {
+  try {
+    const response = await fetch(url);
+    return response.ok ? ((await response.json()) as TerrainGrid) : null;
+  } catch {
+    return null; // not taken yet, or offline: the AWS terrain does
+  }
 }
 
 const TERRAIN = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
@@ -117,9 +164,10 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
   const data = (await response.json()) as HouseData;
   const ruin = data.shapes.find((s) => s.kind === "ruin");
   if (!ruin) throw new Error(`${dataUrl}: no ruin outline`);
-  const [ground, dem, photos] = await Promise.all([
+  const [ground, dem, grid, photos] = await Promise.all([
     mosaic(data, IMAGERY_ZOOM, imagery, 2, false),
     mosaic(data, TERRAIN_ZOOM, TERRAIN, 1, true),
+    loadGrid(dataUrl.replace(/\.json$/, "-terrain.json")),
     Promise.all(data.rooms.map(async (r) => [r.room, r.photo ? await loadImage(r.photo.url) : null] as const)),
   ]);
   if (!ground.loaded) throw new Error("no satellite pictures (offline?)");
@@ -130,6 +178,7 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
     centre: [data.origin.lat + cy / ky, data.origin.lon + cx / kx],
     imagery: ground,
     dem,
+    grid,
     photos: new Map(photos.filter((p): p is readonly [string, HTMLImageElement] => !!p[1])),
   };
 }
@@ -224,7 +273,7 @@ const NORTH = new THREE.Vector3(0, 0, -1);
 const SKY = new THREE.Vector3(0, 1, 0);
 
 export function createHouse(host: HTMLElement, assets: Assets, options: HouseOptions): House {
-  const { data, imagery, dem } = assets;
+  const { data, imagery, dem, grid } = assets;
   const { lat: LAT0, lon: LON0 } = data.origin;
   const [KX, KY] = data.metres_per_degree;
   const ruin = data.shapes.find((s) => s.kind === "ruin")!;
@@ -245,7 +294,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     const o = (y * dem.canvas.width + x) * 4;
     return demPixels[o + 3] ? terrarium(demPixels[o], demPixels[o + 1], demPixels[o + 2]) : null; // a tile that did not load
   };
-  function terrain(x: number, y: number): number | null {
+  function awsTerrain(x: number, y: number): number | null {
     const px = ((x - dem.west) / (dem.east - dem.west)) * dem.canvas.width - 0.5;
     const py = ((dem.north - y) / (dem.north - dem.south)) * dem.canvas.height - 0.5;
     const x0 = Math.floor(px);
@@ -256,6 +305,19 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     if (h.some((v) => v === null)) return null;
     const [a, b, c, d] = h as number[];
     return (a * (1 - fx) + b * fx) * (1 - fy) + (c * (1 - fx) + d * fx) * fy;
+  }
+  // ARGUS's terrain where it was taken; the AWS terrain beyond it, lifted to ARGUS's datum (ARGUS
+  // gives heights above the ellipsoid, AWS above the sea) so the two meet without a step.
+  const gridH = grid && gridHeights(grid);
+  const gridAt = (x: number, y: number) => (grid && gridH ? gridHeight(grid, gridH, x, y) : null);
+  const awsAt0 = awsTerrain(0, 0);
+  const gridAt0 = gridAt(0, 0);
+  const datumShift = gridAt0 !== null && awsAt0 !== null ? gridAt0 - awsAt0 : 0;
+  function terrain(x: number, y: number): number | null {
+    const fine = gridAt(x, y);
+    if (fine !== null) return fine;
+    const coarse = awsTerrain(x, y);
+    return coarse === null ? null : coarse + datumShift;
   }
   const H0 = terrain(0, 0);
   // Flat where the terrain did not load: the house still stands, on level ground.

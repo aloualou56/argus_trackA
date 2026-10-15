@@ -21,3 +21,6 @@ class_data/
 
 # Test clips from `npm run narration -- --sample` (to compare voices; not part of the game).
 web/narration-samples/
+
+# ARGUS 3D data as downloaded by tools/fetch_argus_3d.py (only the small result goes in the game)
+argus_3d_cache/
