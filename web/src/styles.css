@@ -5278,3 +5278,94 @@ html.a11y-contrast .report-contact {
     background: CanvasText;
   }
 }
+
+/* ---- "See it happen" (view3d/weather.ts): the light of the weather over the picture, under the labels */
+.view3d-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.view3d-fx::after {
+  /* a storm's lightning (opacity set by weather.ts; never with less motion) */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: var(--flash, 0);
+}
+.view3d-fx[data-fx="heat"] {
+  background: radial-gradient(circle at 80% 8%, rgb(255 246 214 / 0.75), rgb(255 214 140 / 0.18) 35%, rgb(255 190 110 / 0.1) 70%);
+}
+.view3d-fx[data-fx="sun"] {
+  background: radial-gradient(circle at 78% 6%, rgb(255 255 240 / 0.95), rgb(255 240 190 / 0.35) 22%, transparent 55%);
+}
+.view3d-fx[data-fx="smog"],
+.view3d-fx[data-fx="acidrain"] {
+  background: linear-gradient(to bottom, rgb(120 100 70 / 0.32), rgb(90 80 60 / 0.16));
+}
+.view3d-fx[data-fx="wildfire"] {
+  background: linear-gradient(to top, rgb(255 110 30 / 0.3), rgb(80 60 50 / 0.15) 70%);
+}
+.view3d-fx[data-fx="fire"] {
+  background: radial-gradient(circle at 50% 65%, rgb(255 130 40 / 0.2), transparent 60%);
+}
+.view3d-fx[data-fx="storm"] {
+  background: linear-gradient(to bottom, rgb(30 40 50 / 0.28), transparent 70%);
+}
+.view3d-fx[data-fx="damp"] {
+  background: linear-gradient(to top, rgb(225 235 240 / 0.32), transparent 60%);
+}
+.view3d-fx[data-fx="frost"] {
+  background: radial-gradient(ellipse at center, transparent 55%, rgb(235 245 255 / 0.5));
+}
+/* "See it happen": one button per effect, in a row that scrolls sideways when it does not fit */
+.view3d-fx-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.view3d-fx-title {
+  flex: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.view3d-fx-chips {
+  display: flex;
+  gap: 0.35rem;
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.view3d-fx-chips button {
+  flex: none;
+  min-height: 40px;
+  padding: 0.25rem 0.6rem;
+  border: 2px solid var(--edge);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.view3d-fx-chips button[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+.view3d-fx-note {
+  margin: 0;
+}
+@media (max-width: 39.99rem) {
+  .view3d-fx-row {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  .view3d-fx-chips {
+    width: 100%;
+  }
+}

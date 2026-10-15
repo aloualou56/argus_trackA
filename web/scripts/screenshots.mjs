@@ -1049,6 +1049,21 @@ async function check3dView(browser, lang, vp) {
   await page.getByRole("button", { name: t["view3d.watched"] }).click();
   if ((await page.getByRole("button", { name: t["view3d.watched"] }).getAttribute("aria-pressed")) !== "true") note(`${prefix}: "${t["view3d.watched"]}" not pressed`);
   await page.getByRole("button", { name: t["view3d.nobody"] }).click();
+  // "See it happen": the first effect starts, says what it shows and for which of ARGUS's dangers, and
+  // stops when pressed again.
+  const fxButtons = page.locator(".view3d-fx-chips button");
+  if (!(await fxButtons.count())) note(`${prefix}: no "${t["view3d.fxTitle"]}" buttons`);
+  else {
+    const first = fxButtons.first();
+    await first.click();
+    if ((await first.getAttribute("aria-pressed")) !== "true") note(`${prefix}: the first effect does not start`);
+    if (!(await page.locator(".view3d-fx-note").isVisible())) note(`${prefix}: no note for the effect`);
+    await page.waitForTimeout(500);
+    await checkPage(page, `${prefix} effect`);
+    await shot(page, `${prefix}-effect`);
+    await first.click();
+    if ((await first.getAttribute("aria-pressed")) !== "false" || (await page.locator(".view3d-fx-note").count())) note(`${prefix}: the effect does not stop`);
+  }
   await page.locator(".view3d-dangers summary").click();
   await checkPage(page, prefix);
   await shot(page, prefix);

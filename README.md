@@ -509,6 +509,20 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   almost black). The satellite ground is shown the same way, left out where the model has a ground of its own,
   and stepped down under the model's sunken floors; ARGUS's terrain gives way to the AWS terrain over its last
   24 m, at the median step between the two.
+- **See it happen:** one button for each of the weather and the dangers ARGUS rates at the place, the gravest
+  first, played out over ARGUS's model (`web/src/view3d/weather.ts`; which danger shows as what: `effectOf` in
+  `math.ts`, matched on ARGUS's scenario keys and tested in `web/tests/view3d.test.ts`). Rain (the stone darkening
+  as it gets wet), acid rain (grime), a flood (water rising over the lowest floors), a storm (driving rain,
+  gusts, lightning at most once every 4 s), damp (low mist, the damp rising in the walls and falling again), wind
+  (streaks, sand and dust blowing past), a heatwave (shimmer, bleaching, glare), strong sun (the colours
+  fading), frost (snow, frost on what faces up, then the thaw, on a loop), an earthquake (the camera shaking,
+  dust and stones falling from the wall tops), a landslide (boulders rolling down the slope, dust), a fire in the
+  building (flames out of the roof, smoke) or a wildfire around the place, air pollution (haze, soot settling),
+  plants (rooting and growing over the walls, cut back, coming again) and visitors (people walking the floors,
+  around the walls). For people, a fire and walls shaking the camera comes closer, to some 26 m. Each says
+  which of ARGUS's dangers it shows, and that it is an illustration, not a forecast. Not shown, as nothing would
+  show them properly: woodworm, insects, animals, vandalism, dumping, polluted groundwater. With "less motion"
+  each is a still picture: nothing falls, shakes or flashes.
 - **For a five-year-old too**, without making anything bigger than it is: "Show the damage" (on at first)
   marks in pulsing red where the monument is being damaged, and says that the red is a sign, not the stone's
   colour; a label with a picture sign and a few words stands at the damage ("💧 Water rises from the ground.

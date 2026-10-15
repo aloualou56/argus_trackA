@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { isPlayable } from "../src/game/logic";
 import type { GameData } from "../src/game/types";
-import { cameraHeightFor, damageAfter, RATES, MAP_ZOOM, metresPerPixel, terrarium, tileLonLat, tileXY } from "../src/view3d/math";
+import { cameraHeightFor, damageAfter, effectOf, EFFECTS, RATES, MAP_ZOOM, metresPerPixel, terrarium, tileLonLat, tileXY } from "../src/view3d/math";
 
 const data = JSON.parse(readFileSync(new URL("../public/data/game_data.json", import.meta.url), "utf8")) as GameData;
 
@@ -69,5 +69,46 @@ describe("the 3D view", () => {
     // plants only where they are the point, where damp feeds them, or on a place only looked at
     for (const d of ["stone", "crack", "lean", "floor"] as const) expect(damageAfter(50, false, d).plants).toBe(0);
     for (const d of ["tree", "mosaic", "fresco", null] as const) expect(damageAfter(50, false, d).plants).toBeGreaterThan(0);
+  });
+});
+
+describe("see it happen: ARGUS's dangers played out in 3D", () => {
+  it("matches each danger to the effect that shows it, and leaves out what cannot be shown properly", () => {
+    expect(effectOf("delos-masks.rainfall.site")).toBe("rain");
+    expect(effectOf("delos-masks.storm.site")).toBe("storm");
+    expect(effectOf("schenkenberg.wind-storm.walls")).toBe("storm");
+    expect(effectOf("ranverso.physical-forces.wind-erosion")).toBe("wind");
+    expect(effectOf("baltanas.flooding.structural-wood")).toBe("flood");
+    expect(effectOf("ranverso.pollutants.acid-rain")).toBe("acidrain");
+    expect(effectOf("delos-fournoi.freeze-thaw-cycles.site")).toBe("frost");
+    expect(effectOf("schenkenberg.temperature-variation.walls")).toBe("frost");
+    expect(effectOf("delos-masks.heatwaves.site")).toBe("heat");
+    expect(effectOf("ranverso.incorrect-rh.prolonged-dry-periods")).toBe("heat");
+    expect(effectOf("lucretili-conventillo.uv.mural-paintings")).toBe("sun");
+    expect(effectOf("ranverso.light-uv.solar-radiation-uv")).toBe("sun");
+    expect(effectOf("schenkenberg.earthquake.475y")).toBe("quake");
+    expect(effectOf("lucretili-montefalco.landslide.castle")).toBe("slide");
+    expect(effectOf("baltanas.subsidence.cellar-ensemble")).toBe("slide");
+    expect(effectOf("delos-masks.water-rise.site")).toBe("damp");
+    expect(effectOf("lucretili-conventillo.relative-humidity.mural-paintings")).toBe("damp");
+    expect(effectOf("ranverso.fire.building-fire")).toBe("fire");
+    expect(effectOf("schenkenberg.fire.large-100y")).toBe("wildfire");
+    expect(effectOf("ranverso.pollutants.air-pollution")).toBe("smog");
+    expect(effectOf("schenkenberg.plant-growth.untreated-30y")).toBe("plants");
+    expect(effectOf("lucretili-montefalco.forest-management.castle")).toBe("plants");
+    expect(effectOf("ranverso.pollutants.visitors")).toBe("visitors");
+    for (const k of ["ranverso.pests.woodworms", "ranverso.criminals.illegal-landfill", "ranverso.incorrect-rh.groundwater-pollution", "schenkenberg.vandalism.graffiti"]) {
+      expect(effectOf(k)).toBeNull();
+    }
+  });
+
+  it("every 3D place has dangers that can be played out", () => {
+    const scenes = JSON.parse(readFileSync(new URL("../public/data/view3d/scenes.json", import.meta.url), "utf8")) as { scenes: { id: string }[] };
+    for (const s of scenes.scenes) {
+      const place = JSON.parse(readFileSync(new URL(`../public/data/view3d/${s.id}.json`, import.meta.url), "utf8")) as { dangers: { key: string }[] };
+      const shown = new Set(place.dangers.map((d) => effectOf(d.key)).filter(Boolean));
+      expect(shown.size, s.id).toBeGreaterThanOrEqual(1);
+      for (const e of shown) expect(EFFECTS).toContain(e);
+    }
   });
 });

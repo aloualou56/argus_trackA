@@ -9,7 +9,7 @@ import { formatWhen, loadLive, type LiveFile } from "../game/live";
 import type { GameData, Monument } from "../game/types";
 import { useI18n, type MessageKey } from "../i18n";
 import type { House, HouseRoom } from "../view3d/house";
-import { damageAfter, MAP_ZOOM, metresPerPixel } from "../view3d/math";
+import { damageAfter, EFFECTS, effectOf, MAP_ZOOM, metresPerPixel, type Effect } from "../view3d/math";
 import { preload3d, type Focus3d, type Loaded } from "../view3d/preload";
 import type { MapApi } from "./GameMap";
 import { Icon } from "./Icon";
@@ -26,6 +26,13 @@ const MAX_YEARS = 50;
 type Phase = "building" | "ready" | "swapping" | "flying" | "open" | "closing" | "leaving";
 
 const wait = (ms: number) => new Promise<void>((done) => window.setTimeout(done, ms));
+
+/** The picture sign on each "See it happen" button (the words are the button's name). */
+const FX_SIGN: Record<Effect, string> = {
+  rain: "🌧️", acidrain: "🌧️", flood: "🌊", storm: "⛈️", wind: "💨", heat: "🌡️", sun: "☀️", frost: "❄️",
+  quake: "🏚️", slide: "⛰️", damp: "💧", fire: "🔥", wildfire: "🔥", smog: "🏭", plants: "🌿", visitors: "👥",
+};
+const LEVEL_RANK: Record<string, number> = { low: 0, medium: 1, high: 2, extreme: 3, catastrophic: 4 };
 
 interface Props {
   mon: Monument;
@@ -49,7 +56,7 @@ function noteKey(kind: Focus3d["kind"], watched: boolean): MessageKey {
 }
 
 export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, onClosed }: Props) {
-  const { t, pick, number, locale } = useI18n();
+  const { t, pick, number, locale, list } = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -64,6 +71,8 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
   const [playing, setPlaying] = useState(false);
   const [highlight, setHighlight] = useState(true);
   const [live, setLive] = useState<LiveFile | null>(null);
+  // "See it happen": one of the weather and the dangers here, played out (view3d/weather.ts), or none
+  const [effect, setEffect] = useState<Effect | null>(null);
   const shown = phase === "swapping" || phase === "flying" || phase === "open" || phase === "closing";
   // The place's name and the monument's ("House of the Masks · Delos"), or the monument's alone.
   const placeId = mon.scenes_3d?.find((s) => s.scene === scene)?.place;
@@ -151,6 +160,10 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
   }, [highlight, phase]);
 
   useEffect(() => {
+    if (phase === "open") houseRef.current?.setWeather(effect);
+  }, [effect, phase]);
+
+  useEffect(() => {
     if (!playing) return;
     if (years >= MAX_YEARS) {
       setPlaying(false);
@@ -178,6 +191,8 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
     const house = houseRef.current;
     if (!house || (phase !== "open" && phase !== "flying")) return;
     const still = motionReduced();
+    house.setWeather(null); // the weather stops before the camera goes back up
+    setEffect(null);
     setPhase("closing");
     await house.flyOut(still ? 0 : FLY_OUT_MS);
     if (!alive.current) return;
@@ -204,6 +219,18 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
       watch: (risk ? check?.thresholds?.watch : null) ?? d.watch,
     };
   });
+  // "See it happen": each effect that shows one or more of ARGUS's dangers here, the gravest first, with
+  // the dangers it stands for (said under the buttons).
+  const fx = new Map<Effect, { rank: number; titles: string[] }>();
+  for (const d of dangers) {
+    const e = effectOf(d.key);
+    if (!e || (phase === "open" && houseRef.current && !houseRef.current.canWeather(e))) continue;
+    const entry = fx.get(e) ?? { rank: -1, titles: [] };
+    entry.rank = Math.max(entry.rank, LEVEL_RANK[d.level] ?? 0);
+    if (!entry.titles.includes(d.title)) entry.titles.push(d.title);
+    fx.set(e, entry);
+  }
+  const fxList = [...fx.entries()].sort((a, b) => b[1].rank - a[1].rank || EFFECTS.indexOf(a[0]) - EFFECTS.indexOf(b[0]));
   // How big the damage drawn is, and what that size rests on (math.ts, RATES).
   const d = damageAfter(years, watched, focus.kind);
   const one = (n: number) => number(n, n < 10 ? 1 : 0);
@@ -319,6 +346,26 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
                 {t("view3d.highlightShort")}
               </button>
             </div>
+            {/* "See it happen": the weather and the dangers here, one at a time (pressed again: stops). */}
+            {fxList.length > 0 && (
+              <div className="view3d-fx-row" role="group" aria-labelledby="view3d-fx-title">
+                <span id="view3d-fx-title" className="view3d-fx-title">
+                  {t("view3d.fxTitle")}
+                </span>
+                <div className="view3d-fx-chips">
+                  {fxList.map(([e]) => (
+                    <button key={e} type="button" aria-pressed={effect === e} onClick={() => setEffect(effect === e ? null : e)}>
+                      <span aria-hidden="true">{FX_SIGN[e]}</span> {t(`view3d.fx_${e}` as MessageKey)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {effect && fx.get(effect) && (
+              <p className="view3d-note view3d-fx-note" aria-live="polite">
+                {t(`view3d.fxNote_${effect}` as MessageKey)} {t("view3d.fxDangers", { list: list(fx.get(effect)!.titles) })}
+              </p>
+            )}
             {/* The rest, for whoever asks: what the picture shows, how big and on what grounds, the dangers. */}
             <details className="view3d-dangers">
               <summary>{t("view3d.more")}</summary>

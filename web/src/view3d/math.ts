@@ -142,3 +142,58 @@ export function serialOf(name: string): string | null {
   if (i < 0) return null;
   return name.slice(i + 3).split(" (")[0].trim() || null;
 }
+
+/** What the 3D view can play out over a place ("See it happen", weather.ts): the weather and the
+ *  dangers ARGUS rates there. An illustration of each, not a forecast. */
+export type Effect =
+  | "rain"
+  | "acidrain"
+  | "flood"
+  | "storm"
+  | "wind"
+  | "heat"
+  | "sun"
+  | "frost"
+  | "quake"
+  | "slide"
+  | "damp"
+  | "fire"
+  | "wildfire"
+  | "smog"
+  | "plants"
+  | "visitors";
+
+/** Every effect, in the order they are offered. */
+export const EFFECTS: readonly Effect[] = [
+  "rain", "storm", "flood", "acidrain", "damp", "wind", "heat", "sun", "frost",
+  "quake", "slide", "fire", "wildfire", "smog", "plants", "visitors",
+];
+
+/** Which effect plays out one of ARGUS's dangers, from its scenario key ("delos-masks.rainfall.site",
+ *  "schenkenberg.fire.large-100y"). Null where nothing can be shown properly (woodworm, insects,
+ *  animals, vandalism, dumping, polluted groundwater). The first rule that matches wins. */
+const EFFECT_RULES: [RegExp, Effect | null][] = [
+  [/groundwater-pollution|biohazard|pests|criminals|vandalism|landfill/, null],
+  [/fire\.(large|forest)|forest-fire|wildfire/, "wildfire"],
+  [/fire/, "fire"],
+  [/storm/, "storm"],
+  [/wind/, "wind"],
+  [/flood/, "flood"],
+  [/acid-rain/, "acidrain"],
+  [/rainfall|soil-erosion/, "rain"],
+  [/freeze-thaw|low-temperature|frost|temperature-variation/, "frost"],
+  [/heatwave|high-temperature|dry-periods|drought/, "heat"],
+  [/(^|[.-])uv([.-]|$)|solar/, "sun"],
+  [/earthquake|seismic|architectural-stability|road-traffic/, "quake"],
+  [/landslide|slope|subsidence/, "slide"],
+  [/water-rise|groundwater|relative-humidity|rh-fluctuations|incorrect-rh|wet-periods|salinity/, "damp"],
+  [/air-pollution/, "smog"],
+  [/plant-growth|forest-management|abandonment|dissociation/, "plants"],
+  [/visitors/, "visitors"],
+];
+
+export function effectOf(scenarioKey: string): Effect | null {
+  const key = scenarioKey.toLowerCase();
+  for (const [rule, effect] of EFFECT_RULES) if (rule.test(key)) return effect;
+  return null;
+}

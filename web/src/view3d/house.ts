@@ -23,7 +23,8 @@ import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRe
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage, type DamageKind } from "./math";
+import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage, type DamageKind, type Effect } from "./math";
+import { createWeather, makeEnv, type Weather } from "./weather";
 
 type XY = [number, number];
 
@@ -348,6 +349,11 @@ export interface House {
   /** Back up to the view of matchMap. */
   flyOut(ms: number): Promise<void>;
   setDamage(damage: Damage): void;
+  /** "See it happen": plays out one of the weather and the dangers ARGUS rates here (weather.ts), or
+   *  stops (null). */
+  setWeather(effect: Effect | null): void;
+  /** Whether this place can show it (plants need wall tops, visitors level floors). */
+  canWeather(effect: Effect): boolean;
   /** Marks in red where the damage is (a sign, like an arrow; not the stone's colour). */
   setHighlight(on: boolean): void;
   /** How much of the canvas the view's own title (top) and panel (bottom) cover, in pixels: the
@@ -511,9 +517,11 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // floor at its foot (sensors stand at ARGUS's height above it).
   let CELL = 0.5;
   let floorAt: (x: number, y: number) => number | null = () => null;
+  let topAt: (x: number, y: number) => number | null = () => null;
   let lowestNear: (x: number, y: number, r: number) => number | null = () => null;
   const footprint = new THREE.Box3();
   const tops: THREE.Vector3[] = []; // wall tops, where plants root
+  const flats: THREE.Vector3[] = []; // level floors, every metre or so (visitors walk there)
   const wallCells: XY[] = []; // [x, z] of the cells where the model stands as a wall, near the damage
   // Where the model stands up from its own ground (walls, rocks, buildings): every metre or so, its
   // foot and top, so a place can be seen whole from its long side.
@@ -583,6 +591,13 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       const low = lowestNear(x, y, 1);
       if (h === Infinity) return low;
       return low !== null && h - low > 1.5 ? low : h;
+    };
+    topAt = (x, y) => {
+      const col = Math.floor((x - footprint.min.x) / CELL);
+      const row = Math.floor((-y - footprint.min.z) / CELL);
+      if (col < 0 || row < 0 || col >= nx || row >= nz) return null;
+      const h = highs[row * nx + col];
+      return h === -Infinity ? null : h;
     };
     lowestNear = (x, y, r) => {
       let low = Infinity;
@@ -670,10 +685,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     const side = Math.max(1, Math.round(1.2 / CELL));
     const highAt = (row: number, col: number) => (row < 0 || col < 0 || row >= nz || col >= nx ? -Infinity : highs[row * nx + col]);
     const across: [number, number][] = [[side, 0], [0, side], [side, side], [side, -side]];
+    const cx0 = (col: number) => footprint.min.x + (col + 0.5) * CELL;
+    const cz0 = (row: number) => footprint.min.z + (row + 0.5) * CELL;
     for (let row = 0; row < nz; row += step) {
       for (let col = 0; col < nx; col += step) {
         const k = row * nx + col;
         const tall = highs[k] - cells[k];
+        // a level floor (not a roof high above the ground, nor what the cut leaves out), where people walk
+        if (tall < 0.25 && cells[k] < cutY - 1 && cells[k] < ground(cx0(col), -cz0(row)) + 1.5) flats.push(new THREE.Vector3(cx0(col), cells[k], cz0(row)));
         if (!(tall > 1.2)) continue;
         const cx = footprint.min.x + (col + 0.5) * CELL;
         const cz = footprint.min.z + (row + 0.5) * CELL;
@@ -749,24 +768,40 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // A photograph, with the day's own light in it: shown as it is, not lit a second time.
   // (Drawn a little behind: where it meets the model's own ground, the model's shows.)
   const groundMat = new THREE.MeshBasicMaterial({ map: groundTex, toneMapped: false, polygonOffset: true, polygonOffsetFactor: 2, polygonOffsetUnits: 8 });
-  if (cover) {
-    const mask = new THREE.DataTexture(cover.data, cover.nx, cover.nz, THREE.RedFormat, THREE.UnsignedByteType);
-    mask.needsUpdate = true;
-    const maskMin = new THREE.Vector2(cover.minX, cover.minZ);
-    const maskSize = new THREE.Vector2(cover.nx * cover.cell, cover.nz * cover.cell);
-    groundMat.onBeforeCompile = (shader) => {
-      Object.assign(shader.uniforms, { uMask: { value: mask }, uMaskMin: { value: maskMin }, uMaskSize: { value: maskSize } });
-      shader.vertexShader = shader.vertexShader.replace(...WORLD_VARYING).replace(...WORLD_POSITION);
-      shader.fragmentShader = shader.fragmentShader
-        .replace("#include <common>", "#include <common>\nvarying vec3 vWorld;\nuniform sampler2D uMask;\nuniform vec2 uMaskMin, uMaskSize;")
-        .replace(
-          "void main() {",
-          `void main() {
-          vec2 maskUv = (vWorld.xz - uMaskMin) / uMaskSize;
-          if (all(greaterThan(maskUv, vec2(0.0))) && all(lessThan(maskUv, vec2(1.0))) && texture2D(uMask, maskUv).r > 0.5) discard;`,
-        );
-    };
-  }
+  const mask = cover ? new THREE.DataTexture(cover.data, cover.nx, cover.nz, THREE.RedFormat, THREE.UnsignedByteType) : null;
+  if (mask) mask.needsUpdate = true;
+  const maskMin = new THREE.Vector2(cover?.minX ?? 0, cover?.minZ ?? 0);
+  const maskSize = new THREE.Vector2(cover ? cover.nx * cover.cell : 1, cover ? cover.nz * cover.cell : 1);
+  // (the weather on the ground too: wet, frost, soot, heat, a storm's light; compiled once the scene is made)
+  groundMat.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, {
+      uMask: { value: mask }, uMaskMin: { value: maskMin }, uMaskSize: { value: maskSize }, uHasMask: { value: mask ? 1 : 0 },
+      uEnvWet: env.wet, uEnvFrost: env.frost, uEnvSoot: env.soot, uEnvHeat: env.heat, uEnvDim: env.dim, uEnvFlash: env.flash,
+    });
+    shader.vertexShader = shader.vertexShader.replace(...WORLD_VARYING).replace(...WORLD_POSITION);
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nvarying vec3 vWorld;\nuniform sampler2D uMask;\nuniform vec2 uMaskMin, uMaskSize;\nuniform float uHasMask, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvDim, uEnvFlash;",
+      )
+      .replace(
+        "void main() {",
+        `void main() {
+        vec2 maskUv = (vWorld.xz - uMaskMin) / uMaskSize;
+        if (uHasMask > 0.5 && all(greaterThan(maskUv, vec2(0.0))) && all(lessThan(maskUv, vec2(1.0))) && texture2D(uMask, maskUv).r > 0.5) discard;`,
+      )
+      .replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+        vec3 g = diffuseColor.rgb;
+        float lumG = dot(g, vec3(0.299, 0.587, 0.114));
+        g *= 1.0 - 0.35 * uEnvWet;
+        g = mix(g, vec3(0.93, 0.95, 0.98), uEnvFrost * 0.85);
+        g = mix(g, g * vec3(0.5, 0.46, 0.4), uEnvSoot);
+        g = mix(g, vec3(1.0, 0.94, 0.84) * (0.55 + 0.55 * lumG), uEnvHeat * 0.45);
+        diffuseColor.rgb = g * (1.0 - uEnvDim) + uEnvFlash * 0.5;`,
+      );
+  };
   const groundMesh = new THREE.Mesh(groundGeo, groundMat);
   groundMesh.rotation.x = -Math.PI / 2;
   groundMesh.position.set(gx0, 0, -gy0);
@@ -860,6 +895,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const floors = [floorY, ...data.rooms.map((r) => floorAt(r.xy[0], r.xy[1]))].filter((v): v is number => v !== null);
   const stoneLow = Math.min(...floors);
   const stoneTop = data.cut_above_m != null && data.rooms.length ? stoneLow + data.cut_above_m : stoneLow + 40;
+  // What the weather does to every surface ("See it happen", weather.ts).
+  const env = makeEnv();
   const damage = {
     damp: { value: 0 },
     wet: { value: 0 },
@@ -965,6 +1002,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             uSourceY: damage.sourceY, uLeanDir: damage.leanDir, uWallDir: damage.wallDir, uGround: { value: floorY },
             uReach: { value: VIEW },
             uShow: damage.show, uPulse: damage.pulse, uMarkWeather: { value: kind === "stone" ? 1 : 0 },
+            uEnvWet: env.wet, uEnvFrost: env.frost, uEnvSoot: env.soot, uEnvHeat: env.heat, uEnvFade: env.fade,
+            uEnvDampLow: env.dampLow, uEnvDim: env.dim, uEnvFlash: env.flash,
             uStoneReach: { value: Math.max(20, dist(focusXY, houseCentre) + 25) },
             uStoneLow: { value: stoneLow },
             uStoneTop: { value: stoneTop },
@@ -992,7 +1031,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
@@ -1087,6 +1126,17 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               }
               // the leaning wall itself: a few metres of it either side of the tiltmeter, not everything near
               if (uLean > 0.0) harm = max(harm, wall * (1.0 - smoothstep(3.0, 6.0, abs(along))) * (1.0 - smoothstep(0.8, 1.8, across)) * smoothstep(0.2, 0.8, y) * (1.0 - smoothstep(4.0, 6.0, abs(vWorld.y - uSourceY))) * smoothstep(0.0, 0.004, uLean));
+              // the weather (weather.ts): wet surfaces darker, frost and snow white on what faces up, soot,
+              // heat bleaching warm, strong sun fading the colours, damp rising from the floor, a storm's
+              // dark light and its lightning
+              float lumE = dot(c, vec3(0.299, 0.587, 0.114));
+              c *= 1.0 - 0.4 * uEnvWet;
+              c = mix(c, vec3(0.93, 0.95, 0.98), uEnvFrost * (0.2 * wall + 0.85 * flatUp));
+              c = mix(c, c * vec3(0.5, 0.46, 0.4), uEnvSoot);
+              c = mix(c, vec3(1.0, 0.94, 0.84) * (0.55 + 0.55 * lumE), uEnvHeat * 0.45);
+              c = mix(c, vec3(lumE) * 1.08 + 0.07, uEnvFade);
+              c *= 1.0 - 0.38 * uEnvDampLow * (1.0 - smoothstep(uGround + 0.4, uGround + 1.4, vWorld.y)) * step(uGround - 0.5, vWorld.y);
+              c = c * (1.0 - uEnvDim) + uEnvFlash * 0.55;
               c = mix(c, vec3(1.0, 0.12, 0.3), clamp(harm, 0.0, 1.0) * uShow * (0.35 + 0.3 * uPulse));
               diffuseColor.rgb = c;`,
             );
@@ -1236,8 +1286,22 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   tuftTex.colorSpace = THREE.SRGBColorSpace;
   const tuft = mergeGeometries([0, 1, 2].map((i) => new THREE.PlaneGeometry(1, 1).translate(0, 0.5, 0).rotateY((i * Math.PI) / 3)));
   const plantMat = new THREE.MeshLambertMaterial({ map: tuftTex, alphaTest: 0.35, side: THREE.DoubleSide });
+  // how big they have grown (1: as drawn) and how the wind sways them ("See it happen", weather.ts)
+  const plantGrow = { value: 1 };
+  const plantSway = { value: 0 };
+  const plantTime = { value: 0 };
   plantMat.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, { uShow: damage.show, uPulse: damage.pulse });
+    Object.assign(shader.uniforms, { uShow: damage.show, uPulse: damage.pulse, uGrow: plantGrow, uSway: plantSway, uTime: plantTime });
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nuniform float uGrow, uSway, uTime;")
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+        transformed *= uGrow;
+        float swayK = uSway * transformed.y * (0.6 + 0.4 * sin(uTime * 1.3 + float(gl_InstanceID) * 2.1));
+        transformed.x += swayK * sin(uTime * 3.1 + float(gl_InstanceID)) * 0.35;
+        transformed.z += swayK * 0.25;`,
+      );
     shader.fragmentShader = shader.fragmentShader
       .replace("#include <common>", "#include <common>\nuniform float uShow, uPulse;")
       .replace("#include <map_fragment>", "#include <map_fragment>\ndiffuseColor.rgb = mix(diffuseColor.rgb, vec3(1.0, 0.12, 0.3), uShow * (0.35 + 0.3 * uPulse));");
@@ -1508,6 +1572,49 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   let lastView: MapView | null = null;
   let above = true; // looking straight down (before flyIn, after flyOut)
 
+  // "See it happen" (weather.ts): the weather and the dangers here, around what the camera looks at.
+  const fx = document.createElement("div");
+  fx.className = "view3d-fx";
+  fx.setAttribute("aria-hidden", "true");
+  host.insertBefore(fx, labels.domElement);
+  let plantsFromDamage = 0;
+  let effectNow: Effect | null = null;
+  const between = new THREE.Raycaster();
+  const weather: Weather = createWeather({
+    scene,
+    target: () => look,
+    radius: wholePlace ? Math.max(placeSpan.width, placeSpan.depth) * 0.7 + 10 : Math.max(20, restAt * 1.4),
+    surface: (x, z) => surface(x, -z),
+    topAt: (x, z) => topAt(x, -z) ?? surface(x, -z),
+    base: floorY,
+    tops,
+    flats,
+    blocked: (a, b) => {
+      if (!model) return false;
+      const d = b.clone().sub(a);
+      between.set(a, d.clone().normalize());
+      between.far = d.length();
+      return between.intersectObject(model, true).length > 0;
+    },
+    env,
+    plants: {
+      show(fraction, grow) {
+        plants.count = Math.round(fraction * tops.length);
+        plantGrow.value = grow;
+      },
+      sway: plantSway,
+      restore() {
+        plantGrow.value = 1;
+        plants.count = plantsFromDamage;
+      },
+      count: tops.length,
+    },
+    overlay: fx,
+    pixelScale: () => (size.height * renderer.getPixelRatio()) / (2 * Math.tan((camera.fov * Math.PI) / 360)),
+    still: !!options.still,
+  });
+  let lastFrame = 0;
+
   type Pose = { pos: THREE.Vector3; look: THREE.Vector3; up: THREE.Vector3 };
   function pose(p: Pose) {
     camera.position.copy(p.pos);
@@ -1542,8 +1649,10 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   }
 
   function render() {
+    camera.position.add(weather.shake); // an earthquake shakes the camera, this frame only
     renderer.render(scene, camera);
     labels.render(scene, camera);
+    camera.position.sub(weather.shake);
     const showMag = !!magTarget && !above && !flight;
     if (magFrame.hidden === showMag) magFrame.hidden = !showMag;
     if (showMag) {
@@ -1565,6 +1674,10 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   function frame(now: number) {
     raf = requestAnimationFrame(frame);
     damage.pulse.value = options.still ? 0.6 : 0.5 + 0.5 * Math.sin(now / 280);
+    const dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0;
+    lastFrame = now;
+    plantTime.value = now / 1000;
+    if (!above) weather.update(dt, now);
     if (shift !== shiftTo) {
       shift += (shiftTo - shift) * 0.12;
       if (Math.abs(shiftTo - shift) < 0.5) shift = shiftTo;
@@ -1641,10 +1754,37 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       damage.crack.value = d.crackM;
       damage.crackW.value = d.crackMm / 1000;
       damage.lean.value = (d.lean * Math.PI) / 180;
-      plants.count = Math.round(d.plants * tops.length);
+      plantsFromDamage = Math.round(d.plants * tops.length);
+      if (effectNow !== "plants") plants.count = plantsFromDamage;
       if (kidMain) kidMain.visible = d.damp + d.wet + d.flake + d.wear + d.surfaceMm + d.crackM + d.lean > 0;
       if (kidPlants) kidPlants.visible = plants.count > plantAt;
     },
+    setWeather(e) {
+      effectNow = e;
+      // what the effect needs seen up close (people, a building on fire, walls shaking): the camera comes
+      // to some 26 m from it, from where it is looking now
+      const near = e ? weather.focusFor(e) : null;
+      if (near && !above && camera.position.distanceTo(near) > 34) {
+        const dir = camera.position.clone().sub(look).normalize();
+        if (dir.y < 0.35) dir.setY(0.35).normalize();
+        const to = { pos: near.clone().addScaledVector(dir, 26), look: near.clone(), up: SKY };
+        to.pos.y = Math.max(to.pos.y, surface(to.pos.x, -to.pos.z) + 2);
+        if (options.still) {
+          pose(to);
+          controls.target.copy(near);
+          controls.update();
+        } else {
+          void fly(to, 1400, () => 1).then(() => {
+            controls.target.copy(near);
+            controls.enabled = true;
+          });
+        }
+        look.copy(near);
+      }
+      weather.set(e);
+      if (!raf) render();
+    },
+    canWeather: (e) => weather.can(e),
     setHighlight(on) {
       damage.show.value = on ? 1 : 0;
     },
@@ -1669,6 +1809,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     },
     dispose() {
       stop();
+      weather.dispose();
+      fx.remove();
       controls.dispose();
       scene.traverse((o) => {
         const mesh = o as THREE.Mesh;
