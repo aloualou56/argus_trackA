@@ -2,6 +2,9 @@
 //   ground      the game's satellite picture (Esri) on real terrain: ARGUS's own terrain around the
 //               house where tools/fetch_argus_3d.py has taken it (<scene>-terrain.json), else AWS
 //               Terrain Tiles
+//   house       ARGUS's own photogrammetric model of the house (3D Tiles, the tiles around the house
+//               only: tools/fetch_argus_3d.py, <scene>-model.json), placed by ARGUS's own transform;
+//               where it is missing, the walls and floors below stand in for it:
 //   walls       the ruin's outline from OpenStreetMap (historic=ruins), height assumed
 //   rooms       ARGUS's own 3D sensor placements, which name the mosaic rooms
 //   mosaics     photos from Wikimedia Commons where a straight-down one exists; the other floors
@@ -14,6 +17,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage } from "./math";
 
 type XY = [number, number];
@@ -63,6 +68,9 @@ export interface Assets {
   dem: Mosaic;
   /** ARGUS's own terrain around the house, finer than the AWS tiles, when it was taken (optional). */
   grid: TerrainGrid | null;
+  /** ARGUS's own model of the house in scene axes (x east, y up, z south; y = height on ARGUS's datum),
+   *  when it was taken (optional). */
+  model: THREE.Group | null;
   photos: Map<string, HTMLImageElement>;
 }
 
@@ -93,11 +101,91 @@ export function gridHeight(grid: TerrainGrid, heights: Int16Array, x: number, y:
   return grid.base_m + v / 100;
 }
 
+/** Least-squares plane z = a x + b y + c through the points [x, y, z]; [0, 0, 0] for too few. */
+export function fitPlane(points: [number, number, number][]): [number, number, number] {
+  if (points.length < 3) return [0, 0, 0];
+  let sxx = 0, sxy = 0, sx = 0, syy = 0, sy = 0, sxz = 0, syz = 0, sz = 0;
+  for (const [x, y, z] of points) {
+    sxx += x * x; sxy += x * y; sx += x; syy += y * y; sy += y; sxz += x * z; syz += y * z; sz += z;
+  }
+  const n = points.length;
+  const det3 = (m: number[]) => m[0] * (m[4] * m[8] - m[5] * m[7]) - m[1] * (m[3] * m[8] - m[5] * m[6]) + m[2] * (m[3] * m[7] - m[4] * m[6]);
+  const A = [sxx, sxy, sx, sxy, syy, sy, sx, sy, n];
+  const d = det3(A);
+  if (Math.abs(d) < 1e-9) return [0, 0, sz / n];
+  const col = (i: number, v: number[]) => A.map((x, k) => (k % 3 === i ? v[Math.floor(k / 3)] : x));
+  const B = [sxz, syz, sz];
+  return [det3(col(0, B)) / d, det3(col(1, B)) / d, det3(col(2, B)) / d];
+}
+
 /** The grid's heights (little-endian int16 in base64). */
 export function gridHeights(grid: TerrainGrid): Int16Array {
   const bytes = Uint8Array.from(atob(grid.heights_cm_int16_b64), (ch) => ch.charCodeAt(0));
   const view = new DataView(bytes.buffer);
   return Int16Array.from({ length: bytes.length / 2 }, (_, i) => view.getInt16(i * 2, true));
+}
+
+/** One tile of ARGUS's model, as tools/fetch_argus_3d.py exports it (<scene>-model.json). */
+export interface ModelTile {
+  file: string;
+  /** The tileset's transform to the Earth (ECEF), column-major; null for none. */
+  transform: number[] | null;
+  /** A b3dm tile's own centre (ECEF metres), added before the transform. */
+  rtc_center: number[] | null;
+}
+
+/** Earth-centred position of a point on the WGS84 ellipsoid. */
+function ecef(latDeg: number, lonDeg: number, h: number): THREE.Vector3 {
+  const a = 6378137;
+  const e2 = 6.69437999014e-3;
+  const lat = (latDeg * Math.PI) / 180;
+  const lon = (lonDeg * Math.PI) / 180;
+  const n = a / Math.sqrt(1 - e2 * Math.sin(lat) ** 2);
+  return new THREE.Vector3((n + h) * Math.cos(lat) * Math.cos(lon), (n + h) * Math.cos(lat) * Math.sin(lon), (n * (1 - e2) + h) * Math.sin(lat));
+}
+
+/**
+ * From a model tile's own glTF coordinates to the scene: x east and z south of (lat, lon), y the
+ * height above the ellipsoid. As 3D Tiles does: glTF is y-up (turned to z-up), plus the tile's
+ * RTC_CENTER, then the tileset's transform to Earth-centred coordinates; then into east-north-up at
+ * (lat, lon) and into the scene's axes.
+ */
+export function modelMatrix(tile: ModelTile, lat: number, lon: number): THREE.Matrix4 {
+  const la = (lat * Math.PI) / 180;
+  const lo = (lon * Math.PI) / 180;
+  const east = new THREE.Vector3(-Math.sin(lo), Math.cos(lo), 0);
+  const north = new THREE.Vector3(-Math.sin(la) * Math.cos(lo), -Math.sin(la) * Math.sin(lo), Math.cos(la));
+  const up = new THREE.Vector3(Math.cos(la) * Math.cos(lo), Math.cos(la) * Math.sin(lo), Math.sin(la));
+  const enuToEcef = new THREE.Matrix4().makeBasis(east, north, up).setPosition(ecef(lat, lon, 0));
+  const toScene = new THREE.Matrix4().makeRotationX(-Math.PI / 2); // (east, north, up) -> (x, y up, -z)
+  const tf = tile.transform ? new THREE.Matrix4().fromArray(tile.transform) : new THREE.Matrix4();
+  const rtc = tile.rtc_center ? new THREE.Matrix4().makeTranslation(tile.rtc_center[0], tile.rtc_center[1], tile.rtc_center[2]) : new THREE.Matrix4();
+  const yUpToZUp = new THREE.Matrix4().makeRotationX(Math.PI / 2);
+  return toScene.multiply(enuToEcef.invert()).multiply(tf).multiply(rtc).multiply(yUpToZUp);
+}
+
+/** ARGUS's model of the house (<scene>-model.json and its glTF files), or null where it was not taken. */
+async function loadModel(url: string, lat: number, lon: number): Promise<THREE.Group | null> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    const manifest = (await response.json()) as { tiles: ModelTile[] };
+    const draco = new DRACOLoader().setDecoderPath(`${import.meta.env.BASE_URL}draco/`).setDecoderConfig({ type: "wasm" });
+    const loader = new GLTFLoader().setDRACOLoader(draco);
+    const base = url.slice(0, url.lastIndexOf("/") + 1);
+    const group = new THREE.Group();
+    const parts = await Promise.all(manifest.tiles.map((t) => loader.loadAsync(base + t.file)));
+    draco.dispose();
+    parts.forEach((gltf, i) => {
+      const part = gltf.scene;
+      part.matrixAutoUpdate = false;
+      part.matrix.copy(modelMatrix(manifest.tiles[i], lat, lon));
+      group.add(part);
+    });
+    return group;
+  } catch {
+    return null; // not taken, offline or not decodable here: the drawn walls and floors stand in
+  }
 }
 
 async function loadGrid(url: string): Promise<TerrainGrid | null> {
@@ -164,10 +252,11 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
   const data = (await response.json()) as HouseData;
   const ruin = data.shapes.find((s) => s.kind === "ruin");
   if (!ruin) throw new Error(`${dataUrl}: no ruin outline`);
-  const [ground, dem, grid, photos] = await Promise.all([
+  const [ground, dem, grid, model, photos] = await Promise.all([
     mosaic(data, IMAGERY_ZOOM, imagery, 2, false),
     mosaic(data, TERRAIN_ZOOM, TERRAIN, 1, true),
     loadGrid(dataUrl.replace(/\.json$/, "-terrain.json")),
+    loadModel(dataUrl.replace(/\.json$/, "-model.json"), data.origin.lat, data.origin.lon),
     Promise.all(data.rooms.map(async (r) => [r.room, r.photo ? await loadImage(r.photo.url) : null] as const)),
   ]);
   if (!ground.loaded) throw new Error("no satellite pictures (offline?)");
@@ -179,6 +268,7 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
     imagery: ground,
     dem,
     grid,
+    model,
     photos: new Map(photos.filter((p): p is readonly [string, HTMLImageElement] => !!p[1])),
   };
 }
@@ -269,11 +359,17 @@ function patternGlsl(size: number, emblem: boolean): string {
 const WALL_H = 2.4; // assumed: OpenStreetMap has the outline, not the height
 const FLOOR = 3.1; // assumed sizes (rooms 215 and 216 are 3.3 m apart)
 const PANEL = 1.35;
+/** How far above the floor ARGUS's model is cut (its walls stand to about 3.5 m, the shelters over
+ *  the mosaics at 5-6 m). */
+const ROOF_CUT = 4.3;
 const NORTH = new THREE.Vector3(0, 0, -1);
 const SKY = new THREE.Vector3(0, 1, 0);
 
 export function createHouse(host: HTMLElement, assets: Assets, options: HouseOptions): House {
   const { data, imagery, dem, grid } = assets;
+  // ARGUS's model stands on ARGUS's terrain (both above the ellipsoid); without that terrain the
+  // two would not meet, so the drawn walls and floors are used then.
+  const model = grid ? assets.model : null;
   const { lat: LAT0, lon: LON0 } = data.origin;
   const [KX, KY] = data.metres_per_degree;
   const ruin = data.shapes.find((s) => s.kind === "ruin")!;
@@ -322,7 +418,66 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const H0 = terrain(0, 0);
   // Flat where the terrain did not load: the house still stands, on level ground.
   const ground = (x: number, y: number) => (H0 === null ? 0 : (terrain(x, y) ?? H0) - H0);
-  const at = ([x, y]: XY, up = 0) => new THREE.Vector3(x, ground(x, y) + up, -y); // metres east/north -> scene
+
+  // ARGUS's model, lowered with the ground (whose height 0 is the terrain at the origin). Its floor is
+  // the lowest point of the model in each half-metre cell: inside a room, the floor; by a wall, the
+  // floor at its foot (sensors stand at ARGUS's height above it).
+  const CELL = 0.5;
+  let floorAt: (x: number, y: number) => number | null = () => null;
+  const footprint = new THREE.Box3();
+  if (model) {
+    let nx = 0;
+    let nz = 0;
+    let cells = new Float32Array(0);
+    const measure = () => {
+      model.updateMatrixWorld(true);
+      footprint.setFromObject(model);
+      nx = Math.ceil((footprint.max.x - footprint.min.x) / CELL) + 1;
+      nz = Math.ceil((footprint.max.z - footprint.min.z) / CELL) + 1;
+      cells = new Float32Array(nx * nz).fill(Infinity);
+      const v = new THREE.Vector3();
+      model.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        const pos = mesh.isMesh ? mesh.geometry.getAttribute("position") : null;
+        if (!pos) return;
+        mesh.castShadow = mesh.receiveShadow = true;
+        for (let i = 0; i < pos.count; i++) {
+          v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
+          const k = Math.floor((v.z - footprint.min.z) / CELL) * nx + Math.floor((v.x - footprint.min.x) / CELL);
+          if (v.y < cells[k]) cells[k] = v.y;
+        }
+      });
+    };
+    model.position.y = -(H0 ?? 0);
+    measure();
+    // ARGUS places its model with a slight tilt that its own viewer corrects ("pitch 1°" for this house):
+    // here the model's ground is levelled onto ARGUS's terrain around it (a plane fitted to the
+    // difference, a fraction of a degree to a degree or two), so the two meet without a step.
+    const [a, b, c] = fitPlane(
+      Array.from(cells, (h, k) => {
+        if (h === Infinity) return null;
+        const x = footprint.min.x + ((k % nx) + 0.5) * CELL;
+        const y = -(footprint.min.z + (Math.floor(k / nx) + 0.5) * CELL);
+        return [x, y, h - ground(x, y)] as [number, number, number];
+      }).filter((p): p is [number, number, number] => p !== null),
+    );
+    const levelled = new THREE.Matrix4()
+      .makeTranslation(0, -c, 0)
+      .multiply(new THREE.Matrix4().makeRotationZ(-Math.atan(a))) // x east: tilts east-west
+      .multiply(new THREE.Matrix4().makeRotationX(-Math.atan(b))); // -z north: tilts north-south
+    model.matrixAutoUpdate = false;
+    model.matrix.copy(levelled).multiply(new THREE.Matrix4().makeTranslation(0, -(H0 ?? 0), 0));
+    measure();
+    floorAt = (x, y) => {
+      const col = Math.floor((x - footprint.min.x) / CELL);
+      const row = Math.floor((-y - footprint.min.z) / CELL);
+      if (col < 0 || row < 0 || col >= nx || row >= nz) return null;
+      const h = cells[row * nx + col];
+      return h === Infinity ? null : h;
+    };
+  }
+  const surface = (x: number, y: number) => floorAt(x, y) ?? ground(x, y);
+  const at = ([x, y]: XY, up = 0) => new THREE.Vector3(x, surface(x, y) + up, -y); // metres east/north -> scene
 
   // ---------------------------------------------------------------- the scene
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -361,7 +516,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const gp = groundGeo.attributes.position;
   const gx0 = (imagery.west + imagery.east) / 2;
   const gy0 = (imagery.north + imagery.south) / 2;
-  for (let i = 0; i < gp.count; i++) gp.setZ(i, ground(gp.getX(i) + gx0, gp.getY(i) + gy0));
+  // Under ARGUS's model the ground steps down out of sight, so it never covers the model's floors.
+  const hidden = (x: number, y: number) =>
+    !!model && x > footprint.min.x + 1.5 && x < footprint.max.x - 1.5 && -y > footprint.min.z + 1.5 && -y < footprint.max.z - 1.5;
+  for (let i = 0; i < gp.count; i++) {
+    const x = gp.getX(i) + gx0;
+    const y = gp.getY(i) + gy0;
+    gp.setZ(i, hidden(x, y) ? Math.min(ground(x, y), footprint.min.y - 0.5) : ground(x, y));
+  }
   groundGeo.computeVertexNormals();
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
   const groundTex = new THREE.CanvasTexture(imagery.canvas);
@@ -424,8 +586,68 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     };
     return m;
   }
+  // ARGUS's model of the house, its own photographs as its surfaces, and the same damage drawn on
+  // them: on the floors (flat and low) the damp stain, lost tesserae and salt; on the walls the damp
+  // rising from the floor with its line of salt.
+  if (model) {
+    const floorY = floorAt(dampRoom.xy[0], dampRoom.xy[1]) ?? ground(dampRoom.xy[0], dampRoom.xy[1]);
+    // A cut above the walls: the modern shelters over the mosaics (5-6 m up in ARGUS's model) would
+    // hide the floors from above, so everything higher than the walls is left out, as in a cutaway.
+    renderer.localClippingEnabled = true;
+    const cut = new THREE.Plane(new THREE.Vector3(0, -1, 0), floorY + ROOF_CUT);
+    const patched = new Set<THREE.Material>();
+    model.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+        if (patched.has(m)) continue;
+        patched.add(m);
+        m.clippingPlanes = [cut];
+        m.clipShadows = true;
+        m.onBeforeCompile = (shader) => {
+          Object.assign(shader.uniforms, {
+            uWet: damage.wet, uLoss: damage.loss, uSalt: damage.salt, uDamp: damage.damp, uSource: damage.source,
+            uGround: { value: floorY },
+          });
+          shader.vertexShader = shader.vertexShader
+            .replace("#include <common>", "#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;")
+            .replace(
+              "#include <worldpos_vertex>",
+              "#include <worldpos_vertex>\nvWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvNormalW = normalize(mat3(modelMatrix) * objectNormal);",
+            );
+          shader.fragmentShader = shader.fragmentShader
+            .replace(
+              "#include <common>",
+              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround;\nuniform vec2 uSource;\n${NOISE}`,
+            )
+            .replace(
+              "#include <map_fragment>",
+              `#include <map_fragment>
+              vec3 base0 = diffuseColor.rgb;
+              vec3 col = base0;
+              ${damageGlsl(false)}
+              float flatUp = smoothstep(0.80, 0.95, normalize(vNormalW).y);
+              float nearFloor = 1.0 - smoothstep(0.35, 1.0, vWorld.y - uGround);
+              diffuseColor.rgb = mix(base0, diffuseColor.rgb, flatUp * nearFloor);
+              float near = 1.0 - smoothstep(3.0, 18.0, distance(vWorld.xz, uSource));
+              float damp = uDamp * (0.25 + 0.75 * near) * (1.0 - flatUp);
+              if (damp > 0.0) {
+                float y = vWorld.y - uGround;
+                float edge = damp + (vnoise(vWorld.xz * 1.6 + vWorld.y) - 0.5) * 0.22;
+                float wetWall = 1.0 - smoothstep(edge - 0.05, edge + 0.02, y);
+                diffuseColor.rgb *= mix(vec3(1.0), vec3(0.55, 0.53, 0.49), wetWall);
+                float band = smoothstep(0.07, 0.0, abs(y - edge - 0.035)) * smoothstep(0.15, 0.35, damp);
+                diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.97, 0.96, 0.93), band * (0.55 + 0.45 * vnoise(vWorld.xz * 11.0 + vWorld.y * 9.0)));
+              }`,
+            );
+        };
+      }
+    });
+    scene.add(model);
+  }
+
   const tops: THREE.Vector3[] = [];
-  for (let i = 0; i < ruin.ring.length - 1; i++) {
+  for (let i = 0; !model && i < ruin.ring.length - 1; i++) {
     const a2 = ruin.ring[i];
     const b2 = ruin.ring[i + 1];
     const a = at(a2);
@@ -482,27 +704,30 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const anchors: { xy: XY; up: number }[] = [];
   const crowded = (xy: XY, up: number) => anchors.some((a) => a.up === up && dist(a.xy, xy) < 6);
   for (const r of data.rooms) {
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(FLOOR, FLOOR), floorMaterial(null, FLOOR, false));
-    floor.rotation.set(-Math.PI / 2, 0, axis);
-    floor.position.copy(at(r.xy, 0.03));
-    floor.receiveShadow = true;
-    scene.add(floor);
-    const img = assets.photos.get(r.room);
-    let panel: THREE.Mesh;
-    if (img && r.photo) {
-      const tex = new THREE.Texture(img);
-      tex.needsUpdate = true;
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.anisotropy = anisotropy;
-      const w = PANEL * Math.min(1.35, r.photo.w / r.photo.h);
-      panel = new THREE.Mesh(new THREE.PlaneGeometry(w, PANEL), floorMaterial(tex, PANEL, false));
-    } else {
-      panel = new THREE.Mesh(new THREE.PlaneGeometry(PANEL, PANEL), floorMaterial(null, PANEL, true));
+    // With ARGUS's model the real floors are there: no drawn floor or photo panel on top of them.
+    if (!model) {
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(FLOOR, FLOOR), floorMaterial(null, FLOOR, false));
+      floor.rotation.set(-Math.PI / 2, 0, axis);
+      floor.position.copy(at(r.xy, 0.03));
+      floor.receiveShadow = true;
+      scene.add(floor);
+      const img = assets.photos.get(r.room);
+      let panel: THREE.Mesh;
+      if (img && r.photo) {
+        const tex = new THREE.Texture(img);
+        tex.needsUpdate = true;
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = anisotropy;
+        const w = PANEL * Math.min(1.35, r.photo.w / r.photo.h);
+        panel = new THREE.Mesh(new THREE.PlaneGeometry(w, PANEL), floorMaterial(tex, PANEL, false));
+      } else {
+        panel = new THREE.Mesh(new THREE.PlaneGeometry(PANEL, PANEL), floorMaterial(null, PANEL, true));
+      }
+      panel.rotation.set(-Math.PI / 2, 0, axis);
+      panel.position.copy(at(r.xy, 0.036));
+      panel.receiveShadow = true;
+      scene.add(panel);
     }
-    panel.rotation.set(-Math.PI / 2, 0, axis);
-    panel.position.copy(at(r.xy, 0.036));
-    panel.receiveShadow = true;
-    scene.add(panel);
     const tag = document.createElement("div");
     tag.className = "view3d-tag";
     tag.textContent = options.roomLabel(r);

@@ -525,10 +525,20 @@ other monuments, nor on a device without WebGL.
   `terrain` resamples the most detailed level around the house (±250 m) to a 2 m grid,
   `web/public/data/view3d/delos-masks-terrain.json` (about 150 KB); the 3D view uses it where present and the AWS
   tiles beyond it, lifted to ARGUS's datum (ellipsoid heights) so the two meet without a step. `model` first
-  only surveys the tileset (which tiles touch the house, at which detail, how big), and with `--download` takes
-  the chosen tiles around the house only (default at most 300 MB, never more than 5 GB). Turning those tiles
-  into the game's walls and floors comes next, once we see what they hold. `tools/tests/test_fetch_argus_3d.py`
+  only surveys the tileset (which tiles touch the house, at which detail, how big), and with `--download
+  --export` takes the chosen tiles around the house only (default at most 300 MB, never more than 5 GB) and
+  writes them as glTF: `web/public/data/view3d/delos-masks-model/` (9 tiles, 4 MB, ARGUS's own Draco
+  compression, which kept them smallest) with `delos-masks-model.json`. `tools/tests/test_fetch_argus_3d.py`
   runs the tool against a local copy of such a server.
+- **ARGUS's model in the view:** where both files are there, the 3D view shows ARGUS's photogrammetric model of
+  the house (about 210,000 triangles, its own photographs as textures) instead of the drawn walls and floors,
+  decoded with three.js's Draco decoder (`web/public/draco/`, served from the game itself). It is placed by
+  ARGUS's own tileset transform, then levelled onto ARGUS's terrain by a plane fitted to the difference (ARGUS
+  places it about 1.6 degrees off level; its own viewer corrects it by "pitch 1°"). It is cut 4.3 m above the
+  floor, so the modern shelters over the mosaics (5-6 m up) do not hide the floors, as the credits line says.
+  The damage is drawn on the model's own surfaces: the damp stain, lost tesserae and salt on its floors (flat
+  and low), the damp rising up its walls with a line of salt. Labels and sensors stand on the model's floor.
+  Without the files (or without ARGUS's terrain, which the model is levelled on) the drawn house is shown.
 
 ## Citizen observation report
 

@@ -204,11 +204,12 @@ class Site:
         # The browser itself refuses anything not listed here: with the defaults, nothing outside this server.
         self.policy = "; ".join([
             "default-src 'self'",
-            f"script-src 'self' 'sha256-{digest}'",
+            # 'wasm-unsafe-eval' and blob: workers: the 3D view's Draco decoder (with --online-maps)
+            f"script-src 'self' 'sha256-{digest}' 'wasm-unsafe-eval'",
             "style-src 'self' 'unsafe-inline'",  # the map library positions its tiles and pins with inline styles
             f"img-src {pictures}",
             "connect-src 'self'",
-            "worker-src 'self'",
+            "worker-src 'self' blob:",
             "manifest-src 'self'",
             "base-uri 'self'",
             "form-action 'self'",

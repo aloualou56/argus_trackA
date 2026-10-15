@@ -402,6 +402,7 @@
   "view3d.room216": "Ψηφιδωτό του Σιληνού",
   "view3d.room217": "Ψηφιδωτό με τα δελφίνια",
   "view3d.credits": "Δορυφορική εικόνα © Esri, Maxar, Earthstar Geographics · Ανάγλυφο: AWS Terrain Tiles · Περιγράμματα © συντελεστές του OpenStreetMap (ODbL) · Αίθουσες, αισθητήρες και κίνδυνοι: ARGUS · Φωτογραφίες ψηφιδωτών: Olaf Tausch (κοινό κτήμα), Kevin Stroup (CC BY 3.0), Wikimedia Commons · Το ύψος των τοίχων είναι υπόθεση· τα άλλα δάπεδα και όλες οι ζημιές είναι απεικόνιση",
+  "view3d.creditsArgus": "Δορυφορική εικόνα © Esri, Maxar, Earthstar Geographics · 3D μοντέλο της οικίας και ανάγλυφο: ARGUS (οι σύγχρονες σκεπές πάνω από τα ψηφιδωτά έχουν αφαιρεθεί για να φαίνονται τα δάπεδα) · Πέρα από το μοντέλο: ανάγλυφο AWS Terrain Tiles, περιγράμματα © συντελεστές του OpenStreetMap (ODbL) · Αίθουσες, αισθητήρες και κίνδυνοι: ARGUS · Οι ζημιές είναι απεικόνιση",
   "history.heading": "Ολόκληρη η ιστορία",
   "history.chapter": "Κεφάλαιο {n} από {total}",
   "history.next": "Συνέχεια",

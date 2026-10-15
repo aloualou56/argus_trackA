@@ -243,7 +243,9 @@ export function View3D({ mon, loaded, mapApi, arrived, onReady, onClosed }: Prop
             </details>
           </div>
         )}
-        <p className="view3d-credits">{t("view3d.credits")}</p>
+        <p className="view3d-credits">
+          {t(loaded.assets.model && loaded.assets.grid ? "view3d.creditsArgus" : "view3d.credits")}
+        </p>
       </div>
     </div>
   );

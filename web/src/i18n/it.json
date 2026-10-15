@@ -402,6 +402,7 @@
   "view3d.room216": "Mosaico di Sileno",
   "view3d.room217": "Mosaico dei delfini",
   "view3d.credits": "Immagini © Esri, Maxar, Earthstar Geographics · Rilievo: AWS Terrain Tiles · Contorni © collaboratori di OpenStreetMap (ODbL) · Sale, sensori e pericoli: ARGUS · Foto dei mosaici: Olaf Tausch (pubblico dominio), Kevin Stroup (CC BY 3.0), Wikimedia Commons · Altezza dei muri ipotizzata; gli altri pavimenti e tutti i danni sono un'illustrazione",
+  "view3d.creditsArgus": "Immagine satellitare © Esri, Maxar, Earthstar Geographics · Modello 3D della casa e rilievo: ARGUS (le coperture moderne sopra i mosaici sono tolte per mostrare i pavimenti) · Oltre il modello: AWS Terrain Tiles, contorni © collaboratori di OpenStreetMap (ODbL) · Stanze, sensori e pericoli: ARGUS · Tutti i danni sono un'illustrazione",
   "history.heading": "La storia completa",
   "history.chapter": "Capitolo {n} di {total}",
   "history.next": "Avanti",

@@ -402,6 +402,7 @@
   "view3d.room216": "Silen-Mosaik",
   "view3d.room217": "Delfin-Mosaik",
   "view3d.credits": "Luftbilder © Esri, Maxar, Earthstar Geographics · Gelände: AWS Terrain Tiles · Umrisse © OpenStreetMap-Mitwirkende (ODbL) · Räume, Sensoren und Gefahren: ARGUS · Mosaikfotos: Olaf Tausch (gemeinfrei), Kevin Stroup (CC BY 3.0), Wikimedia Commons · Mauerhöhe angenommen; die anderen Böden und alle Schäden sind eine Illustration",
+  "view3d.creditsArgus": "Satellitenbild © Esri, Maxar, Earthstar Geographics · 3D-Modell des Hauses und Gelände: ARGUS (die modernen Schutzdächer über den Mosaiken sind weggelassen, damit man die Böden sieht) · Ausserhalb des Modells: AWS Terrain Tiles, Umrisse © OpenStreetMap-Mitwirkende (ODbL) · Räume, Sensoren und Gefahren: ARGUS · Alle Schäden sind eine Illustration",
   "history.heading": "Die ganze Geschichte",
   "history.chapter": "Kapitel {n} von {total}",
   "history.next": "Weiter",

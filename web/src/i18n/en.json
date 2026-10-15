@@ -402,6 +402,7 @@
   "view3d.room216": "Silenus mosaic",
   "view3d.room217": "Dolphins mosaic",
   "view3d.credits": "Imagery © Esri, Maxar, Earthstar Geographics · Terrain: AWS Terrain Tiles · Outlines © OpenStreetMap contributors (ODbL) · Rooms, sensors and dangers: ARGUS · Mosaic photos: Olaf Tausch (public domain), Kevin Stroup (CC BY 3.0), Wikimedia Commons · Wall height assumed; the other floors and all damage are an illustration",
+  "view3d.creditsArgus": "Satellite imagery © Esri, Maxar, Earthstar Geographics · 3D model of the house and terrain: ARGUS (the modern shelters over the mosaics are left out so the floors can be seen) · Beyond the model: AWS Terrain Tiles, outlines © OpenStreetMap contributors (ODbL) · Rooms, sensors and dangers: ARGUS · All damage is an illustration",
   "history.heading": "The whole story",
   "history.chapter": "Chapter {n} of {total}",
   "history.next": "Next",

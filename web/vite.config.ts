@@ -27,7 +27,7 @@ function offline(): Plugin {
         // Recorded narration is kept as it is played, not stored up front. The 3D view needs the
         // internet anyway (its satellite and terrain tiles), so its code and data are not stored
         // up front either: only a player who opens it loads them (see sw-template.js).
-        .filter((f) => f !== "sw.js" && !f.endsWith(".map") && !f.startsWith("audio/") && !f.startsWith(`assets/${VIEW3D_CHUNK}-`) && !f.startsWith("data/view3d/"))
+        .filter((f) => f !== "sw.js" && !f.endsWith(".map") && !f.startsWith("audio/") && !f.startsWith(`assets/${VIEW3D_CHUNK}-`) && !f.startsWith("data/view3d/") && !f.startsWith("draco/"))
         .sort();
       const hash = createHash("sha256");
       for (const f of files) hash.update(f).update(readFileSync(join(outDir, f)));
