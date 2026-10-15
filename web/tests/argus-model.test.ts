@@ -73,3 +73,14 @@ describe("a place with no drawn walls", () => {
     expect(sceneCentre({ ...data, sensors3d: [] })).toEqual([0, 0]);
   });
 });
+
+describe("a tileset's own up axis", () => {
+  it("is read as Cesium reads it: glTF's y turned up, unless the tileset says z", () => {
+    const up = (tile: ModelTile) => new THREE.Vector3(0, 1, 0).applyMatrix4(modelMatrix(tile, 0, 0)).sub(new THREE.Vector3().applyMatrix4(modelMatrix(tile, 0, 0)));
+    // a tile in east-north-up at (0, 0): ECEF axes there are up = x, east = y, north = z
+    const enu = [0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 6378137, 0, 0, 1];
+    expect(up({ file: "", transform: enu, rtc_center: null }).y).toBeCloseTo(1, 6); // glTF y: up
+    const z = { file: "", transform: enu, rtc_center: null, gltf_up_axis: "Z" as const };
+    expect(up(z).z).toBeCloseTo(-1, 6); // glTF y: north (scene z is south)
+  });
+});

@@ -170,6 +170,8 @@ export interface ModelTile {
   transform: number[] | null;
   /** A b3dm tile's own centre (ECEF metres), added before the transform. */
   rtc_center: number[] | null;
+  /** The tileset's asset.gltfUpAxis: which glTF axis is up ("Y", glTF's own, unless the tileset says). */
+  gltf_up_axis?: "X" | "Y" | "Z";
 }
 
 /** Earth-centred position of a point on the WGS84 ellipsoid. */
@@ -198,8 +200,11 @@ export function modelMatrix(tile: ModelTile, lat: number, lon: number): THREE.Ma
   const toScene = new THREE.Matrix4().makeRotationX(-Math.PI / 2); // (east, north, up) -> (x, y up, -z)
   const tf = tile.transform ? new THREE.Matrix4().fromArray(tile.transform) : new THREE.Matrix4();
   const rtc = tile.rtc_center ? new THREE.Matrix4().makeTranslation(tile.rtc_center[0], tile.rtc_center[1], tile.rtc_center[2]) : new THREE.Matrix4();
-  const yUpToZUp = new THREE.Matrix4().makeRotationX(Math.PI / 2);
-  return toScene.multiply(enuToEcef.invert()).multiply(tf).multiply(rtc).multiply(yUpToZUp);
+  // as Cesium: glTF's y up turned to the tileset's z up, or as the tileset's gltfUpAxis says
+  const axis = tile.gltf_up_axis ?? "Y";
+  const toZUp =
+    axis === "Z" ? new THREE.Matrix4() : axis === "X" ? new THREE.Matrix4().makeRotationY(-Math.PI / 2) : new THREE.Matrix4().makeRotationX(Math.PI / 2);
+  return toScene.multiply(enuToEcef.invert()).multiply(tf).multiply(rtc).multiply(toZUp);
 }
 
 /** ARGUS's model of the house (<scene>-model.json and its glTF files), or null where it was not taken. */

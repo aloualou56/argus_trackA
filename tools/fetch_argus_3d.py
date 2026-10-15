@@ -562,7 +562,8 @@ def export_model(client: Client, tileset_url: str, picked: List[Dict[str, Any]],
         (out_dir / file).write_bytes(glb)
         total += len(glb)
         tiles.append({"file": f"{name}-model/{file}", "transform": t["transform"] or None,
-                      "rtc_center": rtc, "source": t["uri"], **glb_summary(glb)})
+                      "rtc_center": rtc, "source": t["uri"], **glb_summary(glb),
+                      **({"gltf_up_axis": t["up"]} if t.get("up", "Y") != "Y" else {})})
     manifest = {
         "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is "
                   "y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) "
@@ -615,8 +616,9 @@ def apply(m: List[float], p: Tuple[float, float, float]) -> Tuple[float, float, 
 
 
 def load_tree(client: Client, url: str, node: Dict[str, Any], parent_tf: List[float], refine: str,
-              keep) -> Optional[Dict[str, Any]]:
-    """A tileset's tree, nested tileset files read in, without the branches `keep` turns down."""
+              keep, up: str = "Y") -> Optional[Dict[str, Any]]:
+    """A tileset's tree, nested tileset files read in, without the branches `keep` turns down. `up`: the
+    tileset's asset.gltfUpAxis (which glTF axis is up; Cesium turns "Y", the default, to z up)."""
     tf = mat_mul(parent_tf, node.get("transform") or [])
     sphere = sphere_of(node.get("boundingVolume", {}), tf)
     if sphere and not keep(sphere):
@@ -628,18 +630,19 @@ def load_tree(client: Client, url: str, node: Dict[str, Any], parent_tf: List[fl
         uri = urllib.parse.urljoin(url, content.get("uri") or content.get("url"))
         if urllib.parse.urlparse(uri).path.endswith(".json"):  # a nested tileset: small, read it
             nested = json.loads(client.get_cached(uri, "application/json") or b"{}")
-            child = load_tree(client, uri, nested["root"], tf, refine, keep) if nested.get("root") else None
+            nested_up = str((nested.get("asset") or {}).get("gltfUpAxis") or up).upper()
+            child = load_tree(client, uri, nested["root"], tf, refine, keep, nested_up) if nested.get("root") else None
             children.append(child)
             uri = None
     had = len(node.get("children") or []) + len(children)
-    children += [load_tree(client, url, c, tf, refine, keep) for c in node.get("children") or []]
+    children += [load_tree(client, url, c, tf, refine, keep, up) for c in node.get("children") or []]
     children = [c for c in children if c]
     if had and not children and refine == "REPLACE":
         return None  # its finer tiles are all elsewhere: so is what of it matters
     if not uri and not children:
         return None
     return {"uri": uri, "error": float(node.get("geometricError", 0)), "refine": refine,
-            "transform": tf, "children": children}
+            "transform": tf, "children": children, "up": up}
 
 
 def cut(node: Dict[str, Any], error: float, out: List[Dict[str, Any]]) -> None:
@@ -712,7 +715,8 @@ def scene_tree(client: Client, scene: Dict[str, Any], radius: float) -> Tuple[Op
             if own and math.hypot(own[0][0], own[0][1]) > 2000:  # its middle, not its origin, is the place
                 cx, cy, _ = own[0]
                 mode, parent = "placed, centred", mat_mul(parent, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -cx, -cy, 0, 1])
-        tree = load_tree(client, url, root, parent, "REPLACE", keep)
+        up = str((tileset.get("asset") or {}).get("gltfUpAxis") or "Y").upper()
+        tree = load_tree(client, url, root, parent, "REPLACE", keep, up)
         print(f"  {ts['url']}: {mode}, {'touches the place' if tree else 'nothing within ' + str(round(radius)) + ' m'}")
         if tree:
             roots.append(tree)

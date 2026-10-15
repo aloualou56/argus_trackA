@@ -164,7 +164,7 @@ class FetchArgus3d(unittest.TestCase):
         self.rtc = [round(v, 3) for v in house]
         files["/tiles/delos/house-of-masks/sub/near_hi.b3dm"] = make_b3dm(make_glb(), self.rtc)
         # A model with no place of its own (local metres, z up): ARGUS's placement puts it.
-        local = {"asset": {"version": "1.0"}, "geometricError": 10, "root": {
+        local = {"asset": {"version": "1.0", "gltfUpAxis": "Z"}, "geometricError": 10, "root": {
             "boundingVolume": {"box": [0, 0, 5, 20, 0, 0, 0, 20, 0, 0, 0, 5]}, "geometricError": 4,
             "refine": "REPLACE", "content": {"uri": "lo.b3dm"},
             "children": [{"boundingVolume": {"box": [0, 0, 5, 20, 0, 0, 0, 20, 0, 0, 0, 5]}, "geometricError": 0,
@@ -256,6 +256,7 @@ class FetchArgus3d(unittest.TestCase):
         self.assertEqual(self.all_scenes("--scene", "other", "--no-terrain"), 0)
         other = json.loads((f.OUT_TERRAIN.parent / "other-model.json").read_text())
         self.assertEqual(other["placed"], "placed")
+        self.assertEqual(other["tiles"][0]["gltf_up_axis"], "Z")  # the tileset's own, as Cesium reads it
         tile = other["tiles"][0]
         self.assertTrue(tile["source"].endswith("hi.b3dm"))
         scene = self.scenes["scenes"][1]
