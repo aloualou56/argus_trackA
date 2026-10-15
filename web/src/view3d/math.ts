@@ -89,7 +89,10 @@ export const RATES = {
 /** The damage after `years` in which nobody noticed. With ARGUS watching, the sensors show it within
  *  months and it is treated: never more than a year's worth. An illustration of how big it would be,
  *  at the rates above (README, "3D view"). "mosaic" is the House of the Masks: damp rising under its
- *  floors. */
+ *  floors. Each danger shows its own damage: plants only where they are the point (trees and bushes
+ *  over the walls), where damp feeds them (mosaic, fresco), and on a place only looked at (null),
+ *  where the years only weather it and bring plants; never instead of a crack, a lean, worn stone or
+ *  a worn floor. */
 export function damageAfter(years: number, watched: boolean, kind: DamageKind = "mosaic"): Damage {
   const y = watched ? Math.min(years, 1) : years;
   const none = { damp: 0, wet: 0, loss: 0, salt: 0, plants: 0, flake: 0, wear: 0, surfaceMm: 0, crackMm: 0, crackM: 0, lean: 0 };
@@ -111,18 +114,17 @@ export function damageAfter(years: number, watched: boolean, kind: DamageKind = 
     case "fresco": // damp climbing the painted walls, salt at its edge, the paint coming away
       return { ...none, damp, salt, flake: Math.min(0.6, Math.max(0, (y - 2) / 60)), plants, surfaceMm };
     case "floor": // feet wearing a path: smooth and pale where people walk
-      return { ...none, wear: y > 0 ? 0.6 + 2.4 * grow(y, 20) : 0, plants, surfaceMm };
+      return { ...none, wear: y > 0 ? 0.6 + 2.4 * grow(y, 20) : 0, surfaceMm };
     case "stone": // wind, salt and heat wearing the stone's surface
-      return { ...none, surfaceMm, plants };
+      return { ...none, surfaceMm };
     case "crack": // a crack opening every winter
-      return { ...none, crackMm: y * RATES.crackMmPerYear, crackM: y > 0 ? 0.5 + y * RATES.crackMPerYear : 0, plants, surfaceMm };
+      return { ...none, crackMm: y * RATES.crackMmPerYear, crackM: y > 0 ? 0.5 + y * RATES.crackMPerYear : 0, surfaceMm };
     case "lean": // the wall leaning a little more each year; its crack opening with it
       return {
         ...none,
         lean: y * RATES.leanDegPerYear,
         crackMm: y > 10 ? (y - 10) * RATES.crackMmPerYear : 0,
         crackM: y > 10 ? 0.5 + (y - 10) * RATES.crackMPerYear : 0,
-        plants,
         surfaceMm,
       };
     case "tree": // trees and bushes growing over the walls

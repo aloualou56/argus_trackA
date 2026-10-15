@@ -66,5 +66,8 @@ describe("the 3D view", () => {
     expect(damageAfter(50, false, "crack").crackMm).toBeCloseTo(25, 6);
     expect(damageAfter(50, false, "lean").lean).toBeCloseTo(2.5, 6);
     expect(damageAfter(50, false, "stone").damp).toBe(0); // only the danger's own damage
+    // plants only where they are the point, where damp feeds them, or on a place only looked at
+    for (const d of ["stone", "crack", "lean", "floor"] as const) expect(damageAfter(50, false, d).plants).toBe(0);
+    for (const d of ["tree", "mosaic", "fresco", null] as const) expect(damageAfter(50, false, d).plants).toBeGreaterThan(0);
   });
 });

@@ -495,11 +495,20 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   walls, the paint pushed off where they dry (frescoes: Ranverso, the Conventillo); a path worn into the floor
   (visitors); the stone's surface worn (wind, heat); a crack opening through the wall at the crackmeter or
   accelerometer (Schenkenberg), along the wall's own line in the model; the wall at the tiltmeter leaning
-  further (Conventillo); trees and bushes on the wall tops (storms, wind). After 15 years, plants on the wall
-  tops everywhere. "ARGUS watching" stops each at a year's worth. An orange ring marks where the sensor whose
-  alarm went off stands, and the camera comes to rest where it can see the damage: it checks, with rays
-  against ARGUS's model, that no building stands in between, close for millimetre damage (about 8 m for a
-  crack).
+  further (Conventillo); trees and bushes on the wall tops (storms, wind). Plants root in the wall tops after 15
+  years only where damp feeds them (from the damage outwards) or where the place is only looked at; not on a
+  crack, a lean, worn stone or a worn floor, whose damage they would hide. Wall tops are found in the model:
+  narrow ridges that run on (not columns, posts, roofs or towers). "ARGUS watching" stops each at a year's
+  worth. An orange ring marks where the sensor whose alarm went off stands, and the camera comes to rest where
+  it can see the damage: a crack or a lean on the wall's face, found with level rays from outside, from the side
+  where the ground falls away; it checks, with rays against ARGUS's model, that nothing stands in between (or
+  stops in front of it), close for millimetre damage (about 8 m for a crack, 14 m for a lean); a place only
+  looked at is seen whole, from its long open side, as far back as it takes to fit the screen.
+- **Light:** ARGUS's models are photographs, with the day's own light in them, so they are shown as they are,
+  not lit a second time (lit by the scene's sun, every side away from it went dark: Ranverso's church was
+  almost black). The satellite ground is shown the same way, left out where the model has a ground of its own,
+  and stepped down under the model's sunken floors; ARGUS's terrain gives way to the AWS terrain over its last
+  24 m, at the median step between the two.
 - **For a five-year-old too**, without making anything bigger than it is: "Show the damage" (on at first)
   marks in pulsing red where the monument is being damaged, and says that the red is a sign, not the stone's
   colour; a label with a picture sign and a few words stands at the damage ("💧 Water rises from the ground.

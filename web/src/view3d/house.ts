@@ -22,6 +22,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage, type DamageKind } from "./math";
 
 type XY = [number, number];
@@ -469,14 +470,37 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // gives heights above the ellipsoid, AWS above the sea) so the two meet without a step.
   const gridH = grid && gridHeights(grid);
   const gridAt = (x: number, y: number) => (grid && gridH ? gridHeight(grid, gridH, x, y) : null);
-  const awsAt0 = awsTerrain(0, 0);
-  const gridAt0 = gridAt(0, 0);
-  const datumShift = gridAt0 !== null && awsAt0 !== null ? gridAt0 - awsAt0 : 0;
+  // The step between the two datums: the median difference over ARGUS's whole grid. (Taken at one point,
+  // a hilltop that the coarse AWS tiles round off lifted all the terrain around into a wall.)
+  let datumShift = 0;
+  if (grid && gridH) {
+    const diffs: number[] = [];
+    const every = Math.max(1, Math.floor(grid.cols / 24));
+    for (let r = 0; r < grid.rows; r += every) {
+      for (let c = 0; c < grid.cols; c += every) {
+        const x = grid.west_m + c * grid.spacing_m;
+        const y = grid.north_m - r * grid.spacing_m;
+        const fine = gridAt(x, y);
+        const coarse = awsTerrain(x, y);
+        if (fine !== null && coarse !== null) diffs.push(fine - coarse);
+      }
+    }
+    diffs.sort((a, b) => a - b);
+    if (diffs.length) datumShift = diffs[Math.floor(diffs.length / 2)];
+  }
+  // ARGUS's grid gives way to the AWS terrain over its last 24 m, so the two meet without a step.
+  const BLEND_M = 24;
   function terrain(x: number, y: number): number | null {
     const fine = gridAt(x, y);
-    if (fine !== null) return fine;
     const coarse = awsTerrain(x, y);
-    return coarse === null ? null : coarse + datumShift;
+    const far = coarse === null ? null : coarse + datumShift;
+    if (fine === null || !grid) return far;
+    if (far === null) return fine;
+    const c = (x - grid.west_m) / grid.spacing_m;
+    const r = (grid.north_m - y) / grid.spacing_m;
+    const inside = Math.min(c, grid.cols - 1 - c, r, grid.rows - 1 - r) * grid.spacing_m;
+    const w = Math.min(1, Math.max(0, inside / BLEND_M));
+    return fine * w + far * (1 - w);
   }
   const H0 = terrain(0, 0);
   // Flat where the terrain did not load: the house still stands, on level ground.
@@ -491,6 +515,16 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const footprint = new THREE.Box3();
   const tops: THREE.Vector3[] = []; // wall tops, where plants root
   const wallCells: XY[] = []; // [x, z] of the cells where the model stands as a wall, near the damage
+  // Where the model stands up from its own ground (walls, rocks, buildings): every metre or so, its
+  // foot and top, so a place can be seen whole from its long side.
+  const standing: { x: number; z: number; low: number; high: number }[] = [];
+  // Where the model has a surface at all: the ground is not drawn there (it would show through the
+  // model's own ground, or stand over its sunken floors).
+  let cover: { data: Uint8Array; nx: number; nz: number; minX: number; minZ: number; cell: number } | null = null;
+  // The floor the cut above the walls is measured from (the House of the Masks' shelters over its mosaics).
+  let cutBase = 0;
+  // Within the model, away from its ragged edge (holes in its floors included).
+  let insideModel: (x: number, y: number) => boolean = () => false;
   if (model) {
     let nx = 0;
     let nz = 0;
@@ -560,24 +594,95 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       }
       return low === Infinity ? null : low;
     };
-    // Wall tops: cells where the model stands more than 1.2 m above its own ground with a drop of a metre
-    // beside them (a wall's top is narrow; a roof is not), under the cut where there is one. Every few
-    // cells, so the plants spread along them.
-    const cutY = data.cut_above_m != null ? (floorAt(focusXY[0], focusXY[1]) ?? 0) + data.cut_above_m : Infinity;
+    // The ground is left out where the model has a ground of its own: cells where it is flat (a floor, a
+    // street, a roof), and a metre round them (the walls between floors), and wherever the model's floor
+    // lies below the terrain (rooms dug out, a sunken courtyard, a floor under a shelter's roof); but never
+    // at the model's ragged edge (the ground fills the gaps there) nor in the middle of a cliff or a
+    // facade (where the model has no surface facing up, and the ground's hole would show the sky).
+    const R = Math.max(1, Math.round(1 / CELL));
+    const has = (r: number, c: number) => r >= 0 && c >= 0 && r < nz && c < nx && cells[r * nx + c] !== Infinity;
+    const flat = (r: number, c: number) => has(r, c) && highs[r * nx + c] - cells[r * nx + c] < 1;
+    // Empty cells outside the model (reached from the grid's border through empty cells) are not the holes
+    // in it (a floor the photographs missed): the model's ragged edge is next to the first, not the second.
+    const outside = new Uint8Array(nx * nz);
+    const queue: number[] = [];
+    const seed = (k: number) => {
+      if (!outside[k] && cells[k] === Infinity) {
+        outside[k] = 1;
+        queue.push(k);
+      }
+    };
+    for (let c = 0; c < nx; c++) {
+      seed(c);
+      seed((nz - 1) * nx + c);
+    }
+    for (let r = 0; r < nz; r++) {
+      seed(r * nx);
+      seed(r * nx + nx - 1);
+    }
+    while (queue.length) {
+      const k = queue.pop()!;
+      const c = k % nx;
+      if (c > 0) seed(k - 1);
+      if (c < nx - 1) seed(k + 1);
+      if (k >= nx) seed(k - nx);
+      if (k < (nz - 1) * nx) seed(k + nx);
+    }
+    // within a metre of the outside (the ragged edge), or outside
+    const nearOut = new Uint8Array(nx * nz);
+    const coverData = new Uint8Array(nx * nz);
+    for (let r = 0; r < nz; r++) {
+      for (let c = 0; c < nx; c++) {
+        let edge = false;
+        let nearFlat = false;
+        for (let dr = -R; dr <= R && !edge; dr++) {
+          for (let dc = -R; dc <= R; dc++) {
+            const rr = r + dr;
+            const cc = c + dc;
+            if (rr < 0 || cc < 0 || rr >= nz || cc >= nx || outside[rr * nx + cc]) {
+              edge = true;
+              break;
+            }
+            if (flat(rr, cc)) nearFlat = true;
+          }
+        }
+        if (edge) nearOut[r * nx + c] = 1;
+        if (!has(r, c)) continue;
+        const sunken = cells[r * nx + c] < ground(footprint.min.x + (c + 0.5) * CELL, -(footprint.min.z + (r + 0.5) * CELL)) - 0.3;
+        if (!edge && (nearFlat || sunken)) coverData[r * nx + c] = 255;
+      }
+    }
+    cover = { data: coverData, nx, nz, minX: footprint.min.x, minZ: footprint.min.z, cell: CELL };
+    insideModel = (x, y) => {
+      const c = Math.floor((x - footprint.min.x) / CELL);
+      const r = Math.floor((-y - footprint.min.z) / CELL);
+      return c >= 0 && r >= 0 && c < nx && r < nz && !nearOut[r * nx + c];
+    };
+    // The cut is measured from the floor at the damage: in the mosaics' rooms it takes the shelters' roof
+    // off, so the damage to the mosaics shows; from outside the house (the wind) the roof stays.
+    cutBase = floorAt(focusXY[0], focusXY[1]) ?? 0;
+    // Wall tops: cells where the model stands more than 1.2 m above its own ground, under the cut where
+    // there is one, every metre or so, so the plants spread along them. A wall's top drops away on both
+    // sides across it and runs on along it: not a column or a post (which drops away all round), nor a
+    // roof or a tower (more than 6 m above its own ground).
+    const cutY = data.cut_above_m != null ? cutBase + data.cut_above_m : Infinity;
     const step = Math.max(1, Math.round(1 / CELL));
     const side = Math.max(1, Math.round(1.2 / CELL));
     const highAt = (row: number, col: number) => (row < 0 || col < 0 || row >= nz || col >= nx ? -Infinity : highs[row * nx + col]);
+    const across: [number, number][] = [[side, 0], [0, side], [side, side], [side, -side]];
     for (let row = 0; row < nz; row += step) {
       for (let col = 0; col < nx; col += step) {
         const k = row * nx + col;
-        const drop = (r: number, c: number) => highAt(r, c) < highs[k] - 1;
-        const narrow = (drop(row - side, col) && drop(row + side, col)) || (drop(row, col - side) && drop(row, col + side));
+        const tall = highs[k] - cells[k];
+        if (!(tall > 1.2)) continue;
         const cx = footprint.min.x + (col + 0.5) * CELL;
         const cz = footprint.min.z + (row + 0.5) * CELL;
-        if (highs[k] - cells[k] > 1.2 && Math.hypot(cx - focusXY[0], -cz - focusXY[1]) < 5) wallCells.push([cx, cz]);
-        if (highs[k] - cells[k] > 1.2 && highs[k] < cutY - 0.2 && narrow) {
-          tops.push(new THREE.Vector3(footprint.min.x + (col + 0.5) * CELL, highs[k] + 0.05, footprint.min.z + (row + 0.5) * CELL));
-        }
+        standing.push({ x: cx, z: cz, low: cells[k], high: highs[k] });
+        if (Math.hypot(cx - focusXY[0], -cz - focusXY[1]) < 5) wallCells.push([cx, cz]);
+        const drop = (r: number, c: number) => highAt(r, c) < highs[k] - 1;
+        const drops = across.map(([dr, dc]) => drop(row - dr, col - dc) && drop(row + dr, col + dc));
+        const ridge = drops.some(Boolean) && !drops.every(Boolean);
+        if (ridge && tall < 6 && highs[k] < cutY - 0.2) tops.push(new THREE.Vector3(cx, highs[k] + 0.02, cz));
       }
     }
   }
@@ -622,21 +727,47 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const gp = groundGeo.attributes.position;
   const gx0 = (imagery.west + imagery.east) / 2;
   const gy0 = (imagery.north + imagery.south) / 2;
-  // Under ARGUS's model the ground steps down out of sight (below the model's lowest point around it),
-  // so it never covers the model's floors; where the model has nothing, the ground is the terrain.
+  // The terrain everywhere; where ARGUS's model has a surface the ground is simply not drawn (a mask
+  // of the model's cells), so it never covers the model's own ground or its sunken floors. (Stepping
+  // the ground down under the model left walls of stretched picture all round it.)
+  // Inside the model, where its floors lie below the terrain (rooms dug out), the ground steps down
+  // under them, so it never stands over a floor where the photographs left a hole in it; never at the
+  // model's edge, where a step would show.
   const reach = (Math.max(imagery.east - imagery.west, imagery.north - imagery.south) / SEG) * 0.75;
   for (let i = 0; i < gp.count; i++) {
     const x = gp.getX(i) + gx0;
     const y = gp.getY(i) + gy0;
-    const low = model ? lowestNear(x, y, reach) : null;
-    gp.setZ(i, low === null ? ground(x, y) : Math.min(ground(x, y), low - 0.4));
+    const g = ground(x, y);
+    const low = model && insideModel(x, y) ? lowestNear(x, y, reach) : null;
+    gp.setZ(i, low !== null && low < g - 0.3 ? low - 0.4 : g);
   }
   groundGeo.computeVertexNormals();
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
   const groundTex = new THREE.CanvasTexture(imagery.canvas);
   groundTex.colorSpace = THREE.SRGBColorSpace;
   groundTex.anisotropy = anisotropy;
-  const groundMesh = new THREE.Mesh(groundGeo, new THREE.MeshStandardMaterial({ map: groundTex, roughness: 1 }));
+  // A photograph, with the day's own light in it: shown as it is, not lit a second time.
+  // (Drawn a little behind: where it meets the model's own ground, the model's shows.)
+  const groundMat = new THREE.MeshBasicMaterial({ map: groundTex, toneMapped: false, polygonOffset: true, polygonOffsetFactor: 2, polygonOffsetUnits: 8 });
+  if (cover) {
+    const mask = new THREE.DataTexture(cover.data, cover.nx, cover.nz, THREE.RedFormat, THREE.UnsignedByteType);
+    mask.needsUpdate = true;
+    const maskMin = new THREE.Vector2(cover.minX, cover.minZ);
+    const maskSize = new THREE.Vector2(cover.nx * cover.cell, cover.nz * cover.cell);
+    groundMat.onBeforeCompile = (shader) => {
+      Object.assign(shader.uniforms, { uMask: { value: mask }, uMaskMin: { value: maskMin }, uMaskSize: { value: maskSize } });
+      shader.vertexShader = shader.vertexShader.replace(...WORLD_VARYING).replace(...WORLD_POSITION);
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vWorld;\nuniform sampler2D uMask;\nuniform vec2 uMaskMin, uMaskSize;")
+        .replace(
+          "void main() {",
+          `void main() {
+          vec2 maskUv = (vWorld.xz - uMaskMin) / uMaskSize;
+          if (all(greaterThan(maskUv, vec2(0.0))) && all(lessThan(maskUv, vec2(1.0))) && texture2D(uMask, maskUv).r > 0.5) discard;`,
+        );
+    };
+  }
+  const groundMesh = new THREE.Mesh(groundGeo, groundMat);
   groundMesh.rotation.x = -Math.PI / 2;
   groundMesh.position.set(gx0, 0, -gy0);
   groundMesh.receiveShadow = true;
@@ -669,6 +800,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   if (away.lengthSq() < 0.01) away.set(1, 0);
   away.normalize();
   const along = new THREE.Vector2(-away.y, away.x);
+  let wallLine = 1; // how far the model by the sensor is from a straight wall: 0 a line, 1 a blob (a rock)
   if (wallCells.length >= 4) {
     const mx = wallCells.reduce((a, c) => a + c[0], 0) / wallCells.length;
     const mz = wallCells.reduce((a, c) => a + c[1], 0) / wallCells.length;
@@ -676,10 +808,16 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     for (const [x, z] of wallCells) {
       sxx += (x - mx) ** 2; sxz += (x - mx) * (z - mz); szz += (z - mz) ** 2;
     }
+    const spread = Math.hypot((sxx - szz) / 2, sxz);
+    wallLine = (sxx + szz) / 2 + spread > 0 ? ((sxx + szz) / 2 - spread) / ((sxx + szz) / 2 + spread) : 1;
     const angle = 0.5 * Math.atan2(2 * sxz, sxx - szz);
     along.set(Math.cos(angle), Math.sin(angle));
     const out = new THREE.Vector2(-along.y, along.x);
-    away.copy(out.dot(away) < 0 ? out.negate() : out);
+    // Out in the open: on a slope or a cliff, the side where the ground falls away (inside a building,
+    // its roof stands in for the ground); on level ground, away from the middle of the place.
+    const rise = surface(src.x + out.x * 4, -(src.z + out.y * 4)) - surface(src.x - out.x * 4, -(src.z - out.y * 4));
+    if (Math.abs(rise) > 1.5) away.copy(rise < 0 ? out : out.negate());
+    else away.copy(out.dot(away) < 0 ? out.negate() : out);
   }
   // A crack or a lean is in the wall itself: at the wall cell nearest the sensor.
   const wallAt =
@@ -687,6 +825,41 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       ? wallCells.reduce((best, c) => (Math.hypot(c[0] - src.x, c[1] - src.z) < Math.hypot(best[0] - src.x, best[1] - src.z) ? c : best))
       : null;
   const floorY = floorAt(focusXY[0], focusXY[1]) ?? ground(focusXY[0], focusXY[1]);
+  // A crack or a lean is on the wall's face, seen from outside: from 15 m out on each side in turn (the
+  // open side first), the first surface a level ray meets near the wall by the sensor. (The wall cell's
+  // middle can be inside a thick wall or a tower, and the camera then ended up inside it.)
+  const crackBase = wallAt ? new THREE.Vector3(wallAt[0], Math.max(src.y, surface(focusXY[0], focusXY[1]) + 1), wallAt[1]) : null;
+  let crackAt: THREE.Vector3 | null = crackBase?.clone() ?? null;
+  // The face, and which way it faces (its own normal, level): the crack runs along it, the wall leans
+  // out of it and the camera looks at it from there.
+  function snapCrack() {
+    if (!model || !crackBase) return;
+    const probe = new THREE.Raycaster();
+    const out0 = Math.atan2(away.y, away.x);
+    for (const k of [0, 1, -1, 2, -2, 3, -3, 4]) {
+      const a = out0 + (k * Math.PI) / 4;
+      const d = new THREE.Vector2(Math.cos(a), Math.sin(a));
+      const start = crackBase.clone().add(new THREE.Vector3(d.x * 15, 0, d.y * 15));
+      if (start.y < surface(start.x, -start.z) + 0.5) continue; // inside the hill on that side
+      probe.set(start, new THREE.Vector3(-d.x, 0, -d.y));
+      probe.far = 18;
+      const hit = probe.intersectObject(model, true)[0];
+      if (!hit || Math.hypot(hit.point.x - crackBase.x, hit.point.z - crackBase.z) > 4) continue;
+      const n = hit.face ? hit.face.normal.clone().transformDirection(hit.object.matrixWorld) : null;
+      const face = n && Math.hypot(n.x, n.z) > 0.3 ? new THREE.Vector2(n.x, n.z).normalize() : d.clone();
+      if (face.dot(d) < 0) face.negate();
+      crackAt = hit.point.clone().add(new THREE.Vector3(face.x * 0.02, 0, face.y * 0.02));
+      away.copy(face);
+      along.set(face.y, -face.x);
+      return;
+    }
+  }
+  snapCrack();
+  // The stone the weather wears: the walls from the lowest floor up, and (where the modern shelters are
+  // cut off) not the shelters above the walls.
+  const floors = [floorY, ...data.rooms.map((r) => floorAt(r.xy[0], r.xy[1]))].filter((v): v is number => v !== null);
+  const stoneLow = Math.min(...floors);
+  const stoneTop = data.cut_above_m != null && data.rooms.length ? stoneLow + data.cut_above_m : stoneLow + 40;
   const damage = {
     damp: { value: 0 },
     wet: { value: 0 },
@@ -700,8 +873,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     lean: { value: 0 },
     show: { value: 1 },
     pulse: { value: 0.5 },
-    source: { value: wallAt ? new THREE.Vector2(wallAt[0], wallAt[1]) : new THREE.Vector2(src.x, src.z) },
-    sourceY: { value: src.y },
+    source: { value: crackAt ? new THREE.Vector2(crackAt.x, crackAt.z) : new THREE.Vector2(src.x, src.z) },
+    sourceY: { value: crackAt ? crackAt.y : src.y },
     leanDir: { value: away },
     wallDir: { value: along },
   };
@@ -752,10 +925,34 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     const cutAbove = data.cut_above_m;
     renderer.localClippingEnabled = cutAbove != null;
     const cut = cutAbove != null ? [new THREE.Plane(new THREE.Vector3(0, -1, 0), floorY + cutAbove)] : [];
+    // ARGUS's model is photographs: their light is the day's own, so they are shown as they are. Lit a
+    // second time by the scene's sun and shadows, every side away from it went dark (Ranverso's church
+    // almost black); unlit, each place is as bright as it was photographed.
+    const asPhoto = new Map<THREE.Material, THREE.MeshBasicMaterial>();
+    const photoOf = (m: THREE.Material) => {
+      let u = asPhoto.get(m);
+      if (!u) {
+        const lit = m as THREE.MeshStandardMaterial;
+        u = new THREE.MeshBasicMaterial({
+          map: lit.map ?? null,
+          color: lit.color ? lit.color.clone() : 0xffffff,
+          vertexColors: lit.vertexColors,
+          side: lit.side,
+          transparent: lit.transparent,
+          opacity: lit.opacity,
+          alphaTest: lit.alphaTest,
+          toneMapped: false,
+        });
+        asPhoto.set(m, u);
+        m.dispose();
+      }
+      return u;
+    };
     const patched = new Set<THREE.Material>();
     model.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
+      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(photoOf) : photoOf(mesh.material);
       for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
         if (patched.has(m)) continue;
         patched.add(m);
@@ -768,11 +965,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             uSourceY: damage.sourceY, uLeanDir: damage.leanDir, uWallDir: damage.wallDir, uGround: { value: floorY },
             uReach: { value: VIEW },
             uShow: damage.show, uPulse: damage.pulse, uMarkWeather: { value: kind === "stone" ? 1 : 0 },
+            uStoneReach: { value: Math.max(20, dist(focusXY, houseCentre) + 25) },
+            uStoneLow: { value: stoneLow },
+            uStoneTop: { value: stoneTop },
           });
           shader.vertexShader = shader.vertexShader
             .replace(
               "#include <common>",
-              "#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;",
+              "#include <common>\nvarying vec3 vWorld;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;",
             )
             .replace(
               "#include <begin_vertex>",
@@ -787,12 +987,12 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             )
             .replace(
               "#include <worldpos_vertex>",
-              "#include <worldpos_vertex>\nvWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvNormalW = normalize(mat3(modelMatrix) * objectNormal);",
+              "#include <worldpos_vertex>\nvWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;",
             );
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
@@ -800,7 +1000,10 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               vec3 base0 = diffuseColor.rgb;
               vec3 col = base0;
               ${damageGlsl(false)}
-              vec3 nW = normalize(vNormalW);
+              // which way the surface faces, from the model's shape itself (one of ARGUS's models has no
+              // normals), turned towards the camera
+              vec3 nW = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
+              if (dot(nW, cameraPosition - vWorld) < 0.0) nW = -nW;
               float flatUp = smoothstep(0.80, 0.95, nW.y);
               float wall = 1.0 - flatUp;
               // the stain is on the floors at the damp floor's level, never on a roof above it
@@ -852,7 +1055,12 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 // weathered stone: a few millimetres of its surface gone (uWeather 1 = 5 mm): paler, rain-
                 // streaked, its surface pitted and flaking in places
                 float w = uWeather * (0.55 + 0.45 * near);
-                harm = max(harm, uMarkWeather * 0.5 * smoothstep(0.0, 0.5, uWeather) * (0.4 + 0.6 * near));
+                // marked on the stone the wind wears: walls and wall tops near the weather station, not
+                // the ground, nor anything higher up (the House of the Masks' shelter roof is not stone)
+                float stoneUp = wall * smoothstep(uStoneLow + 0.1, uStoneLow + 0.4, vWorld.y) * (1.0 - smoothstep(uStoneTop - 0.8, uStoneTop, vWorld.y));
+                // (the whole house the wind blows on, not only what stands by the station)
+                float nearS = 1.0 - smoothstep(uStoneReach * 0.7, uStoneReach, dist0);
+                harm = max(harm, uMarkWeather * smoothstep(0.0, 0.5, uWeather) * nearS * stoneUp);
                 float lum = dot(c, vec3(0.299, 0.587, 0.114));
                 c = mix(c, vec3(lum) * vec3(1.06, 1.0, 0.92), w * 0.6);
                 vec2 sw = vec2(vWorld.x + vWorld.z, vWorld.y);
@@ -877,7 +1085,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 c *= 1.0 - 0.35 * (1.0 - smoothstep(width * 1.5, width * 6.0, d)) * onWall;
                 c = mix(c, vec3(0.04, 0.035, 0.03), (1.0 - smoothstep(width * 0.5, width, d)) * onWall);
               }
-              if (uLean > 0.0) harm = max(harm, wall * (1.0 - smoothstep(4.0, 10.0, dist0)) * smoothstep(0.0, 0.004, uLean));
+              // the leaning wall itself: a few metres of it either side of the tiltmeter, not everything near
+              if (uLean > 0.0) harm = max(harm, wall * (1.0 - smoothstep(3.0, 6.0, abs(along))) * (1.0 - smoothstep(0.8, 1.8, across)) * smoothstep(0.2, 0.8, y) * (1.0 - smoothstep(4.0, 6.0, abs(vWorld.y - uSourceY))) * smoothstep(0.0, 0.004, uLean));
               c = mix(c, vec3(1.0, 0.12, 0.3), clamp(harm, 0.0, 1.0) * uShow * (0.35 + 0.3 * uPulse));
               diffuseColor.rgb = c;`,
             );
@@ -900,7 +1109,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     wall.rotation.y = -Math.atan2(b.z - a.z, b.x - a.x);
     wall.castShadow = wall.receiveShadow = true;
     scene.add(wall);
-    for (let t = 0; t < 1; t += 0.7 / Math.max(len, 0.7)) tops.push(a.clone().lerp(b, t).setY(base + WALL_H + 0.12));
+    for (let t = 0; t < 1; t += 0.7 / Math.max(len, 0.7)) tops.push(a.clone().lerp(b, t).setY(base + WALL_H + 0.02));
   }
   for (const s of sites) {
     // plot outlines, dashed as in the game's site guide
@@ -998,28 +1207,54 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     }
   }
 
-  // Plants rooting in the wall tops when nobody looks after them
+  // Plants rooting in the wall tops when nobody looks after them: tufts of weeds (bushes for the
+  // "trees" danger), blades and leaves drawn on three crossed cards, standing on the wall tops. Where
+  // the day's damage feeds them (damp), they start there and spread out from it (the nearest tops
+  // first); on a place only looked at, anywhere. Marked in red with the rest of the damage.
   const rnd = seeded(11);
-  for (let i = tops.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [tops[i], tops[j]] = [tops[j], tops[i]];
+  const fromDamage = kind !== null && kind !== "tree";
+  const order = tops.map((p) => ({ p, d: fromDamage ? Math.hypot(p.x - src.x, p.z - src.z) + rnd() * 4 : rnd() }));
+  order.sort((a, b) => a.d - b.d);
+  order.forEach((o, i) => (tops[i] = o.p));
+  const tuftCanvas = document.createElement("canvas");
+  tuftCanvas.width = tuftCanvas.height = 128;
+  const brush = tuftCanvas.getContext("2d")!;
+  const rb = seeded(5);
+  brush.lineCap = "round";
+  for (let i = 0; i < 30; i++) {
+    const x0 = 64 + (rb() - 0.5) * 60;
+    const h = 40 + rb() * 82;
+    const lean = (rb() - 0.5) * 64;
+    brush.strokeStyle = `hsl(${78 + rb() * 50}, ${38 + rb() * 32}%, ${18 + rb() * 26}%)`;
+    brush.lineWidth = 3 + rb() * 5;
+    brush.beginPath();
+    brush.moveTo(x0, 128);
+    brush.quadraticCurveTo(x0 + lean * 0.2, 128 - h * 0.55, x0 + lean, 128 - h);
+    brush.stroke();
   }
-  const plants = new THREE.InstancedMesh(
-    new THREE.IcosahedronGeometry(model ? 0.3 : 0.16, 0), // over a real wall top, a tuft that can be seen
-    new THREE.MeshStandardMaterial({ color: "#56703a", roughness: 1, flatShading: true }),
-    Math.max(tops.length, 1),
-  );
+  const tuftTex = new THREE.CanvasTexture(tuftCanvas);
+  tuftTex.colorSpace = THREE.SRGBColorSpace;
+  const tuft = mergeGeometries([0, 1, 2].map((i) => new THREE.PlaneGeometry(1, 1).translate(0, 0.5, 0).rotateY((i * Math.PI) / 3)));
+  const plantMat = new THREE.MeshLambertMaterial({ map: tuftTex, alphaTest: 0.35, side: THREE.DoubleSide });
+  plantMat.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, { uShow: damage.show, uPulse: damage.pulse });
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nuniform float uShow, uPulse;")
+      .replace("#include <map_fragment>", "#include <map_fragment>\ndiffuseColor.rgb = mix(diffuseColor.rgb, vec3(1.0, 0.12, 0.3), uShow * (0.35 + 0.3 * uPulse));");
+  };
+  const plants = new THREE.InstancedMesh(tuft, plantMat, Math.max(tops.length, 1));
   const m4 = new THREE.Matrix4();
   const scale = new THREE.Vector3();
   const turn = new THREE.Quaternion();
-  const bushy = kind === "tree" ? 2.8 : 1; // trees and shrubs over the walls, not only weeds
+  // a weed tuft about half a metre high; for the "trees" danger, shrubs over the walls
+  const tall = (model ? 0.55 : 0.4) * (kind === "tree" ? 3 : 1);
   tops.forEach((p, i) => {
-    const k = (0.6 + rnd() * 0.9) * bushy;
-    scale.set(k * 1.3, k * 0.8, k * 1.1);
-    plants.setMatrixAt(i, m4.compose(new THREE.Vector3(p.x + rnd() * 0.24 - 0.12, p.y - 0.05, p.z + rnd() * 0.24 - 0.12), turn, scale));
+    const k = tall * (0.7 + rnd() * 0.6);
+    scale.set(k * (0.8 + rnd() * 0.4), k, k * (0.8 + rnd() * 0.4));
+    turn.setFromAxisAngle(SKY, rnd() * Math.PI);
+    plants.setMatrixAt(i, m4.compose(new THREE.Vector3(p.x + rnd() * 0.16 - 0.08, p.y - 0.03, p.z + rnd() * 0.16 - 0.08), turn, scale));
   });
   plants.count = 0;
-  plants.castShadow = true;
   // Its bounds are measured once, at the first frame, when no plant grows yet: never culled instead.
   plants.frustumCulled = false;
   scene.add(plants);
@@ -1065,8 +1300,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     options.damageLabel && kind && kind !== "tree"
       ? kidTag(
           options.damageLabel(kind),
-          (kind === "crack" || kind === "lean") && wallAt
-            ? new THREE.Vector3(wallAt[0], src.y + 1.2, wallAt[1])
+          (kind === "crack" || kind === "lean") && crackAt
+            ? crackAt.clone().add(new THREE.Vector3(away.x * 0.5, 1.2, away.y * 0.5))
             : kind === "mosaic" && dampRoom
               ? at(dampRoom.xy, 3.4) // above the room's own label
               : kind === "stone"
@@ -1075,9 +1310,15 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
         )
       : null;
   // the wall top nearest the damage, away from the rooms' labels so the two never cover each other
-  const freeTops = tops.filter((p) => data.rooms.every((r) => Math.hypot(p.x - r.xy[0], -p.z - r.xy[1]) > 4));
-  const nearTop = freeTops.length ? freeTops.reduce((best, p) => (p.distanceTo(src) < best.distanceTo(src) ? p : best)) : null;
-  const kidPlants = options.damageLabel && nearTop ? kidTag(options.damageLabel(kind === "tree" ? "tree" : "plants"), nearTop.clone().setY(nearTop.y + 1)) : null;
+  // The plants' label stands over one of the first plants to grow (never over a wall top where no plant
+  // is), away from the rooms' labels so the two never cover each other.
+  const firstGrown = Math.max(1, Math.ceil(tops.length * 0.1));
+  const freeAt = tops.findIndex((p, i) => i < firstGrown && data.rooms.every((r) => Math.hypot(p.x - r.xy[0], -p.z - r.xy[1]) > 4));
+  const plantAt = tops.length ? Math.max(0, freeAt) : -1;
+  const kidPlants =
+    options.damageLabel && plantAt >= 0
+      ? kidTag(options.damageLabel(kind === "tree" ? "tree" : "plants"), tops[plantAt].clone().setY(tops[plantAt].y + tall + 0.6))
+      : null;
 
   // ---------------------------------------------------------------- the camera: from straight above down to the rooms
   const controls = new OrbitControls(camera, canvas);
@@ -1096,54 +1337,151 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // On ARGUS's model of the House of the Masks, straight to the room of the damage (from above, over
   // the cut walls, to see its floor).
   const roomView = kind === "mosaic" && !!dampRoom && !!model;
+  const onSensor = local && !!(focusSensor || at0) && onModel(focusXY);
+  // A place only looked at, or whose damage is all over it, or whose alarm's sensor is not on ARGUS's
+  // model, is seen whole: from its long side (the main axis of where the model stands up from its
+  // ground), from the side where the ground falls away (out in the open, not from inside the hill behind
+  // it), and far enough back to fit it on the screen. The House of the Masks, with its rooms, keeps its
+  // own view down into them.
+  const wholePlace = !!model && !data.rooms.length && !onSensor && standing.length >= 8;
+  let placeLook: THREE.Vector3 | null = null;
+  const placeSide = new THREE.Vector2(-14, 18.5).normalize(); // scene x and z: from the south-west
+  const placeSpan = { width: 0, depth: 0, height: 0 };
+  const placeKnown = !!model && standing.length >= 8;
+  if (placeKnown) {
+    const n = standing.length;
+    const mx = standing.reduce((a, c) => a + c.x, 0) / n;
+    const mz = standing.reduce((a, c) => a + c.z, 0) / n;
+    let sxx = 0, sxz = 0, szz = 0;
+    for (const c of standing) {
+      sxx += (c.x - mx) ** 2; sxz += (c.x - mx) * (c.z - mz); szz += (c.z - mz) ** 2;
+    }
+    const angle = 0.5 * Math.atan2(2 * sxz, sxx - szz);
+    const axis = new THREE.Vector2(Math.cos(angle), Math.sin(angle));
+    const normal = new THREE.Vector2(-axis.y, axis.x);
+    let a0 = Infinity, a1 = -Infinity, b0 = Infinity, b1 = -Infinity, low = Infinity, high = -Infinity;
+    for (const c of standing) {
+      const a = (c.x - mx) * axis.x + (c.z - mz) * axis.y;
+      const b = (c.x - mx) * normal.x + (c.z - mz) * normal.y;
+      a0 = Math.min(a0, a); a1 = Math.max(a1, a); b0 = Math.min(b0, b); b1 = Math.max(b1, b);
+      low = Math.min(low, c.low); high = Math.max(high, c.high);
+    }
+    const cx = mx + axis.x * ((a0 + a1) / 2) + normal.x * ((b0 + b1) / 2);
+    const cz = mz + axis.y * ((a0 + a1) / 2) + normal.y * ((b0 + b1) / 2);
+    Object.assign(placeSpan, { width: a1 - a0, depth: b1 - b0, height: high - low });
+    placeLook = new THREE.Vector3(cx, low + (high - low) * 0.4, cz);
+    const out = (b1 - b0) / 2 + 15;
+    const groundOn = (s: number) => surface(cx + s * normal.x * out, -(cz + s * normal.y * out));
+    placeSide.copy(normal).multiplyScalar(groundOn(1) <= groundOn(-1) ? 1 : -1);
+  }
+  // The wind and the weather wear the stone all over: the camera goes to the weather station and looks
+  // back from beyond it at the walls nearest it (where the wear is marked).
+  const atStation = kind === "stone" && !!focusSensor;
+  // By the sensor the model is no clear wall (a rock face, a corner): the face seen from the place's own
+  // open side instead, the side the whole place is best seen from (and the wall leans out that way).
+  if (((wallAt && (kind === "crack" || kind === "lean")) || (kind === "fresco" && onSensor)) && wallCells.length >= 4 && wallLine > 0.35 && placeKnown) {
+    away.copy(placeSide);
+    along.set(away.y, -away.x);
+    snapCrack();
+    if (crackAt) {
+      damage.source.value.set(crackAt.x, crackAt.z);
+      damage.sourceY.value = crackAt.y;
+    }
+  }
   const endLook = roomView
     ? at(dampRoom!.xy, 0.2)
-    : dampRoom && nextRoom
+    : atStation
+      ? at([(focusXY[0] + houseCentre[0]) / 2, (focusXY[1] + houseCentre[1]) / 2], 1)
+      : dampRoom && nextRoom
       ? at([(dampRoom.xy[0] + nextRoom.xy[0]) / 2, (dampRoom.xy[1] + nextRoom.xy[1]) / 2], 0.4)
-      : (kind === "crack" || kind === "lean") && wallAt
-        ? new THREE.Vector3(wallAt[0], Math.max(src.y, surface(focusXY[0], focusXY[1]) + 1), wallAt[1])
-        : local && (focusSensor || at0) && onModel(focusXY)
+      : (kind === "crack" || kind === "lean") && crackAt
+        ? crackAt.clone()
+        : onSensor
           ? src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1]) + 0.4))
-          : at(onModel(houseCentre) ? houseCentre : modelMiddle, 0.4);
-  // How far away the camera comes to rest: a crack is millimetres wide and a lean a few degrees, so for
-  // them about 8 m; for damp, paint or a worn floor at the sensor, about 17 m; else about 28 m (further
-  // over a bigger place).
-  const close = (kind === "crack" || kind === "lean") && !!wallAt;
-  const restAt = close ? 8 : (kind === "mosaic" || kind === "fresco" || kind === "floor") && focusSensor && onModel(focusXY) ? Math.max(17, 14 * VIEW) : 28 * VIEW;
-  // From which side: the first of these from which nothing of ARGUS's model stands between the camera
-  // and the damage (a building, a wall, a roof; never what the cut leaves out), looking down at 34
-  // degrees from the south-west, or in front of the damaged wall; then from the other sides, then from
-  // higher up.
+          : ((wholePlace ? placeLook : null) ?? at(onModel(houseCentre) ? houseCentre : modelMiddle, 0.4));
+  // How far away the camera comes to rest: a crack is millimetres wide, so about 8 m; a lean is a whole
+  // wall a few degrees off true, about 14 m; for damp, paint or a worn floor at the sensor, about 17 m;
+  // else about 28 m (further over a bigger place); a place seen whole, as far as it takes to fit it.
+  const close = (kind === "crack" || kind === "lean") && !!crackAt;
+  const restAt = close
+    ? kind === "lean" ? 14 : 8
+    : atStation
+      ? 20 + dist(focusXY, houseCentre) / 2
+      : (kind === "mosaic" || kind === "fresco" || kind === "floor") && focusSensor && onModel(focusXY) ? Math.max(17, 14 * VIEW) : 28 * VIEW;
+  // From which side: in front of the damaged wall where the damage is in a wall (a crack, a lean, damp
+  // paint), out from its long side for a place seen whole, else from the south-west; looking down at
+  // 20-34 degrees. Then the first of these from which nothing of ARGUS's model stands between the camera
+  // and the damage (a building, a wall, a roof; never what the cut leaves out) and the camera is not
+  // under the ground: that side, then the others, then higher up.
   const cutTop = model && data.cut_above_m != null ? floorY + data.cut_above_m : Infinity;
-  const first = close ? Math.atan2(away.y, away.x) : Math.atan2(18.5, -14);
+  const faceWall = (close || (kind === "fresco" && onSensor)) && wallCells.length >= 4;
+  const first = faceWall || atStation ? Math.atan2(away.y, away.x) : wholePlace ? Math.atan2(placeSide.y, placeSide.x) : Math.atan2(18.5, -14);
   const sides = [0, 1, -1, 2, -2, 3, -3, 4].map((k) => first + (k * Math.PI) / 4);
-  const heights = roomView ? [55, 70] : close ? [25, 45, 70] : [34, 50, 70];
+  const heights = roomView ? [55, 70] : close ? [20, 35, 50, 70] : faceWall || atStation ? [32, 45, 60, 70] : wholePlace ? [30, 45, 60] : [34, 50, 70];
   const ray = new THREE.Raycaster();
-  const clear = (dir: THREE.Vector3) => {
-    if (!model) return true;
+  // How far the camera can go back that way before something of the model stands in between.
+  const openFor = (dir: THREE.Vector3) => {
+    if (!model || wholePlace) return Infinity; // a place seen whole is seen from outside it: its front walls may stand in front
     ray.set(endLook, dir);
     ray.far = restAt;
-    return !ray.intersectObject(model, true).some((h) => h.distance > 0.6 && h.point.y < cutTop);
+    const hit = ray.intersectObject(model, true).find((h) => h.distance > 0.6 && h.point.y < cutTop);
+    return hit ? hit.distance : Infinity;
   };
-  let END_OFFSET = new THREE.Vector3(-14, 15.5, 18.5).normalize();
+  const aboveGround = (dir: THREE.Vector3, d: number) => {
+    const p = endLook.clone().addScaledVector(dir, d);
+    return p.y > surface(p.x, -p.z) + 1.5;
+  };
+  // The first side that is open all the way; where none is, the one open furthest, and the camera stops
+  // in front of what stands in the way (before, it took the last side tried, wherever that was).
+  const END_DIR = new THREE.Vector3(-14, 15.5, 18.5).normalize();
+  let restCap = Infinity;
+  let best = { dir: END_DIR.clone(), open: -1 };
+  let found = false;
   search: for (const h of heights) {
     for (const az of sides) {
       const e = (h * Math.PI) / 180;
       const dir = new THREE.Vector3(Math.cos(e) * Math.cos(az), Math.sin(e), Math.cos(e) * Math.sin(az));
-      END_OFFSET = dir;
-      if (clear(dir)) break search;
+      if (!aboveGround(dir, wholePlace ? 40 : Math.min(restAt, 12))) continue;
+      const open = openFor(dir);
+      if (open === Infinity) {
+        END_DIR.copy(dir);
+        found = true;
+        break search;
+      }
+      if (open > best.open) best = { dir, open };
     }
   }
-  END_OFFSET.multiplyScalar(restAt);
+  if (!found && best.open > 0) {
+    END_DIR.copy(best.dir);
+    restCap = Math.max(3, best.open - 1);
+  }
+  /** How far back the camera comes to rest on a screen of this shape: a place seen whole, as far as it
+   *  takes to fit it across and up the screen; else restAt, further back on an upright screen so the
+   *  damage's surroundings still fit across it. */
+  const restDistance = (aspect: number) => {
+    if (!wholePlace) return Math.min(restCap, restAt * Math.max(1, 0.95 / aspect));
+    const vHalf = (camera.fov * Math.PI) / 360;
+    const hHalf = Math.atan(Math.tan(vHalf) * aspect);
+    const e = Math.asin(END_DIR.y);
+    const across = placeSpan.width / 2 + 3;
+    const up = (placeSpan.height * Math.cos(e) + placeSpan.depth * Math.sin(e)) / 2 + 3;
+    return Math.min(220, Math.max(20, Math.max(across / Math.tan(hHalf), up / Math.tan(vHalf)) * 1.15));
+  };
 
   // A magnifier for a crack, millimetres wide: a second camera 2.2 m from it, drawn in a square at the
   // top right, without the red sign. Closer, not bigger: the crack stays its true size. (Not for the
   // stone's surface: millimetres of it are finer than ARGUS's model, at any distance.)
   let magTarget: THREE.Vector3 | null = null;
   let magFrom: THREE.Vector3 | null = null;
-  if (model && (kind === "crack" || kind === "lean") && wallAt) {
-    magTarget = new THREE.Vector3(wallAt[0], src.y, wallAt[1]);
+  if (model && kind === "crack" && crackAt) {
+    magTarget = crackAt.clone();
     magFrom = magTarget.clone().add(new THREE.Vector3(away.x * 2.2, 0.3, away.y * 2.2));
+    // nothing between the magnifier and the crack (else a little closer)
+    const toMag = magFrom.clone().sub(magTarget);
+    ray.set(magTarget.clone().addScaledVector(toMag.clone().normalize(), 0.05), toMag.clone().normalize());
+    ray.far = toMag.length();
+    const inWay = ray.intersectObject(model, true)[0];
+    if (inWay) magFrom = magTarget.clone().addScaledVector(toMag.normalize(), Math.max(0.6, inWay.distance - 0.2));
   }
   const magCam = new THREE.PerspectiveCamera(50, 1, 0.05, 200);
   if (magTarget && magFrom) {
@@ -1269,7 +1607,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       above = false;
       // A narrow (upright) screen sees less from side to side: the camera stays further back there,
       // so the rooms still fit across it.
-      endPos.copy(endLook).addScaledVector(END_OFFSET, Math.max(1, 0.95 / (size.width / size.height)));
+      endPos.copy(endLook).addScaledVector(END_DIR, restDistance(size.width / size.height));
+      // never under the ground (a slope rising behind the camera)
+      endPos.y = Math.max(endPos.y, surface(endPos.x, -endPos.z) + 2);
       // Up turns from north to the sky early, while the camera still looks almost straight down.
       return fly({ pos: endPos, look: endLook, up: SKY }, ms, (e) => Math.min(1, e * 1.6)).then(() => {
         controls.target.copy(endLook);
@@ -1303,7 +1643,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       damage.lean.value = (d.lean * Math.PI) / 180;
       plants.count = Math.round(d.plants * tops.length);
       if (kidMain) kidMain.visible = d.damp + d.wet + d.flake + d.wear + d.surfaceMm + d.crackM + d.lean > 0;
-      if (kidPlants) kidPlants.visible = d.plants > 0.05;
+      if (kidPlants) kidPlants.visible = plants.count > plantAt;
     },
     setHighlight(on) {
       damage.show.value = on ? 1 : 0;
