@@ -468,6 +468,32 @@ caption says they are not pictures of the site. Both are read aloud with the rec
 then, with the device's voice). Needs review: the guardians' words and the science of each consequence (listed in
 `docs/data_notes.md`).
 
+## 3D preview (prototype): the House of the Masks
+
+`/preview-3d/` on the public copy, not linked from the game yet. The game's satellite map of Delos, a
+fly-in from the 2D map down into 3D, the House of the Masks with its four mosaic rooms and ARGUS's sensors,
+and a "years nobody noticed" slider that shows what unnoticed damp would do (damp rising in the walls with a
+line of salt, a stain spreading through the mosaics, salt crusts, lost tesserae, plants on the wall tops),
+next to "with ARGUS watching".
+
+- **Real:** the ground (the game's Esri imagery on AWS Terrain Tiles elevation); the ruin's outline and the
+  plots (OpenStreetMap, `historic=ruins`); the four rooms (214 Dionysus, 215 Theatrical Masks, 216 Silenus,
+  217 Dolphins) and the 19 sensors' positions and heights, from ARGUS's own 3D-viewer placements
+  (`snapshot/monitorings.json`); the origin, ARGUS's placement of its model of the house; the 18 dangers ARGUS
+  rates there, with last night's check read from the Pi; photos of the Silenus and Dolphins mosaics (Wikimedia
+  Commons: Olaf Tausch, public domain; Kevin Stroup, CC BY 3.0).
+- **Assumed (needs review):** the walls' height (2.4 m; OpenStreetMap has the outline only), the floors' and
+  panels' sizes, the patterns of rooms 214 and 215 (no straight-down photo), and all the damage: an
+  illustration, not a prediction, and the page says so.
+- **Why not ARGUS's 3D models:** the API lists 3D Tiles models of all five monuments with their placements, but
+  the files are on ARGUS's 3D viewer, which is not public. With them (and permission) they would replace the
+  walls and floors; the rest stays.
+- **Data:** `python3 -I tools/build_preview_3d.py` writes `web/public/preview-3d/data.json` from files in this
+  repository (`--live argus-now.json` embeds a copy of a check for hosts without the Pi's file); tests in
+  `tools/tests/test_preview_3d.py`, including the origin against ARGUS's placement in the snapshot.
+- **Runs anywhere static:** three.js 0.169.0 and Leaflet 1.9.4 from jsDelivr, about 2 MB per visit (two photos,
+  16 imagery and 4 terrain tiles). With "less motion" the camera jumps instead of flying.
+
 ## Citizen observation report
 
 The checklist at the end of the game tells visitors what to look out for. The observation report lets them act on
