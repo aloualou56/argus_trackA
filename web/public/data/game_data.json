@@ -4387,6 +4387,10 @@
     {
      "scene": "delos-masks",
      "place": "masks"
+    },
+    {
+     "scene": "delos-fournoi",
+     "place": "fournoi"
     }
    ],
    "photo": {
@@ -5730,6 +5734,12 @@
     "authored": true,
     "needs_review": true
    },
+   "scenes_3d": [
+    {
+     "scene": "baltanas",
+     "place": null
+    }
+   ],
    "photo": {
     "src": "data/photos/baltanas.jpg",
     "thumb": "data/photos/baltanas-thumb.jpg",
@@ -7733,7 +7743,8 @@
       "en": "Thousands of feet walking the same way wear a path into an old floor. The stones grow smooth and low, and the pattern fades where everyone steps.",
       "el": "Χιλιάδες πόδια που περπατούν από τον ίδιο δρόμο ανοίγουν μονοπάτι σε ένα παλιό δάπεδο. Οι πέτρες λειαίνονται και χαμηλώνουν, και το σχέδιο σβήνει εκεί που πατάνε όλοι."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "lucretili-conventillo"
     },
     "R2a_tilt_step": {
      "picture": "lean",
@@ -7741,7 +7752,8 @@
       "en": "If the slope keeps sliding, the wall leans a little more each year. One day it cracks open and falls, and the rooms behind it lose their protection.",
       "el": "Αν η πλαγιά συνεχίσει να γλιστράει, ο τοίχος γέρνει λίγο ακόμα κάθε χρόνο. Μια μέρα ανοίγει και πέφτει, και τα δωμάτια πίσω του μένουν απροστάτευτα."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "lucretili-conventillo"
     },
     "R7_wind": {
      "picture": "tree",
@@ -7749,7 +7761,8 @@
       "en": "A tree that nobody cuts back can lose a big branch, or fall, in the next storm. Falling on the old walls, it knocks their top stones down.",
       "el": "Ένα δέντρο που κανείς δεν κλαδεύει μπορεί να χάσει ένα μεγάλο κλαδί, ή να πέσει, στην επόμενη καταιγίδα. Πέφτοντας πάνω στους παλιούς τοίχους, ρίχνει τις πέτρες της κορυφής τους."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "lucretili-montefalco"
     },
     "R9b_temp_st": {
      "picture": "stone",
@@ -7757,7 +7770,8 @@
       "en": "Stone and plaster grow when warm and shrink when cool. Fast changes, again and again, open tiny cracks: flakes fall off the surface, and the carved shapes wear away.",
       "el": "Η πέτρα και ο σοβάς μεγαλώνουν στη ζέστη και μικραίνουν στο κρύο. Οι γρήγορες αλλαγές, ξανά και ξανά, ανοίγουν μικρές ρωγμές: η επιφάνεια ξεφλουδίζει και τα σκαλισμένα σχήματα φθείρονται."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "lucretili-montefalco"
     },
     "R4c_hum_rapid_1h": {
      "picture": "fresco",
@@ -7765,7 +7779,8 @@
       "en": "When the damp changes fast, the paint and the wall under it move differently. The paint lifts in small flakes, and pieces of the painting fall off.",
       "el": "Όταν η υγρασία αλλάζει γρήγορα, η μπογιά και ο τοίχος από κάτω κινούνται διαφορετικά. Η μπογιά σηκώνεται σε μικρά λέπια και κομμάτια της τοιχογραφίας πέφτουν."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "lucretili-conventillo"
     },
     "R8_baro": {
      "picture": "tree",
@@ -7773,7 +7788,8 @@
       "en": "A storm brings strong wind and heavy rain. Branches that nobody cut back fall on the walls, and water runs into every crack.",
       "el": "Μια καταιγίδα φέρνει δυνατό αέρα και πολλή βροχή. Κλαδιά που κανείς δεν έκοψε πέφτουν στους τοίχους και το νερό τρέχει μέσα σε κάθε ρωγμή."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "lucretili-montefalco"
     }
    },
    "report_to": {
@@ -8051,6 +8067,16 @@
     "authored": true,
     "needs_review": true
    },
+   "scenes_3d": [
+    {
+     "scene": "lucretili-conventillo",
+     "place": "conventillo"
+    },
+    {
+     "scene": "lucretili-montefalco",
+     "place": "montefalco"
+    }
+   ],
    "photo": {
     "src": "data/photos/lucretili.jpg",
     "thumb": "data/photos/lucretili-thumb.jpg",
@@ -10241,7 +10267,8 @@
       "en": "Water from the soaked ground climbs up into the walls. It leaves a damp band with white salt along its edge, and the paintings above it flake and fade.",
       "el": "Το νερό από το μουσκεμένο έδαφος σκαρφαλώνει μέσα στους τοίχους. Αφήνει μια υγρή ζώνη με άσπρο αλάτι στην άκρη της, και οι τοιχογραφίες από πάνω ξεφλουδίζουν και ξεθωριάζουν."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "ranverso"
     },
     "R4b_soil_low": {
      "picture": "fresco",
@@ -10249,7 +10276,8 @@
       "en": "When the ground dries out and then gets wet again, the water in the walls moves up and down and carries salt. The salt stays behind, and the paint above it flakes off.",
       "el": "Όταν το έδαφος στεγνώνει και μετά ξαναβρέχεται, το νερό στους τοίχους ανεβοκατεβαίνει και κουβαλά αλάτι. Το αλάτι μένει πίσω και η μπογιά από πάνω του ξεφλουδίζει."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "ranverso"
     }
    },
    "report_to": {
@@ -10488,6 +10516,12 @@
     "authored": true,
     "needs_review": true
    },
+   "scenes_3d": [
+    {
+     "scene": "ranverso",
+     "place": null
+    }
+   ],
    "photo": {
     "src": "data/photos/ranverso.jpg",
     "thumb": "data/photos/ranverso-thumb.jpg",
@@ -11846,7 +11880,8 @@
       "en": "Water gets into the crack, freezes in winter and pushes it wider. Roots follow. Year after year the crack grows, until stones fall out of the wall.",
       "el": "Το νερό μπαίνει στη ρωγμή, παγώνει τον χειμώνα και την ανοίγει κι άλλο. Ακολουθούν οι ρίζες. Χρόνο με τον χρόνο η ρωγμή μεγαλώνει, ώσπου πέφτουν πέτρες από τον τοίχο."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "schenkenberg"
     },
     "R3_vib_zscore": {
      "picture": "crack",
@@ -11854,7 +11889,8 @@
       "en": "A tall wall standing on its own that shakes again and again loosens its stones and the mortar between them. Cracks open, and in the end the top of the wall can fall.",
       "el": "Ένας ψηλός τοίχος που στέκει μόνος και κουνιέται ξανά και ξανά χαλαρώνει τις πέτρες του και το κονίαμα ανάμεσά τους. Ανοίγουν ρωγμές, και στο τέλος η κορυφή του τοίχου μπορεί να πέσει."
      },
-     "needs_review": true
+     "needs_review": true,
+     "view_3d": "schenkenberg"
     }
    },
    "report_to": {
@@ -12121,6 +12157,12 @@
     "authored": true,
     "needs_review": true
    },
+   "scenes_3d": [
+    {
+     "scene": "schenkenberg",
+     "place": null
+    }
+   ],
    "photo": {
     "src": "data/photos/schenkenberg.jpg",
     "thumb": "data/photos/schenkenberg-thumb.jpg",

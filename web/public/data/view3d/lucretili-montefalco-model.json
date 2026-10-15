@@ -1,0 +1,1750 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/tileset.json",
+ "fetched_at": "2026-10-15T19:42:28+00:00",
+ "scene": "lucretili-montefalco",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 79.9,
+ "placement": {
+  "lat": 42.1009,
+  "lon": 12.820192,
+  "height": 76.7,
+  "hpr": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": 0.97
+ },
+ "tiles": [
+  {
+   "file": "lucretili-montefalco-model/00.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 63257,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/01.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 15282,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/02.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 7848,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/03.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 62993,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/04.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 14982,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/05.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 13222,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/06.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0012.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 58448,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/07.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0013.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 17912,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/08.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 50598,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/09.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 27280,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/10.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0100.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 991,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/11.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0102.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 253,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/12.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0103.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 77,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/13.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 14632,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/14.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_012.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 52296,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/15.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0120.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 32875,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/16.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0121.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 3727,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/17.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0122.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 30416,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/18.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0123.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 4608,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/19.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_013.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 16248,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/20.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0130.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 13644,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/21.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0132.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 122,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/22.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_02.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 52061,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/23.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_020.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 38863,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/24.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_021.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65292,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/25.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0210.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 31004,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/26.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_0211.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 26247,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/27.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_022.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 6047,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/28.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_023.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 15184,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/29.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_03.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 39828,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/30.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_030.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 37326,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/31.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_031.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 47206,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/32.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_032.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 1998,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/33.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material0_033.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 284,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/34.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 63802,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/35.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 60769,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/36.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 42175,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/37.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 11892,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/38.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65103,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/39.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_00010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 46863,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/40.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_00011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 27393,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/41.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 66043,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/42.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 4851,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/43.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 66465,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/44.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_00110.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 202,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/45.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65866,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/46.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 59964,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/47.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0100.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65380,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/48.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_01000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 19205,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/49.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_01001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 57786,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/50.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0101.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 30360,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/51.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65225,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/52.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0110.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 16964,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-montefalco-model/53.glb",
+   "transform": [
+    -0.2218960230984187,
+    0.9750703333259744,
+    5.5511151231238974e-17,
+    0,
+    -0.6537245083239698,
+    -0.14876759515824955,
+    0.7419652753645662,
+    0,
+    0.7234683283662734,
+    0.16463914388057665,
+    0.6704383119665723,
+    0,
+    4621409.362212282,
+    1051690.6560850926,
+    4253991.6477793455,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/montefalco/0material1_0111.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 731,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  }
+ ]
+}
