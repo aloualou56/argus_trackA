@@ -10,6 +10,7 @@ pause between requests, robots.txt respected, nothing but the area around the ho
     python3 -I tools/fetch_argus_3d.py terrain              # ARGUS terrain around the house -> the game
     python3 -I tools/fetch_argus_3d.py model                # survey the house's 3D model: nothing downloaded
     python3 -I tools/fetch_argus_3d.py model --download     # download the chosen part (to argus_3d_cache/)
+    python3 -I tools/fetch_argus_3d.py model --download --export   # ... and write it as glTF for the game
 
 terrain  Reads layer.json, picks the most detailed level that covers the area (--radius metres around
          the house, default 250, the ground the 3D view shows), downloads those tiles only, and
@@ -435,7 +436,7 @@ def walk(client: Client, url: str, node: Dict[str, Any], parent_tf: List[float],
                 walk(client, uri, nested["root"], tf, depth + 1, house, radius, out)
         else:
             out.append({"uri": uri, "depth": depth, "error": float(node.get("geometricError", 0)),
-                        "radius": sphere[1] if sphere else None})
+                        "radius": sphere[1] if sphere else None, "transform": tf})
     for child in node.get("children") or []:
         walk(client, url, child, tf, depth + 1, house, radius, out)
 
@@ -489,6 +490,72 @@ def run_model(client: Client, args: argparse.Namespace) -> int:
     manifest.write_text(json.dumps({"tileset": url, "house": HOUSE, "geometric_error": chosen,
                                     "tiles": [t["uri"] for t in picked]}, indent=1), encoding="utf-8")
     print(f"model: kept in {shown(CACHE)}/ ({taken / 1e6:.1f} MB); list in {shown(manifest)}")
+    if args.export:
+        return export_model(client, url, picked)
+    return 0
+
+
+def split_b3dm(raw: bytes) -> Tuple[bytes, Optional[List[float]]]:
+    """The glTF binary inside a Batched 3D Model tile, and its RTC_CENTER (ECEF) if it has one.
+    A .glb tile (3D Tiles 1.1) is returned as it is."""
+    if raw[:4] == b"glTF":
+        return raw, None
+    if raw[:4] != b"b3dm":
+        raise ValueError("not a b3dm or glb tile")
+    _, _, ft_json, ft_bin, bt_json, bt_bin = struct.unpack_from("<6I", raw, 4)
+    feature = json.loads(raw[28:28 + ft_json].rstrip(b" \x00") or b"{}") if ft_json else {}
+    start = 28 + ft_json + ft_bin + bt_json + bt_bin
+    rtc = feature.get("RTC_CENTER")
+    if isinstance(rtc, dict):  # stored in the binary part: three float32
+        off = 28 + ft_json + rtc["byteOffset"]
+        rtc = list(struct.unpack_from("<3f", raw, off))
+    return raw[start:], rtc
+
+
+def glb_summary(glb: bytes) -> Dict[str, Any]:
+    """What a glTF binary holds: extensions, meshes, vertices, images (for choosing how to simplify)."""
+    length, = struct.unpack_from("<I", glb, 12)
+    doc = json.loads(glb[20:20 + length])
+    positions = [p["attributes"]["POSITION"] for m in doc.get("meshes", []) for p in m.get("primitives", [])
+                 if "POSITION" in p.get("attributes", {})]
+    return {"extensions": sorted(set(doc.get("extensionsUsed", []))),
+            "meshes": len(doc.get("meshes", [])),
+            "vertices": sum(doc["accessors"][i]["count"] for i in positions),
+            "images": [i.get("mimeType", "?") for i in doc.get("images", [])],
+            "y_up": True}
+
+
+def export_model(client: Client, tileset_url: str, picked: List[Dict[str, Any]]) -> int:
+    """The chosen tiles as plain glTF binaries the game can load, with where each one goes:
+    web/public/data/view3d/delos-masks-model/ and delos-masks-model.json."""
+    out_dir = OUT_TERRAIN.parent / "delos-masks-model"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    tiles, total = [], 0
+    for k, t in enumerate(picked):
+        raw = client.get_cached(t["uri"])
+        if not raw:
+            continue
+        glb, rtc = split_b3dm(raw)
+        name = f"{k:02d}.glb"
+        (out_dir / name).write_bytes(glb)
+        total += len(glb)
+        tiles.append({"file": f"delos-masks-model/{name}", "transform": t["transform"] or None,
+                      "rtc_center": rtc, "source": t["uri"], **glb_summary(glb)})
+    manifest = {
+        "_about": "ARGUS's own 3D model of the House of the Masks, the tiles around the house only "
+                  "(tools/fetch_argus_3d.py model --download --export). Each glTF is y-up, as 3D Tiles stores it; "
+                  "transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+        "source": tileset_url,
+        "fetched_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
+        "house": HOUSE,
+        "tiles": tiles,
+    }
+    path = OUT_TERRAIN.parent / "delos-masks-model.json"
+    path.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
+    ext = sorted({e for t in tiles for e in t["extensions"]})
+    verts = sum(t["vertices"] for t in tiles)
+    print(f"model: exported {len(tiles)} glTF files ({total / 1e6:.1f} MB, {verts} vertices"
+          f"{', extensions ' + ', '.join(ext) if ext else ''}) to {shown(out_dir)}/ and {shown(path)}")
     return 0
 
 
@@ -509,6 +576,7 @@ def main(argv=None) -> int:
     p.add_argument("--max-error", type=float, default=0.5, help="model: level of detail, metres (default 0.5)")
     p.add_argument("--sizes", action="store_true", help="model: ask each tile's size (one HEAD request each)")
     p.add_argument("--download", action="store_true", help="model: download the chosen tiles")
+    p.add_argument("--export", action="store_true", help="model: with --download, write them as glTF for the game")
     p.add_argument("--budget-mb", type=float, default=300.0, help=f"model: at most this much (max {HARD_LIMIT_MB})")
     args = p.parse_args(argv)
     client = Client(args.base, args.delay, args.allow_host)

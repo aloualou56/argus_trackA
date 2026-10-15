@@ -73,6 +73,21 @@ def encode_tile(layer, x, y, z, n=17) -> bytes:
     return header + body
 
 
+def make_glb() -> bytes:
+    doc = {"asset": {"version": "2.0"}, "extensionsUsed": ["KHR_materials_unlit"],
+           "meshes": [{"primitives": [{"attributes": {"POSITION": 0}}]}],
+           "accessors": [{"count": 3, "componentType": 5126, "type": "VEC3"}], "images": [{"mimeType": "image/jpeg"}]}
+    js = json.dumps(doc).encode()
+    js += b" " * (-len(js) % 4)
+    return b"glTF" + struct.pack("<II", 2, 12 + 8 + len(js)) + struct.pack("<I", len(js)) + b"JSON" + js
+
+
+def make_b3dm(glb: bytes, rtc) -> bytes:
+    ft = json.dumps({"BATCH_LENGTH": 0, "RTC_CENTER": rtc}).encode()
+    ft += b" " * (-(28 + len(ft)) % 8)
+    return b"b3dm" + struct.pack("<6I", 1, 28 + len(ft) + len(glb), len(ft), 0, 0, 0) + ft + glb
+
+
 class Server:
     def __init__(self, files):
         self.files = files
@@ -145,7 +160,8 @@ class FetchArgus3d(unittest.TestCase):
         files["/tiles/delos/house-of-masks/sub/near.json"] = json.dumps(nested).encode()
         for name in ("root", "near_lo", "far"):
             files[f"/tiles/delos/house-of-masks/{name}.b3dm"] = b"b3dm" + bytes(1000)
-        files["/tiles/delos/house-of-masks/sub/near_hi.b3dm"] = b"b3dm" + bytes(5000)
+        self.rtc = [round(v, 3) for v in house]
+        files["/tiles/delos/house-of-masks/sub/near_hi.b3dm"] = make_b3dm(make_glb(), self.rtc)
         self.server = Server(files)
 
     def tearDown(self):
@@ -191,6 +207,16 @@ class FetchArgus3d(unittest.TestCase):
         self.assertEqual(got, ["/tiles/delos/house-of-masks/sub/near_hi.b3dm"])
         manifest = json.loads((f.CACHE / "delos-masks-model.json").read_text())
         self.assertEqual(len(manifest["tiles"]), 1)
+
+    def test_model_export_writes_gltf_for_the_game(self):
+        self.assertEqual(self.run_tool("model", "--download", "--export"), 0)
+        manifest = json.loads((f.OUT_TERRAIN.parent / "delos-masks-model.json").read_text())
+        self.assertEqual(len(manifest["tiles"]), 1)
+        tile = manifest["tiles"][0]
+        glb = (f.OUT_TERRAIN.parent / tile["file"]).read_bytes()
+        self.assertEqual(glb[:4], b"glTF")
+        self.assertEqual(tile["rtc_center"], self.rtc)
+        self.assertEqual((tile["vertices"], tile["extensions"]), (3, ["KHR_materials_unlit"]))
 
     def test_never_leaves_the_server(self):
         with self.assertRaises(SystemExit):
