@@ -1230,6 +1230,12 @@ def view_3d_problems(name: Any) -> List[str]:
     return []
 
 
+def scenes_3d_all() -> List[Dict[str, Any]]:
+    """Every 3D scene ARGUS places (data/view3d/scenes.json), whether its model was taken or not."""
+    path = VIEW3D_DIR / "scenes.json"
+    return json.loads(path.read_text(encoding="utf-8"))["scenes"] if path.is_file() else []
+
+
 def scenes_3d_ready() -> List[Dict[str, Any]]:
     """The game's 3D scenes (data/view3d/scenes.json, tools/build_scenes_3d.py) that can be shown: ARGUS's
     model of the place was taken (<scene>-model.json, tools/fetch_argus_3d.py), or the scene's data has
@@ -1253,10 +1259,13 @@ def attach_scenes_3d(monuments: List[Dict[str, Any]]) -> None:
     for each consequence without a view_3d of its own the scene where its alarm's sensor stands (the
     nearest; the first scene of the monument when the alarm names no sensor)."""
     scenes = scenes_3d_ready()
+    every = scenes_3d_all()
     for mon in monuments:
         mine = [s for s in scenes if s["pilot"] == mon["pilot_key"]]
         if not mon["playable"] or not mine:
             continue
+        ready = {s["id"] for s in mine}
+        theirs = [s for s in every if s["pilot"] == mon["pilot_key"]] or mine
         place_ids = [p["id"] for p in mon.get("places") or []]
 
         def place_of(scene):
@@ -1274,8 +1283,11 @@ def attach_scenes_3d(monuments: List[Dict[str, Any]]) -> None:
             spots = [[i["lat"], i["lon"]] for a in mon["alarms"] if a["rule"] == rule
                      for i in a["instruments"] if i.get("lat") is not None and i.get("lon") is not None]
             if spots:
-                c["view_3d"] = min(mine, key=lambda s: min(metres_between(spot, p) for spot in spots
-                                                           for p in points(s)))["id"]
+                # the place where the sensor stands, among all of the monument's places: where ARGUS has no
+                # model of it (the Villa di Orazio), the danger has no 3D view, rather than another place's
+                at = min(theirs, key=lambda s: min(metres_between(spot, p) for spot in spots for p in points(s)))["id"]
+                if at in ready:
+                    c["view_3d"] = at
             else:
                 c["view_3d"] = mine[0]["id"]
         # The scenes the day's dangers open first (on Delos the House of the Masks, then Fournoi).

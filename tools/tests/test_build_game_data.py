@@ -365,6 +365,26 @@ class GameData(unittest.TestCase):
         self.assertEqual([s["scene"] for s in delos["scenes_3d"]], ["delos-masks", "delos-fournoi"])
         self.assertTrue(all(m.get("scenes_3d") for m in mons if m["playable"]), "every mission has 3D")
 
+    def test_a_danger_at_a_place_with_no_model_has_no_3d_view(self):
+        # ARGUS's "Conventillo / Villa di Orazio" model has nothing at the villa: its dangers open no other place
+        scenes = [s for s in json.loads((b.VIEW3D_DIR / "scenes.json").read_text(encoding="utf-8"))["scenes"]
+                  if s["id"] != "lucretili-villa-orazio"]
+        mons = json.loads(json.dumps(self.data["monuments"]))
+        for mon in mons:
+            for c in (mon.get("consequences") or {}).values():
+                c.pop("view_3d", None)
+        ready = b.scenes_3d_ready
+        b.scenes_3d_ready = lambda: scenes
+        try:
+            b.attach_scenes_3d(mons)
+        finally:
+            b.scenes_3d_ready = ready
+        luc = next(m for m in mons if m["pilot_key"] == "lucretili")
+        links = {rule: c.get("view_3d") for rule, c in luc["consequences"].items()}
+        self.assertIsNone(links["R5_visitors"])
+        self.assertEqual(links["R2a_tilt_step"], "lucretili-conventillo")
+        self.assertNotIn("lucretili-villa-orazio", [s["scene"] for s in luc["scenes_3d"]])
+
 
 class PureHelpers(unittest.TestCase):
     def test_view_3d_must_name_a_3d_view(self):
