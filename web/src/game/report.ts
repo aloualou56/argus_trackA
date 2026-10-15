@@ -172,7 +172,7 @@ export function toArgusDocumentation(report: ObservationReport, mon: Monument, i
   return {
     name: "Visitor observation of visible condition",
     description:
-      "Visual observation by a visitor, recorded on the visitor's own device with the Prototype 1 game. " +
+      "Visual observation by a visitor, recorded on the visitor's own device with the Prototype 3 game. " +
       "It has not been checked by site staff. This is a citizen observation and does not constitute an approved conservation diagnosis.",
     metadata: {
       schema: ARGUS_SCHEMA,
@@ -186,7 +186,7 @@ export function toArgusDocumentation(report: ObservationReport, mon: Monument, i
       // A visitor notices; only a conservator rates how serious it is.
       condition: { summary: report.note ? `${seen} Visitor's note: ${report.note}` : seen, severity: null },
       intervention: { method: "No intervention performed. Visual observation by a visitor only.", materials: null },
-      source_references: [`Prototype 1 citizen observation ${report.id}, ${d}/${m}/${y}`],
+      source_references: [`Prototype 3 citizen observation ${report.id}, ${d}/${m}/${y}`],
       citizen_observation: {
         report_id: report.id,
         pilot: mon.pilot_key,

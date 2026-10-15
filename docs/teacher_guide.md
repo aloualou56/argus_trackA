@@ -1,4 +1,4 @@
-# Οδηγός για εκπαιδευτικούς · Prototype 1
+# Οδηγός για εκπαιδευτικούς · Prototype 3
 
 *English version below.*
 
@@ -72,7 +72,7 @@
 
 ---
 
-# Teacher guide · Prototype 1
+# Teacher guide · Prototype 3
 
 ## At a glance
 

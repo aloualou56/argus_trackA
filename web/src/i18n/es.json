@@ -1,5 +1,5 @@
 {
-  "app.title": "Prototype 1",
+  "app.title": "Prototype 3",
   "app.tagline": "Diseña la red de sensores de un monumento real y descubre después qué hicieron los expertos de ARGUS.",
   "app.skip": "Saltar al contenido",
   "app.loading": "Cargando el juego…",
@@ -356,7 +356,7 @@
   "report.toChecked": "Datos de contacto de las webs oficiales, comprobados el {date}.",
   "report.mailSubject": "Observación de un visitante: {name} ({id})",
   "report.mailHello": "Hola, durante una visita a {name} me fijé en algo que quizá haya que revisar:",
-  "report.mailOutro": "Es la observación de un visitante, no el diagnóstico de un experto. Se escribió con el juego Prototype 1 (ARGUS Open Innovation Challenge 2026).",
+  "report.mailOutro": "Es la observación de un visitante, no el diagnóstico de un experto. Se escribió con el juego Prototype 3 (ARGUS Open Innovation Challenge 2026).",
   "citizen.fold": "En qué fijarte ({n} cosas)",
   "photo.by": "Foto: {author}",
   "photo.via": "de Wikimedia Commons",
