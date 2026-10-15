@@ -60,6 +60,9 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
   const [phase, setPhase] = useState<Phase>("building");
   const [years, setYears] = useState(0);
   const [watched, setWatched] = useState(false);
+  // "▶ Watch the years go by": the slider moves by itself from now to 50 years (a year at a time).
+  const [playing, setPlaying] = useState(false);
+  const [highlight, setHighlight] = useState(true);
   const [live, setLive] = useState<LiveFile | null>(null);
   const shown = phase === "swapping" || phase === "flying" || phase === "open" || phase === "closing";
   // The place's name and the monument's ("House of the Masks · Delos"), or the monument's alone.
@@ -85,6 +88,9 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
         roomLabel,
         canvasLabel: t("view3d.canvasPlace", { place: title }),
         focus: { serial: focus.serial, xy, kind: focus.kind },
+        damageLabel: (what) => t(`view3d.kid_${what}` as MessageKey),
+        magnifierLabel: (n) => t("view3d.magnifier", { n: number(n, 0) }),
+        still: motionReduced(),
       });
     } catch {
       onClosed(); // no 3D on this device after all: the map stays as it was
@@ -139,6 +145,20 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
   useEffect(() => {
     houseRef.current?.setDamage(damageAfter(years, watched, focus.kind));
   }, [years, watched, focus.kind]);
+
+  useEffect(() => {
+    houseRef.current?.setHighlight(highlight);
+  }, [highlight, phase]);
+
+  useEffect(() => {
+    if (!playing) return;
+    if (years >= MAX_YEARS) {
+      setPlaying(false);
+      return;
+    }
+    const step = window.setTimeout(() => setYears((y) => Math.min(MAX_YEARS, y + 1)), motionReduced() ? 40 : 160);
+    return () => window.clearTimeout(step);
+  }, [playing, years]);
 
   // Once open, the rooms are framed between the title and the panel (which grows with the dangers).
   useEffect(() => {
@@ -245,8 +265,28 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
               step={1}
               value={years}
               aria-valuetext={yearsText}
-              onChange={(e) => setYears(Number(e.target.value))}
+              onChange={(e) => {
+                setPlaying(false);
+                setYears(Number(e.target.value));
+              }}
             />
+            <div className="view3d-actions">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                aria-pressed={playing}
+                onClick={() => {
+                  if (!playing && years >= MAX_YEARS) setYears(0);
+                  setPlaying(!playing);
+                }}
+              >
+                {t(playing ? "view3d.pause" : "view3d.play")}
+              </button>
+              <button type="button" className="btn btn-secondary" aria-pressed={highlight} onClick={() => setHighlight(!highlight)}>
+                {t("view3d.highlight")}
+              </button>
+            </div>
+            {highlight && <p className="view3d-note view3d-legend">{t("view3d.legend")}</p>}
             <div className="view3d-modes">
               <button type="button" aria-pressed={!watched} onClick={() => setWatched(false)}>
                 {t("view3d.nobody")}

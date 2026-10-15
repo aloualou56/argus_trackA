@@ -500,6 +500,13 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   alarm went off stands, and the camera comes to rest where it can see the damage: it checks, with rays
   against ARGUS's model, that no building stands in between, close for millimetre damage (about 8 m for a
   crack).
+- **For a five-year-old too**, without making anything bigger than it is: "Show the damage" (on at first)
+  marks in pulsing red where the monument is being damaged, and says that the red is a sign, not the stone's
+  colour; a label with a picture sign and a few words stands at the damage ("💧 Water rises from the ground.
+  The salt pushes the little stones out.", "⚡ The crack opens a little more every winter.", "🌱 Plants grow on
+  the walls"); "▶ Watch the years go by" moves the slider from now to 50 years by itself; for a crack, a
+  magnifier at the top right shows it from 2.2 m, as it is, without the red ("🔍 4 times closer"). Not for the
+  stone's surface: its millimetres are finer than ARGUS's model at any distance, and the size line says so.
 - **How big the damage is: true sizes, said on the screen.** The view draws the damage at the sizes below and
   says them under the slider ("The crack 25 mm wider and 2.5 m long, if it opens 0.5 mm a year: an
   assumption…"). Nothing is enlarged to be seen; the camera goes closer instead. `RATES` in

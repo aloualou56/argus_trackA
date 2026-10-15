@@ -4740,6 +4740,37 @@ html.a11y-spacing main p {
   line-height: 1.2;
   text-align: center;
 }
+/* The labels at the damage, for a child to read: bigger, with a picture sign, a red edge like the marking. */
+.view3d-kid {
+  max-width: 13rem;
+  border-color: #c4123a;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
+}
+/* The magnifier for millimetre damage (house.ts draws a second camera's picture in this square). */
+.view3d-magnifier {
+  position: absolute;
+  box-sizing: border-box;
+  border: 4px solid #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px #c4123a, 0 4px 14px rgb(0 0 0 / 0.45);
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.3rem;
+}
+.view3d-magnifier span {
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.view3d-magnifier[hidden] {
+  display: none;
+}
 .view3d-top {
   position: absolute;
   inset: 0.75rem 0.75rem auto;
@@ -4846,6 +4877,29 @@ html.a11y-spacing main p {
 /* How big the damage drawn is, and what that rests on (View3D.tsx). */
 .view3d-size {
   font-size: 0.85em;
+}
+/* "▶ Watch the years go by" and "Show the damage" (View3D.tsx). */
+.view3d-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0.4rem;
+}
+.view3d-actions button {
+  min-height: 44px;
+}
+.view3d-legend {
+  font-size: 0.85em;
+}
+.view3d-legend::before {
+  content: "";
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.35em;
+  border-radius: 50%;
+  background: #ff1f4d;
+  vertical-align: -0.05em;
 }
 .view3d-dangers summary {
   cursor: pointer;

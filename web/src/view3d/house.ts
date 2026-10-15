@@ -324,6 +324,13 @@ export interface HouseOptions {
   focus?: { serial: string | null; xy: XY | null; kind: DamageKind };
   /** The canvas's name for screen readers (it can be turned and moved with a mouse, touch or keys). */
   canvasLabel: string;
+  /** The words, with a picture sign, on the label at the damage ("💧 The water rises"), in the game's
+   *  language: for the day's danger, or "plants" for the plants on the walls. */
+  damageLabel?: (what: Exclude<DamageKind, null> | "plants") => string;
+  /** The words on the magnifier: "{n} times closer". */
+  magnifierLabel?: (times: number) => string;
+  /** No pulsing (the player asked for less motion). */
+  still?: boolean;
 }
 
 /** A view of the game's map: what it is centred on ([lat, lon]) and its scale. */
@@ -340,6 +347,8 @@ export interface House {
   /** Back up to the view of matchMap. */
   flyOut(ms: number): Promise<void>;
   setDamage(damage: Damage): void;
+  /** Marks in red where the damage is (a sign, like an arrow; not the stone's colour). */
+  setHighlight(on: boolean): void;
   /** How much of the canvas the view's own title (top) and panel (bottom) cover, in pixels: the
    *  rooms are framed in the space between them (eased; straight above, the map's framing wins). */
   setInsets(top: number, bottom: number): void;
@@ -689,6 +698,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     crack: { value: 0 },
     crackW: { value: 0 },
     lean: { value: 0 },
+    show: { value: 1 },
+    pulse: { value: 0.5 },
     source: { value: wallAt ? new THREE.Vector2(wallAt[0], wallAt[1]) : new THREE.Vector2(src.x, src.z) },
     sourceY: { value: src.y },
     leanDir: { value: away },
@@ -756,6 +767,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             uFlake: damage.flake, uWear: damage.wear, uWeather: damage.weather, uCrack: damage.crack, uCrackW: damage.crackW, uLean: damage.lean,
             uSourceY: damage.sourceY, uLeanDir: damage.leanDir, uWallDir: damage.wallDir, uGround: { value: floorY },
             uReach: { value: VIEW },
+            uShow: damage.show, uPulse: damage.pulse, uMarkWeather: { value: kind === "stone" ? 1 : 0 },
           });
           shader.vertexShader = shader.vertexShader
             .replace(
@@ -780,7 +792,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nvarying vec3 vNormalW;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
@@ -795,6 +807,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               float nearFloor = 1.0 - smoothstep(0.6, 1.6, abs(vWorld.y - uGround));
               diffuseColor.rgb = mix(base0, diffuseColor.rgb, flatUp * nearFloor);
               vec3 c = diffuseColor.rgb;
+              // where the damage is, from 0 to 1: marked in red when the player asks
+              float harm = wet * flatUp * nearFloor;
               // metres along the damaged wall from the sensor, and out of its line
               float along = dot(vWorld.xz - uSource, uWallDir);
               float across = abs(dot(vWorld.xz - uSource, uLeanDir));
@@ -808,6 +822,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 // damp rising in the walls from the ground: darker below a wavy tide line, with a white line
                 // of salt where it dries out
                 float wetWall = (1.0 - smoothstep(edge - 0.08, edge + 0.04, y)) * step(-0.3, y);
+                harm = max(harm, wetWall * smoothstep(0.05, 0.3, damp));
                 c *= mix(vec3(1.0), vec3(0.58, 0.56, 0.52), wetWall);
                 float band = smoothstep(0.08, 0.0, abs(y - edge - 0.04)) * uSalt * step(-0.3, y);
                 c = mix(c, vec3(0.95, 0.94, 0.91), band * (0.5 + 0.4 * vnoise(vWorld.xz * 11.0 + vWorld.y * 9.0)));
@@ -817,6 +832,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 // line, the stone under it showing
                 float zone = (1.0 - smoothstep(edge + 0.1, edge + 0.4, y)) * step(-0.3, y);
                 float fl = uFlake * near * wall * zone;
+                harm = max(harm, zone * near * wall * smoothstep(0.0, 0.1, uFlake));
                 vec2 w2 = vec2(vWorld.x + vWorld.z, vWorld.y);
                 float flakeN = vnoise(w2 * 1.3 + 4.0) * 0.6 + vnoise(w2 * 4.5) * 0.3 + vnoise(w2 * 14.0) * 0.1;
                 float gone = step(1.0 - fl * 0.85, flakeN);
@@ -828,6 +844,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 // a path worn by feet: the floor polished smooth and pale, then stones loosening
                 float rw = dist0 + (vnoise(vWorld.xz * 0.7) - 0.5) * 1.5;
                 float worn = (1.0 - smoothstep(uWear - 0.8, uWear + 0.2, rw)) * flatUp;
+                harm = max(harm, worn);
                 float lum = dot(c, vec3(0.299, 0.587, 0.114));
                 c = mix(c, vec3(min(1.0, lum * 1.3 + 0.06)) * vec3(1.02, 1.0, 0.94), worn * 0.7);
               }
@@ -835,6 +852,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 // weathered stone: a few millimetres of its surface gone (uWeather 1 = 5 mm): paler, rain-
                 // streaked, its surface pitted and flaking in places
                 float w = uWeather * (0.55 + 0.45 * near);
+                harm = max(harm, uMarkWeather * 0.5 * smoothstep(0.0, 0.5, uWeather) * (0.4 + 0.6 * near));
                 float lum = dot(c, vec3(0.299, 0.587, 0.114));
                 c = mix(c, vec3(lum) * vec3(1.06, 1.0, 0.92), w * 0.6);
                 vec2 sw = vec2(vWorld.x + vWorld.z, vWorld.y);
@@ -854,10 +872,13 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 float d = abs(along - zig);
                 float width = max(0.002, uCrackW * (0.25 + 0.75 * taper));
                 float onWall = wall * (1.0 - smoothstep(halfLen - 0.2, halfLen + 0.1, abs(yr))) * (1.0 - smoothstep(1.2, 2.2, across));
+                harm = max(harm, onWall * (1.0 - smoothstep(0.12, 0.45, d)));
                 // a shadowed edge either side, then the open crack itself
                 c *= 1.0 - 0.35 * (1.0 - smoothstep(width * 1.5, width * 6.0, d)) * onWall;
                 c = mix(c, vec3(0.04, 0.035, 0.03), (1.0 - smoothstep(width * 0.5, width, d)) * onWall);
               }
+              if (uLean > 0.0) harm = max(harm, wall * (1.0 - smoothstep(4.0, 10.0, dist0)) * smoothstep(0.0, 0.004, uLean));
+              c = mix(c, vec3(1.0, 0.12, 0.3), clamp(harm, 0.0, 1.0) * uShow * (0.35 + 0.3 * uPulse));
               diffuseColor.rgb = c;`,
             );
         };
@@ -1027,6 +1048,35 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   }
 
 
+  // Labels at the damage, a picture sign and a few words a child can read ("💧 The water rises"),
+  // shown once there is damage to see: one for the day's danger, one for the plants on the walls.
+  const onModel = (xy: XY) => !model || floorAt(xy[0], xy[1]) !== null;
+  function kidTag(text: string, pos: THREE.Vector3): CSS2DObject {
+    const tag = document.createElement("div");
+    tag.className = "view3d-tag view3d-kid";
+    tag.textContent = text;
+    const label = new CSS2DObject(tag);
+    label.position.copy(pos);
+    label.visible = false;
+    scene.add(label);
+    return label;
+  }
+  const kidMain =
+    options.damageLabel && kind && kind !== "tree"
+      ? kidTag(
+          options.damageLabel(kind),
+          (kind === "crack" || kind === "lean") && wallAt
+            ? new THREE.Vector3(wallAt[0], src.y + 1.2, wallAt[1])
+            : kind === "mosaic" && dampRoom
+              ? at(dampRoom.xy, 1.6)
+              : kind === "stone"
+                ? at(onModel(houseCentre) ? houseCentre : focusXY, 4)
+                : src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1])) + 1.6),
+        )
+      : null;
+  const nearTop = tops.length ? tops.reduce((best, p) => (p.distanceTo(src) < best.distanceTo(src) ? p : best)) : null;
+  const kidPlants = options.damageLabel && nearTop ? kidTag(options.damageLabel(kind === "tree" ? "tree" : "plants"), nearTop.clone().setY(nearTop.y + 1)) : null;
+
   // ---------------------------------------------------------------- the camera: from straight above down to the rooms
   const controls = new OrbitControls(camera, canvas);
   controls.enabled = false;
@@ -1039,7 +1089,6 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // rooms, else at the alarm's sensor (or the middle of the place).
   // rooms, else at the alarm's sensor where the damage is on the building by it (and ARGUS's model is
   // there); for damage all over (weathered stone, plants) or a sensor off the model, at the building.
-  const onModel = (xy: XY) => !model || floorAt(xy[0], xy[1]) !== null;
   const modelMiddle: XY = model ? [(footprint.min.x + footprint.max.x) / 2, -(footprint.min.z + footprint.max.z) / 2] : houseCentre;
   const local = kind === "mosaic" || kind === "fresco" || kind === "floor" || kind === "crack" || kind === "lean";
   // On ARGUS's model of the House of the Masks, straight to the room of the damage (from above, over
@@ -1084,6 +1133,33 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     }
   }
   END_OFFSET.multiplyScalar(restAt);
+
+  // A magnifier for a crack, millimetres wide: a second camera 2.2 m from it, drawn in a square at the
+  // top right, without the red sign. Closer, not bigger: the crack stays its true size. (Not for the
+  // stone's surface: millimetres of it are finer than ARGUS's model, at any distance.)
+  let magTarget: THREE.Vector3 | null = null;
+  let magFrom: THREE.Vector3 | null = null;
+  if (model && (kind === "crack" || kind === "lean") && wallAt) {
+    magTarget = new THREE.Vector3(wallAt[0], src.y, wallAt[1]);
+    magFrom = magTarget.clone().add(new THREE.Vector3(away.x * 2.2, 0.3, away.y * 2.2));
+  }
+  const magCam = new THREE.PerspectiveCamera(50, 1, 0.05, 200);
+  if (magTarget && magFrom) {
+    magCam.position.copy(magFrom);
+    magCam.lookAt(magTarget);
+  }
+  const magTimes = magTarget ? Math.max(2, Math.round(restAt / 2.2)) : 0;
+  const magFrame = document.createElement("div");
+  magFrame.className = "view3d-magnifier";
+  magFrame.setAttribute("aria-hidden", "true");
+  if (options.magnifierLabel && magTimes) magFrame.appendChild(document.createElement("span")).textContent = options.magnifierLabel(magTimes);
+  magFrame.hidden = true;
+  host.appendChild(magFrame);
+  let insetTop = 0;
+  const magRect = () => {
+    const side = Math.round(Math.min(0.36 * Math.min(size.width, size.height), 260));
+    return { x: size.width - side - 12, y: insetTop + 12, side };
+  };
   const endPos = new THREE.Vector3();
   const topLook = at(houseCentre);
   const topPos = topLook.clone().setY(topLook.y + 200);
@@ -1128,10 +1204,27 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   function render() {
     renderer.render(scene, camera);
     labels.render(scene, camera);
+    const showMag = !!magTarget && !above && !flight;
+    if (magFrame.hidden === showMag) magFrame.hidden = !showMag;
+    if (showMag) {
+      const r = magRect();
+      Object.assign(magFrame.style, { left: `${r.x}px`, top: `${r.y}px`, width: `${r.side}px`, height: `${r.side}px` });
+      const y = size.height - r.y - r.side; // the renderer counts from the bottom
+      renderer.setScissorTest(true);
+      renderer.setScissor(r.x, y, r.side, r.side);
+      renderer.setViewport(r.x, y, r.side, r.side);
+      const sign = damage.show.value;
+      damage.show.value = 0; // in the magnifier, the crack as it is
+      renderer.render(scene, magCam);
+      damage.show.value = sign;
+      renderer.setScissorTest(false);
+      renderer.setViewport(0, 0, size.width, size.height);
+    }
   }
   let raf = 0;
   function frame(now: number) {
     raf = requestAnimationFrame(frame);
+    damage.pulse.value = options.still ? 0.6 : 0.5 + 0.5 * Math.sin(now / 280);
     if (shift !== shiftTo) {
       shift += (shiftTo - shift) * 0.12;
       if (Math.abs(shiftTo - shift) < 0.5) shift = shiftTo;
@@ -1192,6 +1285,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       });
     },
     setInsets(top, bottom) {
+      insetTop = top;
       shiftTo = above ? 0 : Math.round((bottom - top) / 2);
     },
     setDamage(d) {
@@ -1206,6 +1300,11 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       damage.crackW.value = d.crackMm / 1000;
       damage.lean.value = (d.lean * Math.PI) / 180;
       plants.count = Math.round(d.plants * tops.length);
+      if (kidMain) kidMain.visible = d.damp + d.wet + d.flake + d.wear + d.surfaceMm + d.crackM + d.lean > 0;
+      if (kidPlants) kidPlants.visible = d.plants > 0.05;
+    },
+    setHighlight(on) {
+      damage.show.value = on ? 1 : 0;
     },
     resize(width, height) {
       if (width < 1 || height < 1) return;
@@ -1242,6 +1341,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       renderer.forceContextLoss();
       canvas.remove();
       labels.domElement.remove();
+      magFrame.remove();
     },
     look(offset, room) {
       const r = room ? rooms.get(room) : undefined;
