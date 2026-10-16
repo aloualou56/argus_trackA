@@ -34,6 +34,13 @@ export interface Env {
   geoCentre: { value: THREE.Vector2 };
   geoDir: { value: THREE.Vector2 };
   geoR: Uniform;
+  /** A cellar caving in (0-1): its roof over the collapse coming down; the ground above sinking into a
+   *  hollow; the camera inside a cellar (1: lit by its lamp); where (the floor at the collapse) and how wide. */
+  cave: Uniform;
+  hollow: Uniform;
+  inCellar: Uniform;
+  caveC: { value: THREE.Vector3 };
+  caveR: Uniform;
 }
 
 /** The parts of Env that come and go with the weather (the rest says where). */
@@ -44,6 +51,7 @@ export function makeEnv(): Env {
   return {
     wet: u(), frost: u(), soot: u(), heat: u(), fade: u(), dampLow: u(), dim: u(), flash: u(), creep: u(), sink: u(),
     geoCentre: { value: new THREE.Vector2() }, geoDir: { value: new THREE.Vector2(1, 0) }, geoR: { value: 20 },
+    cave: u(), hollow: u(), inCellar: u(), caveC: { value: new THREE.Vector3() }, caveR: { value: 2.6 },
   };
 }
 
@@ -73,6 +81,18 @@ export interface WeatherContext {
   /** Screen pixels per metre at one metre from the camera (the particles' sizes). */
   pixelScale: () => number;
   still: boolean;
+  /** Where a cellar can be seen caving in (Baltanás, house.ts), or null: the floor and the ceiling at the
+   *  collapse, where the camera stands inside the cellar to watch it, and the ground over it. */
+  cellar?: { floor: THREE.Vector3; ceiling: number; eye: THREE.Vector3; above: THREE.Vector3; radius: number } | null;
+  /** The camera, for an effect that takes it somewhere (the cellar): fly or cut to a view, darken the
+   *  picture (0-1), and back to where it was when the effect began. */
+  director?: {
+    fly(pos: THREE.Vector3, look: THREE.Vector3, ms: number): Promise<void>;
+    cut(pos: THREE.Vector3, look: THREE.Vector3): void;
+    fade(v: number): void;
+    save(): void;
+    home(ms: number): Promise<void>;
+  };
 }
 
 export interface Weather {
@@ -290,6 +310,7 @@ export function createWeather(ctx: WeatherContext): Weather {
   // (called through a function: `cycle` is set inside build, where the type checker cannot follow it)
   const runCycle = (k: number) => cycle?.(k);
   let flashAt = 0;
+  let caveShake = 0;
   const skyTo = SKY_BASE.clone();
   const fogTo: [number, number] = [260, 760];
   const fog = scene.fog as THREE.Fog | null;
@@ -642,6 +663,187 @@ export function createWeather(ctx: WeatherContext): Weather {
     });
   }
 
+  // ---------------------------------------------------------------- a cellar caving in
+  /** Pieces of the cellar's roof: they come away from the ceiling one after another (from `start` s),
+   *  fall, and come to rest in a heap on the floor. Plain earth and stone, lit as the cellar is. */
+  function debris(c: NonNullable<WeatherContext["cellar"]>, start: number) {
+    const n = 150;
+    const geo = new THREE.DodecahedronGeometry(1, 0);
+    const mat = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+    mat.onBeforeCompile = (shader) => {
+      Object.assign(shader.uniforms, { uInCellar: env.inCellar });
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vRock;")
+        .replace("#include <project_vertex>", "#include <project_vertex>\nvRock = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vRock;\nuniform float uInCellar;")
+        .replace(
+          "#include <color_fragment>",
+          `#include <color_fragment>
+          vec3 nR = normalize(cross(dFdx(vRock), dFdy(vRock)));
+          vec3 toCamR = cameraPosition - vRock;
+          float dR = length(toCamR);
+          if (dot(nR, toCamR) < 0.0) nR = -nR;
+          float lampR = (0.25 + 0.75 * max(dot(nR, toCamR / max(dR, 0.001)), 0.0)) / (1.0 + 0.035 * dR * dR);
+          float dayR = 0.55 + 0.45 * max(dot(nR, normalize(vec3(-0.4, 0.8, 0.3))), 0.0);
+          diffuseColor.rgb *= mix(dayR, clamp(lampR * 1.7 + 0.05, 0.0, 1.25), uInCellar);`,
+        );
+    };
+    const mesh = new THREE.InstancedMesh(geo, mat, n);
+    mesh.frustumCulled = false;
+    const tones = ["#6f5a44", "#857158", "#9c8b70", "#5d4b39", "#a99a80"];
+    const st = Array.from({ length: n }, (_v, i) => {
+      mesh.setColorAt(i, new THREE.Color(tones[i % tones.length]));
+      const a = rnd() * Math.PI * 2;
+      const d = Math.sqrt(rnd()) * c.radius * 0.75;
+      const big = i < 16; // slabs of the vault, the rest smaller pieces
+      const r = big ? 0.35 + rnd() * 0.3 : 0.08 + rnd() * 0.2;
+      return {
+        p: new THREE.Vector3(c.floor.x + Math.cos(a) * d, c.ceiling - r, c.floor.z + Math.sin(a) * d),
+        v: new THREE.Vector3((rnd() - 0.5) * 0.4, 0, (rnd() - 0.5) * 0.4),
+        r,
+        flat: big ? 0.45 : 0.8 + rnd() * 0.3,
+        // when it comes away (with less motion: already, so the still picture shows them lying there)
+        at: ctx.still ? -1 : start + (big ? 0.3 + rnd() * 1.6 : rnd() * 2.8),
+        rest: false,
+        spin: rnd() * 6,
+        axis: new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).normalize(),
+      };
+    });
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    group.add(mesh);
+    const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const sc = new THREE.Vector3();
+    let landed = 0;
+    const update = (dt: number) => {
+      st.forEach((s, i) => {
+        if (t < s.at) {
+          // still part of the roof: hidden above it
+          mesh.setMatrixAt(i, m.makeScale(0, 0, 0));
+          return;
+        }
+        if (!s.rest) {
+          s.v.y -= 9.8 * dt;
+          s.p.addScaledVector(s.v, dt);
+          s.spin += dt * 4;
+          // they land on the mound the fallen roof makes (house.ts, CAVE_BEGIN: 0.9 m high in the middle),
+          // a little higher as more of them pile up
+          const dMid = Math.min(1, Math.hypot(s.p.x - c.floor.x, s.p.z - c.floor.z) / c.radius);
+          const mound = 0.9 * env.cave.value * (1 - dMid * dMid * (3 - 2 * dMid));
+          const heap = c.floor.y + 0.2 + mound + (1 - dMid) * Math.min(0.5, landed * 0.006);
+          if (s.p.y - s.r * s.flat < heap) {
+            s.p.y = heap + s.r * s.flat;
+            if (Math.abs(s.v.y) > 1.2) {
+              s.v.y = Math.abs(s.v.y) * 0.25;
+              s.v.x *= 0.5;
+              s.v.z *= 0.5;
+            } else {
+              s.rest = true;
+              landed++;
+            }
+          }
+        }
+        q.setFromAxisAngle(s.axis, s.spin);
+        sc.set(s.r, s.r * s.flat, s.r);
+        mesh.setMatrixAt(i, m.compose(s.p, q, sc));
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+    };
+    parts.push({
+      update,
+      dispose: () => {
+        geo.dispose();
+        mat.dispose();
+      },
+    });
+  }
+  /** "Cellars that cave in": the camera goes down into a cellar; there, dust trickles from the ceiling,
+   *  then pieces of the roof come away, fall and lie in a heap on the floor, the camera at the bottom
+   *  watching; then back outside, where the ground over it has sunk into a hollow; then back to where the
+   *  camera was. Which stretch caves in, and how much, is an illustration (README, "See it happen"). */
+  function caveIn() {
+    const c = ctx.cellar;
+    const dir = ctx.director;
+    if (!c || !dir) return;
+    env.caveC.value.copy(c.floor);
+    env.caveR.value = c.radius;
+    const lookUp = new THREE.Vector3(c.floor.x, c.floor.y + (c.ceiling - c.floor.y) * 0.7, c.floor.z);
+    const lookFloor = new THREE.Vector3(c.floor.x, c.floor.y + 0.4, c.floor.z);
+    // from outside: the ground over the collapse, from the side the camera is already on
+    const out = ctx.target().clone().sub(c.above).setY(0);
+    if (out.lengthSq() < 1) out.set(-1, 0, 1);
+    out.normalize();
+    const overPos = c.above.clone().addScaledVector(out, 9).setY(c.above.y + 13);
+    const afterPos = c.above.clone().addScaledVector(out, 7).setY(c.above.y + 8);
+    const COLLAPSE = 6.2; // seconds in: the roof comes down
+    debris(c, COLLAPSE);
+    // dust: trickling from the ceiling before, a cloud filling the cellar after
+    cloud(260, {
+      world: true,
+      born: (_i, p) => {
+        const a = rnd() * Math.PI * 2;
+        const d = Math.sqrt(rnd()) * c.radius;
+        const after = t > COLLAPSE;
+        Object.assign(p, {
+          x: c.floor.x + Math.cos(a) * d,
+          y: after ? c.floor.y + rnd() * (c.ceiling - c.floor.y) : c.ceiling - 0.05,
+          z: c.floor.z + Math.sin(a) * d,
+          vx: (rnd() - 0.5) * (after ? 0.6 : 0.05),
+          vy: after ? (rnd() - 0.3) * 0.3 : -(0.4 + rnd() * 0.6),
+          vz: (rnd() - 0.5) * (after ? 0.6 : 0.05),
+          life: after ? 4 + rnd() * 3 : 1.2 + rnd(),
+          size: after ? 0.35 + rnd() * 0.5 : 0.03 + rnd() * 0.04,
+          alpha: t < 3.5 ? 0 : after ? 0.13 : 0.8,
+          rgb: after ? [0.42, 0.37, 0.3] : [0.62, 0.55, 0.45],
+        });
+      },
+      grow: 1.2,
+      fadeIn: 0.15,
+      wobble: 0.15,
+    });
+    const fired = new Set<string>();
+    const once = (k: number, name: string, at: number, fn: () => void) => {
+      if (k >= at && !fired.has(name)) {
+        fired.add(name);
+        fn();
+      }
+    };
+    dir.save();
+    if (ctx.still) {
+      // a still picture: at the bottom of the cellar, the roof already down
+      dir.cut(c.eye, lookFloor);
+      env.inCellar.value = 1;
+      env.cave.value = 1;
+      env.hollow.value = 1;
+      cycle = () => {};
+      return;
+    }
+    cycle = (k) => {
+      once(k, "over", 0, () => void dir.fly(overPos, c.above, 2200));
+      // down into the cellar: the picture goes dark, the camera is inside, the lamp on
+      once(k, "dark", 2.2, () => dir.fade(1));
+      once(k, "inside", 2.65, () => {
+        dir.cut(c.eye, lookUp);
+        env.inCellar.value = 1;
+      });
+      once(k, "light", 2.75, () => dir.fade(0));
+      // the roof comes down; the camera looks after the pieces to the floor
+      env.cave.value = k < COLLAPSE ? 0 : Math.min(1, (k - COLLAPSE) / 2.4);
+      caveShake = k > COLLAPSE - 1.2 && k < COLLAPSE + 2.5 ? (k < COLLAPSE ? 0.008 : 0.05 * Math.max(0, 1 - (k - COLLAPSE) / 2.5)) : 0;
+      once(k, "watch", COLLAPSE + 1.6, () => void dir.fly(c.eye, lookFloor, 2000));
+      // back outside: the ground over it sunk into a hollow
+      once(k, "dark2", 12, () => dir.fade(1));
+      once(k, "outside", 12.45, () => {
+        env.inCellar.value = 0;
+        env.hollow.value = 1;
+        dir.cut(afterPos, c.above);
+      });
+      once(k, "light2", 12.55, () => dir.fade(0));
+      once(k, "home", 16.5, () => void dir.home(2200));
+    };
+  }
+
   // ---------------------------------------------------------------- the effects
   function build(e: Effect) {
     const c = ctx.target();
@@ -801,6 +1003,9 @@ export function createWeather(ctx: WeatherContext): Weather {
       case "visitors":
         people();
         break;
+      case "cellar":
+        caveIn();
+        break;
     }
   }
 
@@ -826,6 +1031,7 @@ export function createWeather(ctx: WeatherContext): Weather {
     can(e) {
       if (e === "plants") return ctx.plants.count > 0;
       if (e === "visitors") return ctx.flats.filter((p) => p.distanceTo(ctx.target()) < R * 0.9).length >= 6;
+      if (e === "cellar") return !!ctx.cellar && !!ctx.director;
       return true;
     },
     set(e) {
@@ -837,6 +1043,8 @@ export function createWeather(ctx: WeatherContext): Weather {
       ctx.plants.sway.value = 0;
       ctx.plants.restore();
       shake.set(0, 0, 0);
+      env.cave.value = env.hollow.value = env.inCellar.value = 0;
+      ctx.overlay.style.setProperty("--dark", "0");
       effect = e;
       t = 0;
       flashAt = 0;
@@ -885,7 +1093,10 @@ export function createWeather(ctx: WeatherContext): Weather {
         env.flash.value = 0;
       }
       // an earthquake: the ground (and the camera on it) shakes for 2.5 s in every 5
-      if (effect === "quake" || effect === "slide") {
+      if (effect === "cellar") {
+        const a = caveShake;
+        shake.set(Math.sin(now / 29) * a, Math.sin(now / 19) * a * 0.7, Math.cos(now / 23) * a);
+      } else if (effect === "quake" || effect === "slide") {
         const burst = t % 5 < 2.5 ? Math.sin((Math.PI * (t % 5)) / 2.5) : 0;
         const a = (effect === "quake" ? 0.14 : 0.04) * burst;
         shake.set(Math.sin(now / 37) * a, Math.sin(now / 23) * a * 0.6, Math.cos(now / 31) * a);

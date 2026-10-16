@@ -30,7 +30,7 @@ const wait = (ms: number) => new Promise<void>((done) => window.setTimeout(done,
 /** The picture sign on each "See it happen" button (the words are the button's name). */
 const FX_SIGN: Record<Effect, string> = {
   rain: "🌧️", acidrain: "🌧️", flood: "🌊", storm: "⛈️", wind: "💨", heat: "🌡️", sun: "☀️", frost: "❄️",
-  quake: "🏚️", walls: "🧱", slide: "⛰️", creep: "↘️", sink: "⤵️", damp: "💧", fire: "🔥", wildfire: "🔥", smog: "🏭", plants: "🌿", visitors: "👥",
+  quake: "🏚️", walls: "🧱", slide: "⛰️", creep: "↘️", sink: "⤵️", cellar: "", damp: "💧", fire: "🔥", wildfire: "🔥", smog: "🏭", plants: "🌿", visitors: "👥",
 };
 const LEVEL_RANK: Record<string, number> = { low: 0, medium: 1, high: 2, extreme: 3, catastrophic: 4 };
 
@@ -355,7 +355,8 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
                 <div className="view3d-fx-chips">
                   {fxList.map(([e]) => (
                     <button key={e} type="button" aria-pressed={effect === e} onClick={() => setEffect(effect === e ? null : e)}>
-                      <span aria-hidden="true">{FX_SIGN[e]}</span> {t(`view3d.fx_${e}` as MessageKey)}
+                      {FX_SIGN[e] && <span aria-hidden="true">{FX_SIGN[e]} </span>}
+                      {t(`view3d.fx_${e}` as MessageKey)}
                     </button>
                   ))}
                 </div>

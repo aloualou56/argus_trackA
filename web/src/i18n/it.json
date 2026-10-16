@@ -431,6 +431,8 @@
   "view3d.fxNote_creep": "Il terreno del pendio scivola lentamente verso valle, si apre una fessura di traverso e i muri sopra si inclinano: 50 anni in 12 secondi, con un ritmo ipotizzato di 1 cm l'anno.",
   "view3d.fx_sink": "Terreno che sprofonda",
   "view3d.fxNote_sink": "Il terreno sotto gli edifici si assesta lentamente: il centro sprofonda, i muri si inclinano verso l'interno, e pavimenti e muri si crepano dove si piega. 50 anni in 12 secondi, con un ritmo ipotizzato di 8 mm l'anno.",
+  "view3d.fx_cellar": "Una cantina che crolla",
+  "view3d.fxNote_cellar": "Giù in una delle cantine scavate sotto la collina (le loro forme sono di ARGUS; la loro superficie è disegnata, non fotografata). Pezzi della volta si staccano e cadono sul pavimento, e il terreno sopra sprofonda in una conca. Quale tratto crolla, e quanto, è un'illustrazione.",
   "view3d.fx_damp": "Umidità",
   "view3d.fxNote_damp": "Aria umida e acqua dal terreno: la foschia resta bassa, e l'umidità sale nei muri e poi scende.",
   "view3d.fx_fire": "Incendio",

@@ -5482,3 +5482,12 @@ html.a11y-contrast .report-contact {
 .own-to li {
   margin: 0.2rem 0;
 }
+/* going down into a cellar and back out (a cellar caving in): the picture darkens for a moment */
+.view3d-fx::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--dark, 0);
+  transition: opacity 0.4s ease;
+}

@@ -431,6 +431,8 @@
   "view3d.fxNote_creep": "El suelo de la ladera se desliza despacio cuesta abajo, se abre una grieta de lado a lado y los muros encima se inclinan: 50 años en 12 segundos, a un ritmo supuesto de 1 cm al año.",
   "view3d.fx_sink": "Suelo que se hunde",
   "view3d.fxNote_sink": "El suelo bajo los edificios se asienta despacio: el centro se hunde, los muros se inclinan hacia dentro, y suelos y muros se agrietan donde se dobla. 50 años en 12 segundos, a un ritmo supuesto de 8 mm al año.",
+  "view3d.fx_cellar": "Una bodega que se hunde",
+  "view3d.fxNote_cellar": "Abajo, en una de las bodegas excavadas bajo el cerro (sus formas son de ARGUS; su superficie está dibujada, no fotografiada). Trozos de la bóveda se desprenden y caen al suelo, y el terreno de encima se hunde en una hondonada. Qué tramo se hunde, y cuánto, es una ilustración.",
   "view3d.fx_damp": "Humedad",
   "view3d.fxNote_damp": "Aire húmedo y agua del suelo: la neblina se queda baja, y la humedad sube por los muros y vuelve a bajar.",
   "view3d.fx_fire": "Incendio",

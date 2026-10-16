@@ -431,6 +431,8 @@
   "view3d.fxNote_creep": "The ground on the slope slowly slides downhill, a tear opens across it and the walls on it tilt: 50 years in 12 seconds, at an assumed 1 cm a year.",
   "view3d.fx_sink": "Ground sinking",
   "view3d.fxNote_sink": "The ground under the buildings slowly settles: the middle sinks, the walls lean in, and floors and walls crack where it bends. 50 years in 12 seconds, at an assumed 8 mm a year.",
+  "view3d.fx_cellar": "A cellar caving in",
+  "view3d.fxNote_cellar": "Down into one of the cellars dug under the hill (their shapes are ARGUS's; their surface is drawn, not photographed). Pieces of the roof come away and fall to the floor, and the ground above sinks into a hollow. Which stretch caves in, and how much, is an illustration.",
   "view3d.fx_damp": "Damp",
   "view3d.fxNote_damp": "Damp air and water from the ground: mist hangs low, and the damp rises in the walls and falls again.",
   "view3d.fx_fire": "Fire",

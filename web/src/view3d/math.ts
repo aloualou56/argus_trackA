@@ -159,6 +159,7 @@ export type Effect =
   | "slide"
   | "creep"
   | "sink"
+  | "cellar"
   | "damp"
   | "fire"
   | "wildfire"
@@ -169,7 +170,7 @@ export type Effect =
 /** Every effect, in the order they are offered. */
 export const EFFECTS: readonly Effect[] = [
   "rain", "storm", "flood", "acidrain", "damp", "wind", "heat", "sun", "frost",
-  "quake", "walls", "slide", "creep", "sink", "fire", "wildfire", "smog", "plants", "visitors",
+  "quake", "walls", "slide", "creep", "sink", "cellar", "fire", "wildfire", "smog", "plants", "visitors",
 ];
 
 /** Which effect plays out one of ARGUS's dangers, from its scenario key ("delos-masks.rainfall.site",
@@ -194,6 +195,8 @@ const EFFECT_RULES: [RegExp, Effect | null][] = [
   [/road-traffic/, "smog"],
   [/earthquake|seismic/, "quake"],
   // the ground settling under the buildings: nothing rolls anywhere
+  // underground cellars caving in (Baltanás: ARGUS's model has the cellars themselves, under the hill)
+  [/subsidence\.cellar/, "cellar"],
   [/subsidence/, "sink"],
   // a landslide (rocks coming down) where ARGUS rates the slope's danger high or worse; else the slow
   // creep it describes ("the ground on a slope can slowly slip downhill and pull walls with it")

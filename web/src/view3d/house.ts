@@ -535,6 +535,57 @@ const GEO_GLSL = `
     return s;
   }`;
 
+/** A cellar caving in ("See it happen", weather.ts), in ARGUS's model: the cellars' points (attribute
+ *  `cellar`) under the roof over the collapse come down onto the floor, ragged; the ground above sinks into
+ *  a hollow over it. uCave and uHollow from 0 to 1; uCaveC the floor at the collapse, uCaveR its radius. */
+const CAVE_VERTEX = `
+  attribute float cellar;
+  varying float vCellar;
+  uniform float uCave, uCaveR, uHollow;
+  uniform vec3 uCaveC;`;
+const CAVE_BEGIN = `
+  vCellar = cellar;
+  if (uCave > 0.0 || uHollow > 0.0) {
+    vec4 wc = modelMatrix * vec4(transformed, 1.0);
+    float dC = distance(wc.xz, uCaveC.xz);
+    if (cellar > 0.5) {
+      float fall = uCave * (1.0 - smoothstep(uCaveR * 0.45, uCaveR, dC));
+      float roof = smoothstep(uCaveC.y + 0.6, uCaveC.y + 1.6, wc.y);
+      float rest = uCaveC.y + 0.9 * uCave * (1.0 - smoothstep(0.0, uCaveR, dC)) + 0.05 + 0.3 * fract(sin(dot(wc.xz, vec2(12.9898, 78.233))) * 43758.5453); // a rough mound of what fell (the pieces lie on it: weather.ts, debris)
+      transformed += inverse(mat3(modelMatrix)) * vec3(0.0, min(0.0, (rest - wc.y) * fall * roof), 0.0);
+    } else {
+      float dish = 1.0 - smoothstep(0.0, uCaveR * 1.8, dC);
+      transformed += inverse(mat3(modelMatrix)) * vec3(0.0, -uHollow * 1.4 * dish * dish, 0.0);
+    }
+  }`;
+/** The cellars' plain surface: dug into clay and limestone, a warm earth with pale stone in places; inside,
+ *  lit by the camera's lamp (what faces it bright, falling off with distance). Drawn, not photographed.
+ *  After the model's colours are applied (color_fragment), which it takes the place of. */
+const CAVE_FRAGMENT = `
+  if (vCellar > 0.5) {
+    vec3 nC = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
+    vec3 toCam = cameraPosition - vWorld;
+    float dCam = length(toCam);
+    toCam /= max(dCam, 0.001);
+    if (dot(nC, toCam) < 0.0) nC = -nC;
+    float n1 = vnoise(vWorld.xz * 1.7 + vWorld.y * 1.3);
+    float n2 = vnoise(vec2(vWorld.x + vWorld.z, vWorld.y) * 6.0);
+    float n3 = vnoise(vWorld.xz * 14.0 + vWorld.y * 11.0);
+    vec3 earth = mix(vec3(0.36, 0.27, 0.19), vec3(0.58, 0.52, 0.42), smoothstep(0.5, 0.8, n1));
+    earth *= 0.78 + 0.28 * n2 + 0.14 * n3;
+    float lamp = (0.12 + 0.88 * max(dot(nC, toCam), 0.0)) / (1.0 + 0.09 * dCam * dCam);
+    float day = 0.55 + 0.45 * max(dot(nC, normalize(vec3(-0.4, 0.8, 0.3))), 0.0);
+    diffuseColor.rgb = earth * mix(day, clamp(lamp * 1.9 + 0.02, 0.0, 1.2), uInCellar);
+  } else if (uHollow > 0.0) {
+    // the ground over the collapse sunk into a hollow: darker towards its middle (the model is drawn unlit,
+    // so a dip would not show), and a ring of cracks where it tore away
+    float dH = distance(vWorld.xz, uCaveC.xz);
+    float dishH = 1.0 - smoothstep(0.0, uCaveR * 1.8, dH);
+    diffuseColor.rgb *= 1.0 - 0.55 * uHollow * dishH * dishH;
+    float ringH = abs(dH - uCaveR * 1.5 + (vnoise(vWorld.xz * 1.4) - 0.5) * 0.9);
+    diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.05, 0.04, 0.03), uHollow * (1.0 - smoothstep(0.03, 0.12, ringH)));
+  }`;
+
 const WALL_H = 2.4; // assumed: OpenStreetMap has the outline, not the height
 const FLOOR = 3.1; // assumed sizes (rooms 215 and 216 are 3.3 m apart)
 const PANEL = 1.35;
@@ -655,11 +706,37 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   let cutBase = 0;
   // Within the model, away from its ragged edge (holes in its floors included).
   let insideModel: (x: number, y: number) => boolean = () => false;
+  // The cellars under Baltanás's hill: ARGUS's model has them as shells of their own, each in one flat
+  // colour (lime, cyan, magenta), not photographed. Found by that colour (an attribute `cellar` on each
+  // point, 1 in a cellar), they get a plain earth-and-stone surface, are left out of the ground's height,
+  // and are where a cellar caving in is shown ("See it happen", weather.ts).
+  const CELLAR_COLOURS = [[0.4, 1, 0.2], [0.4, 1, 1], [1, 0.4, 1]];
+  let anyCellar = false;
+  model?.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const pos = mesh.geometry.getAttribute("position");
+    const col = mesh.geometry.getAttribute("color");
+    const flag = new Float32Array(pos.count);
+    for (let i = 0; col && i < pos.count; i++) {
+      const r = col.getX(i), g = col.getY(i), b = col.getZ(i);
+      if (CELLAR_COLOURS.some(([cr, cg, cb]) => Math.abs(r - cr) < 0.12 && Math.abs(g - cg) < 0.12 && Math.abs(b - cb) < 0.12)) {
+        flag[i] = 1;
+        anyCellar = true;
+      }
+    }
+    mesh.geometry.setAttribute("cellar", new THREE.BufferAttribute(flag, 1));
+  });
+  // the cellars' floor and ceiling (lowest and highest point) in each cell, and every cell with a cellar
+  let cellarAt: (x: number, z: number) => { low: number; high: number } | null = () => null;
+  const cellarCells: { x: number; z: number; low: number; high: number }[] = [];
   if (model) {
     let nx = 0;
     let nz = 0;
     let cells = new Float32Array(0);
     let highs = new Float32Array(0);
+    let cLows = new Float32Array(0);
+    let cHighs = new Float32Array(0);
     const measure = () => {
       model.updateMatrixWorld(true);
       footprint.setFromObject(model);
@@ -669,15 +746,24 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       nz = Math.ceil((footprint.max.z - footprint.min.z) / CELL) + 1;
       cells = new Float32Array(nx * nz).fill(Infinity);
       highs = new Float32Array(nx * nz).fill(-Infinity);
+      cLows = new Float32Array(nx * nz).fill(Infinity);
+      cHighs = new Float32Array(nx * nz).fill(-Infinity);
       const v = new THREE.Vector3();
       model.traverse((o) => {
         const mesh = o as THREE.Mesh;
         const pos = mesh.isMesh ? mesh.geometry.getAttribute("position") : null;
         if (!pos) return;
         mesh.castShadow = mesh.receiveShadow = true;
+        const inCellar = mesh.geometry.getAttribute("cellar");
         for (let i = 0; i < pos.count; i++) {
           v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
           const k = Math.floor((v.z - footprint.min.z) / CELL) * nx + Math.floor((v.x - footprint.min.x) / CELL);
+          if (inCellar && inCellar.getX(i) > 0.5) {
+            // underground: not the ground's height (the hill above it is)
+            if (v.y < cLows[k]) cLows[k] = v.y;
+            if (v.y > cHighs[k]) cHighs[k] = v.y;
+            continue;
+          }
           if (v.y < cells[k]) cells[k] = v.y;
           if (v.y > highs[k]) highs[k] = v.y;
         }
@@ -807,6 +893,19 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       }
     }
     lows = { data: lowData, nx, nz, minX: footprint.min.x, minZ: footprint.min.z, cell: CELL };
+    if (anyCellar) {
+      for (let k = 0; k < cLows.length; k++) {
+        if (cLows[k] === Infinity) continue;
+        cellarCells.push({ x: footprint.min.x + ((k % nx) + 0.5) * CELL, z: footprint.min.z + (Math.floor(k / nx) + 0.5) * CELL, low: cLows[k], high: cHighs[k] });
+      }
+      cellarAt = (x, z) => {
+        const col = Math.floor((x - footprint.min.x) / CELL);
+        const row = Math.floor((z - footprint.min.z) / CELL);
+        if (col < 0 || row < 0 || col >= nx || row >= nz) return null;
+        const k = row * nx + col;
+        return cLows[k] === Infinity ? null : { low: cLows[k], high: cHighs[k] };
+      };
+    }
     insideModel = (x, y) => {
       const c = Math.floor((x - footprint.min.x) / CELL);
       const r = Math.floor((-y - footprint.min.z) / CELL);
@@ -1194,6 +1293,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             uEnvDampLow: env.dampLow, uEnvDim: env.dim, uEnvFlash: env.flash,
             uEnvCreep: env.creep, uEnvSink: env.sink, uGeoCentre: env.geoCentre, uGeoDir: env.geoDir, uGeoR: env.geoR,
             uShaftC: shaft.centre, uShaftR: shaft.r, uShaftY: shaft.y,
+            uCave: env.cave, uCaveC: env.caveC, uCaveR: env.caveR, uHollow: env.hollow, uInCellar: env.inCellar,
             uStoneReach: { value: Math.max(20, dist(focusXY, houseCentre) + 25) },
             uStoneLow: { value: stoneLow },
             uStoneTop: { value: stoneTop },
@@ -1201,7 +1301,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.vertexShader = shader.vertexShader
             .replace(
               "#include <common>",
-              "#include <common>\nvarying vec3 vWorld;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;" + GEO_GLSL,
+              "#include <common>\nvarying vec3 vWorld;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;" + GEO_GLSL + CAVE_VERTEX,
             )
             .replace(
               "#include <begin_vertex>",
@@ -1216,7 +1316,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               if (uEnvCreep > 0.0 || uEnvSink > 0.0) {
                 vec4 wg = modelMatrix * vec4(transformed, 1.0);
                 transformed += inverse(mat3(modelMatrix)) * geoShift(wg.xyz, uGround);
-              }`,
+              }
+              ${anyCellar ? CAVE_BEGIN : ""}`,
             )
             .replace(
               "#include <worldpos_vertex>",
@@ -1225,8 +1326,10 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash, uEnvCreep, uEnvSink, uGeoR, uShaftR, uShaftY; uniform vec2 uGeoCentre, uGeoDir, uShaftC;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash, uEnvCreep, uEnvSink, uGeoR, uShaftR, uShaftY, uInCellar, uCaveR, uHollow; uniform vec3 uCaveC; uniform vec2 uGeoCentre, uGeoDir, uShaftC;\nuniform vec2 uSource, uWallDir, uLeanDir;\nvarying float vCellar;\n${NOISE}`,
             )
+            .replace("#include <color_fragment>", `#include <color_fragment>
+${anyCellar ? CAVE_FRAGMENT : ""}`)
             .replace(
               "#include <map_fragment>",
               `#include <map_fragment>
@@ -1893,6 +1996,55 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   let lastView: MapView | null = null;
   let above = true; // looking straight down (before flyIn, after flyOut)
 
+  // Where a cellar can be seen caving in (Baltanás): the roomiest stretch well inside a cellar (2.2-6 m
+  // between its floor and its ceiling, with room all round it), and a place 2.5-5.5 m along the cellar from
+  // it, with nothing of the model in between, where the camera stands to watch.
+  let cellarPlan: { floor: THREE.Vector3; ceiling: number; eye: THREE.Vector3; above: THREE.Vector3; radius: number } | null = null;
+  if (model && cellarCells.length > 40) {
+    const roomy = (x: number, z: number, min: number) => {
+      const c = cellarAt(x, z);
+      return !!c && c.high - c.low >= min && c.high - c.low <= 6;
+    };
+    let best: { c: (typeof cellarCells)[number]; score: number } | null = null;
+    for (const c of cellarCells) {
+      if (!roomy(c.x, c.z, 2.2)) continue;
+      let score = 0;
+      for (let a = 0; a < 12; a++) {
+        for (const d of [0.8, 1.6, 2.4]) if (roomy(c.x + Math.cos((a * Math.PI) / 6) * d, c.z + Math.sin((a * Math.PI) / 6) * d, 1.6)) score++;
+      }
+      if (!best || score > best.score) best = { c, score };
+    }
+    if (best) {
+      const c = best.c;
+      const lookAt = new THREE.Vector3(c.x, c.low + (c.high - c.low) * 0.7, c.z);
+      const probe = new THREE.Raycaster();
+      let eye: THREE.Vector3 | null = null;
+      let reach = 0;
+      for (let a = 0; a < 16; a++) {
+        const dx = Math.cos((a * Math.PI) / 8);
+        const dz = Math.sin((a * Math.PI) / 8);
+        let d = 0;
+        while (d < 6 && roomy(c.x + dx * (d + 0.5), c.z + dz * (d + 0.5), 1.8)) d += 0.5;
+        const dist = Math.min(d - 0.3, 5.5);
+        if (dist < 2.5 || dist <= reach) continue;
+        const at = cellarAt(c.x + dx * dist, c.z + dz * dist);
+        if (!at) continue;
+        const e = new THREE.Vector3(c.x + dx * dist, Math.min(at.low + 1.4, at.high - 0.4), c.z + dz * dist);
+        const to = lookAt.clone().sub(e);
+        probe.set(e, to.clone().normalize());
+        probe.far = to.length() - 0.3;
+        if (probe.intersectObject(model, true).length) continue;
+        eye = e;
+        reach = dist;
+      }
+      if (eye) {
+        cellarPlan = { floor: new THREE.Vector3(c.x, c.low, c.z), ceiling: c.high, eye, above: new THREE.Vector3(c.x, surface(c.x, -c.z), c.z), radius: 2.6 };
+      }
+    }
+  }
+  // The camera, for an effect that takes it somewhere (a cellar caving in): where it was when it began.
+  let savedPose: { pos: THREE.Vector3; look: THREE.Vector3; up: THREE.Vector3 } | null = null;
+
   // "See it happen" (weather.ts): the weather and the dangers here, around what the camera looks at.
   const fx = document.createElement("div");
   fx.className = "view3d-fx";
@@ -1931,6 +2083,28 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       count: tops.length,
     },
     overlay: fx,
+    cellar: cellarPlan,
+    director: {
+      fly: (pos, lookAt, ms) => fly({ pos: pos.clone(), look: lookAt.clone(), up: SKY.clone() }, ms, () => 1),
+      cut: (pos, lookAt) => {
+        flight = null;
+        controls.enabled = false;
+        pose({ pos: pos.clone(), look: lookAt.clone(), up: SKY.clone() });
+      },
+      fade: (v) => fx.style.setProperty("--dark", String(v)),
+      save: () => {
+        savedPose = { pos: camera.position.clone(), look: look.clone(), up: camera.up.clone() };
+      },
+      home: (ms) => {
+        const back = savedPose;
+        if (!back) return Promise.resolve();
+        return fly(back, ms, () => 1).then(() => {
+          controls.target.copy(back.look);
+          controls.enabled = true;
+          savedPose = null;
+        });
+      },
+    },
     pixelScale: () => (size.height * renderer.getPixelRatio()) / (2 * Math.tan((camera.fov * Math.PI) / 360)),
     still: !!options.still,
   });
@@ -2108,6 +2282,16 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       if (kidPlants) kidPlants.visible = plants.count > plantAt;
     },
     setWeather(e) {
+      // a cellar caving in stopped before it was over: the camera back where it was, out of the cellar
+      if (effectNow === "cellar" && savedPose) {
+        const back = savedPose;
+        flight = null;
+        pose(back);
+        controls.target.copy(back.look);
+        controls.enabled = true;
+        savedPose = null;
+        fx.style.setProperty("--dark", "0");
+      }
       effectNow = e;
       // what the effect needs seen up close (people, a building on fire, walls shaking): the camera comes
       // to some 26 m from it, from where it is looking now

@@ -431,6 +431,8 @@
   "view3d.fxNote_creep": "Der Boden am Hang gleitet langsam talwärts, quer darüber reißt er auf, und die Mauern darauf neigen sich: 50 Jahre in 12 Sekunden, bei angenommenen 1 cm im Jahr.",
   "view3d.fx_sink": "Absinkender Boden",
   "view3d.fxNote_sink": "Der Boden unter den Gebäuden setzt sich langsam: Die Mitte sinkt ein, die Mauern neigen sich nach innen, und Böden und Mauern reißen, wo er sich biegt. 50 Jahre in 12 Sekunden, bei angenommenen 8 mm im Jahr.",
+  "view3d.fx_cellar": "Ein Keller stürzt ein",
+  "view3d.fxNote_cellar": "Hinunter in einen der Keller, die unter dem Hügel gegraben sind (ihre Formen stammen von ARGUS; ihre Oberfläche ist gezeichnet, nicht fotografiert). Stücke des Gewölbes lösen sich und fallen auf den Boden, und der Boden darüber sinkt zu einer Mulde ein. Welcher Abschnitt einstürzt, und wie stark, ist eine Illustration.",
   "view3d.fx_damp": "Feuchtigkeit",
   "view3d.fxNote_damp": "Feuchte Luft und Wasser aus dem Boden: Dunst hängt tief, und die Feuchtigkeit steigt in den Mauern auf und sinkt wieder.",
   "view3d.fx_fire": "Brand",

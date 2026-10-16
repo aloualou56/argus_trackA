@@ -531,6 +531,20 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   which of ARGUS's dangers it shows, and that it is an illustration, not a forecast. Not shown, as nothing would
   show them properly: woodworm, insects, animals, vandalism, dumping, polluted groundwater. With "less motion"
   each is a still picture: nothing falls, shakes or flashes.
+- **Baltanás's cellars:** ARGUS's model of Baltanás has, under the hill, the cellars themselves: three
+  systems of tunnels and chambers some 10 m down, each as a shell in one flat colour (lime, cyan, magenta),
+  with no photographs of their inside; ARGUS's API and its own 3D viewer have no other model of them (checked
+  16 Oct 2026). The view finds them by that colour, gives them a plain surface of earth and stone (drawn, not
+  photographed; lit inside by the camera's lamp, dark further down a tunnel), and leaves them out of the
+  ground's height (the hill above them is the ground). "A cellar caving in" (ARGUS: "Cellars that cave in",
+  extreme) plays it out at the roomiest stretch well inside a cellar: the camera flies over the ground above
+  it, goes down into the cellar (the picture darkens for a moment), and from the bottom, a few metres along
+  the cellar, watches dust trickle from the ceiling, then pieces of the roof come away and fall onto a heap on
+  the floor, the roof coming down over 2.4 s; then back outside, where the ground over it has sunk into a
+  hollow (shaded, with a ring of cracks: the model is drawn unlit, so a dip alone would not show), and back to
+  where it was. Stopped before the end, the camera goes straight back. With "less motion": one still picture
+  from the bottom of the cellar, the roof already down. Which stretch caves in, and how much, is an
+  illustration, and the view says so.
 - **For a five-year-old too**, without making anything bigger than it is: "Show the damage" (on at first)
   marks in pulsing red where the monument is being damaged, and says that the red is a sign, not the stone's
   colour; a label with a picture sign and a few words stands at the damage ("💧 Water rises from the ground.

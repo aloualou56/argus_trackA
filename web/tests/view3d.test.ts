@@ -97,7 +97,7 @@ describe("see it happen: ARGUS's dangers played out in 3D", () => {
     expect(effectOf("delos-masks.gravitational-slope-movements.site", "low")).toBe("creep");
     expect(effectOf("delos-fournoi.gravitational-slope-movements.site", "low")).toBe("creep");
     // the ground settling under the buildings, at any level
-    expect(effectOf("baltanas.subsidence.cellar-ensemble", "extreme")).toBe("sink");
+    expect(effectOf("baltanas.subsidence.cellar-ensemble", "extreme")).toBe("cellar"); // the cellars themselves
     expect(effectOf("delos-masks.subsidence.site", "low")).toBe("sink");
     expect(effectOf("delos-masks.water-rise.site")).toBe("damp");
     expect(effectOf("lucretili-conventillo.relative-humidity.mural-paintings")).toBe("damp");
