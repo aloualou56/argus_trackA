@@ -335,9 +335,18 @@ export default function App() {
       };
       preload3d(alarm.view_3d, data).then(
         (loaded) => replayRun.current === run && setAlarm3d({ loaded, focus, stage: "building" }),
-        () => replayRun.current === run && replayComplete(),
+        // not loadable (offline): the alarm stays on the map, and its picture is complete when the map's is
+        () => replayRun.current === run && mapOnly(),
       );
     }
+  };
+  /** The alarm stays on the map after all: its picture is complete when the map's is (the replay's own
+   *  time, 3.4 s, or at once if that has passed). */
+  const mapOnly = () => {
+    awaiting3d.current = false;
+    const left = replayStart.current + (motionReduced() ? 600 : 3400) - performance.now();
+    if (left <= 0) replayComplete();
+    // else the replay's own timer completes it
   };
   /** The scene is built: the map keeps showing the alarm for a moment (2.6 s from the start), then flies down. */
   const alarm3dReady = () => {
@@ -624,7 +633,7 @@ export default function App() {
                   onFailed={() => {
                     replayRun.current++;
                     setAlarm3d(null);
-                    replayComplete();
+                    mapOnly();
                   }}
                 />
               ) : null

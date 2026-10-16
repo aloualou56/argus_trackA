@@ -46,8 +46,17 @@ export default defineConfig({
   build: {
     rollupOptions: {
       // The 3D view and three.js in one file of their own, loaded only when a player opens the view.
-      // (Module ids use forward slashes on every system.)
-      output: { manualChunks: (id) => (/\/node_modules\/three\/|\/src\/view3d\/(house|weather)\.ts$/.test(id) ? VIEW3D_CHUNK : undefined) },
+      // (Module ids use forward slashes on every system.) The game itself uses a few of the 3D view's numbers
+      // (math.ts, no three.js in it): a small file of its own, else they would be put in the 3D file and
+      // the game would load three.js on every visit, and fail offline, where the 3D file is not stored.
+      output: {
+        manualChunks: (id) =>
+          /\/src\/view3d\/math\.ts$/.test(id)
+            ? "scene-math"
+            : /\/node_modules\/three\/|\/src\/view3d\/(house|weather)\.ts$/.test(id)
+              ? VIEW3D_CHUNK
+              : undefined,
+      },
     },
   },
   test: { environment: "node", include: ["tests/**/*.test.ts"] },

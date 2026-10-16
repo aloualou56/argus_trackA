@@ -1077,6 +1077,12 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   const stoneTop = data.cut_above_m != null && data.rooms.length ? stoneLow + data.cut_above_m : stoneLow + 40;
   // What the weather does to every surface ("See it happen", weather.ts).
   const env = makeEnv();
+  // A shaft cut away above an alarm's sensor that ARGUS's model covers from every side (Schenkenberg's
+  // crack meter, under the castle's masonry): what of the model stands above `y` within `r` metres of
+  // `centre` (wider higher up) is not drawn, so the camera can see down to the sensor. Off (r 0) else.
+  const shaft = { centre: { value: new THREE.Vector2() }, r: { value: 0 }, y: { value: 0 } };
+  const inShaft = (pt: THREE.Vector3) =>
+    shaft.r.value > 0 && pt.y > shaft.y.value && Math.hypot(pt.x - shaft.centre.value.x, pt.z - shaft.centre.value.y) < shaft.r.value + (pt.y - shaft.y.value) * 0.35;
   const damage = {
     damp: { value: 0 },
     wet: { value: 0 },
@@ -1187,6 +1193,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             uEnvWet: env.wet, uEnvFrost: env.frost, uEnvSoot: env.soot, uEnvHeat: env.heat, uEnvFade: env.fade,
             uEnvDampLow: env.dampLow, uEnvDim: env.dim, uEnvFlash: env.flash,
             uEnvCreep: env.creep, uEnvSink: env.sink, uGeoCentre: env.geoCentre, uGeoDir: env.geoDir, uGeoR: env.geoR,
+            uShaftC: shaft.centre, uShaftR: shaft.r, uShaftY: shaft.y,
             uStoneReach: { value: Math.max(20, dist(focusXY, houseCentre) + 25) },
             uStoneLow: { value: stoneLow },
             uStoneTop: { value: stoneTop },
@@ -1218,11 +1225,12 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash, uEnvCreep, uEnvSink, uGeoR; uniform vec2 uGeoCentre, uGeoDir;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash, uEnvCreep, uEnvSink, uGeoR, uShaftR, uShaftY; uniform vec2 uGeoCentre, uGeoDir, uShaftC;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
               `#include <map_fragment>
+              if (uShaftR > 0.0 && vWorld.y > uShaftY && distance(vWorld.xz, uShaftC) < uShaftR + (vWorld.y - uShaftY) * 0.35) discard;
               vec3 base0 = diffuseColor.rgb;
               vec3 col = base0;
               ${damageGlsl(false)}
@@ -1747,6 +1755,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // (an alarm: from out beyond its sensor, away from the middle of ARGUS's model, looking back at it with
   // the place behind it)
   const outward = new THREE.Vector2(focusXY[0] - modelMiddle[0], -(focusXY[1] - modelMiddle[1]));
+  // (on a cliff, over 40 degrees, as the Conventillo's on Monte Morra, from the downhill side, facing the
+  // cliff: from along it the ground is seen at a grazing angle, stretched, and from above nothing of the
+  // face. Schenkenberg's hill, 20 degrees, is no cliff.)
+  const G = 6;
+  const slopeX = (ground(focusXY[0] + G, focusXY[1]) - ground(focusXY[0] - G, focusXY[1])) / (2 * G);
+  const slopeY = (ground(focusXY[0], focusXY[1] + G) - ground(focusXY[0], focusXY[1] - G)) / (2 * G);
+  const steepAlarm = alarmView && Math.hypot(slopeX, slopeY) > 0.85;
+  if (steepAlarm) outward.set(-slopeX, slopeY).setLength(10);
   const first =
     alarmView && outward.lengthSq() > 1
       ? Math.atan2(outward.y, outward.x)
@@ -1755,15 +1771,20 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       : wholePlace
         ? Math.atan2(placeSide.y, placeSide.x)
         : Math.atan2(18.5, -14);
-  const sides = [0, 1, -1, 2, -2, 3, -3, 4].map((k) => first + (k * Math.PI) / 4);
-  const heights = alarmView ? [26, 38, 50, 65] : roomView ? [55, 70] : close ? [20, 35, 50, 70] : faceWall || atStation ? [32, 45, 60, 70] : wholePlace ? [30, 45, 60] : [34, 50, 70];
+  // (on a steep slope only the downhill side and the two next to it: from the others the slope is seen
+  // along or from above)
+  const sides = (steepAlarm ? [0, 1, -1] : [0, 1, -1, 2, -2, 3, -3, 4]).map((k) => first + (k * Math.PI) / 4);
+  // (an alarm's sensor in a narrow gap between walls, as Schenkenberg's crack meter, is clear only from
+  // high up: from there the camera keeps its distance and its way down stays above the walls)
+  const heights = alarmView ? [26, 38, 50, 65, 78, 88] : roomView ? [55, 70] : close ? [20, 35, 50, 70] : faceWall || atStation ? [32, 45, 60, 70] : wholePlace ? [30, 45, 60] : [34, 50, 70];
   const ray = new THREE.Raycaster();
   // How far the camera can go back that way before something of the model stands in between.
-  const openFor = (dir: THREE.Vector3) => {
+  // `near`: what of the model stands within that many metres of the damage does not count.
+  const openFor = (dir: THREE.Vector3, near = 0.6) => {
     if (!model || wholePlace) return Infinity; // a place seen whole is seen from outside it: its front walls may stand in front
     ray.set(endLook, dir);
     ray.far = restAt;
-    const hit = ray.intersectObject(model, true).find((h) => h.distance > 0.6 && h.point.y < cutTop);
+    const hit = ray.intersectObject(model, true).find((h) => h.distance > near && h.point.y < cutTop);
     return hit ? hit.distance : Infinity;
   };
   const aboveGround = (dir: THREE.Vector3, d: number) => {
@@ -1790,7 +1811,32 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       if (open > best.open) best = { dir, open };
     }
   }
-  if (!found && best.open > 0) {
+  // An alarm's sensor seen from no side: on a cliff (the Conventillo's tilt meter, three floors up inside
+  // the rock-cut building), the building it is in seen from downhill, the beam rising out of it (its walls,
+  // within 6 m of the sensor, may stand in front); elsewhere (Schenkenberg's crack meter, in a narrow gap
+  // between walls), down a shaft cut away above it.
+  if (!found && alarmView && model && steepAlarm) {
+    for (const h of heights) {
+      for (const az of sides) {
+        const e = (h * Math.PI) / 180;
+        const dir = new THREE.Vector3(Math.cos(e) * Math.cos(az), Math.sin(e), Math.cos(e) * Math.sin(az));
+        if (aboveGround(dir, Math.min(restAt, 12)) && openFor(dir, 6) === Infinity) {
+          END_DIR.copy(dir);
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+  }
+  if (!found && alarmView && model) {
+    // covered from every side: down a shaft cut away above it, from high up and nearly straight above
+    shaft.centre.value.set(endLook.x, endLook.z);
+    shaft.r.value = 2.5;
+    shaft.y.value = endLook.y + 2;
+    const e = (84 * Math.PI) / 180;
+    END_DIR.set(Math.cos(e) * Math.cos(first), Math.sin(e), Math.cos(e) * Math.sin(first));
+  } else if (!found && best.open > 0) {
     END_DIR.copy(best.dir);
     restCap = Math.max(3, best.open - 1);
   }
@@ -2002,6 +2048,29 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       endPos.copy(endLook).addScaledVector(END_DIR, restDistance(size.width / size.height));
       // never under the ground (a slope rising behind the camera)
       endPos.y = Math.max(endPos.y, surface(endPos.x, -endPos.z) + 2);
+      // The way down never through ARGUS's model (Schenkenberg's tower beside its crack meter): where a
+      // spiral would pass through a wall, the camera comes down without turning; where even that would,
+      // the fewer walls the better.
+      const passes = (turn: number) => {
+        if (!model) return 0;
+        const from = camera.position.clone();
+        const lookFrom = look.clone();
+        const p = new THREE.Vector3();
+        const l = new THREE.Vector3();
+        let hits = 0;
+        for (let i = 1; i < 20; i++) {
+          const e = ease(i / 20);
+          p.lerpVectors(from, endPos, e);
+          l.lerpVectors(lookFrom, endLook, e);
+          if (turn) p.sub(l).applyAxisAngle(SKY, turn * (1 - e)).add(l);
+          const d = p.clone().sub(l);
+          ray.set(l, d.clone().normalize());
+          ray.far = d.length();
+          if (ray.intersectObject(model, true).some((h) => h.distance > 0.6 && h.point.y < cutTop && !inShaft(h.point))) hits++;
+        }
+        return hits;
+      };
+      if (spin && ms > 0 && passes(spin) > 0) spin = passes(0) <= passes(spin) ? 0 : spin;
       // Up turns from north to the sky early, while the camera still looks almost straight down.
       return fly({ pos: endPos, look: endLook, up: SKY }, ms, (e) => Math.min(1, e * 1.6), spin).then(() => {
         controls.target.copy(endLook);

@@ -636,6 +636,44 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   and low), the damp rising up its walls with a line of salt. Labels and sensors stand on the model's floor.
   Without the files (or without ARGUS's terrain, which the model is levelled on) the drawn house is shown.
 
+## The alarm in 3D
+
+When the day's alarm plays (after "Done" on the mission screen, or "Go on to day N" on the score screen), the
+map first shows it as before, for about 2.6 s. Then, where ARGUS has a model of the place the alarm's sensor
+stands in, the map flies down onto the place, blurs, and the 3D view takes over from the same picture: the
+camera comes down in a spiral to the sensor that raised the alarm, red waves spread over the ground from it and
+a beam of light stands over it, and the camera circles slowly until the player presses "See the answer".
+Nothing is invented: it shows the place today, with no damage drawn; the alarm's own banner says what was
+measured.
+
+- **Where:** each alarm gets `view_3d`, the 3D scene its sensor stands in (within 150 m, only where a model
+  exists; `tools/build_game_data.py`, tested in `tools/tests/test_build_game_data.py`). 24 of the 33 replayable
+  alarms have one: all 8 at Delos (House of the Masks), all 8 at Schenkenberg, all 7 at Ranverso, and 1 of
+  Lucretili's 10, the tilt alarm at the Conventillo (the others' sensors are at the Villa di Orazio, where ARGUS's
+  model has nothing). Baltanás has no alarms.
+- **Code:** `web/src/components/Alarm3D.tsx` builds the scene unseen and runs the hand-over;
+  `web/src/view3d/house.ts` adds the waves and beam (`setAlarm`), the slow circling (`orbit`, which stops when
+  the player takes the camera) and the spiral (`flyIn(ms, spin)`); `web/src/App.tsx` runs the replay. The
+  banner and the button stay above the 3D view and can be pressed; afterwards the 3D view is gone and the map is
+  sharp again.
+- **Where the camera rests:** about 26 m from the sensor, from out beyond it (away from the middle of ARGUS's
+  model), the lowest of 26-88 degrees from which nothing of the model stands between the camera and the sensor.
+  On a cliff (over 40 degrees: the Conventillo, 56 degrees) it comes from the downhill side and faces the cliff;
+  where the sensor sits inside the building there, the building is seen from outside with the beam rising out of
+  it. Where the sensor can be seen from no side (Schenkenberg's crack meter, in a narrow gap between the tower's
+  walls), a shaft of the model above it is cut away (2.5 m wide, wider higher up) and the camera looks down it
+  from high up. The spiral is left out where it would pass through the model.
+- **Loading:** the model loads with the mission screen (and the score screen, for the next day's alarm), so it
+  is there when the alarm goes off. If it has not loaded within 8 s, or cannot load (offline), the alarm stays on
+  the map and "See the answer" comes at the replay's usual time. The 3D view's code is a file of its own
+  (`assets/view3d-*.js`), loaded only when needed; the few numbers the game itself uses from it
+  (`web/src/view3d/math.ts`) are in a small file of their own (`assets/scene-math-*.js`), so the game never loads
+  three.js up front and works offline.
+- **Less motion:** no spiral and no circling; the camera is at the sensor at once, the waves held still.
+- **Checked** on a real GPU (Intel Iris Xe) at 1280x800 and on a phone (390x844), on every monument with an
+  alarm in 3D: the hand-over, the spiral, the resting view, the banner and button, the answer screen after it,
+  less motion, and the 3D files hanging (the 8 s give-up) or refused.
+
 ## Citizen observation report
 
 The checklist at the end of the game tells visitors what to look out for. The observation report lets them act on
