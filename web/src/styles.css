@@ -3829,6 +3829,11 @@ b {
   pointer-events: none;
   animation: replay-pop 0.35s ease-out both;
 }
+/* Over the alarm in 3D too (Alarm3D.tsx, ".view3d" at 1500). */
+.board-map.mode-replay .replay-banner,
+.board-map.mode-replay .replay-skip {
+  z-index: 1600;
+}
 .replay-banner p {
   margin: 0;
 }

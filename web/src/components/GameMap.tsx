@@ -840,14 +840,15 @@ export function GameMap(props: Props) {
     }
   }
 
-  // Under the 3D view nothing of the map can be reached: not the map, its pins nor its controls.
+  // Under the 3D view nothing of the map can be reached: not the map, its pins nor its controls (the
+  // alarm's own button, over the alarm in 3D, still can).
   const sectionRef = useRef<HTMLElement>(null);
   const covered = !!props.overlay;
   useLayoutEffect(() => {
     for (const child of Array.from(sectionRef.current?.children ?? []) as HTMLElement[]) {
-      if (!child.classList.contains("view3d")) child.inert = covered;
+      if (!child.classList.contains("view3d") && !child.classList.contains("replay-skip")) child.inert = covered;
     }
-  }, [covered]);
+  }, [covered, mode]);
 
   return (
     <section ref={sectionRef} className={`board-map mode-${mode}${isPlan ? " is-plan" : ""}`} aria-label={t("map.region")}>

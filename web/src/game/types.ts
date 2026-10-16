@@ -139,6 +139,9 @@ export interface Alarm {
   direction: "above" | "below";
   times_threshold: number | null;
   instruments: AlarmInstrument[];
+  /** The 3D scene its sensor stands in (data/view3d/<scene>.json), where ARGUS has a model of the place:
+   *  the alarm plays out there too (Alarm3D.tsx). */
+  view_3d?: string;
   quality_flags: string[];
   roles: string[];
   episode: { rule: string; start: string; end: string; alarm_count: number; flat_signal: boolean };

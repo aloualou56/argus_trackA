@@ -3522,7 +3522,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:DL_soil_moisture:2026-09-02T08:30:00",
@@ -3576,7 +3577,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:DL_humidity:2026-09-12T20:30:00",
@@ -3631,7 +3633,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:DL_soil_moisture:2026-09-24T20:30:00",
@@ -3685,7 +3688,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:DL_soil_moisture:2026-09-27T20:30:00",
@@ -3739,7 +3743,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:DL_humidity:2026-09-28T20:30:00",
@@ -3794,7 +3799,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:DL_soil_moisture:2026-09-29T20:30:00",
@@ -3849,7 +3855,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     },
     {
      "id": "delos:R2_wind:2026-10-02T20:30:00",
@@ -3908,7 +3915,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "delos-masks"
     }
    ],
    "alarm_funnel": {
@@ -7211,7 +7219,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "lucretili-conventillo"
     },
     {
      "id": "lucretili:R9b_temp_st:2026-08-31T20:30:00",
@@ -9831,7 +9840,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     },
     {
      "id": "ranverso:R2_rain_7d:2026-09-10T20:30:00",
@@ -9891,7 +9901,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     },
     {
      "id": "ranverso:R4b_soil_low:2026-09-15T20:30:00",
@@ -9953,7 +9964,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     },
     {
      "id": "ranverso:R2_rain_7d:2026-09-16T15:30:00",
@@ -10012,7 +10024,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     },
     {
      "id": "ranverso:R4b_soil_low:2026-09-21T20:30:00",
@@ -10071,7 +10084,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     },
     {
      "id": "ranverso:R4b_soil_low:2026-09-24T20:00:00",
@@ -10129,7 +10143,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     },
     {
      "id": "ranverso:R4b_soil_low:2026-09-25T20:30:00",
@@ -10187,7 +10202,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "ranverso"
     }
    ],
    "alarm_funnel": {
@@ -11389,7 +11405,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R2_crack_step:2026-08-30T20:30:00",
@@ -11450,7 +11467,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R2_crack_step:2026-08-31T20:30:00",
@@ -11511,7 +11529,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R3_vib_zscore:2026-09-16T20:30:00",
@@ -11570,7 +11589,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R2_crack_step:2026-09-20T20:30:00",
@@ -11630,7 +11650,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R2_crack_step:2026-09-25T20:30:00",
@@ -11690,7 +11711,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R2_crack_step:2026-09-28T20:30:00",
@@ -11750,7 +11772,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     },
     {
      "id": "schenkenberg:R2_crack_step:2026-10-08T20:30:00",
@@ -11810,7 +11833,8 @@
       },
       "authored": true,
       "needs_review": true
-     }
+     },
+     "view_3d": "schenkenberg"
     }
    ],
    "alarm_funnel": {

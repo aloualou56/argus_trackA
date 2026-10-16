@@ -1290,12 +1290,22 @@ def attach_scenes_3d(monuments: List[Dict[str, Any]]) -> None:
                     c["view_3d"] = at
             else:
                 c["view_3d"] = mine[0]["id"]
+        # Each alarm whose sensor stands in a scene ARGUS has a model of plays out in it: the nearest scene
+        # (among all of the monument's places) within ALARM_3D_MAX_M of the sensor, if it can be shown.
+        for alarm in mon.get("alarms") or []:
+            spots = [[i["lat"], i["lon"]] for i in alarm["instruments"] if i.get("lat") is not None and i.get("lon") is not None]
+            if not spots:
+                continue
+            gap, near = min((min(metres_between(spot, p) for spot in spots for p in points(s)), s["id"]) for s in theirs)
+            if near in ready and gap <= ALARM_3D_MAX_M:
+                alarm["view_3d"] = near
         # The scenes the day's dangers open first (on Delos the House of the Masks, then Fournoi).
         used = [c.get("view_3d") for c in (mon.get("consequences") or {}).values()]
         mine.sort(key=lambda s: -used.count(s["id"]))
         mon["scenes_3d"] = [{"scene": s["id"], "place": place_of(s)} for s in mine]
 
 
+ALARM_3D_MAX_M = 150  # an alarm's sensor further than this from a scene's middle and its sensors is not in it
 PLACE_MAX_DISTANCE_M = 3000  # a place further than this from the monument's sensors is a typo
 
 

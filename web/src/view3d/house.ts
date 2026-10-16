@@ -419,6 +419,10 @@ export interface HouseOptions {
   magnifierLabel?: (times: number) => string;
   /** No pulsing (the player asked for less motion). */
   still?: boolean;
+  /** The view of an alarm going off (Alarm3D.tsx): the camera comes to rest a little way back from the
+   *  alarm's sensor, out beyond it, the sensor in the middle and the place behind it (not up close to
+   *  the damage). */
+  alarm?: boolean;
 }
 
 /** A view of the game's map: what it is centred on ([lat, lon]) and its scale. */
@@ -430,8 +434,9 @@ export interface MapView {
 export interface House {
   /** Looks straight down on the map's view, north up, from the height where the ground matches it. */
   matchMap(view: MapView): void;
-  /** From straight above down to the rooms; then the camera can be turned. */
-  flyIn(ms: number): Promise<void>;
+  /** From straight above down to the rooms; then the camera can be turned. `spin`: turning round them
+   *  on the way down, in radians (the alarm's way in). */
+  flyIn(ms: number, spin?: number): Promise<void>;
   /** Back up to the view of matchMap. */
   flyOut(ms: number): Promise<void>;
   setDamage(damage: Damage): void;
@@ -442,6 +447,11 @@ export interface House {
   canWeather(effect: Effect): boolean;
   /** Marks in red where the damage is (a sign, like an arrow; not the stone's colour). */
   setHighlight(on: boolean): void;
+  /** The alarm going off at its sensor: red waves spreading on the ground from it and a beam of light
+   *  over it, so it is found from anywhere (App.tsx, the day's alarm in 3D). */
+  setAlarm(on: boolean): void;
+  /** The camera circling slowly round what it looks at, until the player takes it over. */
+  orbit(on: boolean): void;
   /** How much of the canvas the view's own title (top) and panel (bottom) cover, in pixels: the
    *  rooms are framed in the space between them (eased; straight above, the map's framing wins). */
   setInsets(top: number, bottom: number): void;
@@ -1578,6 +1588,60 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       ? kidTag(options.damageLabel(kind === "tree" ? "tree" : "plants"), tops[plantAt].clone().setY(tops[plantAt].y + tall + 0.6))
       : null;
 
+  // ---------------------------------------------------------------- the alarm going off at its sensor
+  // Red waves spreading over the ground from the sensor, one after another (as on the map), and a beam of
+  // light standing over it that fades upwards. Hidden until setAlarm(true).
+  const alarmGroup = new THREE.Group();
+  alarmGroup.visible = false;
+  const alarmFoot = at(focusSensor ? focusXY : [src.x, -src.z], 0.12);
+  alarmGroup.position.copy(alarmFoot);
+  const ALARM_RED = new THREE.Color("#ff2a3d");
+  const waveReach = 4 + 2 * VIEW; // metres the waves spread to
+  const waves = [0, 1, 2].map(() => {
+    const wave = new THREE.Mesh(
+      new THREE.RingGeometry(0.86, 1, 64).rotateX(-Math.PI / 2),
+      new THREE.MeshBasicMaterial({ color: ALARM_RED, transparent: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false }),
+    );
+    wave.renderOrder = 5;
+    alarmGroup.add(wave);
+    return wave;
+  });
+  const beamHeight = Math.max(18, 14 * VIEW);
+  const beam = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.22 * VIEW, 0.35 * VIEW, beamHeight, 24, 1, true).translate(0, beamHeight / 2, 0),
+    new THREE.ShaderMaterial({
+      uniforms: { uColor: { value: ALARM_RED }, uPulse: { value: 1 }, uHeight: { value: beamHeight } },
+      vertexShader: "varying float vUp; uniform float uHeight; void main() { vUp = position.y / uHeight; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+      fragmentShader: "varying float vUp; uniform vec3 uColor; uniform float uPulse; void main() { gl_FragColor = vec4(uColor, (1.0 - vUp) * (1.0 - vUp) * 0.55 * uPulse); }",
+      transparent: true,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+  beam.renderOrder = 6;
+  const core = new THREE.Mesh(
+    new THREE.SphereGeometry(0.28 * Math.min(VIEW, 2), 20, 14),
+    new THREE.MeshBasicMaterial({ color: ALARM_RED, toneMapped: false }),
+  );
+  core.position.y = Math.max(0.3, src.y - alarmFoot.y);
+  alarmGroup.add(beam, core);
+  scene.add(alarmGroup);
+  function alarmFrame(now: number) {
+    if (!alarmGroup.visible) return;
+    const still = !!options.still;
+    waves.forEach((wave, i) => {
+      // each wave 1.8 s from the sensor out to its reach, a third of that after the one before; held
+      // at three sizes when the player asked for less motion
+      const t = still ? (i + 1) / 3.5 : (now / 1800 + i / 3) % 1;
+      wave.scale.setScalar(0.6 + t * waveReach);
+      (wave.material as THREE.MeshBasicMaterial).opacity = still ? 0.7 : 0.9 * (1 - t) ** 1.5;
+    });
+    const pulse = still ? 1 : 0.75 + 0.25 * Math.sin(now / 220);
+    (beam.material as THREE.ShaderMaterial).uniforms.uPulse.value = pulse;
+    core.scale.setScalar(still ? 1 : 0.85 + 0.3 * pulse);
+  }
+
   // ---------------------------------------------------------------- the camera: from straight above down to the rooms
   const controls = new OrbitControls(camera, canvas);
   controls.enabled = false;
@@ -1586,6 +1650,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   controls.minDistance = 2;
   controls.maxDistance = 400;
   controls.listenToKeyEvents(canvas); // arrow keys move the view while the canvas has the focus
+  controls.autoRotateSpeed = -0.8; // orbit(): once round in about 75 s
+  controls.addEventListener("start", () => (controls.autoRotate = false)); // the player has it now
   // The camera comes to rest looking at the damage: between the two rooms nearest it where ARGUS names
   // rooms, else at the alarm's sensor (or the middle of the place).
   // rooms, else at the alarm's sensor where the damage is on the building by it (and ARGUS's model is
@@ -1601,7 +1667,8 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // ground), from the side where the ground falls away (out in the open, not from inside the hill behind
   // it), and far enough back to fit it on the screen. The House of the Masks, with its rooms, keeps its
   // own view down into them.
-  const wholePlace = !!model && !data.rooms.length && !onSensor && standing.length >= 8;
+  const alarmView = !!options.alarm && !!(focusSensor || at0);
+  const wholePlace = !!model && !data.rooms.length && !onSensor && !alarmView && standing.length >= 8;
   let placeLook: THREE.Vector3 | null = null;
   const placeSide = new THREE.Vector2(-14, 18.5).normalize(); // scene x and z: from the south-west
   const placeSpan = { width: 0, depth: 0, height: 0 };
@@ -1646,7 +1713,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       damage.sourceY.value = crackAt.y;
     }
   }
-  const endLook = roomView
+  const endLook = alarmView
+    ? src.clone().setY(Math.max(src.y, surface(focusXY[0], focusXY[1]) + 0.4))
+    : roomView
     ? at(dampRoom!.xy, 0.2)
     : atStation
       ? at([(focusXY[0] + houseCentre[0]) / 2, (focusXY[1] + houseCentre[1]) / 2], 1)
@@ -1661,7 +1730,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // wall a few degrees off true, about 14 m; for damp, paint or a worn floor at the sensor, about 17 m;
   // else about 28 m (further over a bigger place); a place seen whole, as far as it takes to fit it.
   const close = (kind === "crack" || kind === "lean") && !!crackAt;
-  const restAt = close
+  const restAt = alarmView
+    ? 26 * VIEW
+    : close
     ? kind === "lean" ? 14 : 8
     : atStation
       ? 20 + dist(focusXY, houseCentre) / 2
@@ -1673,9 +1744,19 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // under the ground: that side, then the others, then higher up.
   const cutTop = model && data.cut_above_m != null ? floorY + data.cut_above_m : Infinity;
   const faceWall = (close || (kind === "fresco" && onSensor)) && wallCells.length >= 4;
-  const first = faceWall || atStation ? Math.atan2(away.y, away.x) : wholePlace ? Math.atan2(placeSide.y, placeSide.x) : Math.atan2(18.5, -14);
+  // (an alarm: from out beyond its sensor, away from the middle of ARGUS's model, looking back at it with
+  // the place behind it)
+  const outward = new THREE.Vector2(focusXY[0] - modelMiddle[0], -(focusXY[1] - modelMiddle[1]));
+  const first =
+    alarmView && outward.lengthSq() > 1
+      ? Math.atan2(outward.y, outward.x)
+      : faceWall || atStation || alarmView
+      ? Math.atan2(away.y, away.x)
+      : wholePlace
+        ? Math.atan2(placeSide.y, placeSide.x)
+        : Math.atan2(18.5, -14);
   const sides = [0, 1, -1, 2, -2, 3, -3, 4].map((k) => first + (k * Math.PI) / 4);
-  const heights = roomView ? [55, 70] : close ? [20, 35, 50, 70] : faceWall || atStation ? [32, 45, 60, 70] : wholePlace ? [30, 45, 60] : [34, 50, 70];
+  const heights = alarmView ? [26, 38, 50, 65] : roomView ? [55, 70] : close ? [20, 35, 50, 70] : faceWall || atStation ? [32, 45, 60, 70] : wholePlace ? [30, 45, 60] : [34, 50, 70];
   const ray = new THREE.Raycaster();
   // How far the camera can go back that way before something of the model stands in between.
   const openFor = (dir: THREE.Vector3) => {
@@ -1818,9 +1899,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   }
   pose({ pos: topPos, look: topLook, up: NORTH });
 
-  let flight: { from: Pose; to: Pose; t0: number; ms: number; upAt: (e: number) => number; done: () => void } | null = null;
+  let flight: { from: Pose; to: Pose; t0: number; ms: number; upAt: (e: number) => number; spin: number; done: () => void } | null = null;
   const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-  function fly(to: Pose, ms: number, upAt: (e: number) => number): Promise<void> {
+  function fly(to: Pose, ms: number, upAt: (e: number) => number, spin = 0): Promise<void> {
     controls.enabled = false;
     flight = null;
     if (ms <= 0) {
@@ -1829,7 +1910,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     }
     const from = { pos: camera.position.clone(), look: look.clone(), up: camera.up.clone() };
     return new Promise((done) => {
-      flight = { from, to, t0: performance.now(), ms, upAt, done };
+      flight = { from, to, t0: performance.now(), ms, upAt, spin, done };
     });
   }
 
@@ -1871,6 +1952,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     const dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0;
     lastFrame = now;
     plantTime.value = now / 1000;
+    alarmFrame(now);
     if (!above) weather.update(dt, now);
     if (shift !== shiftTo) {
       shift += (shiftTo - shift) * 0.12;
@@ -1882,6 +1964,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       const e = ease(t);
       camera.position.lerpVectors(flight.from.pos, flight.to.pos, e);
       look.lerpVectors(flight.from.look, flight.to.look, e);
+      // turning round what it looks at, less and less (a spiral, not a straight line); at the start straight
+      // above it, where turning changes nothing, so the first picture is still the map's
+      if (flight.spin) camera.position.sub(look).applyAxisAngle(SKY, flight.spin * (1 - e)).add(look);
       camera.up.lerpVectors(flight.from.up, flight.to.up, flight.upAt(e)).normalize();
       camera.lookAt(look);
       if (t >= 1) {
@@ -1910,7 +1995,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
 
   return {
     matchMap,
-    flyIn(ms) {
+    flyIn(ms, spin = 0) {
       above = false;
       // A narrow (upright) screen sees less from side to side: the camera stays further back there,
       // so the rooms still fit across it.
@@ -1918,7 +2003,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       // never under the ground (a slope rising behind the camera)
       endPos.y = Math.max(endPos.y, surface(endPos.x, -endPos.z) + 2);
       // Up turns from north to the sky early, while the camera still looks almost straight down.
-      return fly({ pos: endPos, look: endLook, up: SKY }, ms, (e) => Math.min(1, e * 1.6)).then(() => {
+      return fly({ pos: endPos, look: endLook, up: SKY }, ms, (e) => Math.min(1, e * 1.6), spin).then(() => {
         controls.target.copy(endLook);
         controls.enabled = true;
       });
@@ -1981,6 +2066,12 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     canWeather: (e) => weather.can(e),
     setHighlight(on) {
       damage.show.value = on ? 1 : 0;
+    },
+    setAlarm(on) {
+      alarmGroup.visible = on;
+    },
+    orbit(on) {
+      controls.autoRotate = on && !options.still;
     },
     resize(width, height) {
       if (width < 1 || height < 1) return;

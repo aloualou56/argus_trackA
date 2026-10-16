@@ -386,6 +386,17 @@ class GameData(unittest.TestCase):
         self.assertNotIn("lucretili-villa-orazio", [s["scene"] for s in luc["scenes_3d"]])
 
 
+    def test_an_alarm_plays_out_in_the_3d_scene_of_its_sensor(self):
+        alarms = {m["pilot_key"]: m.get("alarms", []) for m in self.data["monuments"]}
+        # every alarm on Delos is at the House of the Masks (its probes, the weather station by it)
+        self.assertEqual({a.get("view_3d") for a in alarms["delos"]}, {"delos-masks"})
+        self.assertTrue(all(a.get("view_3d") == "schenkenberg" for a in alarms["schenkenberg"]))
+        luc = {a["rule"]: a.get("view_3d") for a in alarms["lucretili"]}
+        self.assertEqual(luc["R2a_tilt_step"], "lucretili-conventillo")  # the tiltmeter in the Conventillo
+        self.assertIsNone(luc["R5_visitors"])  # at the villa, which ARGUS has no model of
+        self.assertIsNone(luc["R4c_hum_rapid_1h"])  # no sensor position: nowhere to play it out
+
+
 class PureHelpers(unittest.TestCase):
     def test_view_3d_must_name_a_3d_view(self):
         self.assertEqual(b.view_3d_problems(None), [])

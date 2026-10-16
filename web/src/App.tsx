@@ -27,9 +27,10 @@ import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
 import { Teacher } from "./screens/Teacher";
 import { View3D } from "./components/View3D";
+import { Alarm3D } from "./components/Alarm3D";
 import { OWN } from "./game/report";
-import { MAP_ZOOM } from "./view3d/math";
-import type { Focus3d, Loaded } from "./view3d/preload";
+import { MAP_ZOOM, serialOf } from "./view3d/math";
+import { canShow3d, preload3d, type Focus3d, type Loaded } from "./view3d/preload";
 
 type Screen = "home" | "teacher" | "observe" | Step | "quizPre" | "quizPost" | "history";
 
@@ -182,9 +183,36 @@ export default function App() {
   const replayFrom = useRef<Screen | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const stopReplaySound = useRef<() => void>(() => {});
+  // The alarm in 3D (Alarm3D.tsx), where ARGUS has a model of the place its sensor stands in: once the
+  // map has shown the alarm, it flies down onto the place and the 3D view takes over. building: the
+  // scene is made, unseen; waiting: the map still shows the alarm; flying: the map zooms in; arrived:
+  // the 3D view takes over. Each replay has its own number, so a model that loads after it is over is
+  // never shown.
+  const [alarm3d, setAlarm3d] = useState<{
+    loaded: Loaded;
+    focus: Focus3d;
+    stage: "building" | "waiting" | "flying" | "arrived";
+  } | null>(null);
+  const alarm3dStage = useRef<string | null>(null);
+  useEffect(() => {
+    alarm3dStage.current = alarm3d?.stage ?? null;
+  }, [alarm3d]);
+  const replayRun = useRef(0);
+  const replayStart = useRef(0);
+  // Whether the replay waits for the 3D view before its picture is complete.
+  const awaiting3d = useRef(false);
+  const replayComplete = useCallback(() => {
+    awaiting3d.current = false;
+    setReplayOver(true);
+    announce(t("replay.over", { button: t("replay.continue") }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const finishReplay = useCallback(() => {
     stopReplaySound.current();
     stopReplaySound.current = () => {};
+    replayRun.current++;
+    awaiting3d.current = false;
+    setAlarm3d(null);
     setReplaying(false);
     setReplayOver(false);
     setScreen("event");
@@ -192,12 +220,24 @@ export default function App() {
   useEffect(() => {
     if (!replaying) return;
     const still = motionReduced();
-    // No time limit: the replay waits on its final picture until the player goes on (WCAG 2.2.1).
+    const run = replayRun.current;
+    // No time limit: the replay waits on its final picture until the player goes on (WCAG 2.2.1). With
+    // the alarm in 3D the picture is complete once the camera is down at the alarm; a model not loaded
+    // within 8 s (a slow network) is not waited for: the alarm stays on the map.
     const timer = window.setTimeout(() => {
-      setReplayOver(true);
-      announce(t("replay.over", { button: t("replay.continue") }));
+      if (!awaiting3d.current) replayComplete();
     }, still ? 600 : 3400);
-    return () => window.clearTimeout(timer);
+    const giveUp = window.setTimeout(() => {
+      if (replayRun.current !== run || !awaiting3d.current) return;
+      if (alarm3dStage.current) return; // loaded: on its way
+      replayRun.current++;
+      setAlarm3d(null);
+      replayComplete();
+    }, 8000);
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(giveUp);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [replaying]);
   // Leaving the screen it started from (the home button on a wide screen) ends it, sound and all.
@@ -206,6 +246,12 @@ export default function App() {
     setReplaying(false);
     stopReplaySound.current();
   }, [screen, replaying]);
+  useEffect(() => {
+    if (replaying) return;
+    replayRun.current++;
+    awaiting3d.current = false;
+    setAlarm3d(null);
+  }, [replaying]);
   // "Display in 3D" (Score): the map flies down onto the house and the 3D view takes over
   // (View3D.tsx). building: the scene is made, unseen, before the map moves; flying: the map zooms
   // in; arrived: the 3D view may take over. Phones give it the whole screen; wide screens keep the
@@ -253,6 +299,14 @@ export default function App() {
   // The real alarms of this game's week on duty, one per day; today's is week[day].
   const week = playable && game ? weekAlarms(playable, game.level) : [];
   const today = game ? (week[game.day] ?? null) : null;
+  // The alarm in 3D starts loading with the mission (and with the score, for the next day's alarm), so it
+  // is there when the alarm goes off.
+  const comingAlarms = [today, game ? (week[game.day + 1] ?? null) : null].map((a) => a?.view_3d ?? "").join(" ");
+  useEffect(() => {
+    if (!data || !inGame || (screen !== "mission" && screen !== "score") || !canShow3d()) return;
+    for (const scene of new Set(comingAlarms.split(" ").filter(Boolean))) preload3d(scene, data).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comingAlarms, screen, !!inGame, data]);
 
   /** Plays `alarm` on the map, then opens its screen; an alarm with no position goes straight there. */
   const beginReplay = (alarm: Alarm | null, picks: Picks) => {
@@ -267,6 +321,30 @@ export default function App() {
     const rule = ruleFor(data, playable, alarm);
     const still = motionReduced();
     stopReplaySound.current = playReplay(!!rule && detects(rule, picks).detected, still);
+    // In 3D too, where ARGUS has a model of the place the alarm's sensor stands in.
+    const run = ++replayRun.current;
+    replayStart.current = performance.now();
+    const sensor = alarm.instruments.find((i) => i.lat !== null && i.lon !== null)!;
+    if (alarm.view_3d && canShow3d()) {
+      awaiting3d.current = true;
+      // today: the alarm, at its sensor (no damage drawn yet)
+      const focus: Focus3d = {
+        kind: null,
+        serial: serialOf(sensor.name),
+        at: [sensor.lat!, sensor.lon!],
+      };
+      preload3d(alarm.view_3d, data).then(
+        (loaded) => replayRun.current === run && setAlarm3d({ loaded, focus, stage: "building" }),
+        () => replayRun.current === run && replayComplete(),
+      );
+    }
+  };
+  /** The scene is built: the map keeps showing the alarm for a moment (2.6 s from the start), then flies down. */
+  const alarm3dReady = () => {
+    const run = replayRun.current;
+    setAlarm3d((a) => (a ? { ...a, stage: "waiting" } : a));
+    const wait = Math.max(0, replayStart.current + (motionReduced() ? 600 : 2600) - performance.now());
+    window.setTimeout(() => replayRun.current === run && setAlarm3d((a) => (a ? { ...a, stage: "flying" } : a)), wait);
   };
 
   const start = (pilot: string, level: LevelId, mission?: string[], beat: number | null = null) => {
@@ -512,11 +590,19 @@ export default function App() {
             alarm={inGame && (screen === "event" || replaying) ? today : null}
             onReplaySkip={finishReplay}
             replayOver={replayOver}
-            view3d={view3d && view3d.stage !== "building" ? { center: view3d.loaded.assets.centre, zoom: MAP_ZOOM } : null}
-            onArrived3d={() => setView3d((v) => (v ? { ...v, stage: "arrived" } : v))}
+            view3d={
+              view3d && view3d.stage !== "building"
+                ? { center: view3d.loaded.assets.centre, zoom: MAP_ZOOM }
+                : alarm3d && (alarm3d.stage === "flying" || alarm3d.stage === "arrived")
+                  ? { center: alarm3d.loaded.assets.centre, zoom: MAP_ZOOM }
+                  : null
+            }
+            onArrived3d={() => {
+              setView3d((v) => (v ? { ...v, stage: "arrived" } : v));
+              setAlarm3d((a) => (a ? { ...a, stage: "arrived" } : a));
+            }}
             overlay={
-              view3d &&
-              playable && (
+              view3d && playable ? (
                 <View3D
                   mon={playable}
                   scene={view3d.scene}
@@ -527,7 +613,21 @@ export default function App() {
                   onReady={() => setView3d((v) => (v && v.stage === "building" ? { ...v, stage: "flying" } : v))}
                   onClosed={() => setView3d(null)}
                 />
-              )
+              ) : alarm3d && replaying ? (
+                <Alarm3D
+                  loaded={alarm3d.loaded}
+                  focus={alarm3d.focus}
+                  mapApi={mapApi}
+                  arrived={alarm3d.stage === "arrived"}
+                  onReady={alarm3dReady}
+                  onDown={() => awaiting3d.current && replayComplete()}
+                  onFailed={() => {
+                    replayRun.current++;
+                    setAlarm3d(null);
+                    replayComplete();
+                  }}
+                />
+              ) : null
             }
             apiRef={mapApi}
             onSelectSite={(pilot) => {
