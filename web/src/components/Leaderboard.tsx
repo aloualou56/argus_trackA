@@ -19,7 +19,6 @@ interface Props {
 }
 
 const SHOWN = 10;
-const MEDALS = ["🥇", "🥈", "🥉"];
 
 export function Leaderboard({ community, monument, level, classCode, nick, score, ready }: Props) {
   const { t, number } = useI18n();
@@ -47,7 +46,7 @@ export function Leaderboard({ community, monument, level, classCode, nick, score
   const where = classCode ? t("board.scopeClass", { code: classCode }) : community.kind === "shared" ? t("board.scopeAll") : t("board.scopeDevice");
   const row = (r: BoardRow, rank: number) => (
     <li key={r.nick} className={r.nick === nick ? "is-me" : undefined}>
-      <span className="board-rank">{MEDALS[rank - 1] ?? rank}</span>
+      <span className="board-rank">{rank}</span>
       <span className="board-name">
         {label(r.nick)}
         {r.nick === nick && <strong> ({t("board.you")})</strong>}

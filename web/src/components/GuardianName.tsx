@@ -1,16 +1,16 @@
-// The player's guardian name on the leaderboard ("🦉 Owl 27"): an animal of a fixed list and a number,
+// The player's guardian name on the leaderboard ("Owl 27"): an animal of a fixed list and a number,
 // so a child never puts a real name where others see it. "New player" gives another one (for the next
 // child on the same device, or for a name they do not like).
 import { useState } from "react";
 import { loadNick, newNick, nickParts, saveNick } from "../community/nickname";
 import { useI18n, type MessageKey } from "../i18n";
 
-/** "🦉 Owl 27", in the player's language. */
+/** "Owl 27", in the player's language. */
 export function useNickLabel(): (nick: string) => string {
   const { t } = useI18n();
   return (nick) => {
-    const { animal, number, emoji } = nickParts(nick);
-    return `${emoji} ${t(`nick.${animal}` as MessageKey)} ${number}`;
+    const { animal, number } = nickParts(nick);
+    return `${t(`nick.${animal}` as MessageKey)} ${number}`;
   };
 }
 

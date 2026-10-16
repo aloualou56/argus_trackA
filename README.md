@@ -686,14 +686,14 @@ native speaker has checked yet**; the game says so in its footer in those langua
 
 ## Leaderboard
 
-At the end of every mission, "🏆 Leaderboard": each player once, with their best score, on this mission or on all
+At the end of every mission, "Leaderboard": each player once, with their best score, on this mission or on all
 missions, the best first (on a tie, who got there first); where the player stands ("You are number 4 of 23
-guardians") and how many points pass the next one ("6 more points and you pass 🦊 Fox 58"), and "Your new
+guardians") and how many points pass the next one ("6 more points and you pass Fox 58"), and "Your new
 best!". The class's when there is a class code, everyone's in the shared store, otherwise everyone who played on
 this device.
 
 - **No names, for children:** on the board a player is a guardian name: an animal of a fixed list of 24 and a
-  number ("🦉 Owl 27"), shown in the player's language. It is never typed, so nobody can put a real name, their
+  number ("Owl 27"), shown in the player's language. It is never typed, so nobody can put a real name, their
   own or anyone else's, where others see it. It is made on the first visit and kept on the device; "New player /
   other name" on the first screen gives another (for the next child on a shared device, or a name they do not
   like). Records stay anonymous otherwise: the name goes with the same score records as before
@@ -710,10 +710,10 @@ this device.
 
 At the end of a mission the guardian says: "Every neighbourhood has an old building nobody looks after: a church,
 a bridge, the old school. Go and see it with a guardian's eyes." "Make a card for your own monument" opens the
-same observation card for a building that is not one of the game's (also "🏠 A building in my neighbourhood" on
+same observation card for a building that is not one of the game's (also "A building in my neighbourhood" on
 the first screen, and in the card's monument list). The player writes what it is called, picks what it is
 (church, bridge, school, house, castle or wall, statue or memorial, something else), what they saw (the same
-checklist), where (the town and the street in words, or "📍 Add my location", asked of the browser only when
+checklist), where (the town and the street in words, or "Add my location", asked of the browser only when
 pressed), when, and may add a photo. The card prints and opens an email the player sends themselves; who to give
 it to: a grown-up first (parents, teacher), then the town hall, and for an old or listed building the heritage
 office of the area. Like every card it stays on the device; there is no ARGUS data file for it, as it is not one
