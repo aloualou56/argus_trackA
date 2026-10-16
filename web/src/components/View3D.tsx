@@ -30,7 +30,7 @@ const wait = (ms: number) => new Promise<void>((done) => window.setTimeout(done,
 /** The picture sign on each "See it happen" button (the words are the button's name). */
 const FX_SIGN: Record<Effect, string> = {
   rain: "🌧️", acidrain: "🌧️", flood: "🌊", storm: "⛈️", wind: "💨", heat: "🌡️", sun: "☀️", frost: "❄️",
-  quake: "🏚️", slide: "⛰️", damp: "💧", fire: "🔥", wildfire: "🔥", smog: "🏭", plants: "🌿", visitors: "👥",
+  quake: "🏚️", walls: "🧱", slide: "⛰️", creep: "↘️", sink: "⤵️", damp: "💧", fire: "🔥", wildfire: "🔥", smog: "🏭", plants: "🌿", visitors: "👥",
 };
 const LEVEL_RANK: Record<string, number> = { low: 0, medium: 1, high: 2, extreme: 3, catastrophic: 4 };
 
@@ -223,7 +223,7 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
   // the dangers it stands for (said under the buttons).
   const fx = new Map<Effect, { rank: number; titles: string[] }>();
   for (const d of dangers) {
-    const e = effectOf(d.key);
+    const e = effectOf(d.key, d.level);
     if (!e || (phase === "open" && houseRef.current && !houseRef.current.canWeather(e))) continue;
     const entry = fx.get(e) ?? { rank: -1, titles: [] };
     entry.rank = Math.max(entry.rank, LEVEL_RANK[d.level] ?? 0);

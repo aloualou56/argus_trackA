@@ -155,7 +155,10 @@ export type Effect =
   | "sun"
   | "frost"
   | "quake"
+  | "walls"
   | "slide"
+  | "creep"
+  | "sink"
   | "damp"
   | "fire"
   | "wildfire"
@@ -166,12 +169,13 @@ export type Effect =
 /** Every effect, in the order they are offered. */
 export const EFFECTS: readonly Effect[] = [
   "rain", "storm", "flood", "acidrain", "damp", "wind", "heat", "sun", "frost",
-  "quake", "slide", "fire", "wildfire", "smog", "plants", "visitors",
+  "quake", "walls", "slide", "creep", "sink", "fire", "wildfire", "smog", "plants", "visitors",
 ];
 
 /** Which effect plays out one of ARGUS's dangers, from its scenario key ("delos-masks.rainfall.site",
- *  "schenkenberg.fire.large-100y"). Null where nothing can be shown properly (woodworm, insects,
- *  animals, vandalism, dumping, polluted groundwater). The first rule that matches wins. */
+ *  "schenkenberg.fire.large-100y") and, for a slope, ARGUS's level for it. Null where nothing can be
+ *  shown properly (woodworm, insects, animals, vandalism, dumping, polluted groundwater). The first rule
+ *  that matches wins. */
 const EFFECT_RULES: [RegExp, Effect | null][] = [
   [/groundwater-pollution|biohazard|pests|criminals|vandalism|landfill/, null],
   [/fire\.(large|forest)|forest-fire|wildfire/, "wildfire"],
@@ -184,16 +188,28 @@ const EFFECT_RULES: [RegExp, Effect | null][] = [
   [/freeze-thaw|low-temperature|frost|temperature-variation/, "frost"],
   [/heatwave|high-temperature|dry-periods|drought/, "heat"],
   [/(^|[.-])uv([.-]|$)|solar/, "sun"],
-  [/earthquake|seismic|architectural-stability|road-traffic/, "quake"],
-  [/landslide|slope|subsidence/, "slide"],
+  // unroofed walls cracking, leaning, losing stones: not an earthquake
+  [/architectural-stability/, "walls"],
+  // heavy road traffic: ARGUS files it under pollutants (exhaust); its vibration is not an earthquake
+  [/road-traffic/, "smog"],
+  [/earthquake|seismic/, "quake"],
+  // the ground settling under the buildings: nothing rolls anywhere
+  [/subsidence/, "sink"],
+  // a landslide (rocks coming down) where ARGUS rates the slope's danger high or worse; else the slow
+  // creep it describes ("the ground on a slope can slowly slip downhill and pull walls with it")
+  [/landslide|slope/, "slide"],
   [/water-rise|groundwater|relative-humidity|rh-fluctuations|incorrect-rh|wet-periods|salinity/, "damp"],
   [/air-pollution/, "smog"],
   [/plant-growth|forest-management|abandonment|dissociation/, "plants"],
   [/visitors/, "visitors"],
 ];
 
-export function effectOf(scenarioKey: string): Effect | null {
+export function effectOf(scenarioKey: string, level?: string): Effect | null {
   const key = scenarioKey.toLowerCase();
-  for (const [rule, effect] of EFFECT_RULES) if (rule.test(key)) return effect;
+  for (const [rule, effect] of EFFECT_RULES) {
+    if (!rule.test(key)) continue;
+    if (effect === "slide" && level && !["high", "extreme", "catastrophic"].includes(level)) return "creep";
+    return effect;
+  }
   return null;
 }

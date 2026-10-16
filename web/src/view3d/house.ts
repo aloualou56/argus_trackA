@@ -418,6 +418,27 @@ function patternGlsl(size: number, emblem: boolean): string {
   col *= 0.92 + 0.16 * hash12(floor(vWorld.xz / 0.04));`;
 }
 
+/** How the ground moves ("See it happen", weather.ts: creep, sink), in world space: what a point at w
+ *  is shifted by. Creep: below a tear across the slope the ground slides downhill and a little down, and
+ *  what stands on it leans. Sink: a dish, deepest in the middle, the walls leaning in where it bends. */
+const GEO_GLSL = `
+  uniform float uEnvCreep, uEnvSink, uGeoR;
+  uniform vec2 uGeoCentre, uGeoDir;
+  vec3 geoShift(vec3 w, float ground) {
+    vec2 rel = w.xz - uGeoCentre;
+    float d = length(rel);
+    float inR = 1.0 - smoothstep(uGeoR * 0.7, uGeoR, d);
+    float up = max(0.0, w.y - ground);
+    float below = smoothstep(-1.5, 1.5, dot(rel, uGeoDir)) * inR;
+    vec3 s = vec3(uGeoDir.x, -0.25, uGeoDir.y) * uEnvCreep * below;
+    s.xz += uGeoDir * uEnvCreep * 0.06 * up * below;
+    float dish = 1.0 - smoothstep(0.0, uGeoR, d);
+    s.y -= uEnvSink * dish;
+    vec2 inward = d > 0.01 ? -rel / d : vec2(0.0);
+    s.xz += inward * uEnvSink * 0.08 * up * dish * (1.0 - dish) * 4.0;
+    return s;
+  }`;
+
 const WALL_H = 2.4; // assumed: OpenStreetMap has the outline, not the height
 const FLOOR = 3.1; // assumed sizes (rooms 215 and 216 are 3.3 m apart)
 const PANEL = 1.35;
@@ -777,8 +798,21 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
     Object.assign(shader.uniforms, {
       uMask: { value: mask }, uMaskMin: { value: maskMin }, uMaskSize: { value: maskSize }, uHasMask: { value: mask ? 1 : 0 },
       uEnvWet: env.wet, uEnvFrost: env.frost, uEnvSoot: env.soot, uEnvHeat: env.heat, uEnvDim: env.dim, uEnvFlash: env.flash,
+      uEnvCreep: env.creep, uEnvSink: env.sink, uGeoCentre: env.geoCentre, uGeoDir: env.geoDir, uGeoR: env.geoR, uGround: { value: floorY },
     });
-    shader.vertexShader = shader.vertexShader.replace(...WORLD_VARYING).replace(...WORLD_POSITION);
+    // the ground moves with the model where it creeps or sinks
+    shader.vertexShader = shader.vertexShader
+      .replace(...WORLD_VARYING)
+      .replace(...WORLD_POSITION)
+      .replace("#include <common>", "#include <common>\nuniform float uGround;" + GEO_GLSL)
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+        if (uEnvCreep > 0.0 || uEnvSink > 0.0) {
+          vec4 wg = modelMatrix * vec4(transformed, 1.0);
+          transformed += inverse(mat3(modelMatrix)) * geoShift(wg.xyz, uGround);
+        }`,
+      );
     shader.fragmentShader = shader.fragmentShader
       .replace(
         "#include <common>",
@@ -1004,6 +1038,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
             uShow: damage.show, uPulse: damage.pulse, uMarkWeather: { value: kind === "stone" ? 1 : 0 },
             uEnvWet: env.wet, uEnvFrost: env.frost, uEnvSoot: env.soot, uEnvHeat: env.heat, uEnvFade: env.fade,
             uEnvDampLow: env.dampLow, uEnvDim: env.dim, uEnvFlash: env.flash,
+            uEnvCreep: env.creep, uEnvSink: env.sink, uGeoCentre: env.geoCentre, uGeoDir: env.geoDir, uGeoR: env.geoR,
             uStoneReach: { value: Math.max(20, dist(focusXY, houseCentre) + 25) },
             uStoneLow: { value: stoneLow },
             uStoneTop: { value: stoneTop },
@@ -1011,7 +1046,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.vertexShader = shader.vertexShader
             .replace(
               "#include <common>",
-              "#include <common>\nvarying vec3 vWorld;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;",
+              "#include <common>\nvarying vec3 vWorld;\nuniform float uLean, uGround;\nuniform vec2 uSource, uLeanDir;" + GEO_GLSL,
             )
             .replace(
               "#include <begin_vertex>",
@@ -1022,6 +1057,10 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
                 float reachL = 1.0 - smoothstep(4.0, 10.0, distance(wl.xz, uSource));
                 float off = tan(uLean) * max(0.0, wl.y - uGround) * reachL;
                 transformed += inverse(mat3(modelMatrix)) * vec3(uLeanDir.x * off, 0.0, uLeanDir.y * off);
+              }
+              if (uEnvCreep > 0.0 || uEnvSink > 0.0) {
+                vec4 wg = modelMatrix * vec4(transformed, 1.0);
+                transformed += inverse(mat3(modelMatrix)) * geoShift(wg.xyz, uGround);
               }`,
             )
             .replace(
@@ -1031,7 +1070,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
+              `#include <common>\nvarying vec3 vWorld;\nuniform float uWet, uLoss, uSalt, uDamp, uGround, uFlake, uWear, uWeather, uCrack, uCrackW, uSourceY, uReach, uLean, uShow, uPulse, uMarkWeather, uStoneReach, uStoneLow, uStoneTop, uEnvWet, uEnvFrost, uEnvSoot, uEnvHeat, uEnvFade, uEnvDampLow, uEnvDim, uEnvFlash, uEnvCreep, uEnvSink, uGeoR; uniform vec2 uGeoCentre, uGeoDir;\nuniform vec2 uSource, uWallDir, uLeanDir;\n${NOISE}`,
             )
             .replace(
               "#include <map_fragment>",
@@ -1137,6 +1176,23 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
               c = mix(c, vec3(lumE) * 1.08 + 0.07, uEnvFade);
               c *= 1.0 - 0.38 * uEnvDampLow * (1.0 - smoothstep(uGround + 0.4, uGround + 1.4, vWorld.y)) * step(uGround - 0.5, vWorld.y);
               c = c * (1.0 - uEnvDim) + uEnvFlash * 0.55;
+              if (uEnvCreep > 0.0) {
+                // the tear across the slope, opening as the ground below it slides away
+                vec2 relC = vWorld.xz - uGeoCentre;
+                float inC = 1.0 - smoothstep(uGeoR * 0.7, uGeoR, length(relC));
+                float acrossC = dot(relC, uGeoDir) + (vnoise(vec2(dot(relC, vec2(-uGeoDir.y, uGeoDir.x)) * 0.7, 2.0)) - 0.5) * 1.2;
+                float tear = (1.0 - smoothstep(0.0, 0.04 + uEnvCreep * 0.3, abs(acrossC))) * inC;
+                c = mix(c, vec3(0.06, 0.05, 0.04), tear);
+                harm = max(harm, max(tear, 0.2 * inC * smoothstep(-1.5, 1.5, dot(relC, uGeoDir))) * smoothstep(0.0, 0.08, uEnvCreep));
+              }
+              if (uEnvSink > 0.0) {
+                // cracks in a ring where the ground bends most, wider as it sinks
+                float rS = length(vWorld.xz - uGeoCentre);
+                float ringS = abs(rS - uGeoR * 0.55 + (vnoise(vWorld.xz * 0.8) - 0.5) * 1.6);
+                float crS = (1.0 - smoothstep(0.0, 0.03 + uEnvSink * 0.2, ringS)) * smoothstep(0.0, 0.05, uEnvSink);
+                c = mix(c, vec3(0.06, 0.05, 0.04), crS);
+                harm = max(harm, max(crS, 0.18 * (1.0 - smoothstep(uGeoR * 0.25, uGeoR * 0.7, rS))) * smoothstep(0.0, 0.08, uEnvSink));
+              }
               c = mix(c, vec3(1.0, 0.12, 0.3), clamp(harm, 0.0, 1.0) * uShow * (0.35 + 0.3 * uPulse));
               diffuseColor.rgb = c;`,
             );

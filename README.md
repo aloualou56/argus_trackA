@@ -516,7 +516,15 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   gusts, lightning at most once every 4 s), damp (low mist, the damp rising in the walls and falling again), wind
   (streaks, sand and dust blowing past), a heatwave (shimmer, bleaching, glare), strong sun (the colours
   fading), frost (snow, frost on what faces up, then the thaw, on a loop), an earthquake (the camera shaking,
-  dust and stones falling from the wall tops), a landslide (boulders rolling down the slope, dust), a fire in the
+  dust and stones falling from the wall tops), unroofed walls giving way (ARGUS's "architectural stability":
+  stones and dust coming down from the wall tops, no shaking), a landslide (boulders rolling down the slope,
+  dust) only where ARGUS rates the slope's danger high or worse (Lucretili's Monte Morra); where it rates it
+  lower (both Delos houses, low) the slow creep it describes: the ground below a tear across the slope sliding
+  downhill and the walls on it tilting, 50 years in 12 s at an assumed 1 cm a year. The ground sinking
+  (subsidence: Delos, Baltanás's cellars, Lucretili) is its own: a dish under the buildings, 0.4 m at the middle
+  in 50 years at an assumed 8 mm a year, the walls leaning in, a ring of cracks where it bends. Both move
+  ARGUS's model itself (and the ground with it) in the shader. Heavy road traffic (Ranverso) shows as air
+  pollution, which ARGUS files it under, not as an earthquake. A fire in the
   building (flames out of the roof, smoke) or a wildfire around the place, air pollution (haze, soot settling),
   plants (rooting and growing over the walls, cut back, coming again) and visitors (people walking the floors,
   around the walls). For people, a fire and walls shaking the camera comes closer, to some 26 m. Each says

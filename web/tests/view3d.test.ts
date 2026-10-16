@@ -87,8 +87,18 @@ describe("see it happen: ARGUS's dangers played out in 3D", () => {
     expect(effectOf("lucretili-conventillo.uv.mural-paintings")).toBe("sun");
     expect(effectOf("ranverso.light-uv.solar-radiation-uv")).toBe("sun");
     expect(effectOf("schenkenberg.earthquake.475y")).toBe("quake");
-    expect(effectOf("lucretili-montefalco.landslide.castle")).toBe("slide");
-    expect(effectOf("baltanas.subsidence.cellar-ensemble")).toBe("slide");
+    expect(effectOf("delos-masks.seismic.site")).toBe("quake");
+    // unroofed walls giving way, and traffic's exhaust: not earthquakes
+    expect(effectOf("delos-masks.architectural-stability.site")).toBe("walls");
+    expect(effectOf("ranverso.pollutants.overloading-road-traffic")).toBe("smog");
+    // rocks coming down only where ARGUS rates the slope's danger high or worse; else a slow creep
+    expect(effectOf("lucretili-montefalco.landslide.castle", "extreme")).toBe("slide");
+    expect(effectOf("lucretili-conventillo.landslide.site", "catastrophic")).toBe("slide");
+    expect(effectOf("delos-masks.gravitational-slope-movements.site", "low")).toBe("creep");
+    expect(effectOf("delos-fournoi.gravitational-slope-movements.site", "low")).toBe("creep");
+    // the ground settling under the buildings, at any level
+    expect(effectOf("baltanas.subsidence.cellar-ensemble", "extreme")).toBe("sink");
+    expect(effectOf("delos-masks.subsidence.site", "low")).toBe("sink");
     expect(effectOf("delos-masks.water-rise.site")).toBe("damp");
     expect(effectOf("lucretili-conventillo.relative-humidity.mural-paintings")).toBe("damp");
     expect(effectOf("ranverso.fire.building-fire")).toBe("fire");
@@ -105,10 +115,12 @@ describe("see it happen: ARGUS's dangers played out in 3D", () => {
   it("every 3D place has dangers that can be played out", () => {
     const scenes = JSON.parse(readFileSync(new URL("../public/data/view3d/scenes.json", import.meta.url), "utf8")) as { scenes: { id: string }[] };
     for (const s of scenes.scenes) {
-      const place = JSON.parse(readFileSync(new URL(`../public/data/view3d/${s.id}.json`, import.meta.url), "utf8")) as { dangers: { key: string }[] };
-      const shown = new Set(place.dangers.map((d) => effectOf(d.key)).filter(Boolean));
+      const place = JSON.parse(readFileSync(new URL(`../public/data/view3d/${s.id}.json`, import.meta.url), "utf8")) as { dangers: { key: string; level: string }[] };
+      const shown = new Set(place.dangers.map((d) => effectOf(d.key, d.level)).filter(Boolean));
       expect(shown.size, s.id).toBeGreaterThanOrEqual(1);
       for (const e of shown) expect(EFFECTS).toContain(e);
+      // no landslide at Delos: ARGUS rates its slopes low there
+      if (s.id.startsWith("delos")) expect(shown.has("slide"), s.id).toBe(false);
     }
   });
 });

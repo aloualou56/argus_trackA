@@ -26,11 +26,25 @@ export interface Env {
   dim: Uniform;
   /** A flash of lightning. */
   flash: Uniform;
+  /** The ground creeping downhill (metres moved) below a tear across the slope through geoCentre. */
+  creep: Uniform;
+  /** The ground settling (metres down at the middle) in a dish around geoCentre. */
+  sink: Uniform;
+  /** Where the ground moves (scene x, z), which way is downhill, and how far round it moves (metres). */
+  geoCentre: { value: THREE.Vector2 };
+  geoDir: { value: THREE.Vector2 };
+  geoR: Uniform;
 }
+
+/** The parts of Env that come and go with the weather (the rest says where). */
+const NUMERIC = ["wet", "frost", "soot", "heat", "fade", "dampLow", "dim", "flash", "creep", "sink"] as const;
 
 export function makeEnv(): Env {
   const u = () => ({ value: 0 });
-  return { wet: u(), frost: u(), soot: u(), heat: u(), fade: u(), dampLow: u(), dim: u(), flash: u() };
+  return {
+    wet: u(), frost: u(), soot: u(), heat: u(), fade: u(), dampLow: u(), dim: u(), flash: u(), creep: u(), sink: u(),
+    geoCentre: { value: new THREE.Vector2() }, geoDir: { value: new THREE.Vector2(1, 0) }, geoR: { value: 20 },
+  };
 }
 
 export interface WeatherContext {
@@ -271,7 +285,7 @@ export function createWeather(ctx: WeatherContext): Weather {
   const wind = new THREE.Vector2(0.8, 0.6).normalize(); // from the south-west, as the sun
   // every part of the current effect, so it can be taken down
   let parts: { update?: (dt: number, c: THREE.Vector3) => void; dispose: () => void }[] = [];
-  const targets: Partial<Record<keyof Env, number>> = {};
+  const targets: Partial<Record<(typeof NUMERIC)[number], number>> = {};
   let cycle: ((t: number) => void) | null = null; // values that come and go (frost and thaw, damp up and down)
   // (called through a function: `cycle` is set inside build, where the type checker cannot follow it)
   const runCycle = (k: number) => cycle?.(k);
@@ -692,16 +706,41 @@ export function createWeather(ctx: WeatherContext): Weather {
         targets.dim = 0.05;
         break;
       case "quake":
+      case "walls":
+        // stones and dust coming down from the wall tops (an earthquake also shakes the camera: update)
         stones(false);
-        cloud(500, {
+        cloud(e === "quake" ? 500 : 250, {
           born: (_i, p) => {
             const top = ctx.tops.length ? ctx.tops[Math.floor(rnd() * ctx.tops.length)] : c;
             const cc = ctx.target();
-            Object.assign(p, { x: top.x - cc.x + (rnd() - 0.5), y: top.y - cc.y, z: top.z - cc.z + (rnd() - 0.5), vx: (rnd() - 0.5) * 0.3, vy: -(0.6 + rnd()), vz: (rnd() - 0.5) * 0.3, life: 2.5 + rnd() * 2, size: 0.5 + rnd() * 0.7, alpha: 0.55, rgb: [0.78, 0.72, 0.64] });
+            Object.assign(p, { x: top.x - cc.x + (rnd() - 0.5), y: top.y - cc.y, z: top.z - cc.z + (rnd() - 0.5), vx: (rnd() - 0.5) * 0.3, vy: -(0.6 + rnd()), vz: (rnd() - 0.5) * 0.3, life: 2.5 + rnd() * 2, size: 0.5 + rnd() * 0.7, alpha: e === "quake" ? 0.55 : 0.4, rgb: [0.78, 0.72, 0.64] });
           },
           grow: 2.5,
           fadeIn: 0.1,
         });
+        break;
+      case "creep": {
+        // the ground on the slope sliding slowly downhill below a tear across it, the walls on it tilting:
+        // 50 years in 12 s, at an assumed 1 cm a year (0.5 m in all); then again
+        const g = 2;
+        const dir = new THREE.Vector2(-(ctx.surface(c.x + g, c.z) - ctx.surface(c.x - g, c.z)), -(ctx.surface(c.x, c.z + g) - ctx.surface(c.x, c.z - g)));
+        if (dir.lengthSq() < 1e-6) dir.set(1, 0);
+        env.geoDir.value.copy(dir.normalize());
+        env.geoCentre.value.set(c.x, c.z);
+        env.geoR.value = Math.min(R, 30);
+        cycle = (k) => {
+          env.creep.value = 0.5 * Math.min(1, (ctx.still ? 12 : k % 15) / 12);
+        };
+        break;
+      }
+      case "sink":
+        // the ground settling under the buildings in a dish, the walls leaning in: 50 years in 12 s, at an
+        // assumed 8 mm a year (0.4 m at the middle); then again
+        env.geoCentre.value.set(c.x, c.z);
+        env.geoR.value = Math.min(25, Math.max(8, R * 0.5));
+        cycle = (k) => {
+          env.sink.value = 0.4 * Math.min(1, (ctx.still ? 12 : k % 15) / 12);
+        };
         break;
       case "slide":
         stones(true);
@@ -765,7 +804,7 @@ export function createWeather(ctx: WeatherContext): Weather {
     }
   }
 
-  const ENV_KEYS = Object.keys(env) as (keyof Env)[];
+  const ENV_KEYS = NUMERIC;
   return {
     shake,
     focusFor(e) {
@@ -778,7 +817,7 @@ export function createWeather(ctx: WeatherContext): Weather {
         return spots.reduce((best, p) => (p.distanceTo(m) < best.distanceTo(m) ? p : best)).clone();
       }
       if (e === "fire") return new THREE.Vector3(c.x, ctx.topAt(c.x, c.z), c.z);
-      if (e === "quake" && ctx.tops.length) {
+      if ((e === "quake" || e === "walls") && ctx.tops.length) {
         const top = ctx.tops.reduce((best, p) => (p.distanceTo(c) < best.distanceTo(c) ? p : best));
         return top.clone();
       }
