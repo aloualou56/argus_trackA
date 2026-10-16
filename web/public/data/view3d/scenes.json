@@ -31,6 +31,7 @@
      "h": -5.65,
      "alt": 796.85,
      "kind": "vibration",
+     "type": "Accelerometer Sensor",
      "where": "Cellar 364 - Outside - car path",
      "monitoring": 72,
      "serial": "159313"
@@ -43,6 +44,7 @@
      "h": -1.12,
      "alt": 801.38,
      "kind": "airflow",
+     "type": "Air Flow Sensor",
      "where": "Cellar 88 - Chimney 4 Pasillo sisa3-sisa4",
      "monitoring": 76,
      "serial": "AF4-149421"
@@ -55,6 +57,7 @@
      "h": -5.66,
      "alt": 796.84,
      "kind": "other",
+     "type": "Barrier Sensor",
      "where": "Cellar 364 - Outside - car path",
      "monitoring": 79,
      "serial": "A8610A34324D7F09"
@@ -67,6 +70,7 @@
      "h": -5.5,
      "alt": 797.0,
      "kind": "other",
+     "type": "Gas Sensor",
      "where": "Cellar 193 - Lagar",
      "monitoring": 80,
      "serial": "151810"
@@ -79,6 +83,7 @@
      "h": -5.5,
      "alt": 797.0,
      "kind": "other",
+     "type": "Gas Sensor",
      "where": "Cellar 193 - Lagar",
      "monitoring": 81,
      "serial": "151810"
@@ -91,6 +96,7 @@
      "h": -5.5,
      "alt": 797.0,
      "kind": "other",
+     "type": "Gas Sensor",
      "where": "Cellar 193 - Lagar",
      "monitoring": 82,
      "serial": "151810"
@@ -103,6 +109,7 @@
      "h": -5.41,
      "alt": 797.09,
      "kind": "other",
+     "type": "Pir-Airflow Sensor",
      "where": "Cellar 193 - Entry",
      "monitoring": 88,
      "serial": "A8610A3230467704"
@@ -115,6 +122,7 @@
      "h": -5.5,
      "alt": 797.0,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Cellar 193 - Lagar",
      "monitoring": 92,
      "serial": "151810"
@@ -155,6 +163,7 @@
      "h": -2.8,
      "alt": 34.0,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Few meters away from the House of Fournoi",
      "monitoring": 117,
      "serial": "151815"
@@ -167,6 +176,7 @@
      "h": -2.8,
      "alt": 34.0,
      "kind": "other",
+     "type": "Pyranometer Sensor",
      "where": "Few meters away from the House of Fournoi",
      "monitoring": 123,
      "serial": "151815"
@@ -179,6 +189,7 @@
      "h": 0.2,
      "alt": 37.0,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Sensor placed on a plastered wall at the House of Fournoi",
      "monitoring": 127,
      "serial": "149678"
@@ -191,6 +202,7 @@
      "h": 0.2,
      "alt": 37.0,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Sensor placed on a plastered wall at the House of Fournoi",
      "monitoring": 128,
      "serial": "149529"
@@ -203,6 +215,7 @@
      "h": -2.8,
      "alt": 34.0,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Few meters away from the House of Fournoi",
      "monitoring": 129,
      "serial": "151815"
@@ -215,6 +228,7 @@
      "h": -4.8,
      "alt": 32.0,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": "Few meters away from the House of Fournoi",
      "monitoring": 134,
      "serial": "151815"
@@ -227,6 +241,7 @@
      "h": 1.2,
      "alt": 38.0,
      "kind": "weather_station",
+     "type": "Weather Station Sensor",
      "where": "Few meters away from the House of Fournoi",
      "monitoring": 140,
      "serial": "2CF7F1C0723001F4"
@@ -267,6 +282,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "airflow",
+     "type": "Air Flow Sensor",
      "where": "Room 215 - Theatrical Masks mosaic",
      "monitoring": 110,
      "serial": "109315"
@@ -279,6 +295,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "airflow",
+     "type": "Air Flow Sensor",
      "where": "Room 214 - Dionysus mosaic",
      "monitoring": 111,
      "serial": "149405"
@@ -291,6 +308,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Room 217 - Dolphins mosaic",
      "monitoring": 113,
      "serial": "151805"
@@ -303,6 +321,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Room 216 - Seilinos mosaic",
      "monitoring": 114,
      "serial": "151809"
@@ -315,6 +334,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Room 215 - Theatrical Masks mosaic",
      "monitoring": 115,
      "serial": "151836"
@@ -327,6 +347,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Room 214 - Dionysus mosaic",
      "monitoring": 116,
      "serial": "168439"
@@ -339,6 +360,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "light_uv",
+     "type": "Lux Meter Sensor",
      "where": "Room 217 - Dolphins mosaic",
      "monitoring": 118,
      "serial": "151805"
@@ -351,6 +373,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "light_uv",
+     "type": "Lux Meter Sensor",
      "where": "Room 216 - Seilinos mosaic",
      "monitoring": 119,
      "serial": "151809"
@@ -363,6 +386,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "light_uv",
+     "type": "Lux Meter Sensor",
      "where": "Room 215 - Theatrical Masks mosaic",
      "monitoring": 120,
      "serial": "151836"
@@ -375,6 +399,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "light_uv",
+     "type": "Lux Meter Sensor",
      "where": "Room 214 - Dionysus mosaic",
      "monitoring": 121,
      "serial": "168439"
@@ -387,6 +412,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "people_counter",
+     "type": "People Counter Sensor",
      "where": "Above door of room 214 - Dionysus mosaic",
      "monitoring": 122,
      "serial": "2CF7F1C062800035"
@@ -399,6 +425,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Room 215 - Theatrical Masks mosaic",
      "monitoring": 124,
      "serial": "149368"
@@ -411,6 +438,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Room 215 - Theatrical Masks mosaic",
      "monitoring": 125,
      "serial": "149423"
@@ -423,6 +451,7 @@
      "h": 2.31,
      "alt": 39.1,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": "Few meters away from the House of the Masks",
      "monitoring": 126,
      "serial": "149460"
@@ -435,6 +464,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": "Room 217 - Dolphins mosaic",
      "monitoring": 130,
      "serial": "151805"
@@ -447,6 +477,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": "Room 216 - Seilinos mosaic",
      "monitoring": 131,
      "serial": "151809"
@@ -459,6 +490,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": "Room 215 - Theatrical Masks mosaic",
      "monitoring": 132,
      "serial": "151836"
@@ -471,6 +503,7 @@
      "h": 1.31,
      "alt": 38.1,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": "Room 214 - Dionysus mosaic",
      "monitoring": 133,
      "serial": "168439"
@@ -483,6 +516,7 @@
      "h": 2.31,
      "alt": 39.1,
      "kind": "weather_station",
+     "type": "Weather Station Sensor",
      "where": "Few meters away from the House of the Masks",
      "monitoring": 139,
      "serial": "2CF7F1C061300548"
@@ -523,6 +557,7 @@
      "h": 0.5,
      "alt": 730.8,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Conventillo - Staircase access façade",
      "monitoring": 141,
      "serial": "177266"
@@ -535,6 +570,7 @@
      "h": 0.4,
      "alt": 730.7,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Conventillo - First-storey crack",
      "monitoring": 142,
      "serial": "177253"
@@ -547,6 +583,7 @@
      "h": 2.87,
      "alt": 733.17,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Conventillo - Sensor and logger on the same wall",
      "monitoring": 143,
      "serial": "177320"
@@ -559,6 +596,7 @@
      "h": 1.7,
      "alt": 732.0,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Conventillo - Main room, second floor",
      "monitoring": 148,
      "serial": "177239"
@@ -571,6 +609,7 @@
      "h": 0.65,
      "alt": 730.95,
      "kind": "people_counter",
+     "type": "People Counter Sensor",
      "where": "Conventillo - Main entrance",
      "monitoring": 150,
      "serial": "2CF7F1C062800056"
@@ -583,6 +622,7 @@
      "h": 1.7,
      "alt": 732.0,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": "Conventillo - Main room, second floor",
      "monitoring": 153,
      "serial": "177239"
@@ -595,6 +635,7 @@
      "h": 0.6,
      "alt": 730.9,
      "kind": "tiltmeter",
+     "type": "Tiltmeter Sensor",
      "where": "Conventillo - Staircase access façade",
      "monitoring": 155,
      "serial": "152931"
@@ -607,6 +648,7 @@
      "h": 0.5,
      "alt": 730.8,
      "kind": "tiltmeter",
+     "type": "Tiltmeter Sensor",
      "where": "Conventillo - First floor, close to a window",
      "monitoring": 156,
      "serial": "153061"
@@ -619,6 +661,7 @@
      "h": 2.8,
      "alt": 733.1,
      "kind": "tiltmeter",
+     "type": "Tiltmeter Sensor",
      "where": "Conventillo - Third floor, close to a window",
      "monitoring": 157,
      "serial": "152816"
@@ -631,6 +674,7 @@
      "h": 2.6,
      "alt": 732.9,
      "kind": "vibration",
+     "type": "Vibration Sensor",
      "where": "Montefalco Castle - External wall",
      "monitoring": 158,
      "serial": "152608"
@@ -671,6 +715,7 @@
      "h": 823.4,
      "alt": 900.1,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Montefalco Castle - External wall",
      "monitoring": 146,
      "serial": "177310"
@@ -683,6 +728,7 @@
      "h": 822.3,
      "alt": 899.0,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Montefalco Castle - External wall",
      "monitoring": 147,
      "serial": "177325"
@@ -695,6 +741,7 @@
      "h": 823.3,
      "alt": 900.0,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": "Montefalco Castle - Exterior wall pole",
      "monitoring": 149,
      "serial": "177281"
@@ -707,6 +754,7 @@
      "h": 823.1,
      "alt": 899.8,
      "kind": "rain_gauge",
+     "type": "Rain Gauge Sensor",
      "where": "Montefalco Castle - Exterior wall pole",
      "monitoring": 196,
      "serial": "177281"
@@ -747,6 +795,7 @@
      "h": -8.9,
      "alt": 431.2,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Villa di Orazio - Close to a mosaic",
      "monitoring": 144,
      "serial": "174156"
@@ -759,6 +808,7 @@
      "h": -8.0,
      "alt": 432.1,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": "Villa di Orazio - Perimetral wall enclosing a mosaic",
      "monitoring": 145,
      "serial": "177287"
@@ -771,6 +821,7 @@
      "h": -3.41,
      "alt": 436.69,
      "kind": "people_counter",
+     "type": "People Counter Sensor",
      "where": "Villa di Orazio - Entrance gate pillar",
      "monitoring": 151,
      "serial": "24E124600E450308"
@@ -783,6 +834,7 @@
      "h": -8.47,
      "alt": 431.63,
      "kind": "other",
+     "type": "Pyranometer Sensor",
      "where": "Villa di Orazio - Gateway pole",
      "monitoring": 152,
      "serial": "177237"
@@ -795,6 +847,7 @@
      "h": -3.29,
      "alt": 436.81,
      "kind": "weather_station",
+     "type": "Weather Station Sensor",
      "where": "Villa di Orazio - Gateway pillar",
      "monitoring": 159,
      "serial": "2CF7F1C072300286"
@@ -835,6 +888,7 @@
      "h": -13.84,
      "alt": 340.71,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": null,
      "monitoring": 51,
      "serial": "168442"
@@ -847,6 +901,7 @@
      "h": -10.83,
      "alt": 343.72,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": null,
      "monitoring": 52,
      "serial": "174188"
@@ -859,6 +914,7 @@
      "h": -13.06,
      "alt": 341.49,
      "kind": "humidity",
+     "type": "Humidity Sensor",
      "where": null,
      "monitoring": 53,
      "serial": "177315"
@@ -871,6 +927,7 @@
      "h": -11.59,
      "alt": 342.96,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": null,
      "monitoring": 54,
      "serial": "168442"
@@ -883,6 +940,7 @@
      "h": -11.83,
      "alt": 342.72,
      "kind": "temperature",
+     "type": "Temperature Sensor",
      "where": null,
      "monitoring": 55,
      "serial": "174188"
@@ -895,6 +953,7 @@
      "h": -13.53,
      "alt": 341.02,
      "kind": "vibration",
+     "type": "Vibration Sensor",
      "where": null,
      "monitoring": 57,
      "serial": "170894"
@@ -907,6 +966,7 @@
      "h": -13.79,
      "alt": 340.76,
      "kind": "acoustic",
+     "type": "Acoustic Sensor",
      "where": null,
      "monitoring": 58,
      "serial": "raspi-100000007a1083f5"
@@ -919,6 +979,7 @@
      "h": -14.09,
      "alt": 340.46,
      "kind": "airflow",
+     "type": "Air Flow Sensor",
      "where": null,
      "monitoring": 59,
      "serial": "149248"
@@ -931,6 +992,7 @@
      "h": -14.04,
      "alt": 340.51,
      "kind": "airflow",
+     "type": "Air Flow Sensor",
      "where": null,
      "monitoring": 60,
      "serial": "A8610A3539387205"
@@ -943,6 +1005,7 @@
      "h": -13.86,
      "alt": 340.69,
      "kind": "other",
+     "type": "Gas Sensor",
      "where": null,
      "monitoring": 61,
      "serial": "A8610A3338359111"
@@ -955,6 +1018,7 @@
      "h": -13.59,
      "alt": 340.96,
      "kind": "light_uv",
+     "type": "Lux Meter Sensor",
      "where": null,
      "monitoring": 62,
      "serial": "168442"
@@ -967,6 +1031,7 @@
      "h": -13.84,
      "alt": 340.71,
      "kind": "other",
+     "type": "Multispectral Camera Sensor",
      "where": null,
      "monitoring": 63,
      "serial": "Svy 324160033"
@@ -979,6 +1044,7 @@
      "h": -14.04,
      "alt": 340.51,
      "kind": "other",
+     "type": "Pyranometer Sensor",
      "where": null,
      "monitoring": 64,
      "serial": "149361"
@@ -991,6 +1057,7 @@
      "h": -14.56,
      "alt": 339.99,
      "kind": "rain_gauge",
+     "type": "Rain Gauge Sensor",
      "where": null,
      "monitoring": 65,
      "serial": "177315"
@@ -1003,6 +1070,7 @@
      "h": -13.83,
      "alt": 340.72,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": null,
      "monitoring": 66,
      "serial": "A8610A34363D6617"
@@ -1015,6 +1083,7 @@
      "h": -13.83,
      "alt": 340.72,
      "kind": "soil_moisture",
+     "type": "Soil Moisture Sensor",
      "where": null,
      "monitoring": 67,
      "serial": "A8610A333526680F"
@@ -1027,6 +1096,7 @@
      "h": -13.72,
      "alt": 340.83,
      "kind": "tiltmeter",
+     "type": "Tiltmeter Sensor",
      "where": null,
      "monitoring": 68,
      "serial": "143276"
@@ -1039,6 +1109,7 @@
      "h": -14.09,
      "alt": 340.46,
      "kind": "other",
+     "type": "UV Meter Sensor",
      "where": null,
      "monitoring": 69,
      "serial": "168442"
@@ -1051,6 +1122,7 @@
      "h": -13.84,
      "alt": 340.71,
      "kind": "weather_station",
+     "type": "Weather Station Sensor",
      "where": null,
      "monitoring": 200,
      "serial": "2CF7F1C0734001E8"
@@ -1091,6 +1163,7 @@
      "h": 15.69,
      "alt": 645.99,
      "kind": "vibration",
+     "type": "Accelerometer Sensor",
      "where": "Schenkenberg tower - North wall",
      "monitoring": 100,
      "serial": "159070"
@@ -1103,6 +1176,7 @@
      "h": 18.22,
      "alt": 648.52,
      "kind": "vibration",
+     "type": "Accelerometer Sensor",
      "where": "Schenkenberg tower - North wall",
      "monitoring": 101,
      "serial": "152555"
@@ -1115,6 +1189,7 @@
      "h": 17.88,
      "alt": 648.18,
      "kind": "vibration",
+     "type": "Accelerometer Sensor",
      "where": "Schenkenberg tower - South wall",
      "monitoring": 102,
      "serial": "152479"
@@ -1127,6 +1202,7 @@
      "h": 17.88,
      "alt": 648.18,
      "kind": "vibration",
+     "type": "Accelerometer Sensor",
      "where": "Schenkenberg tower - South wall",
      "monitoring": 103,
      "serial": "175480"
@@ -1139,6 +1215,7 @@
      "h": 12.7,
      "alt": 643.0,
      "kind": "other",
+     "type": "Composite sensor 2 Sensor",
      "where": null,
      "monitoring": 105,
      "serial": "2CF7F1C072600345"
@@ -1151,6 +1228,7 @@
      "h": 13.2,
      "alt": 643.5,
      "kind": "crackmeter",
+     "type": "Crackmeter Sensor",
      "where": null,
      "monitoring": 106,
      "serial": "149796"
@@ -1163,6 +1241,7 @@
      "h": 18.22,
      "alt": 648.52,
      "kind": "tiltmeter",
+     "type": "Tiltmeter Sensor",
      "where": "North face",
      "monitoring": 107,
      "serial": "152914"
@@ -1175,6 +1254,7 @@
      "h": 17.0,
      "alt": 647.3,
      "kind": "tiltmeter",
+     "type": "Tiltmeter Sensor",
      "where": "South face",
      "monitoring": 108,
      "serial": "152899"
@@ -1187,6 +1267,7 @@
      "h": 20.9,
      "alt": 651.2,
      "kind": "weather_station",
+     "type": "Weather Station Sensor",
      "where": "Top of the tower",
      "monitoring": 109,
      "serial": "2CF7F1C072300226"

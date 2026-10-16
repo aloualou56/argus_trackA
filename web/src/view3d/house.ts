@@ -52,7 +52,7 @@ export interface HouseData {
   /** The ruin's outline (the drawn walls, where ARGUS's model is missing) and plot outlines; may be empty. */
   shapes: { kind: "ruin" | "site"; ring: XY[] }[];
   /** h: metres above ARGUS's placement of its model; alt: above the WGS84 ellipsoid, where given. */
-  sensors3d: { xy: XY; h: number; alt?: number; kind: string; room: string | null; serial?: string | null }[];
+  sensors3d: HouseSensor[];
   rooms: HouseRoom[];
   dangers: HouseDanger[];
   risk_checked_at: string | null;
@@ -403,6 +403,44 @@ export async function loadAssets(dataUrl: string, imagery: string): Promise<Asse
   };
 }
 
+/** One of ARGUS's sensors in a scene's data (metres east and north of the origin; h above the model). */
+export interface HouseSensor {
+  xy: XY;
+  h: number;
+  alt?: number;
+  /** the game's own grouping of the sensor ("humidity"; "other": a type the game has no sensor of) */
+  kind: string;
+  /** ARGUS's name for the instrument's type ("Humidity Sensor") */
+  type?: string | null;
+  /** where ARGUS says it stands ("Cellar 193 - Lagar") */
+  where?: string | null;
+  room: string | null;
+  room_name?: string | null;
+  serial?: string | null;
+}
+
+/** A sensor as a pin tells of it (HouseOptions.sensorPin). */
+export interface SensorRef {
+  kind: string;
+  type: string | null;
+  where: string | null;
+  /** the number of ARGUS's room it is in (the House of the Masks), whose name the game has in every language */
+  room: string | null;
+  serial: string | null;
+  /** it raised the day's alarm */
+  alarm: boolean;
+}
+
+/** What a pin is made of, in the game's language. */
+export interface SensorPinFace {
+  /** inside the pin: the sensor's drawing (an SVG), or how many sensors stand there */
+  icon: string;
+  /** the pin's name for screen readers */
+  name: string;
+  /** what opens by it when it is pressed */
+  card: HTMLElement;
+}
+
 export interface HouseOptions {
   /** The words on a room's label, in the game's language. */
   roomLabel: (room: HouseRoom) => string;
@@ -415,6 +453,9 @@ export interface HouseOptions {
   /** The words, with a picture sign, on the label at the damage ("💧 The water rises"), in the game's
    *  language: for the day's danger, or "plants" for the plants on the walls. */
   damageLabel?: (what: Exclude<DamageKind, null> | "plants") => string;
+  /** A pin to press on each of ARGUS's sensors (one for sensors at one spot), which opens a card of what it
+   *  is. Not given (the alarm's picture): no pins. */
+  sensorPin?: (sensors: SensorRef[]) => SensorPinFace;
   /** The words on the magnifier: "{n} times closer". */
   magnifierLabel?: (times: number) => string;
   /** No pulsing (the player asked for less motion). */
@@ -963,6 +1004,14 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   labels.domElement.className = "view3d-labels";
   labels.domElement.setAttribute("aria-hidden", "true"); // the panel says the same in words
   host.appendChild(labels.domElement);
+  // The sensors' pins are buttons, so their layer is not hidden from screen readers like the labels'; its
+  // own small scene holds only them.
+  const pins = options.sensorPin ? new CSS2DRenderer() : null;
+  const pinScene = new THREE.Scene();
+  if (pins) {
+    pins.domElement.className = "view3d-pins";
+    host.appendChild(pins.domElement);
+  }
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#cfe2ee");
@@ -1571,6 +1620,131 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       scene.add(post);
     }
   }
+  // Each sensor a pin to press, over it: it opens a card of what the sensor is, above it (or below, near the
+  // top), kept inside the picture. Pins that come within a pin's width of one another in the picture (sensors
+  // at one spot, or far away) become one pin with their number, and its card tells of them all; they part
+  // as the camera comes nearer. One card at a time; it closes with a second press, Escape, a press anywhere
+  // in the picture, or when the camera flies off.
+  interface PinMade {
+    el: HTMLElement;
+    object: CSS2DObject;
+    button: HTMLButtonElement;
+    card: HTMLElement;
+    at: THREE.Vector3;
+    sensors: HouseSensor[];
+    /** which pins it stands for now (their indexes), to see when that changes */
+    stands: string;
+  }
+  const made: PinMade[] = [];
+  let openPin: PinMade | null = null;
+  const closePin = () => {
+    if (!openPin) return;
+    openPin.card.hidden = true;
+    openPin.button.setAttribute("aria-expanded", "false");
+    openPin.button.classList.remove("is-open");
+    openPin = null;
+  };
+  const cardSpot = new THREE.Vector3();
+  /** Keeps the open card inside the picture: nudged sideways, and below its pin when there is no room above. */
+  function placeCard() {
+    if (!openPin) return;
+    const { card, at: pos } = openPin;
+    cardSpot.copy(pos).project(camera);
+    const x = (cardSpot.x * 0.5 + 0.5) * size.width;
+    const y = (-cardSpot.y * 0.5 + 0.5) * size.height;
+    const w = card.offsetWidth;
+    const margin = 8;
+    const left = Math.min(Math.max(x - w / 2, margin), Math.max(margin, size.width - w - margin));
+    card.style.setProperty("--shift", `${left - (x - w / 2)}px`);
+    // above its pin, unless there is more room below it (between the title and the panel)
+    const room = card.offsetHeight + 24;
+    const over = y - insetTop;
+    card.classList.toggle("is-below", room > over && size.height - insetBottom - y > over);
+  }
+  const PIN_PX = 32;
+  const spots: { x: number; y: number; ok: boolean }[] = [];
+  /** Which pins stand alone and which stand for others near them (in the picture, as the camera is now). */
+  function mergePins() {
+    spots.length = 0;
+    for (const m of made) {
+      cardSpot.copy(m.at).project(camera);
+      spots.push({ x: (cardSpot.x * 0.5 + 0.5) * size.width, y: (-cardSpot.y * 0.5 + 0.5) * size.height, ok: cardSpot.z >= -1 && cardSpot.z <= 1 });
+    }
+    const taken = new Set<number>();
+    made.forEach((m, i) => {
+      const lead = spots[i].ok && !taken.has(i);
+      m.object.visible = lead;
+      if (!lead) return;
+      const into = [i];
+      made.forEach((_, j) => {
+        if (j === i || taken.has(j) || !spots[j].ok || Math.hypot(spots[j].x - spots[i].x, spots[j].y - spots[i].y) >= PIN_PX) return;
+        taken.add(j);
+        into.push(j);
+      });
+      const stands = into.join(",");
+      if (stands === m.stands) return;
+      m.stands = stands;
+      if (openPin === m) closePin();
+      const list = into.flatMap((j) => made[j].sensors);
+      const face = makeFace(list.map((x) => ({ kind: x.kind, type: x.type ?? null, where: x.where ?? x.room_name ?? null, room: x.room, serial: x.serial ?? null, alarm: x === focusSensor })));
+      m.button.innerHTML = face.icon;
+      m.button.setAttribute("aria-label", face.name);
+      m.button.classList.toggle("is-alarm", list.some((x) => x === focusSensor));
+      m.card.replaceChildren(face.card);
+    });
+    for (const m of made) if (!m.object.visible) m.stands = "";
+    if (openPin && !openPin.object.visible) closePin();
+  }
+  const makeFace = options.sensorPin ?? (() => ({ icon: "", name: "", card: document.createElement("div") }));
+  if (pins && options.sensorPin) {
+    // (sensors at one spot, ARGUS's several instruments on one device, start as one)
+    const groups: { at: THREE.Vector3; list: HouseSensor[] }[] = [];
+    for (const s of data.sensors3d) {
+      const p = sensorAt(s);
+      const g = groups.find((x) => x.at.distanceTo(p) < 0.5);
+      if (g) g.list.push(s);
+      else groups.push({ at: p.clone(), list: [s] });
+    }
+    groups.forEach((g, i) => {
+      const el = document.createElement("div");
+      el.className = "view3d-pin";
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "pin pin-argus view3d-pin-btn";
+      button.setAttribute("aria-expanded", "false");
+      const card = document.createElement("div");
+      card.className = "view3d-pin-card";
+      card.id = `view3d-sensor-${i}`;
+      card.hidden = true;
+      button.setAttribute("aria-controls", card.id);
+      el.append(button, card);
+      const object = new CSS2DObject(el);
+      object.position.copy(g.at);
+      pinScene.add(object);
+      const pin: PinMade = { el, object, button, card, at: g.at, sensors: g.list, stands: "" };
+      made.push(pin);
+      button.addEventListener("click", () => {
+        const was = openPin === pin;
+        closePin();
+        if (was) return;
+        card.hidden = false;
+        button.setAttribute("aria-expanded", "true");
+        button.classList.add("is-open");
+        openPin = pin;
+        placeCard();
+      });
+      // Escape closes the card first (and only then the view, on the next press)
+      el.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape" || !openPin) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const focusBack = openPin.button;
+        closePin();
+        focusBack.focus();
+      });
+    });
+    canvas.addEventListener("pointerdown", closePin);
+  }
 
   // Plants rooting in the wall tops when nobody looks after them: tufts of weeds (bushes for the
   // "trees" danger), blades and leaves drawn on three crossed cards, standing on the wall tops. Where
@@ -1984,6 +2158,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
   magFrame.hidden = true;
   host.appendChild(magFrame);
   let insetTop = 0;
+  let insetBottom = 0; // (what the panel covers, from the bottom)
   const magRect = () => {
     const side = Math.round(Math.min(0.36 * Math.min(size.width, size.height), 260));
     return { x: size.width - side - 12, y: insetTop + 12, side };
@@ -2164,6 +2339,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
   const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
   const smooth = (t: number) => t * t * (3 - 2 * t);
   function fly(to: Pose, ms: number, turnAt: (e: number) => number = (e) => e, spin = 0): Promise<void> {
+    closePin();
     controls.enabled = false;
     flight = null;
     if (ms <= 0) {
@@ -2189,6 +2365,14 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
     camera.position.add(weather.shake); // an earthquake shakes the camera, this frame only
     renderer.render(scene, camera);
     labels.render(scene, camera);
+    if (pins) {
+      mergePins();
+      pins.render(pinScene, camera);
+      if (openPin) {
+        openPin.el.style.zIndex = "100000"; // the open card over every other pin
+        placeCard();
+      }
+    }
     camera.position.sub(weather.shake);
     const showMag = !!magTarget && !above && !flight;
     if (magFrame.hidden === showMag) magFrame.hidden = !showMag;
@@ -2307,6 +2491,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
     },
     setInsets(top, bottom) {
       insetTop = top;
+      insetBottom = bottom;
       shiftTo = above ? 0 : Math.round((bottom - top) / 2);
     },
     setDamage(d) {
@@ -2375,6 +2560,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       size = { width, height };
       renderer.setSize(width, height);
       labels.setSize(width, height);
+      pins?.setSize(width, height);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       applyShift();
@@ -2407,6 +2593,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       renderer.forceContextLoss();
       canvas.remove();
       labels.domElement.remove();
+      pins?.domElement.remove();
       magFrame.remove();
     },
     look(offset, room) {

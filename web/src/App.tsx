@@ -616,6 +616,7 @@ export default function App() {
                   mon={playable}
                   scene={view3d.scene}
                   focus={view3d.focus}
+                  cards={data.cards.cards}
                   loaded={view3d.loaded}
                   mapApi={mapApi}
                   arrived={view3d.stage === "arrived"}

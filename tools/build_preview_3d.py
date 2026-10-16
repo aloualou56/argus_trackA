@@ -106,8 +106,19 @@ def shapes() -> List[Dict[str, Any]]:
     return out
 
 
+def instrument_types() -> Dict[int, str]:
+    """ARGUS's own name for the type of each installed instrument ("Humidity Sensor"), by its id (the same as
+    tools/build_scenes_3d.py's: installed instrument -> instrument -> instrument type)."""
+    def records(path: Path) -> List[Dict[str, Any]]:
+        return json.loads(path.read_text(encoding="utf-8"))["records"]
+    type_names = {r["id"]: r.get("name", "") for r in records(INSTRUMENTS.parent / "instrument-types.json")}
+    of_instrument = {r["id"]: type_names.get(r.get("instrument_type_id"), "") for r in records(INSTRUMENTS.parent / "instruments.json")}
+    return {r["id"]: of_instrument.get(r.get("instrument_id"), "") for r in records(INSTRUMENTS)}
+
+
 def sensors() -> List[Dict[str, Any]]:
     names = {r["id"]: r.get("name", "") for r in json.loads(INSTRUMENTS.read_text(encoding="utf-8"))["records"]}
+    types = instrument_types()
     out = []
     for r in json.loads(MONITORINGS.read_text(encoding="utf-8"))["records"]:
         position = (metadata(r).get("viewer_placement") or {}).get("position") or {}
@@ -122,6 +133,7 @@ def sensors() -> List[Dict[str, Any]]:
             "xy": xy,
             "h": round(position["height"] - ORIGIN["height"], 2),  # above ARGUS's model of the house
             "kind": next((k for word, k in KINDS if word in name.lower()), "other"),
+            "type": types.get(r.get("installed_instrument_id")) or None,
             "room": room.group(1) if room else None,
             "room_name": room.group(2).strip() if room else None,
             "serial": serial(name),

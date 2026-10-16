@@ -6,13 +6,14 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MutableRefObject } from "react";
 import { motionReduced } from "../a11y/settings";
 import { formatWhen, loadLive, type LiveFile } from "../game/live";
-import type { GameData, Monument } from "../game/types";
+import type { Card, GameData, Monument } from "../game/types";
 import { useI18n, type MessageKey } from "../i18n";
 import type { House, HouseRoom } from "../view3d/house";
 import { damageAfter, EFFECTS, effectOf, MAP_ZOOM, metresPerPixel, type Effect } from "../view3d/math";
 import { preload3d, type Focus3d, type Loaded } from "../view3d/preload";
 import type { MapApi } from "./GameMap";
 import { Icon } from "./Icon";
+import { sensorPinFace } from "./sensorPin";
 
 /** The blur between the map and the 3D view (styles.css, ".view3d"). */
 const SWAP_MS = 700;
@@ -39,6 +40,8 @@ interface Props {
   /** The scene (data/view3d/<scene>.json) and what it is opened for: the day's danger, or none. */
   scene: string;
   focus: Focus3d;
+  /** The game's sensors: what the pins on ARGUS's sensors say. */
+  cards: Card[];
   loaded: Loaded;
   mapApi: MutableRefObject<MapApi | null>;
   /** The map has flown down onto the house: the 3D view may take over. */
@@ -55,7 +58,7 @@ function noteKey(kind: Focus3d["kind"], watched: boolean): MessageKey {
   return watched ? "view3d.noteWatchedAny" : (`view3d.noteNobody_${kind ?? "none"}` as MessageKey);
 }
 
-export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, onClosed }: Props) {
+export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onReady, onClosed }: Props) {
   const { t, pick, number, locale, list } = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -73,6 +76,10 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
   const [live, setLive] = useState<LiveFile | null>(null);
   // "See it happen": one of the weather and the dangers here, played out (view3d/weather.ts), or none
   const [effect, setEffect] = useState<Effect | null>(null);
+  // The panel under the picture can be folded away (the model is then all there is to see), and the note on an
+  // effect is two lines until asked for the rest.
+  const [folded, setFolded] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
   const shown = phase === "swapping" || phase === "flying" || phase === "open" || phase === "closing";
   // The place's name and the monument's ("House of the Masks · Delos"), or the monument's alone.
   const placeId = mon.scenes_3d?.find((s) => s.scene === scene)?.place;
@@ -99,6 +106,7 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
         focus: { serial: focus.serial, xy, kind: focus.kind },
         damageLabel: (what) => t(`view3d.kid_${what}` as MessageKey),
         magnifierLabel: (n) => t("view3d.magnifier", { n: number(n, 0) }),
+        sensorPin: (sensors) => sensorPinFace(sensors, cards, { t, pick }),
         still: motionReduced(),
       });
     } catch {
@@ -161,6 +169,7 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
 
   useEffect(() => {
     if (phase === "open") houseRef.current?.setWeather(effect);
+    setNoteOpen(false);
   }, [effect, phase]);
 
   useEffect(() => {
@@ -292,7 +301,18 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
       </div>
       <div className="view3d-dock" ref={dockRef}>
         {panel && (
-          <div className="view3d-panel">
+          <button
+            type="button"
+            className="view3d-fold"
+            aria-expanded={!folded}
+            aria-controls="view3d-panel"
+            onClick={() => setFolded(!folded)}
+          >
+            <span aria-hidden="true">{folded ? "▴" : "▾"}</span> {t(folded ? "view3d.show" : "view3d.hide")}
+          </button>
+        )}
+        {panel && (
+          <div className="view3d-panel" id="view3d-panel" hidden={folded}>
             {/* One row for time: play, the slider, how many years and how big the damage is then. */}
             <div className="view3d-time">
               <button
@@ -363,9 +383,14 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
               </div>
             )}
             {effect && fx.get(effect) && (
-              <p className="view3d-note view3d-fx-note" aria-live="polite">
-                {t(`view3d.fxNote_${effect}` as MessageKey)} {t("view3d.fxDangers", { list: list(fx.get(effect)!.titles) })}
-              </p>
+              <div className="view3d-fx-note-box">
+                <p className={`view3d-note view3d-fx-note${noteOpen ? "" : " is-clamped"}`} aria-live="polite">
+                  {t(`view3d.fxNote_${effect}` as MessageKey)} {t("view3d.fxDangers", { list: list(fx.get(effect)!.titles) })}
+                </p>
+                <button type="button" className="view3d-more-btn" aria-expanded={noteOpen} onClick={() => setNoteOpen(!noteOpen)}>
+                  {t(noteOpen ? "view3d.noteLess" : "view3d.noteMore")}
+                </button>
+              </div>
             )}
             {/* The rest, for whoever asks: what the picture shows, how big and on what grounds, the dangers. */}
             <details className="view3d-dangers">
@@ -373,6 +398,7 @@ export function View3D({ mon, scene, focus, loaded, mapApi, arrived, onReady, on
               <p className="view3d-note">{t(noteKey(focus.kind, watched))}</p>
               {years > 0 && <p className="view3d-note">{sizeLine}</p>}
               <p className="view3d-note view3d-legend">{t("view3d.legend")}</p>
+              {loaded.assets.data.sensors3d.length > 0 && <p className="view3d-note">{t("view3d.sensorsNote")}</p>}
               <h3 className="view3d-dangers-title">{t(loaded.assets.data.rooms.length ? "view3d.dangers" : "view3d.dangersHere")}</h3>
               <p className="small">
                 {checkedAt ? t("view3d.checked", { when: formatWhen(new Date(checkedAt), new Date(), locale) }) : t("view3d.noCheck")}

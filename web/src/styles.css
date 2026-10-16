@@ -4745,6 +4745,86 @@ html.a11y-spacing main p {
   line-height: 1.2;
   text-align: center;
 }
+/* The pins on ARGUS's sensors: a square each (as on the map), over the picture, pressed for a card of what
+   the sensor is. They come in with the labels, once the camera is down; unseen, they cannot be pressed. */
+.view3d-pins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s;
+}
+.view3d.is-open .view3d-pins {
+  opacity: 1;
+  visibility: visible;
+}
+.view3d-pin {
+  pointer-events: auto;
+}
+.view3d-pin-btn {
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+}
+.view3d-pin-btn:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.view3d-pin-btn.is-open {
+  background: var(--ink);
+  transform: scale(1.12);
+}
+.view3d-pin-card {
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  left: 50%;
+  transform: translateX(calc(-50% + var(--shift, 0px)));
+  width: max-content;
+  max-width: min(17rem, 80vw);
+  padding: 0.55rem 0.75rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  text-align: left;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.35);
+  /* a card never covers the pins under it: they can still be pressed (and pressing the card itself, as
+     anywhere in the picture, closes it) */
+  pointer-events: none;
+}
+.view3d-pin-card[hidden] {
+  display: none;
+}
+.view3d-pin-card.is-below {
+  top: calc(100% + 0.6rem);
+  bottom: auto;
+}
+.view3d-pin-card .map-popup-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--argus-pin);
+}
+.view3d-pin-card section + section {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line, rgb(0 0 0 / 0.2));
+}
+.view3d-pin-card p {
+  margin: 0 0 0.2rem;
+}
+.view3d-sensor-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.view3d-sensor-alarm {
+  font-weight: 700;
+  color: #b3360a;
+}
 /* The labels at the damage, for a child to read: bigger, with a picture sign, a red edge like the marking. */
 .view3d-kid {
   max-width: 13rem;
@@ -4826,13 +4906,40 @@ html.a11y-spacing main p {
   display: grid;
   gap: 0.45rem;
   width: min(32rem, calc(100% - 1.5rem));
-  max-height: 50vh;
+  /* the model is what is to be seen: the panel takes under a third of the height, and scrolls inside */
+  max-height: min(30vh, 15rem);
   overflow-y: auto;
   padding: 0.5rem 0.7rem 0.55rem;
   border: 2px solid var(--ink);
   border-radius: var(--radius);
   background: var(--surface);
   animation: view3d-in 0.4s ease both;
+}
+.view3d-panel[hidden] {
+  display: none;
+}
+/* Folds the panel away, leaving the model whole. It lies over the picture's corner, above the panel, taking no
+   room from it. */
+.view3d-fold {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 100%;
+  min-height: 34px;
+  margin-bottom: 0.4rem;
+  padding: 0.1rem 0.75rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+}
+.view3d-fold:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 @keyframes view3d-in {
   from {
@@ -5029,6 +5136,7 @@ html.a11y-spacing main p {
     white-space: nowrap;
   }
   .view3d-panel {
+    max-height: min(32vh, 14rem);
     gap: 0.35rem;
     width: calc(100% - 1rem);
     padding: 0.45rem 0.55rem 0.5rem;
@@ -5364,6 +5472,27 @@ html.a11y-contrast .report-contact {
 }
 .view3d-fx-note {
   margin: 0;
+}
+/* the note on an effect is two lines until asked for the rest */
+.view3d-fx-note.is-clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.view3d-more-btn {
+  margin: 0;
+  padding: 0.1rem 0;
+  min-height: 32px;
+  border: 0;
+  background: none;
+  color: var(--primary-deep);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-decoration: underline;
+  cursor: pointer;
 }
 @media (max-width: 39.99rem) {
   .view3d-fx-row {

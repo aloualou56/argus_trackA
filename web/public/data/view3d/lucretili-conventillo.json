@@ -20,6 +20,8 @@
    "h": 0.5,
    "alt": 730.8,
    "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Conventillo - Staircase access façade",
    "room": null,
    "serial": "177266"
   },
@@ -31,6 +33,8 @@
    "h": 0.4,
    "alt": 730.7,
    "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Conventillo - First-storey crack",
    "room": null,
    "serial": "177253"
   },
@@ -42,6 +46,8 @@
    "h": 2.87,
    "alt": 733.17,
    "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Conventillo - Sensor and logger on the same wall",
    "room": null,
    "serial": "177320"
   },
@@ -53,6 +59,8 @@
    "h": 1.7,
    "alt": 732.0,
    "kind": "humidity",
+   "type": "Humidity Sensor",
+   "where": "Conventillo - Main room, second floor",
    "room": null,
    "serial": "177239"
   },
@@ -64,6 +72,8 @@
    "h": 0.65,
    "alt": 730.95,
    "kind": "people_counter",
+   "type": "People Counter Sensor",
+   "where": "Conventillo - Main entrance",
    "room": null,
    "serial": "2CF7F1C062800056"
   },
@@ -75,6 +85,8 @@
    "h": 1.7,
    "alt": 732.0,
    "kind": "temperature",
+   "type": "Temperature Sensor",
+   "where": "Conventillo - Main room, second floor",
    "room": null,
    "serial": "177239"
   },
@@ -86,6 +98,8 @@
    "h": 0.6,
    "alt": 730.9,
    "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "Conventillo - Staircase access façade",
    "room": null,
    "serial": "152931"
   },
@@ -97,6 +111,8 @@
    "h": 0.5,
    "alt": 730.8,
    "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "Conventillo - First floor, close to a window",
    "room": null,
    "serial": "153061"
   },
@@ -108,6 +124,8 @@
    "h": 2.8,
    "alt": 733.1,
    "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "Conventillo - Third floor, close to a window",
    "room": null,
    "serial": "152816"
   },
@@ -119,6 +137,8 @@
    "h": 2.6,
    "alt": 732.9,
    "kind": "vibration",
+   "type": "Vibration Sensor",
+   "where": "Montefalco Castle - External wall",
    "room": null,
    "serial": "152608"
   }

@@ -20,6 +20,8 @@
    "h": -5.65,
    "alt": 796.85,
    "kind": "vibration",
+   "type": "Accelerometer Sensor",
+   "where": "Cellar 364 - Outside - car path",
    "room": null,
    "serial": "159313"
   },
@@ -31,6 +33,8 @@
    "h": -1.12,
    "alt": 801.38,
    "kind": "airflow",
+   "type": "Air Flow Sensor",
+   "where": "Cellar 88 - Chimney 4 Pasillo sisa3-sisa4",
    "room": null,
    "serial": "AF4-149421"
   },
@@ -42,6 +46,8 @@
    "h": -5.66,
    "alt": 796.84,
    "kind": "other",
+   "type": "Barrier Sensor",
+   "where": "Cellar 364 - Outside - car path",
    "room": null,
    "serial": "A8610A34324D7F09"
   },
@@ -53,6 +59,8 @@
    "h": -5.5,
    "alt": 797.0,
    "kind": "other",
+   "type": "Gas Sensor",
+   "where": "Cellar 193 - Lagar",
    "room": null,
    "serial": "151810"
   },
@@ -64,6 +72,8 @@
    "h": -5.5,
    "alt": 797.0,
    "kind": "other",
+   "type": "Gas Sensor",
+   "where": "Cellar 193 - Lagar",
    "room": null,
    "serial": "151810"
   },
@@ -75,6 +85,8 @@
    "h": -5.5,
    "alt": 797.0,
    "kind": "other",
+   "type": "Gas Sensor",
+   "where": "Cellar 193 - Lagar",
    "room": null,
    "serial": "151810"
   },
@@ -86,6 +98,8 @@
    "h": -5.41,
    "alt": 797.09,
    "kind": "other",
+   "type": "Pir-Airflow Sensor",
+   "where": "Cellar 193 - Entry",
    "room": null,
    "serial": "A8610A3230467704"
   },
@@ -97,6 +111,8 @@
    "h": -5.5,
    "alt": 797.0,
    "kind": "soil_moisture",
+   "type": "Soil Moisture Sensor",
+   "where": "Cellar 193 - Lagar",
    "room": null,
    "serial": "151810"
   }

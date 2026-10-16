@@ -53,6 +53,16 @@ def serial(name: str) -> str | None:
     return parts[1].split(" (")[0].strip() or None if len(parts) == 2 else None
 
 
+def instrument_types(base: Path) -> Dict[int, str]:
+    """ARGUS's own name for the type of each installed instrument ("Humidity Sensor", "Gas Sensor"), by the
+    installed instrument's id: installed instrument -> instrument -> instrument type."""
+    def records(name: str) -> List[Dict[str, Any]]:
+        return json.loads((base / name).read_text(encoding="utf-8"))["records"]
+    type_names = {r["id"]: r.get("name", "") for r in records("instrument-types.json")}
+    of_instrument = {r["id"]: type_names.get(r.get("instrument_type_id"), "") for r in records("instruments.json")}
+    return {r["id"]: of_instrument.get(r.get("instrument_id"), "") for r in records("installed-instruments.json")}
+
+
 def metadata(record: Dict[str, Any]) -> Dict[str, Any]:
     raw = record.get("metadata")
     if isinstance(raw, dict):
@@ -109,6 +119,7 @@ def sensors(snapshot: Path, scenes: List[Dict[str, Any]]) -> None:
     base = ROOT / "snapshot"
     monitorings = json.loads((base / "monitorings.json").read_text(encoding="utf-8"))["records"]
     names = {r["id"]: r.get("name", "") for r in json.loads((base / "installed-instruments.json").read_text(encoding="utf-8"))["records"]}
+    types = instrument_types(base)
     for s in scenes:
         s["sensors"] = []
     for r in monitorings:
@@ -133,7 +144,9 @@ def sensors(snapshot: Path, scenes: List[Dict[str, Any]]) -> None:
             "h": round(p.get("height", scene["height"]) - scene["height"], 2),
             "alt": round(p.get("height", scene["height"]), 2),
             "kind": next((k for word, k in KINDS if word in name.lower()), "other"),
-            "where": where.group(1).strip() if where else None,
+            "type": types.get(r.get("installed_instrument_id")) or None,
+            # (ARGUS's text has "façade" with its c-cedilla lost to a replacement character)
+            "where": where.group(1).strip().replace("fa�ade", "façade") if where else None,
             "monitoring": r["id"],
             "serial": serial(name),
         })
@@ -177,8 +190,8 @@ def scene_file(scene: Dict[str, Any], game: Dict[str, Any]) -> Dict[str, Any]:
         "base_height": scene["height"],
         "metres_per_degree": scene["metres_per_degree"],
         "shapes": [],
-        "sensors3d": [{"xy": x["xy"], "h": x["h"], "alt": x["alt"], "kind": x["kind"], "room": None, "serial": x["serial"]}
-                      for x in scene["sensors"]],
+        "sensors3d": [{"xy": x["xy"], "h": x["h"], "alt": x["alt"], "kind": x["kind"], "type": x["type"], "where": x["where"],
+                       "room": None, "serial": x["serial"]} for x in scene["sensors"]],
         "rooms": [],
         "dangers": dangers(scene, game),
         "risk_checked_at": None,

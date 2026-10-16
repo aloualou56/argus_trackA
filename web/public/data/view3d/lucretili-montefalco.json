@@ -20,6 +20,8 @@
    "h": 823.4,
    "alt": 900.1,
    "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Montefalco Castle - External wall",
    "room": null,
    "serial": "177310"
   },
@@ -31,6 +33,8 @@
    "h": 822.3,
    "alt": 899.0,
    "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Montefalco Castle - External wall",
    "room": null,
    "serial": "177325"
   },
@@ -42,6 +46,8 @@
    "h": 823.3,
    "alt": 900.0,
    "kind": "humidity",
+   "type": "Humidity Sensor",
+   "where": "Montefalco Castle - Exterior wall pole",
    "room": null,
    "serial": "177281"
   },
@@ -53,6 +59,8 @@
    "h": 823.1,
    "alt": 899.8,
    "kind": "rain_gauge",
+   "type": "Rain Gauge Sensor",
+   "where": "Montefalco Castle - Exterior wall pole",
    "room": null,
    "serial": "177281"
   }

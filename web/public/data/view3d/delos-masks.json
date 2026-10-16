@@ -345,6 +345,7 @@
    ],
    "h": 1.31,
    "kind": "airflow",
+   "type": "Air Flow Sensor",
    "room": "214",
    "room_name": "Dionysus mosaic",
    "serial": "149405"
@@ -356,6 +357,7 @@
    ],
    "h": 1.31,
    "kind": "humidity",
+   "type": "Humidity Sensor",
    "room": "214",
    "room_name": "Dionysus mosaic",
    "serial": "168439"
@@ -367,6 +369,7 @@
    ],
    "h": 1.31,
    "kind": "light_uv",
+   "type": "Lux Meter Sensor",
    "room": "214",
    "room_name": "Dionysus mosaic",
    "serial": "168439"
@@ -378,6 +381,7 @@
    ],
    "h": 1.31,
    "kind": "temperature",
+   "type": "Temperature Sensor",
    "room": "214",
    "room_name": "Dionysus mosaic",
    "serial": "168439"
@@ -389,6 +393,7 @@
    ],
    "h": 1.31,
    "kind": "airflow",
+   "type": "Air Flow Sensor",
    "room": "215",
    "room_name": "Theatrical Masks mosaic",
    "serial": "109315"
@@ -400,6 +405,7 @@
    ],
    "h": 1.31,
    "kind": "humidity",
+   "type": "Humidity Sensor",
    "room": "215",
    "room_name": "Theatrical Masks mosaic",
    "serial": "151836"
@@ -411,6 +417,7 @@
    ],
    "h": 1.31,
    "kind": "light_uv",
+   "type": "Lux Meter Sensor",
    "room": "215",
    "room_name": "Theatrical Masks mosaic",
    "serial": "151836"
@@ -422,6 +429,7 @@
    ],
    "h": 1.31,
    "kind": "soil_moisture",
+   "type": "Soil Moisture Sensor",
    "room": "215",
    "room_name": "Theatrical Masks mosaic",
    "serial": "149423"
@@ -433,6 +441,7 @@
    ],
    "h": 1.31,
    "kind": "soil_moisture",
+   "type": "Soil Moisture Sensor",
    "room": "215",
    "room_name": "Theatrical Masks mosaic",
    "serial": "149368"
@@ -444,6 +453,7 @@
    ],
    "h": 1.31,
    "kind": "temperature",
+   "type": "Temperature Sensor",
    "room": "215",
    "room_name": "Theatrical Masks mosaic",
    "serial": "151836"
@@ -455,6 +465,7 @@
    ],
    "h": 1.31,
    "kind": "humidity",
+   "type": "Humidity Sensor",
    "room": "216",
    "room_name": "Seilinos mosaic",
    "serial": "151809"
@@ -466,6 +477,7 @@
    ],
    "h": 1.31,
    "kind": "light_uv",
+   "type": "Lux Meter Sensor",
    "room": "216",
    "room_name": "Seilinos mosaic",
    "serial": "151809"
@@ -477,6 +489,7 @@
    ],
    "h": 1.31,
    "kind": "temperature",
+   "type": "Temperature Sensor",
    "room": "216",
    "room_name": "Seilinos mosaic",
    "serial": "151809"
@@ -488,6 +501,7 @@
    ],
    "h": 1.31,
    "kind": "humidity",
+   "type": "Humidity Sensor",
    "room": "217",
    "room_name": "Dolphins mosaic",
    "serial": "151805"
@@ -499,6 +513,7 @@
    ],
    "h": 1.31,
    "kind": "light_uv",
+   "type": "Lux Meter Sensor",
    "room": "217",
    "room_name": "Dolphins mosaic",
    "serial": "151805"
@@ -510,6 +525,7 @@
    ],
    "h": 1.31,
    "kind": "temperature",
+   "type": "Temperature Sensor",
    "room": "217",
    "room_name": "Dolphins mosaic",
    "serial": "151805"
@@ -521,6 +537,7 @@
    ],
    "h": 1.31,
    "kind": "other",
+   "type": "People Counter Sensor",
    "room": null,
    "room_name": null,
    "serial": "2CF7F1C062800035"
@@ -532,6 +549,7 @@
    ],
    "h": 2.31,
    "kind": "other",
+   "type": "Weather Station Sensor",
    "room": null,
    "room_name": null,
    "serial": "2CF7F1C061300548"
@@ -543,6 +561,7 @@
    ],
    "h": 2.31,
    "kind": "soil_moisture",
+   "type": "Soil Moisture Sensor",
    "room": null,
    "room_name": null,
    "serial": "149460"

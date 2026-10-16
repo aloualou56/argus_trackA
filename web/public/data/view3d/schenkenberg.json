@@ -20,6 +20,8 @@
    "h": 15.69,
    "alt": 645.99,
    "kind": "vibration",
+   "type": "Accelerometer Sensor",
+   "where": "Schenkenberg tower - North wall",
    "room": null,
    "serial": "159070"
   },
@@ -31,6 +33,8 @@
    "h": 18.22,
    "alt": 648.52,
    "kind": "vibration",
+   "type": "Accelerometer Sensor",
+   "where": "Schenkenberg tower - North wall",
    "room": null,
    "serial": "152555"
   },
@@ -42,6 +46,8 @@
    "h": 17.88,
    "alt": 648.18,
    "kind": "vibration",
+   "type": "Accelerometer Sensor",
+   "where": "Schenkenberg tower - South wall",
    "room": null,
    "serial": "152479"
   },
@@ -53,6 +59,8 @@
    "h": 17.88,
    "alt": 648.18,
    "kind": "vibration",
+   "type": "Accelerometer Sensor",
+   "where": "Schenkenberg tower - South wall",
    "room": null,
    "serial": "175480"
   },
@@ -64,6 +72,8 @@
    "h": 12.7,
    "alt": 643.0,
    "kind": "other",
+   "type": "Composite sensor 2 Sensor",
+   "where": null,
    "room": null,
    "serial": "2CF7F1C072600345"
   },
@@ -75,6 +85,8 @@
    "h": 13.2,
    "alt": 643.5,
    "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": null,
    "room": null,
    "serial": "149796"
   },
@@ -86,6 +98,8 @@
    "h": 18.22,
    "alt": 648.52,
    "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "North face",
    "room": null,
    "serial": "152914"
   },
@@ -97,6 +111,8 @@
    "h": 17.0,
    "alt": 647.3,
    "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "South face",
    "room": null,
    "serial": "152899"
   },
@@ -108,6 +124,8 @@
    "h": 20.9,
    "alt": 651.2,
    "kind": "weather_station",
+   "type": "Weather Station Sensor",
+   "where": "Top of the tower",
    "room": null,
    "serial": "2CF7F1C072300226"
   }

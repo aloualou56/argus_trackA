@@ -39,6 +39,24 @@ describe("the 3D scenes of the missions", () => {
     expect(checked).toBeGreaterThan(0);
   });
 
+  it("says what each of ARGUS's sensors is: its type, which the game's cards name, or ARGUS's own name for it", () => {
+    const cardOf = (type: string) => data.cards.cards.find((c) => c.instrument_types.includes(type));
+    const unnamed = new Set<string>();
+    let sensors = 0;
+    for (const mon of playable) {
+      for (const s of mon.scenes_3d ?? []) {
+        for (const x of scene(s.scene).sensors3d) {
+          sensors += 1;
+          expect(x.type, `${s.scene} ${x.serial}`).toBeTruthy();
+          if (!cardOf(x.type!)) unnamed.add(x.type!);
+        }
+      }
+    }
+    expect(sensors).toBeGreaterThan(50);
+    // the types the pins name as ARGUS does (no card of the game is of them): a new one is a reason to look
+    expect([...unnamed].sort()).toEqual(["Composite sensor 2 Sensor"]);
+  });
+
   it("offers a scene only where ARGUS's model was taken or the walls can be drawn", () => {
     for (const mon of playable) {
       for (const s of mon.scenes_3d ?? []) {

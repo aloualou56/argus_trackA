@@ -504,6 +504,18 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   where the ground falls away; it checks, with rays against ARGUS's model, that nothing stands in between (or
   stops in front of it), close for millimetre damage (about 8 m for a crack, 14 m for a lean); a place only
   looked at is seen whole, from its long open side, as far back as it takes to fit the screen.
+- **ARGUS's sensors, to press:** each one stands in the scene as a small square (a vermilion box on its post) with a
+  pin over it, as on the map (a square, the sensor's drawing in it). Pressing a pin (or Enter on it) opens a card:
+  what the sensor is, in the game's own name for it ("Humidity sensor", "Tilt meter") and what it tells, where ARGUS
+  says it stands ("Cellar 193 - Lagar"; on Delos the room, in the player's language), its serial number, and
+  "This sensor raised the day's alarm" on the one that did. The game's sensor is found by ARGUS's own name for the
+  instrument's type (`type` in each scene's `sensors3d`, written by `tools/build_scenes_3d.py` and
+  `tools/build_preview_3d.py` from the snapshot's instrument types: the table the game's cards carry,
+  `instrument_types`); the one type no card has ("Composite sensor 2") is named as ARGUS names it. Pins within a
+  pin's width of one another in the picture (a device with several instruments, or sensors far off) are one pin
+  with their number, and their card tells of them all; they part as the camera comes nearer. One card at a time:
+  a second press, Escape (which closes the card first, the view on the next press) or a press in the picture
+  closes it. Only in this view: the alarm's own picture has nothing to press (README, "The alarm in 3D").
 - **Light:** ARGUS's models are photographs, with the day's own light in them, so they are shown as they are,
   not lit a second time (lit by the scene's sun, every side away from it went dark: Ranverso's church was
   almost black). The satellite ground is shown the same way, left out where it would stand over the model's
