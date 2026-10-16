@@ -3,7 +3,8 @@
 -- VITE_SUPABASE_ANON_KEY (see README). Without it the game keeps everything on each device.
 --
 -- What is stored: the monument, level, sensor counts, score, whether the replayed alarm was caught,
--- the answer to "what would you do next?", quiz right/wrong marks, the date (no time) and an optional class code. No names, no device ids,
+-- the answer to "what would you do next?", quiz right/wrong marks, the date (no time), an optional class code
+-- and a guardian name from a fixed list for the leaderboard ("owl-27"). No real names, no device ids,
 -- no IP addresses (Supabase keeps its own request logs; see its privacy terms).
 --
 -- The public "anon" key may only INSERT and SELECT. There are no UPDATE or DELETE policies, so nobody
@@ -23,6 +24,9 @@ create table if not exists public.plays (
 );
 -- For a project created before the decision step existed.
 alter table public.plays add column if not exists decision text check (decision ~ '^[a-z_]{2,30}$');
+-- The player's guardian name on the leaderboard: an animal of the game's fixed list and a number
+-- ("owl-27", web/src/community/nickname.ts). Never typed by the player, so never a real name.
+alter table public.plays add column if not exists nick text check (nick ~ '^[a-z]{2,12}-[1-9][0-9]$');
 create index if not exists plays_monument_level on public.plays (monument, level);
 create index if not exists plays_class_code on public.plays (class_code);
 

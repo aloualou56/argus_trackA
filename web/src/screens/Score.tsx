@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { summaryOf, topCard, type CommunityStore, type Summary } from "../community/store";
 import { DayStrip } from "../components/DayStrip";
+import { Leaderboard } from "../components/Leaderboard";
+import { loadNick } from "../community/nickname";
 import { ConsequenceDrawings } from "../components/Consequence";
 import { GuardianSays } from "../components/Guardian";
 import { Open3dButton } from "../components/View3D";
@@ -37,6 +39,8 @@ interface Props extends ScreenProps {
   onRecorded: () => void;
   /** Opens the observation report for this monument. */
   onReport: () => void;
+  /** "Your own monument": a card for an old building of the player's own neighbourhood. */
+  onOwn: () => void;
   /** "Display in 3D" under the drawings, once the view is loaded: the game opens it over the map. */
   onView3d: (scene: string, loaded: Loaded, focus: Focus3d, from: string) => void;
   /** The real alarms of the week on duty, one per day; today's is week[session.day]. Empty if none can be replayed. */
@@ -67,6 +71,7 @@ export function Score({
   onQuiz,
   onRecorded,
   onReport,
+  onOwn,
   onView3d,
   week,
   onImprove,
@@ -110,6 +115,10 @@ export function Score({
     }
   };
   const submitted = useRef(false);
+  // The player's guardian name on the leaderboard (chosen on the first screen), and whether this
+  // game is stored yet, so the board shows it.
+  const [nick] = useState(loadNick);
+  const [boardReady, setBoardReady] = useState(false);
   useEffect(() => play("complete"), []);
 
   useEffect(() => {
@@ -129,13 +138,15 @@ export function Score({
             day: new Date().toISOString().slice(0, 10),
             ...(classCode ? { classCode } : {}),
             ...(session.decision ? { decision: session.decision } : {}),
+            nick,
           })
           .then(onRecorded);
+    stored.finally(() => setBoardReady(true));
     stored
       .then(() => summaryOf(community, { monument: mon.pilot_key, level: session.level, classCode: classCode ?? undefined }))
       .then(setSummary)
       .catch(() => setSummary(null));
-  }, [community, mon.pilot_key, session, result.total, detected, classCode]);
+  }, [community, mon.pilot_key, session, result.total, detected, classCode, nick]);
 
   const names = (ids: string[]) => list(ids.map((id) => pick(cards.get(id)?.name)));
   const top = summary && topCard(summary, humanCards(data));
@@ -180,6 +191,17 @@ export function Score({
         </ul>
         {!result.alarm && <p className="small">{t("score.scaled")}</p>}
       </div>
+
+      {/* Who did best: the class, everyone, or this device; and how far the next one is. */}
+      <Leaderboard
+        community={community}
+        monument={mon.pilot_key}
+        level={session.level}
+        classCode={classCode}
+        nick={nick}
+        score={result.total}
+        ready={boardReady}
+      />
 
       {/* The guardian comes back (first day), and what the day's alarm would have led to if nobody noticed. */}
       {(() => {
@@ -404,6 +426,29 @@ export function Score({
           </button>
         </div>
       </section>
+
+      {/* "Your own monument": the guardian sends the player out, to an old building of their own
+          neighbourhood, with the same observation card. The game becomes a way of seeing the world. */}
+      {mon.guardian ? (
+        <GuardianSays mon={mon} headingId="own-title" title={t("own.title")} text={t("own.says")}>
+          <p>{t("own.text")}</p>
+          <button type="button" className="btn btn-primary" onClick={onOwn}>
+            {t("own.open")}
+            <Icon name="arrow" />
+          </button>
+        </GuardianSays>
+      ) : (
+        <section className="panel" aria-labelledby="own-title">
+          <h2 id="own-title">{t("own.title")}</h2>
+          <blockquote>
+            <p>{t("own.says")}</p>
+          </blockquote>
+          <p>{t("own.text")}</p>
+          <button type="button" className="btn btn-primary" onClick={onOwn}>
+            {t("own.open")}
+          </button>
+        </section>
+      )}
 
       {/* Challenge a friend: the link is shown, so it can be seen and copied by hand too. */}
       <section className="panel challenge-send" aria-labelledby="challenge-send-title">

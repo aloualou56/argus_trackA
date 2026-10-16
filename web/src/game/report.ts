@@ -14,24 +14,41 @@ export const NOTE_MAX = 400;
 /** A pin this close to a named part of the site is described as "near" it. */
 export const NEAR_METRES = 120;
 
+/** "Your own monument": an old building in the visitor's own neighbourhood, not one of the game's. */
+export const OWN = "own";
+export const OWN_KINDS = ["church", "bridge", "school", "house", "castle", "statue", "other"] as const;
+export type OwnKind = (typeof OWN_KINDS)[number];
+export const OWN_NAME_MAX = 80;
+export const OWN_WHERE_MAX = 120;
+
+/** What the visitor says about their own building: its name, what it is, and where (in words). */
+export interface OwnPlace {
+  name: string;
+  kind: OwnKind;
+  where: string;
+}
+
 export interface ObservationReport {
   v: 1;
   /** Short code printed on the card, e.g. "OBS-7K3Q9A". Random: it identifies the card, not the person. */
   id: string;
-  /** pilot_key of the monument. */
+  /** pilot_key of the monument, or OWN for a building of the visitor's own. */
   monument: string;
   /** A checklist item id (content/citizen_checklist.json), or OTHER_ITEM. */
   item: string;
   /** The visitor's own words. May be empty. */
   note: string;
-  lat: number;
-  lng: number;
+  /** Where, when the visitor marked it (a building of their own may be given in words only: null). */
+  lat: number | null;
+  lng: number | null;
   /** Id of the named part of the site the pin is near, if any. */
   place: string | null;
   /** The day it was seen (YYYY-MM-DD). */
   day: string;
   /** Whether a photo is on the card. The photo itself is never stored or exported. */
   hasPhoto: boolean;
+  /** For a building of the visitor's own (monument OWN). */
+  own?: OwnPlace;
 }
 
 /** What the form holds before it is a report. */
@@ -42,9 +59,10 @@ export interface ReportDraft {
   at: LatLng | null;
   day: string;
   hasPhoto: boolean;
+  own?: OwnPlace;
 }
 
-export type ReportProblem = "what" | "where" | "when";
+export type ReportProblem = "name" | "what" | "where" | "when";
 
 const ID_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no look-alikes (0/O, 1/I), as in class codes
 
@@ -68,8 +86,10 @@ export function isRealDay(day: string): boolean {
 /** What is still missing before the card can be made, in the order of the form. */
 export function reportProblems(draft: ReportDraft, today: string = localDay()): ReportProblem[] {
   const problems: ReportProblem[] = [];
+  const own = draft.monument === OWN;
+  if (own && !draft.own?.name.trim()) problems.push("name");
   if (!draft.item) problems.push("what");
-  if (!draft.at) problems.push("where");
+  if (!draft.at && !(own && draft.own?.where.trim())) problems.push("where");
   if (!isRealDay(draft.day) || draft.day > today) problems.push("when");
   return problems;
 }
@@ -93,10 +113,30 @@ export function cleanNote(note: string): string {
   return note.replace(/\s+/g, " ").trim().slice(0, NOTE_MAX);
 }
 
-/** A finished report from a complete draft; throws if something is still missing. */
-export function makeReport(draft: ReportDraft, mon: Monument, id: string = newReportId(), today: string = localDay()): ObservationReport {
+const tidy = (text: string, max: number) => text.replace(/\s+/g, " ").trim().slice(0, max);
+
+/** A finished report from a complete draft; throws if something is still missing. `mon` is null for a
+ *  building of the visitor's own. */
+export function makeReport(draft: ReportDraft, mon: Monument | null, id: string = newReportId(), today: string = localDay()): ObservationReport {
   const problems = reportProblems(draft, today);
-  if (problems.length || !draft.item || !draft.at) throw new Error(`report is not complete: ${problems.join(", ")}`);
+  if (problems.length || !draft.item) throw new Error(`report is not complete: ${problems.join(", ")}`);
+  if (!mon || draft.monument === OWN) {
+    const own = draft.own!;
+    return {
+      v: 1,
+      id,
+      monument: OWN,
+      item: draft.item,
+      note: cleanNote(draft.note),
+      lat: draft.at ? Number(draft.at[0].toFixed(5)) : null,
+      lng: draft.at ? Number(draft.at[1].toFixed(5)) : null,
+      place: null,
+      day: draft.day,
+      hasPhoto: draft.hasPhoto,
+      own: { name: tidy(own.name, OWN_NAME_MAX), kind: own.kind, where: tidy(own.where, OWN_WHERE_MAX) },
+    };
+  }
+  if (!draft.at) throw new Error("report is not complete: where");
   return {
     v: 1,
     id,
@@ -192,7 +232,7 @@ export function toArgusDocumentation(report: ObservationReport, mon: Monument, i
         pilot: mon.pilot_key,
         checklist_item: report.item,
         visitor_note: report.note || null,
-        position: { reference: "wgs84", latitude: report.lat, longitude: report.lng },
+        position: { reference: "wgs84", latitude: report.lat ?? 0, longitude: report.lng ?? 0 },
         near_place: place ? place.name.en : null,
         photo_on_card: report.hasPhoto,
         reviewed_by_staff: false,
@@ -211,15 +251,28 @@ export function reportFileName(report: ObservationReport): string {
 export function isReport(value: unknown): value is ObservationReport {
   if (!value || typeof value !== "object") return false;
   const r = value as Record<string, unknown>;
+  const own = r.monument === OWN;
+  const o = r.own as Record<string, unknown> | undefined;
+  const ownOk =
+    !own ||
+    (!!o &&
+      typeof o.name === "string" &&
+      o.name.length > 0 &&
+      o.name.length <= OWN_NAME_MAX &&
+      typeof o.where === "string" &&
+      o.where.length <= OWN_WHERE_MAX &&
+      (OWN_KINDS as readonly unknown[]).includes(o.kind));
+  const spot = (x: unknown) => typeof x === "number" || (own && x === null);
   return (
+    ownOk &&
     r.v === 1 &&
     typeof r.id === "string" &&
     /^OBS-[A-Z2-9]{6}$/.test(r.id) &&
     typeof r.monument === "string" &&
     typeof r.item === "string" &&
     typeof r.note === "string" &&
-    typeof r.lat === "number" &&
-    typeof r.lng === "number" &&
+    spot(r.lat) &&
+    spot(r.lng) &&
     (r.place === null || typeof r.place === "string") &&
     typeof r.day === "string" &&
     isRealDay(r.day) &&

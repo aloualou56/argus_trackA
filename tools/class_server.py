@@ -46,6 +46,11 @@ LEVELS = {"low", "medium", "high", "extreme", "catastrophic"}
 MONUMENT = re.compile(r"^[a-z]{3,20}$")
 CARD = re.compile(r"^[a-z_]{2,30}$")
 CLASS_CODE = re.compile(r"^[A-HJ-NP-Z2-9]{6}$")
+# Guardian names on the leaderboard: an animal of the game's own list and a number ("owl-27"); the
+# list is web/src/community/nickname.ts's (tests/test_class_server.py checks the two are the same).
+NICK = re.compile(r"^[a-z]{2,12}-[1-9][0-9]$")
+ANIMALS = frozenset("""owl dolphin falcon fox turtle deer hedgehog otter seal wolf bee swan squirrel lizard bear lion
+whale octopus parrot butterfly rabbit horse goat penguin""".split())
 DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 FIRST_DAY = dt.date(2026, 1, 1)
 
@@ -123,6 +128,11 @@ def clean_play(raw: Any) -> Dict[str, Any]:
         if not isinstance(decision, str) or not CARD.match(decision):
             raise Invalid("decision: unknown")
         record["decision"] = decision
+    nick = raw.get("nick")
+    if nick is not None:
+        if not isinstance(nick, str) or not NICK.match(nick) or nick.split("-")[0] not in ANIMALS:
+            raise Invalid("nick: not a guardian name")
+        record["nick"] = nick
     return record
 
 

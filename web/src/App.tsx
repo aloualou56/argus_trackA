@@ -27,6 +27,7 @@ import { Score } from "./screens/Score";
 import { Story } from "./screens/Story";
 import { Teacher } from "./screens/Teacher";
 import { View3D } from "./components/View3D";
+import { OWN } from "./game/report";
 import { MAP_ZOOM } from "./view3d/math";
 import type { Focus3d, Loaded } from "./view3d/preload";
 
@@ -244,6 +245,9 @@ export default function App() {
   const session: Session | null = game && { ...game, picks: countPicks(game.placements) };
   const inGame = screen !== "home" && screen !== "teacher" && screen !== "observe" && session && playable;
   const observing = screen === "observe" && report && data ? report : null;
+  // A card for one of the game's monuments has its pin on the map; one for a building of the visitor's
+  // own (OWN) is placed in words, and the map stays as it was.
+  const observingSite = observing && observing.pilot !== OWN ? observing : null;
   // "Beat my score on the same dangers": ?m=delos&l=high&d=65.69.82&s=68 (see game/challenge.ts).
   const challenge = useMemo(() => (data ? challengeFromUrl(window.location.search, data) : null), [data]);
   // The real alarms of this game's week on duty, one per day; today's is week[day].
@@ -323,6 +327,7 @@ export default function App() {
     body = (
       <Home
         onReport={() => homePilot && openReport(homePilot, "home")}
+        onOwn={() => openReport(OWN, "home")}
         classCode={classCode}
         setClassCode={(code) => {
           setClassCode(code);
@@ -451,6 +456,7 @@ export default function App() {
             onQuiz={() => setScreen("quizPost")}
             onRecorded={() => setGame((g) => (g ? { ...g, recorded: true } : g))}
             onReport={() => openReport(playable.pilot_key, "score")}
+            onOwn={() => openReport(OWN, "score")}
             onView3d={(scene, loaded, focus, from) => {
               opener.current = from; // the button that opened it has the focus again afterwards
               setView3d({ scene, loaded, focus, stage: "building" });
@@ -498,10 +504,10 @@ export default function App() {
         {data && (
           <GameMap
             data={data}
-            mode={observing ? "report" : inGame ? (replaying ? "replay" : mapMode(screen)) : "overview"}
-            pilot={observing ? observing.pilot : inGame ? game!.pilot : homePilot}
-            reportPin={observing?.at}
-            onReportPin={observing?.editable ? (at) => setReport((r) => (r ? { ...r, at } : r)) : undefined}
+            mode={observingSite ? "report" : inGame ? (replaying ? "replay" : mapMode(screen)) : "overview"}
+            pilot={observingSite ? observingSite.pilot : inGame ? game!.pilot : homePilot}
+            reportPin={observingSite?.at}
+            onReportPin={observingSite?.editable ? (at) => setReport((r) => (r ? { ...r, at } : r)) : undefined}
             placements={inGame ? game!.placements : []}
             alarm={inGame && (screen === "event" || replaying) ? today : null}
             onReplaySkip={finishReplay}

@@ -6,6 +6,7 @@ Run from the repo root:  python3 -I -m unittest discover -s tools/tests -t tools
 import datetime as dt
 import http.client
 import json
+import re
 import tempfile
 import threading
 import unittest
@@ -145,6 +146,7 @@ class ClassServer(unittest.TestCase):
             dict(PLAY, picks={"humidity": 0}), dict(PLAY, picks={"<script>": 1}), dict(PLAY, picks=[1]),
             dict(PLAY, detected="yes"), dict(PLAY, day="2020-01-01"), dict(PLAY, day="2026-13-40"),
             dict(PLAY, classCode="abc234"), dict(PLAY, classCode="ABC10O"), dict(PLAY, decision="DROP TABLE"),
+            dict(PLAY, nick="Maria"), dict(PLAY, nick="maria-27"), dict(PLAY, nick="owl-7"), dict(PLAY, nick=27),
             ["not", "an", "object"],
         ]
         for record in bad:
@@ -202,6 +204,14 @@ class Records(unittest.TestCase):
         self.assertEqual(cs.CLASS_CODE.pattern, "^[A-HJ-NP-Z2-9]{6}$")
         for level in cs.LEVELS:
             self.assertIn(f"'{level}'", schema)
+
+    def test_a_guardian_name_is_kept_and_is_one_of_the_games_own(self):
+        self.assertEqual(cs.clean_play(dict(PLAY, nick="owl-27"))["nick"], "owl-27")
+        game = (cs.ROOT / "web" / "src" / "community" / "nickname.ts").read_text(encoding="utf-8")
+        listed = set(re.findall(r"^  ([a-z]+): \"", game, re.M))
+        self.assertEqual(listed, set(cs.ANIMALS))
+        schema = (cs.ROOT / "supabase" / "schema.sql").read_text(encoding="utf-8")
+        self.assertIn(f"'{cs.NICK.pattern}'", schema)
 
     def test_a_record_from_tomorrow_is_fine_but_not_from_next_week(self):
         tomorrow = (dt.date.today() + dt.timedelta(days=1)).isoformat()  # a phone in another time zone

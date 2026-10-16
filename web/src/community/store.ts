@@ -4,7 +4,8 @@
 //   SupabaseCommunityStore  shared by everyone, through Supabase's REST API (no SDK)
 //   LanCommunityStore       shared by one class, kept by tools/class_server.py on the teacher's computer
 //   SharedWithFallback      shared when online; keeps a local copy and queues what could not be sent
-// Records hold no names, no times and no device ids, only the date and an optional class code.
+// Records hold no names, no times and no device ids, only the date and an optional class code, and
+// for the leaderboard a guardian name chosen from a fixed list ("owl-27", community/nickname.ts).
 import type { Picks } from "../game/types";
 
 export interface PlayRecord {
@@ -19,6 +20,8 @@ export interface PlayRecord {
   classCode?: string;
   /** What the player would do first after the alarm (an option id of content/decisions.json), if they chose. */
   decision?: string;
+  /** The player's guardian name on the leaderboard ("owl-27"): an animal of a fixed list and a number. */
+  nick?: string;
 }
 
 /** Pre/post quiz answers of one game: right (true) or wrong per question. */
@@ -258,6 +261,7 @@ export class SupabaseCommunityStore implements CommunityStore {
       day: r.day,
       class_code: r.classCode ?? null,
       ...(r.decision ? { decision: r.decision } : {}),
+      ...(r.nick ? { nick: r.nick } : {}),
     });
   }
 
@@ -266,17 +270,18 @@ export class SupabaseCommunityStore implements CommunityStore {
   }
 
   async plays(f: PlayFilter = {}): Promise<PlayRecord[]> {
-    type Row = Omit<PlayRecord, "v" | "classCode" | "decision"> & { class_code: string | null; decision?: string | null };
-    const rows = await this.select<Row>("plays", "monument,level,picks,score,detected,day,class_code,decision", {
+    type Row = Omit<PlayRecord, "v" | "classCode" | "decision" | "nick"> & { class_code: string | null; decision?: string | null; nick?: string | null };
+    const rows = await this.select<Row>("plays", "monument,level,picks,score,detected,day,class_code,decision,nick", {
       monument: f.monument,
       level: f.level,
       class_code: f.classCode,
     });
-    return rows.map(({ class_code, decision, ...r }) => ({
+    return rows.map(({ class_code, decision, nick, ...r }) => ({
       v: 1,
       ...r,
       ...(class_code ? { classCode: class_code } : {}),
       ...(decision ? { decision } : {}),
+      ...(nick ? { nick } : {}),
     }));
   }
 

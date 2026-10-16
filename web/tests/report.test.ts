@@ -16,6 +16,7 @@ import {
   newReportId,
   NOTE_MAX,
   OTHER_ITEM,
+  OWN,
   reportFileName,
   reportProblems,
   siteKey,
@@ -99,6 +100,29 @@ describe("observation report", () => {
     expect(isReport({ ...good, day: "yesterday" })).toBe(false);
     expect(isReport(null)).toBe(false);
     expect(isReport("OBS-ABC234")).toBe(false);
+  });
+});
+
+describe("your own monument: a building of the visitor's own neighbourhood", () => {
+  const own = (over: Partial<ReportDraft> = {}) =>
+    draft({ monument: OWN, at: null, own: { name: "  The old\n school ", kind: "school", where: "Naxos, Chora" }, ...over });
+
+  it("needs its name and where it is, in words or as a spot, and no monument of the game", () => {
+    expect(reportProblems(own(), "2026-10-12")).toEqual([]);
+    expect(reportProblems(own({ own: { name: " ", kind: "other", where: "" } }), "2026-10-12")).toEqual(["name", "where"]);
+    expect(reportProblems(own({ own: { name: "Bridge", kind: "bridge", where: "" }, at: [37.1, 25.4] }), "2026-10-12")).toEqual([]);
+  });
+
+  it("makes a card with the name, what it is and where, no named place and no ARGUS site", () => {
+    const r = makeReport(own(), null, "OBS-ABCDEF", "2026-10-12");
+    expect(r).toMatchObject({ monument: OWN, lat: null, lng: null, place: null, own: { name: "The old school", kind: "school", where: "Naxos, Chora" } });
+    expect(isReport(r)).toBe(true);
+    expect(isReport({ ...r, own: { ...r.own, kind: "castle-of-doom" } })).toBe(false);
+    expect(isReport({ ...r, own: undefined })).toBe(false);
+    // a game monument's card still needs its spot
+    expect(isReport({ ...r, monument: "delos", own: undefined })).toBe(false);
+    const spot = makeReport(own({ at: [37.123456, 25.654321] }), null, "OBS-ABCDEG", "2026-10-12");
+    expect([spot.lat, spot.lng]).toEqual([37.12346, 25.65432]);
   });
 });
 

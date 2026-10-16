@@ -15,6 +15,11 @@ import {
   nearestPlace,
   NOTE_MAX,
   OTHER_ITEM,
+  OWN,
+  OWN_KINDS,
+  OWN_NAME_MAX,
+  OWN_WHERE_MAX,
+  type OwnKind,
   reportFileName,
   reportProblems,
   telLink,
@@ -43,6 +48,7 @@ interface Props {
 }
 
 const PROBLEM: Record<ReportProblem, { key: MessageKey; focus: string }> = {
+  name: { key: "own.needName", focus: "own-name" },
   what: { key: "report.needWhat", focus: "report-item-0" },
   where: { key: "report.needWhere", focus: "report-place-0" },
   when: { key: "report.needWhen", focus: "report-day" },
@@ -51,7 +57,13 @@ const PROBLEM: Record<ReportProblem, { key: MessageKey; focus: string }> = {
 export function Observe({ data, report, setReport, mapApi, announce, onBack }: Props) {
   const { t, pick, number, date } = useI18n();
   const monuments = useMemo(() => data.monuments.filter(isPlayable), [data]);
-  const mon = monuments.find((m) => m.pilot_key === report.pilot) ?? monuments[0];
+  // "Your own monument": a building of the visitor's own neighbourhood, not one of the game's.
+  const own = report.pilot === OWN;
+  const mon = own ? null : (monuments.find((m) => m.pilot_key === report.pilot) ?? monuments[0]);
+  const [ownName, setOwnName] = useState("");
+  const [ownKind, setOwnKind] = useState<OwnKind>("other");
+  const [ownWhere, setOwnWhere] = useState("");
+  const [locating, setLocating] = useState<"idle" | "busy" | "failed">("idle");
   const store = useMemo(() => new ReportStore(), []);
   const [saved, setSaved] = useState<ObservationReport[]>(() => store.list());
   const [item, setItem] = useState<string | null>(null);
@@ -77,8 +89,8 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
     if (card) cardTitle.current?.focus();
   }, [card]);
 
-  const where = (m: Monument, at: LatLng) => {
-    const place = nearestPlace(m, at);
+  const where = (m: Monument | null, at: LatLng) => {
+    const place = m && nearestPlace(m, at);
     const spot = `${number(at[0], 5)}, ${number(at[1], 5)}`;
     return place ? `${t("report.near", { name: pick(place.name) })} (${spot})` : spot;
   };
@@ -97,7 +109,15 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const draft = { monument: mon.pilot_key, item, note, at: report.at, day, hasPhoto: !!photo };
+    const draft = {
+      monument: mon ? mon.pilot_key : OWN,
+      item,
+      note,
+      at: report.at,
+      day,
+      hasPhoto: !!photo,
+      ...(mon ? {} : { own: { name: ownName, kind: ownKind, where: ownWhere } }),
+    };
     const missing = reportProblems(draft);
     setProblems(missing);
     if (missing.length) {
@@ -123,14 +143,37 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
     setPhoto(null);
     setProblems([]);
     setStatus("");
+    setOwnName("");
+    setOwnKind("other");
+    setOwnWhere("");
+    setLocating("idle");
     setReport({ at: null, editable: true });
+  };
+
+  // "Add my location", for a building of the visitor's own: asked of the browser only when pressed.
+  const locate = () => {
+    if (!navigator.geolocation) {
+      setLocating("failed");
+      return;
+    }
+    setLocating("busy");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating("idle");
+        setReport({ at: [pos.coords.latitude, pos.coords.longitude] });
+        setProblems((p) => p.filter((x) => x !== "where"));
+      },
+      () => setLocating("failed"),
+      { enableHighAccuracy: true, timeout: 15000 },
+    );
   };
 
   const show = (r: ObservationReport) => {
     setCard(r);
     setStatus("");
-    setReport({ pilot: r.monument, at: [r.lat, r.lng], editable: false });
-    mapApi.current?.focus([r.lat, r.lng]);
+    const at: LatLng | null = r.lat !== null && r.lng !== null ? [r.lat, r.lng] : null;
+    setReport({ pilot: r.monument, at, editable: false });
+    if (at && r.monument !== OWN) mapApi.current?.focus(at);
   };
 
   const remove = (r: ObservationReport) => {
@@ -159,17 +202,19 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
 
   // ---------------------------------------------------------------- the finished card
   if (card) {
-    const cardMon = monuments.find((m) => m.pilot_key === card.monument) ?? mon;
+    const cardMon = card.own ? null : (monuments.find((m) => m.pilot_key === card.monument) ?? mon ?? monuments[0]);
     const cardPhoto = photo?.forCard === card.id ? photo.url : null;
-    const reportTo = cardMon.report_to;
-    const monName = pick(cardMon.display_name);
+    const reportTo = cardMon?.report_to;
+    const monName = card.own ? card.own.name : pick(cardMon!.display_name);
+    const cardAt: LatLng | null = card.lat !== null && card.lng !== null ? [card.lat, card.lng] : null;
+    const cardWhere = [card.own?.where, cardAt && where(cardMon, cardAt)].filter(Boolean).join(" · ");
     // The email the visitor's own app opens with: the card in words, and the exact spot.
     const mailLines = [
-      t("report.mailHello", { name: monName }),
+      card.own ? t("own.mailHello", { name: monName }) : t("report.mailHello", { name: monName }),
       "",
       `${t("report.cardWhat")}: ${itemText(card.item)}`,
       ...(card.note ? [`${t("report.cardNote")}: ${card.note}`] : []),
-      `${t("report.cardWhere")}: ${where(cardMon, [card.lat, card.lng])}`,
+      `${t("report.cardWhere")}: ${cardWhere}`,
       `${t("report.cardWhen")}: ${date(card.day)}`,
       t("report.cardId", { id: card.id }),
       "",
@@ -192,7 +237,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
             <div>
               <dt>{t("report.cardMonument")}</dt>
               <dd>
-                {pick(cardMon.display_name)}, {pick(cardMon.place)}
+                {card.own ? `${card.own.name} (${t(`own.kind.${card.own.kind}` as MessageKey)})` : `${pick(cardMon!.display_name)}, ${pick(cardMon!.place)}`}
               </dd>
             </div>
             <div>
@@ -207,7 +252,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
             )}
             <div>
               <dt>{t("report.cardWhere")}</dt>
-              <dd>{where(cardMon, [card.lat, card.lng])}</dd>
+              <dd>{cardWhere}</dd>
             </div>
             <div>
               <dt>{t("report.cardWhen")}</dt>
@@ -266,6 +311,27 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
           </section>
         )}
 
+        {/* A building of the visitor's own: no contacts of ours for it, so who to give the card to. */}
+        {card.own && (
+          <section className="report-to" aria-labelledby="own-to-title">
+            <h2 id="own-to-title">{t("own.toTitle")}</h2>
+            <ol className="own-to">
+              <li>{t("own.to1")}</li>
+              <li>{t("own.to2")}</li>
+              <li>{t("own.to3")}</li>
+            </ol>
+            <div className="actions">
+              <a className="btn btn-primary" href={mailtoLink("", mailSubject, mailLines)}>
+                {t("own.email")}
+              </a>
+            </div>
+            <p className="small">{t("report.toEmailHelp")}</p>
+            <p className="note">
+              <strong>{t("report.toSafety")}</strong>
+            </p>
+          </section>
+        )}
+
         <p className="citizen-report" data-needs-review={data.checklist.needs_review}>
           <strong>{pick(data.checklist.report)}</strong>
         </p>
@@ -273,11 +339,14 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
           <button type="button" className="btn btn-primary" onClick={() => window.print()}>
             {t("report.print")}
           </button>
-          <button type="button" className="btn btn-secondary" onClick={() => saveFile(card, cardMon)}>
-            {t("report.save")}
-          </button>
+          {/* The data file is in ARGUS's format for ARGUS's monuments only. */}
+          {cardMon && (
+            <button type="button" className="btn btn-secondary" onClick={() => saveFile(card, cardMon)}>
+              {t("report.save")}
+            </button>
+          )}
         </div>
-        <p className="small">{t("report.saveHelp")}</p>
+        {cardMon && <p className="small">{t("report.saveHelp")}</p>}
         <p className="small" role="status">
           {status}
         </p>
@@ -300,8 +369,8 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
 
   return (
     <form className="screen observe" onSubmit={submit} noValidate>
-      <h1 tabIndex={-1}>{t("report.title")}</h1>
-      <p className="lead">{t("report.intro")}</p>
+      <h1 tabIndex={-1}>{own ? t("own.title") : t("report.title")}</h1>
+      <p className="lead">{own ? t("own.intro") : t("report.intro")}</p>
 
       {/* The button itself reads "Which monument?: Delos", so this visible label is for the eye. */}
       <p className="field-label" aria-hidden="true">
@@ -311,10 +380,50 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
         id="report-monument"
         className="menu-field"
         label={t("report.monument")}
-        options={monuments.map((m) => ({ id: m.pilot_key, name: pick(m.display_name) }))}
-        value={mon.pilot_key}
+        options={[...monuments.map((m) => ({ id: m.pilot_key, name: pick(m.display_name) })), { id: OWN, name: t("own.option") }]}
+        value={mon ? mon.pilot_key : OWN}
         onChange={(pilot) => setReport({ pilot, at: null })}
       />
+
+      {own && (
+        <>
+          <label className="field-label" htmlFor="own-name">
+            {t("own.name")}
+          </label>
+          <input
+            id="own-name"
+            className="input"
+            type="text"
+            maxLength={OWN_NAME_MAX}
+            value={ownName}
+            aria-invalid={has("name")}
+            aria-describedby={has("name") ? "own-name-error own-name-help" : "own-name-help"}
+            onChange={(e) => {
+              setOwnName(e.target.value);
+              setProblems((p) => p.filter((x) => x !== "name"));
+            }}
+          />
+          <p id="own-name-help" className="hint">
+            {t("own.nameHelp")}
+          </p>
+          {has("name") && (
+            <p id="own-name-error" className="field-error">
+              {t("own.needName")}
+            </p>
+          )}
+          <fieldset className="choices own-kinds">
+            <legend>
+              <h2>{t("own.kind")}</h2>
+            </legend>
+            {OWN_KINDS.map((k) => (
+              <label key={k} className="chip-choice">
+                <input type="radio" name="own-kind" checked={ownKind === k} onChange={() => setOwnKind(k)} />
+                <span>{t(`own.kind.${k}` as MessageKey)}</span>
+              </label>
+            ))}
+          </fieldset>
+        </>
+      )}
 
       <fieldset className="choices choices-ladder" aria-describedby={has("what") ? "report-what-error" : undefined}>
         <legend>
@@ -363,11 +472,45 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
         {t("report.noteHelp")}
       </p>
 
+      {own ? (
+        <section aria-labelledby="own-where-title">
+          <h2 id="own-where-title">{t("own.where")}</h2>
+          <label className="sr-only" htmlFor="report-place-0">
+            {t("own.where")}
+          </label>
+          <input
+            id="report-place-0"
+            className="input"
+            type="text"
+            maxLength={OWN_WHERE_MAX}
+            value={ownWhere}
+            aria-describedby={has("where") ? "report-where-error own-where-help" : "own-where-help"}
+            onChange={(e) => {
+              setOwnWhere(e.target.value);
+              setProblems((p) => p.filter((x) => x !== "where"));
+            }}
+          />
+          <p id="own-where-help" className="hint">
+            {t("own.whereHelp")}
+          </p>
+          <button type="button" className="btn btn-secondary" aria-disabled={locating === "busy" || undefined} onClick={locate}>
+            {t("own.locate")}
+          </button>
+          <p className="small" role="status">
+            {locating === "failed" ? t("own.locateFailed") : report.at ? t("own.located", { where: where(null, report.at) }) : ""}
+          </p>
+          {has("where") && !ownWhere.trim() && (
+            <p id="report-where-error" className="field-error">
+              {t("own.needWhere")}
+            </p>
+          )}
+        </section>
+      ) : (
       <section aria-labelledby="report-where-title">
         <h2 id="report-where-title">{t("report.where")}</h2>
         <p className="hint">{t("report.whereHelp")}</p>
         <ol className="place-rows report-places">
-          {(mon.places ?? []).map((place, i) => (
+          {(mon?.places ?? []).map((place, i) => (
             <li key={place.id}>
               <button
                 type="button"
@@ -396,6 +539,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
           </p>
         )}
       </section>
+      )}
 
       <label className="field-label" htmlFor="report-day">
         {t("report.when")}
@@ -477,7 +621,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
           <ul className="report-list">
             {saved.map((r) => {
               const m = monuments.find((x) => x.pilot_key === r.monument);
-              const name = `${date(r.day)} · ${m ? pick(m.display_name) : r.monument} · ${itemText(r.item)}`;
+              const name = `${date(r.day)} · ${r.own ? r.own.name : m ? pick(m.display_name) : r.monument} · ${itemText(r.item)}`;
               return (
                 <li key={r.id}>
                   <span>{name}</span>

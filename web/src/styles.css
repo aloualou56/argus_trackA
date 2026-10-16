@@ -5369,3 +5369,111 @@ html.a11y-contrast .report-contact {
     width: 100%;
   }
 }
+
+/* ---- the leaderboard (components/Leaderboard.tsx) and the guardian name (components/GuardianName.tsx) */
+.leaderboard h2 {
+  margin-bottom: 0.2rem;
+}
+.board-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+.board-tabs button {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+.board-tabs button[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+}
+.board-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.board-list li {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.4rem;
+  padding: 0.2rem 0.5rem;
+  border-top: 1px solid var(--line);
+}
+.board-list li:first-child {
+  border-top: 0;
+}
+.board-list li.is-me {
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+  font-weight: 650;
+}
+.board-list .board-gap {
+  display: block;
+  min-height: 0;
+  text-align: center;
+  color: var(--muted);
+}
+.board-rank {
+  font-size: 1.15rem;
+  text-align: center;
+}
+.board-score {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.board-standing {
+  margin: 0.6rem 0 0;
+}
+.guardian-name h2 {
+  margin-bottom: 0.2rem;
+  font-size: 1.1rem;
+}
+
+/* ---- "Your own monument" (screens/Observe.tsx): what the building is, as chips; who to give the card to */
+.own-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.own-kinds legend {
+  margin-bottom: 0.4rem;
+}
+.chip-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.2rem 0.75rem;
+  border: 2px solid var(--edge);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+}
+.chip-choice:has(input:checked) {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  font-weight: 650;
+}
+.chip-choice input {
+  accent-color: var(--primary);
+}
+.own-to {
+  margin: 0.4rem 0 0.8rem;
+  padding-left: 1.4rem;
+}
+.own-to li {
+  margin: 0.2rem 0;
+}
