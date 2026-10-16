@@ -5136,7 +5136,7 @@ html.a11y-spacing main p {
     white-space: nowrap;
   }
   .view3d-panel {
-    max-height: min(32vh, 14rem);
+    max-height: min(35vh, 15rem);
     gap: 0.35rem;
     width: calc(100% - 1rem);
     padding: 0.45rem 0.55rem 0.5rem;
@@ -5431,41 +5431,126 @@ html.a11y-contrast .report-contact {
 .view3d-fx[data-fx="frost"] {
   background: radial-gradient(ellipse at center, transparent 55%, rgb(235 245 255 / 0.5));
 }
-/* "See it happen": one button per effect, in a row that scrolls sideways when it does not fit */
+/* "See it happen": one row (the effect playing, with its neighbours and a stop), and a grid of large tiles
+   over the picture to choose from: all of them in view, nothing to scroll sideways. */
 .view3d-fx-row {
   display: flex;
   align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.view3d-fx-main {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   min-width: 0;
-}
-.view3d-fx-title {
-  flex: none;
-  font-size: 0.85rem;
+  min-height: 44px;
+  padding: 0.25rem 0.8rem;
+  border: 2px solid var(--primary);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--primary-deep);
+  font: inherit;
+  font-size: 0.95rem;
   font-weight: 700;
+  cursor: pointer;
 }
-.view3d-fx-chips {
-  display: flex;
-  gap: 0.35rem;
+.view3d-fx-main.is-on {
+  background: var(--primary);
+  color: #fff;
+}
+.view3d-fx-main-text {
   min-width: 0;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: thin;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.view3d-fx-chips button {
+.view3d-fx-step,
+.view3d-fx-stop {
   flex: none;
-  min-height: 40px;
-  padding: 0.25rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.6rem;
   border: 2px solid var(--edge);
   border-radius: 999px;
   background: var(--surface);
   color: var(--ink);
   font: inherit;
-  font-size: 0.85rem;
-  font-weight: 650;
-  white-space: nowrap;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
 }
-.view3d-fx-chips button[aria-pressed="true"] {
+.view3d-fx-stop {
+  font-size: 0.85rem;
+}
+.view3d-fx-main:focus-visible,
+.view3d-fx-step:focus-visible,
+.view3d-fx-stop:focus-visible,
+.view3d-fx-grid button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.view3d-fx-picker {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 3rem); /* over the picture, above the fold button */
+  left: 0;
+  width: min(32rem, calc(100% - 1rem));
+  max-height: min(60vh, 26rem);
+  margin: 0 auto;
+  overflow-y: auto;
+  padding: 0.6rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.35);
+  animation: view3d-in 0.2s ease both;
+}
+.view3d-fx-picker-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.view3d-fx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.4rem;
+}
+.view3d-fx-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 64px;
+  padding: 0.35rem 0.3rem;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+}
+.view3d-fx-sign {
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+.view3d-fx-grid button:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.view3d-fx-grid button[aria-pressed="true"] {
   border-color: var(--primary);
   background: var(--primary);
   color: #fff;
@@ -5495,12 +5580,15 @@ html.a11y-contrast .report-contact {
   cursor: pointer;
 }
 @media (max-width: 39.99rem) {
-  .view3d-fx-row {
-    flex-wrap: wrap;
-    gap: 0.25rem;
+  .view3d-fx-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-  .view3d-fx-chips {
-    width: 100%;
+  .view3d-fx-stop span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 }
 

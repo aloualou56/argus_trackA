@@ -80,6 +80,10 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
   // effect is two lines until asked for the rest.
   const [folded, setFolded] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
+  // "See it happen" has many effects (up to thirteen): one button opens them all as a grid of large tiles.
+  const [picking, setPicking] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const pickTriggerRef = useRef<HTMLButtonElement>(null);
   const shown = phase === "swapping" || phase === "flying" || phase === "open" || phase === "closing";
   // The place's name and the monument's ("House of the Masks · Delos"), or the monument's alone.
   const placeId = mon.scenes_3d?.find((s) => s.scene === scene)?.place;
@@ -171,6 +175,22 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
     if (phase === "open") houseRef.current?.setWeather(effect);
     setNoteOpen(false);
   }, [effect, phase]);
+
+  // The grid of effects: focus goes to the one playing (or the first); a press outside it, or Escape, closes it.
+  useEffect(() => {
+    if (!picking) return;
+    const tiles = pickerRef.current?.querySelectorAll<HTMLButtonElement>(".view3d-fx-grid button");
+    const on = pickerRef.current?.querySelector<HTMLButtonElement>('.view3d-fx-grid button[aria-pressed="true"]');
+    (on ?? tiles?.[0])?.focus({ preventScroll: true });
+    const away = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (pickerRef.current?.contains(target) || pickTriggerRef.current?.contains(target)) return;
+      setPicking(false);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [picking]);
+
 
   useEffect(() => {
     if (!playing) return;
@@ -271,6 +291,12 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
   const yearsText =
     years === 0 ? t("view3d.today") : years === 1 ? t("view3d.oneYear") : t("view3d.yearsN", { n: number(years, 0) });
   const panel = phase === "open";
+  /** The next (or previous) effect in the list, round. */
+  const stepEffect = (by: number) => {
+    if (!fxList.length) return;
+    const at = effect ? fxList.findIndex(([e]) => e === effect) : by > 0 ? -1 : 0;
+    setEffect(fxList[(at + by + fxList.length) % fxList.length][0]);
+  };
 
   return (
     <div
@@ -306,7 +332,10 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
             className="view3d-fold"
             aria-expanded={!folded}
             aria-controls="view3d-panel"
-            onClick={() => setFolded(!folded)}
+            onClick={() => {
+              setFolded(!folded);
+              setPicking(false);
+            }}
           >
             <span aria-hidden="true">{folded ? "▴" : "▾"}</span> {t(folded ? "view3d.show" : "view3d.hide")}
           </button>
@@ -368,18 +397,51 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
             </div>
             {/* "See it happen": the weather and the dangers here, one at a time (pressed again: stops). */}
             {fxList.length > 0 && (
-              <div className="view3d-fx-row" role="group" aria-labelledby="view3d-fx-title">
-                <span id="view3d-fx-title" className="view3d-fx-title">
-                  {t("view3d.fxTitle")}
-                </span>
-                <div className="view3d-fx-chips">
-                  {fxList.map(([e]) => (
-                    <button key={e} type="button" aria-pressed={effect === e} onClick={() => setEffect(effect === e ? null : e)}>
-                      {FX_SIGN[e] && <span aria-hidden="true">{FX_SIGN[e]} </span>}
-                      {t(`view3d.fx_${e}` as MessageKey)}
-                    </button>
-                  ))}
-                </div>
+              <div className="view3d-fx-row" role="group" aria-label={t("view3d.fxTitle")}>
+                {effect && (
+                  <button type="button" className="view3d-fx-step" aria-label={t("view3d.fxPrev")} onClick={() => stepEffect(-1)}>
+                    <span aria-hidden="true">‹</span>
+                  </button>
+                )}
+                <button
+                  ref={pickTriggerRef}
+                  type="button"
+                  className={`view3d-fx-main${effect ? " is-on" : ""}`}
+                  aria-haspopup="true"
+                  aria-expanded={picking}
+                  aria-controls="view3d-fx-picker"
+                  onClick={() => setPicking(!picking)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape" && picking) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setPicking(false);
+                    }
+                  }}
+                >
+                  <span className="view3d-fx-main-text">
+                    {effect ? (
+                      <>
+                        {FX_SIGN[effect] && <span aria-hidden="true">{FX_SIGN[effect]} </span>}
+                        {t(`view3d.fx_${effect}` as MessageKey)}
+                      </>
+                    ) : (
+                      t("view3d.fxTitle")
+                    )}
+                  </span>
+                  <span aria-hidden="true">{picking ? "▴" : "▾"}</span>
+                </button>
+                {effect && (
+                  <button type="button" className="view3d-fx-step" aria-label={t("view3d.fxNext")} onClick={() => stepEffect(1)}>
+                    <span aria-hidden="true">›</span>
+                  </button>
+                )}
+                {effect && (
+                  <button type="button" className="view3d-fx-stop" onClick={() => setEffect(null)}>
+                    <Icon name="cross" size={16} />
+                    <span>{t("view3d.fxStop")}</span>
+                  </button>
+                )}
               </div>
             )}
             {effect && fx.get(effect) && (
@@ -416,6 +478,52 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
                 ))}
               </ul>
             </details>
+          </div>
+        )}
+        {panel && picking && !folded && (
+          <div
+            ref={pickerRef}
+            id="view3d-fx-picker"
+            className="view3d-fx-picker"
+            role="group"
+            aria-label={t("view3d.fxPicker")}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                e.stopPropagation();
+                setPicking(false);
+                pickTriggerRef.current?.focus();
+                return;
+              }
+              // arrows move between the tiles
+              const tiles = [...e.currentTarget.querySelectorAll<HTMLButtonElement>(".view3d-fx-grid button")];
+              const at = tiles.indexOf(document.activeElement as HTMLButtonElement);
+              const to = e.key === "ArrowRight" || e.key === "ArrowDown" ? at + 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? at - 1 : e.key === "Home" ? 0 : e.key === "End" ? tiles.length - 1 : null;
+              if (to === null || at < 0) return;
+              e.preventDefault();
+              tiles[(to + tiles.length) % tiles.length].focus();
+            }}
+          >
+            <p className="view3d-fx-picker-title">{t("view3d.fxPicker")}</p>
+            <div className="view3d-fx-grid">
+              {fxList.map(([e]) => (
+                <button
+                  key={e}
+                  type="button"
+                  aria-pressed={effect === e}
+                  onClick={() => {
+                    setEffect(effect === e ? null : e);
+                    setPicking(false);
+                    pickTriggerRef.current?.focus({ preventScroll: true });
+                  }}
+                >
+                  <span className="view3d-fx-sign" aria-hidden="true">
+                    {FX_SIGN[e]}
+                  </span>
+                  <span>{t(`view3d.fx_${e}` as MessageKey)}</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
         {/* The sources in one line; all of them when asked. */}
