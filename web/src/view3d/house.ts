@@ -2119,7 +2119,25 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
   }
   pose({ pos: topPos, look: topLook, up: NORTH });
 
-  let flight: { from: Pose; to: Pose; t0: number; ms: number; upAt: (e: number) => number; spin: number; done: () => void } | null = null;
+  let flight: {
+    from: Pose;
+    to: Pose;
+    t0: number;
+    ms: number;
+    upAt: (e: number) => number;
+    spin: number;
+    done: () => void;
+    /** The camera's orientation at both ends: the flight turns from one to the other. */
+    q0: THREE.Quaternion;
+    q1: THREE.Quaternion;
+  } | null = null;
+  /** The orientation of a camera at `pos` looking at `at` with `up` above. */
+  const orientation = (pos: THREE.Vector3, at: THREE.Vector3, up: THREE.Vector3) =>
+    new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(pos, at, up));
+  const qNow = new THREE.Quaternion();
+  const qSpin = new THREE.Quaternion();
+  const upNow = new THREE.Vector3();
+  const viewDir = new THREE.Vector3();
   const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
   function fly(to: Pose, ms: number, upAt: (e: number) => number, spin = 0): Promise<void> {
     controls.enabled = false;
@@ -2129,8 +2147,10 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       return Promise.resolve();
     }
     const from = { pos: camera.position.clone(), look: look.clone(), up: camera.up.clone() };
+    const q0 = orientation(from.pos, from.look, from.up);
+    const q1 = orientation(to.pos, to.look, to.up);
     return new Promise((done) => {
-      flight = { from, to, t0: performance.now(), ms, upAt, spin, done };
+      flight = { from, to, t0: performance.now(), ms, upAt, spin, done, q0, q1 };
     });
   }
 
@@ -2187,7 +2207,17 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       // turning round what it looks at, less and less (a spiral, not a straight line); at the start straight
       // above it, where turning changes nothing, so the first picture is still the map's
       if (flight.spin) camera.position.sub(look).applyAxisAngle(SKY, flight.spin * (1 - e)).add(look);
-      camera.up.lerpVectors(flight.from.up, flight.to.up, flight.upAt(e)).normalize();
+      // Which way is up in the picture: from the orientation turning smoothly from the start's to the end's
+      // (and round with the spiral), set square to where the camera looks. (Blending the up direction
+      // itself, from north to the sky, swung the picture round in jolts while the camera still looked
+      // almost straight down: up to 10 degrees in a frame, a tremble.)
+      // (the start exactly the map's; the end where the spiral is heading, turned with it)
+      qSpin.setFromAxisAngle(SKY, flight.spin * (1 - e)).multiply(flight.q1);
+      qNow.slerpQuaternions(flight.q0, qSpin, flight.upAt(e));
+      upNow.set(0, 1, 0).applyQuaternion(qNow);
+      viewDir.subVectors(look, camera.position).normalize();
+      upNow.addScaledVector(viewDir, -upNow.dot(viewDir));
+      if (upNow.lengthSq() > 1e-8) camera.up.copy(upNow.normalize());
       camera.lookAt(look);
       if (t >= 1) {
         const done = flight.done;
