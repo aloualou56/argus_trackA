@@ -506,8 +506,8 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   looked at is seen whole, from its long open side, as far back as it takes to fit the screen.
 - **Light:** ARGUS's models are photographs, with the day's own light in them, so they are shown as they are,
   not lit a second time (lit by the scene's sun, every side away from it went dark: Ranverso's church was
-  almost black). The satellite ground is shown the same way, left out where the model has a ground of its own,
-  and stepped down under the model's sunken floors; ARGUS's terrain gives way to the AWS terrain over its last
+  almost black). The satellite ground is shown the same way, left out where it would stand over the model's
+  own ground, and kept under the model (its points closer together round it, about every 1.5 m); ARGUS's terrain gives way to the AWS terrain over its last
   24 m, at the median step between the two.
 - **See it happen:** one button for each of the weather and the dangers ARGUS rates at the place, the gravest
   first, played out over ARGUS's model (`web/src/view3d/weather.ts`; which danger shows as what: `effectOf` in
@@ -607,7 +607,12 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   (`--budget-mb`, never more than 5 GB). A tileset that says where it is on the Earth stays there; one in local
   metres is put where ARGUS puts it (position, heading, pitch, roll, scale), as ARGUS's own viewer does. The 3D
   view then levels each model onto ARGUS's terrain, leaving out what is not ground (cellars below it, wall tops)
-  and tilting it 3 degrees at most; ARGUS's sensors move with it.
+  and tilting it 3 degrees at most; ARGUS's sensors move with it. ARGUS's terrain is coarser than its models (a
+  height every 2 m, a hilltop rounded off), so round each model it is bent to meet the model's edge
+  (`bendToEdge` in `house.ts`): up where the edge stood on air (Schenkenberg: its edge a median 0.5 m over the terrain,
+  more than 2 m in places), down where the ground covered the slopes (Montefalco: a median 4.5 m under it), fading out over the ground round it
+  (a slope of 1 in 3 on average, within 60 m). Under the model the ground stays under its lowest point, so
+  through a gap under its ragged edge the ground shows, not the sky; the models are drawn from both sides.
 - **ARGUS's own terrain and 3D model** (`tools/fetch_argus_3d.py`): ARGUS lists its 3D data in its API
   (asset-states, `spatial_representations`): for Delos the terrain `/terrain/delos/` (Cesium quantized-mesh) and
   the House of the Masks `/tiles/delos/house-of-masks/tileset.json` (3D Tiles) on argus.athenarc.gr. The tool

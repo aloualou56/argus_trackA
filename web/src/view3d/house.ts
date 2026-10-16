@@ -158,6 +158,92 @@ export function levelFit(points: [number, number, number][]): [number, number, n
   return [ca, cb, c];
 }
 
+/** How far the terrain is bent round a model: given the model's edge ([x, y, how far the edge stands
+ *  above the terrain there], metres east and north) and the box round the model, the bend at any point:
+ *  at the edge, the difference there (an average of the edge points nearest, so a ragged edge does not make
+ *  a bumpy ground); away from it, fading out, slowly where it is big (a slope of 1 in 3 on average),
+ *  within 60 m of the edge; nothing beyond. */
+export function bendToEdge(
+  edge: [number, number, number][],
+  box: { west: number; east: number; south: number; north: number },
+): (x: number, y: number) => number {
+  const GRID = 3;
+  const REACH = 60;
+  const BUCKET = 6;
+  const west = box.west - REACH;
+  const north = box.north + REACH;
+  const cols = Math.ceil((box.east - box.west + 2 * REACH) / GRID) + 1;
+  const rows = Math.ceil((box.north - box.south + 2 * REACH) / GRID) + 1;
+  // the edge points in 6 m squares over the whole field (an edge point outside it is never needed)
+  const bcols = Math.ceil((cols * GRID) / BUCKET) + 1;
+  const brows = Math.ceil((rows * GRID) / BUCKET) + 1;
+  const buckets: [number, number, number][][] = Array.from({ length: bcols * brows }, () => []);
+  const bucketOf = (x: number, y: number) => [Math.floor((x - west) / BUCKET), Math.floor((north - y) / BUCKET)];
+  for (const p of edge) {
+    const [bc, br] = bucketOf(p[0], p[1]);
+    if (bc >= 0 && br >= 0 && bc < bcols && br < brows) buckets[br * bcols + bc].push(p);
+  }
+  const field = new Float32Array(cols * rows);
+  const near: [number, number][] = []; // [distance, difference] of the edge points round a node
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = west + c * GRID;
+      const y = north - r * GRID;
+      const [bc, br] = bucketOf(x, y);
+      // the nearest edge point: rings of squares outwards, until a ring is further than it
+      let dmin = Infinity;
+      const look = (bi: number, bj: number) => {
+        if (bi < 0 || bj < 0 || bi >= bcols || bj >= brows) return;
+        for (const [sx, sy] of buckets[bj * bcols + bi]) dmin = Math.min(dmin, Math.hypot(sx - x, sy - y));
+      };
+      look(bc, br);
+      for (let ring = 1; (ring - 1) * BUCKET <= Math.min(dmin, REACH); ring++) {
+        for (let i = -ring; i <= ring; i++) {
+          look(bc + i, br - ring);
+          look(bc + i, br + ring);
+        }
+        for (let j = 1 - ring; j < ring; j++) {
+          look(bc - ring, br + j);
+          look(bc + ring, br + j);
+        }
+      }
+      if (dmin > REACH) continue;
+      // the edge points within 12 m further than the nearest weigh, the nearest most
+      near.length = 0;
+      const span = Math.ceil((dmin + 12) / BUCKET);
+      for (let j = Math.max(0, br - span); j <= Math.min(brows - 1, br + span); j++) {
+        for (let i = Math.max(0, bc - span); i <= Math.min(bcols - 1, bc + span); i++) {
+          for (const [sx, sy, d] of buckets[j * bcols + i]) {
+            const dist = Math.hypot(sx - x, sy - y);
+            if (dist < dmin + 12) near.push([dist, d]);
+          }
+        }
+      }
+      let sw = 0;
+      let sd = 0;
+      for (const [dist, d] of near) {
+        const w = Math.exp(-(((dist - dmin) / 4) ** 2)) / (dist + 1);
+        sw += w;
+        sd += w * d;
+      }
+      const d = sd / sw;
+      const s = Math.max(0, 1 - dmin / Math.min(REACH, Math.max(12, 3 * Math.abs(d))));
+      field[r * cols + c] = d * s * s * (3 - 2 * s);
+    }
+  }
+  return (x, y) => {
+    const fc = (x - west) / GRID;
+    const fr = (north - y) / GRID;
+    const c0 = Math.floor(fc);
+    const r0 = Math.floor(fr);
+    if (c0 < 0 || r0 < 0 || c0 + 1 >= cols || r0 + 1 >= rows) return 0;
+    const tx = fc - c0;
+    const ty = fr - r0;
+    const at = (c: number, r: number) => field[r * cols + c];
+    return (at(c0, r0) * (1 - tx) + at(c0 + 1, r0) * tx) * (1 - ty) + (at(c0, r0 + 1) * (1 - tx) + at(c0 + 1, r0 + 1) * tx) * ty;
+  };
+}
+
 /** The grid's heights (little-endian int16 in base64). */
 export function gridHeights(grid: TerrainGrid): Int16Array {
   const bytes = Uint8Array.from(atob(grid.heights_cm_int16_b64), (ch) => ch.charCodeAt(0));
@@ -531,7 +617,12 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   }
   const H0 = terrain(0, 0);
   // Flat where the terrain did not load: the house still stands, on level ground.
-  const ground = (x: number, y: number) => (H0 === null ? 0 : (terrain(x, y) ?? H0) - H0);
+  const baseGround = (x: number, y: number) => (H0 === null ? 0 : (terrain(x, y) ?? H0) - H0);
+  // The terrain is coarser than ARGUS's model (a height every 2 m, smoothed: a hilltop rounded off): round
+  // the model it is bent to meet the model's edge (set once the model is levelled), so the model neither
+  // stands on air over it nor sinks into it.
+  let bend: (x: number, y: number) => number = () => 0;
+  const ground = (x: number, y: number) => baseGround(x, y) + bend(x, y);
 
   // ARGUS's model, lowered with the ground (whose height 0 is the terrain at the origin). Its floor is
   // the lowest point of the model in each half-metre cell: inside a room, the floor; by a wall, the
@@ -547,9 +638,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // Where the model stands up from its own ground (walls, rocks, buildings): every metre or so, its
   // foot and top, so a place can be seen whole from its long side.
   const standing: { x: number; z: number; low: number; high: number }[] = [];
-  // Where the model has a surface at all: the ground is not drawn there (it would show through the
-  // model's own ground, or stand over its sunken floors).
-  let cover: { data: Uint8Array; nx: number; nz: number; minX: number; minZ: number; cell: number } | null = null;
+  // The model's lowest point in each cell where it has a ground of its own: the ground is not drawn above
+  // it (it would show through the model's own ground, or stand over its sunken floors).
+  let lows: { data: Float32Array; nx: number; nz: number; minX: number; minZ: number; cell: number } | null = null;
   // The floor the cut above the walls is measured from (the House of the Masks' shelters over its mosaics).
   let cutBase = 0;
   // Within the model, away from its ragged edge (holes in its floors included).
@@ -630,11 +721,11 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       }
       return low === Infinity ? null : low;
     };
-    // The ground is left out where the model has a ground of its own: cells where it is flat (a floor, a
-    // street, a roof), and a metre round them (the walls between floors), and wherever the model's floor
-    // lies below the terrain (rooms dug out, a sunken courtyard, a floor under a shelter's roof); but never
-    // at the model's ragged edge (the ground fills the gaps there) nor in the middle of a cliff or a
-    // facade (where the model has no surface facing up, and the ground's hole would show the sky).
+    // The model has a ground of its own in cells where it is flat (a floor, a street, a roof) and a metre
+    // round them (the walls between floors), and wherever its floor lies below the terrain (rooms dug out, a
+    // sunken courtyard, a floor under a shelter's roof); not in the middle of a cliff or a facade (no surface
+    // facing up there: the ground's hole would show the sky), nor at its ragged edge (the ground fills the
+    // gaps there).
     const R = Math.max(1, Math.round(1 / CELL));
     const has = (r: number, c: number) => r >= 0 && c >= 0 && r < nz && c < nx && cells[r * nx + c] !== Infinity;
     const flat = (r: number, c: number) => has(r, c) && highs[r * nx + c] - cells[r * nx + c] < 1;
@@ -664,31 +755,48 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       if (k >= nx) seed(k - nx);
       if (k < (nz - 1) * nx) seed(k + nx);
     }
+    // The terrain bent to the model's edge (bendToEdge): along the edge (its cells next to the outside),
+    // the model's lowest point in every 2 m is how far above (or below) the terrain the edge stands there.
+    const bins = new Map<number, [number, number, number]>();
+    for (let r = 0; r < nz; r++) {
+      for (let c = 0; c < nx; c++) {
+        const k = r * nx + c;
+        if (cells[k] === Infinity) continue;
+        const edge = c === 0 || r === 0 || c === nx - 1 || r === nz - 1 || outside[k - 1] || outside[k + 1] || outside[k - nx] || outside[k + nx];
+        if (!edge) continue;
+        const x = footprint.min.x + (c + 0.5) * CELL;
+        const y = -(footprint.min.z + (r + 0.5) * CELL);
+        const key = Math.floor(x / 2) * 100003 + Math.floor(y / 2);
+        const was = bins.get(key);
+        if (!was || cells[k] < was[2]) bins.set(key, [x, y, cells[k]]);
+      }
+    }
+    bend = bendToEdge(
+      [...bins.values()].map(([x, y, h]): [number, number, number] => [x, y, h - 0.1 - baseGround(x, y)]), // a little under: it hides the seam
+      { west: footprint.min.x, east: footprint.max.x, south: -footprint.max.z, north: -footprint.min.z },
+    );
     // within a metre of the outside (the ragged edge), or outside
     const nearOut = new Uint8Array(nx * nz);
-    const coverData = new Uint8Array(nx * nz);
+    const lowData = new Float32Array(nx * nz).fill(1e6);
     for (let r = 0; r < nz; r++) {
       for (let c = 0; c < nx; c++) {
         let edge = false;
         let nearFlat = false;
-        for (let dr = -R; dr <= R && !edge; dr++) {
+        for (let dr = -R; dr <= R; dr++) {
           for (let dc = -R; dc <= R; dc++) {
             const rr = r + dr;
             const cc = c + dc;
-            if (rr < 0 || cc < 0 || rr >= nz || cc >= nx || outside[rr * nx + cc]) {
-              edge = true;
-              break;
-            }
-            if (flat(rr, cc)) nearFlat = true;
+            if (rr < 0 || cc < 0 || rr >= nz || cc >= nx || outside[rr * nx + cc]) edge = true;
+            else if (flat(rr, cc)) nearFlat = true;
           }
         }
         if (edge) nearOut[r * nx + c] = 1;
         if (!has(r, c)) continue;
         const sunken = cells[r * nx + c] < ground(footprint.min.x + (c + 0.5) * CELL, -(footprint.min.z + (r + 0.5) * CELL)) - 0.3;
-        if (!edge && (nearFlat || sunken)) coverData[r * nx + c] = 255;
+        if (!edge && (nearFlat || sunken)) lowData[r * nx + c] = cells[r * nx + c];
       }
     }
-    cover = { data: coverData, nx, nz, minX: footprint.min.x, minZ: footprint.min.z, cell: CELL };
+    lows = { data: lowData, nx, nz, minX: footprint.min.x, minZ: footprint.min.z, cell: CELL };
     insideModel = (x, y) => {
       const c = Math.floor((x - footprint.min.x) / CELL);
       const r = Math.floor((-y - footprint.min.z) / CELL);
@@ -762,24 +870,52 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   Object.assign(sun.shadow.camera, { left: -reachShadow, right: reachShadow, top: reachShadow, bottom: -reachShadow, near: 1, far: 250 * VIEW });
   scene.add(sun, sun.target);
 
-  const SEG = 128; // ground: the satellite picture, lifted onto the terrain
+  // ground: the satellite picture, lifted onto the terrain; its points closer together round the model
+  // (about every 1.5 m there, 6 m far off), so the ground follows the model's edge
+  const SEG = 200;
   const groundGeo = new THREE.PlaneGeometry(imagery.east - imagery.west, imagery.north - imagery.south, SEG, SEG);
   const gp = groundGeo.attributes.position;
+  const guv = groundGeo.attributes.uv;
   const gx0 = (imagery.west + imagery.east) / 2;
   const gy0 = (imagery.north + imagery.south) / 2;
-  // The terrain everywhere; where ARGUS's model has a surface the ground is simply not drawn (a mask
-  // of the model's cells), so it never covers the model's own ground or its sunken floors. (Stepping
-  // the ground down under the model left walls of stretched picture all round it.)
-  // Inside the model, where its floors lie below the terrain (rooms dug out), the ground steps down
-  // under them, so it never stands over a floor where the photographs left a hole in it; never at the
-  // model's edge, where a step would show.
-  const reach = (Math.max(imagery.east - imagery.west, imagery.north - imagery.south) / SEG) * 0.75;
+  const [mx0, my0] = model ? [(footprint.min.x + footprint.max.x) / 2, -(footprint.min.z + footprint.max.z) / 2] : houseCentre;
+  const sigma = (model ? Math.max(footprint.max.x - footprint.min.x, footprint.max.z - footprint.min.z) / 2 : 30) + 40;
+  /** SEG + 1 positions from a to b, denser round m. */
+  const spread = (a: number, b: number, m: number): number[] => {
+    const N = 2000;
+    const cdf = [0];
+    for (let i = 1; i <= N; i++) {
+      const x = a + ((i - 0.5) / N) * (b - a);
+      cdf.push(cdf[i - 1] + 1 + 4 * Math.exp(-(((x - m) / sigma) ** 2)));
+    }
+    const out: number[] = [];
+    let i = 0;
+    for (let k = 0; k <= SEG; k++) {
+      const want = (k / SEG) * cdf[N];
+      while (i < N - 1 && cdf[i + 1] < want) i++;
+      const t = (want - cdf[i]) / (cdf[i + 1] - cdf[i] || 1);
+      out.push(a + ((i + Math.min(1, Math.max(0, t))) / N) * (b - a));
+    }
+    return out;
+  };
+  const xs = spread(imagery.west, imagery.east, mx0);
+  const ys = spread(imagery.south, imagery.north, my0).reverse(); // the plane's rows run from the north
+  // The terrain everywhere. Inside the model the ground stays under it (under its lowest point a few
+  // metres round), so it fills what is seen through a gap under the model's edge or a hole in its
+  // floors, and never stands over a floor where the photographs left a hole; never at the model's edge,
+  // where a step would show (the bent terrain meets the edge there). Where it still stands over the
+  // model, it is not drawn (the model's lowest point in each cell), so it never covers the model's own
+  // ground or its sunken floors.
+  const reach = (Math.max(imagery.east - imagery.west, imagery.north - imagery.south) / 128) * 0.75;
   for (let i = 0; i < gp.count; i++) {
-    const x = gp.getX(i) + gx0;
-    const y = gp.getY(i) + gy0;
+    const x = xs[i % (SEG + 1)];
+    const y = ys[Math.floor(i / (SEG + 1))];
+    gp.setXY(i, x - gx0, y - gy0);
+    guv.setXY(i, (x - imagery.west) / (imagery.east - imagery.west), (y - imagery.south) / (imagery.north - imagery.south));
     const g = ground(x, y);
-    const low = model && insideModel(x, y) ? lowestNear(x, y, reach) : null;
-    gp.setZ(i, low !== null && low < g - 0.3 ? low - 0.4 : g);
+    const inside = model && insideModel(x, y);
+    const low = inside ? lowestNear(x, y, reach) : null;
+    gp.setZ(i, low === null ? g : Math.min(g, low - 0.3));
   }
   groundGeo.computeVertexNormals();
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -789,10 +925,10 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
   // A photograph, with the day's own light in it: shown as it is, not lit a second time.
   // (Drawn a little behind: where it meets the model's own ground, the model's shows.)
   const groundMat = new THREE.MeshBasicMaterial({ map: groundTex, toneMapped: false, polygonOffset: true, polygonOffsetFactor: 2, polygonOffsetUnits: 8 });
-  const mask = cover ? new THREE.DataTexture(cover.data, cover.nx, cover.nz, THREE.RedFormat, THREE.UnsignedByteType) : null;
-  if (mask) mask.needsUpdate = true;
-  const maskMin = new THREE.Vector2(cover?.minX ?? 0, cover?.minZ ?? 0);
-  const maskSize = new THREE.Vector2(cover ? cover.nx * cover.cell : 1, cover ? cover.nz * cover.cell : 1);
+  const mask = lows ? new THREE.DataTexture(lows.data, lows.nx, lows.nz, THREE.RedFormat, THREE.FloatType) : null;
+  if (mask) mask.needsUpdate = true; // (nearest: a float texture is not filtered everywhere)
+  const maskMin = new THREE.Vector2(lows?.minX ?? 0, lows?.minZ ?? 0);
+  const maskSize = new THREE.Vector2(lows ? lows.nx * lows.cell : 1, lows ? lows.nz * lows.cell : 1);
   // (the weather on the ground too: wet, frost, soot, heat, a storm's light; compiled once the scene is made)
   groundMat.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, {
@@ -822,7 +958,7 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
         "void main() {",
         `void main() {
         vec2 maskUv = (vWorld.xz - uMaskMin) / uMaskSize;
-        if (uHasMask > 0.5 && all(greaterThan(maskUv, vec2(0.0))) && all(lessThan(maskUv, vec2(1.0))) && texture2D(uMask, maskUv).r > 0.5) discard;`,
+        if (uHasMask > 0.5 && all(greaterThan(maskUv, vec2(0.0))) && all(lessThan(maskUv, vec2(1.0))) && vWorld.y > texture2D(uMask, maskUv).r + 0.02) discard;`,
       )
       .replace(
         "#include <map_fragment>",
@@ -1008,7 +1144,9 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
           map: lit.map ?? null,
           color: lit.color ? lit.color.clone() : 0xffffff,
           vertexColors: lit.vertexColors,
-          side: lit.side,
+          // both sides: from low down, through a gap under the model's ragged edge, its ground is seen from
+          // below (some of ARGUS's models are one-sided, and the sky showed through them there)
+          side: THREE.DoubleSide,
           transparent: lit.transparent,
           opacity: lit.opacity,
           alphaTest: lit.alphaTest,

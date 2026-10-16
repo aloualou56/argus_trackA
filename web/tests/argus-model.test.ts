@@ -2,7 +2,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import * as THREE from "three";
 import { describe, expect, it } from "vitest";
-import { fitPlane, levelFit, modelMatrix, sceneCentre, type HouseData, type ModelTile } from "../src/view3d/house";
+import { bendToEdge, fitPlane, levelFit, modelMatrix, sceneCentre, type HouseData, type ModelTile } from "../src/view3d/house";
 
 const url = new URL("../public/data/view3d/delos-masks-model.json", import.meta.url);
 const house = JSON.parse(readFileSync(new URL("../public/data/view3d/delos-masks.json", import.meta.url), "utf8")) as {
@@ -63,6 +63,38 @@ describe("levelling a model onto the terrain, whatever else it has", () => {
   it("never tilts it more than 3 degrees", () => {
     const [a] = levelFit(grid((x) => 0.2 * x));
     expect(Math.atan(a) * (180 / Math.PI)).toBeCloseTo(3, 6);
+  });
+});
+
+describe("the terrain round ARGUS's model", () => {
+  // a 40 m square model, its edge every 2 m; how far the edge stands above the terrain: `at(x, y)`
+  const square = (at: (x: number, y: number) => number) => {
+    const pts: [number, number, number][] = [];
+    for (let t = -20; t <= 20; t += 2) pts.push([t, 20, at(t, 20)], [t, -20, at(t, -20)], [20, t, at(20, t)], [-20, t, at(-20, t)]);
+    return bendToEdge(pts, { west: -20, east: 20, south: -20, north: 20 });
+  };
+  it("is bent to meet the model's edge, up where it stands over the terrain (Schenkenberg)", () => {
+    const bend = square(() => 1.5);
+    // (within 10 cm: the bend is kept every 3 m)
+    expect(Math.abs(bend(0, 20) - 1.5)).toBeLessThan(0.1);
+    expect(Math.abs(bend(20, 0) - 1.5)).toBeLessThan(0.1);
+  });
+  it("and down where it is under it (Montefalco), fading out away from it, slower the bigger the step", () => {
+    const small = square(() => -1);
+    const big = square(() => -10);
+    expect(Math.abs(small(0, 21) + 1)).toBeLessThan(0.1);
+    expect(small(0, 34)).toBeCloseTo(0, 6); // 12 m round a 1 m step
+    expect(big(0, 34)).toBeLessThan(-3); // 30 m round a 10 m step: 1 in 3 on average
+    expect(big(0, 51)).toBeCloseTo(0, 6);
+    for (let y = 20; y < 50; y += 2) expect(Math.abs(big(0, y + 2) - big(0, y)) / 2).toBeLessThan(0.5);
+  });
+  it("follows a ragged edge as a smooth ground, not a bumpy one", () => {
+    const bend = square((x) => (Math.round(x / 2) % 2 ? 1 : 0)); // 0, 1, 0, 1 m every 2 m along the edge
+    for (let x = -10; x <= 10; x += 2) expect(Math.abs(bend(x, 26) - bend(x + 2, 26))).toBeLessThan(0.15);
+  });
+  it("is left as it is beyond 60 m, and where the model has no edge", () => {
+    expect(square(() => 30)(0, 85)).toBe(0);
+    expect(bendToEdge([], { west: 0, east: 1, south: 0, north: 1 })(0, 0)).toBe(0);
   });
 });
 
