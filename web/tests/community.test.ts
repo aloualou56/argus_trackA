@@ -130,7 +130,7 @@ describe("class codes", () => {
 });
 
 /** A fake Supabase REST endpoint: keeps rows per table and applies eq. filters. */
-function fakeSupabase() {
+function fakeSupabase({ nickColumn = true } = {}) {
   const tables: Record<string, Record<string, unknown>[]> = { plays: [], quizzes: [] };
   const calls: { url: string; init?: RequestInit }[] = [];
   let online = true;
@@ -139,6 +139,9 @@ function fakeSupabase() {
     if (!online) throw new TypeError("Failed to fetch");
     const u = new URL(url);
     const table = u.pathname.split("/").pop()!;
+    // a project created before the leaderboard: PostgREST answers 400 for a column it does not have
+    const asksNick = init?.method === "POST" ? "nick" in JSON.parse(String(init.body)) : (u.searchParams.get("select") ?? "").includes("nick");
+    if (!nickColumn && table === "plays" && asksNick) return new Response('{"code":"PGRST204"}', { status: 400 });
     if (init?.method === "POST") {
       tables[table].push(JSON.parse(String(init.body)));
       return new Response(null, { status: 201 });
@@ -169,6 +172,19 @@ describe("shared store (Supabase REST)", () => {
     expect(headers.apikey).toBe("anon-key");
     expect((await store.plays({ classCode: "ABC234" })).map((r) => r.classCode)).toEqual(["ABC234"]);
     expect(await store.plays({ monument: "ranverso", level: "extreme" })).toHaveLength(2);
+  });
+
+  it("keeps working on a project without the leaderboard's nick column (schema not updated yet)", async () => {
+    const api = fakeSupabase({ nickColumn: false });
+    const store = new SupabaseCommunityStore("https://x.supabase.co", "k", api.fetcher);
+    await store.submit(play({ humidity: 1 }, { nick: "owl-27" }));
+    expect(api.tables.plays).toHaveLength(1);
+    expect(api.tables.plays[0]).not.toHaveProperty("nick");
+    expect(await store.plays()).toHaveLength(1); // read without the column, not from this device
+    const updated = fakeSupabase();
+    const store2 = new SupabaseCommunityStore("https://x.supabase.co", "k", updated.fetcher);
+    await store2.submit(play({ humidity: 1 }, { nick: "owl-27" }));
+    expect((await store2.plays())[0].nick).toBe("owl-27");
   });
 
   it("falls back to this device when offline and sends the queue later", async () => {

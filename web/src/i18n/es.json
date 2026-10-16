@@ -520,6 +520,7 @@
   "own.to3": "Si el edificio es antiguo o está protegido, también al servicio de patrimonio de tu zona.",
   "own.email": "Escribir un correo",
   "own.mailHello": "Hola, he visto algo en el edificio «{name}».",
+  "own.cardStaff": "Lo ha notado un guardián por un día, con el juego. No es el diagnóstico de un experto: un experto debería verlo de cerca.",
   "nick.owl": "Búho",
   "nick.dolphin": "Delfín",
   "nick.falcon": "Halcón",

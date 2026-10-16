@@ -222,6 +222,9 @@ type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
  */
 export class SupabaseCommunityStore implements CommunityStore {
   readonly kind = "shared" as const;
+  /** The project has no `nick` column yet (schema.sql's alter table not run): leave it out, rather than
+   *  lose every record and every read. The leaderboard then has only this device's games. */
+  private noNick = false;
 
   constructor(
     private url: string,
@@ -240,18 +243,29 @@ export class SupabaseCommunityStore implements CommunityStore {
       headers: this.headers({ Prefer: "return=minimal" }),
       body: JSON.stringify(row),
     });
-    if (!res.ok) throw new Error(`${table}: HTTP ${res.status}`);
+    if (!res.ok) throw Object.assign(new Error(`${table}: HTTP ${res.status}`), { status: res.status });
   }
 
   private async select<T>(table: string, columns: string, eq: Record<string, string | undefined>): Promise<T[]> {
     const params = new URLSearchParams({ select: columns, order: "id.desc", limit: String(this.limit) });
     for (const [column, value] of Object.entries(eq)) if (value !== undefined) params.append(column, `eq.${value}`);
     const res = await this.fetcher(`${this.url}/rest/v1/${table}?${params}`, { headers: this.headers() });
-    if (!res.ok) throw new Error(`${table}: HTTP ${res.status}`);
+    if (!res.ok) throw Object.assign(new Error(`${table}: HTTP ${res.status}`), { status: res.status });
     return (await res.json()) as T[];
   }
 
   async submit(r: PlayRecord): Promise<void> {
+    try {
+      await this.insertPlay(r);
+    } catch (e) {
+      // 400 with a name: most likely a project without the nick column; once more without it
+      if (!r.nick || this.noNick || (e as { status?: number }).status !== 400) throw e;
+      this.noNick = true;
+      await this.insertPlay(r);
+    }
+  }
+
+  private async insertPlay(r: PlayRecord): Promise<void> {
     await this.insert("plays", {
       monument: r.monument,
       level: r.level,
@@ -261,7 +275,7 @@ export class SupabaseCommunityStore implements CommunityStore {
       day: r.day,
       class_code: r.classCode ?? null,
       ...(r.decision ? { decision: r.decision } : {}),
-      ...(r.nick ? { nick: r.nick } : {}),
+      ...(r.nick && !this.noNick ? { nick: r.nick } : {}),
     });
   }
 
@@ -271,11 +285,16 @@ export class SupabaseCommunityStore implements CommunityStore {
 
   async plays(f: PlayFilter = {}): Promise<PlayRecord[]> {
     type Row = Omit<PlayRecord, "v" | "classCode" | "decision" | "nick"> & { class_code: string | null; decision?: string | null; nick?: string | null };
-    const rows = await this.select<Row>("plays", "monument,level,picks,score,detected,day,class_code,decision,nick", {
-      monument: f.monument,
-      level: f.level,
-      class_code: f.classCode,
-    });
+    const eq = { monument: f.monument, level: f.level, class_code: f.classCode };
+    const columns = "monument,level,picks,score,detected,day,class_code,decision";
+    let rows: Row[];
+    try {
+      rows = await this.select<Row>("plays", this.noNick ? columns : `${columns},nick`, eq);
+    } catch (e) {
+      if (this.noNick || (e as { status?: number }).status !== 400) throw e;
+      this.noNick = true;
+      rows = await this.select<Row>("plays", columns, eq);
+    }
     return rows.map(({ class_code, decision, nick, ...r }) => ({
       v: 1,
       ...r,

@@ -274,7 +274,7 @@ export function Observe({ data, report, setReport, mapApi, announce, onBack }: P
             )}
           </dl>
           {cardPhoto && <img className="report-photo" src={cardPhoto} alt={t("report.photoAlt")} />}
-          <p className="report-card-staff">{t("report.cardStaff")}</p>
+          <p className="report-card-staff">{t(card.own ? "own.cardStaff" : "report.cardStaff")}</p>
         </section>
 
         {reportTo && (

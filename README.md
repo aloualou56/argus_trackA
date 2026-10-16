@@ -699,9 +699,12 @@ this device.
   like). Records stay anonymous otherwise: the name goes with the same score records as before
   (`web/src/community/nickname.ts`, `leaderboard.ts`, tested in `web/tests/leaderboard.test.ts`).
 - **Shared stores:** Supabase takes it in a new `nick` column (`supabase/schema.sql`: run the `alter table` line
-  once on an existing project), which accepts only that shape; the class server accepts only an animal of the
-  game's own list (`tools/class_server.py`, tested against the game's list). Games played before had no name and
-  are not on the board.
+  once on an existing project), which accepts only that shape. Until it is run the game still stores and reads
+  everything there, without the names (it tries once with the name, then leaves it out), so the shared
+  leaderboard stays empty but nothing else breaks. The class server accepts only an animal of the game's own
+  list (`tools/class_server.py`, tested against the game's list); an older copy of the server drops the name,
+  so a teacher updates it to have the class's leaderboard. Games played before had no name and are not on the
+  board. The board is read from the newest 2000 games of the shared store.
 
 ## Your own monument
 
