@@ -201,7 +201,16 @@ export function GameMap(props: Props) {
     // In the mission, a tap moves the crosshair there; the panel's "+" then places a sensor.
     map.on("movestart", () => setMoving(true));
     map.on("moveend", () => setMoving(false));
-    map.on("move", () => reticleRef.current?.setLatLng(map.getCenter()));
+    // The crosshair stays still in the middle of the map while it glides: put where the middle is to the
+    // fraction of a pixel (as a marker it is rounded to whole pixels, and the gliding map is not: it shook).
+    const steadyReticle = () => {
+      const reticle = reticleRef.current;
+      if (!reticle) return;
+      reticle.setLatLng(map.getCenter());
+      const node = reticle.getElement();
+      if (node) L.DomUtil.setPosition(node, map.containerPointToLayerPoint(map.getSize().divideBy(2)));
+    };
+    map.on("move zoomend viewreset", steadyReticle);
     map.on("zoomend moveend resize", () => declutterRef.current());
     map.on("click", (e: L.LeafletMouseEvent) => {
       if (latest.current.mode === "mission") map.panTo(e.latlng, { animate: !motionReduced() });

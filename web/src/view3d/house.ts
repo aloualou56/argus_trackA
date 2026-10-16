@@ -2085,7 +2085,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
     overlay: fx,
     cellar: cellarPlan,
     director: {
-      fly: (pos, lookAt, ms) => fly({ pos: pos.clone(), look: lookAt.clone(), up: SKY.clone() }, ms, () => 1),
+      fly: (pos, lookAt, ms) => fly({ pos: pos.clone(), look: lookAt.clone(), up: SKY.clone() }, ms),
       cut: (pos, lookAt) => {
         flight = null;
         controls.enabled = false;
@@ -2098,7 +2098,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       home: (ms) => {
         const back = savedPose;
         if (!back) return Promise.resolve();
-        return fly(back, ms, () => 1).then(() => {
+        return fly(back, ms).then(() => {
           controls.target.copy(back.look);
           controls.enabled = true;
           savedPose = null;
@@ -2119,27 +2119,51 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
   }
   pose({ pos: topPos, look: topLook, up: NORTH });
 
-  let flight: {
+  // A flight, told as what the camera looks at, how far out from it and how high above it the camera is,
+  // and from which side (its heading, round the sky): the camera always looks straight at what it looks
+  // at and the picture never leans (no roll). Straight above, where the side means nothing, the heading
+  // still says which way is up in the picture: north, as on the map.
+  type Way = {
     from: Pose;
     to: Pose;
-    t0: number;
-    ms: number;
-    upAt: (e: number) => number;
+    /** the side the camera is on at the end, and how far round it turns on the way there */
+    heading: number;
+    turn: number;
+    /** how much of the turn is done (from the progress along the way) */
+    turnAt: (e: number) => number;
     spin: number;
-    done: () => void;
-    /** The camera's orientation at both ends: the flight turns from one to the other. */
-    q0: THREE.Quaternion;
-    q1: THREE.Quaternion;
-  } | null = null;
-  /** The orientation of a camera at `pos` looking at `at` with `up` above. */
-  const orientation = (pos: THREE.Vector3, at: THREE.Vector3, up: THREE.Vector3) =>
-    new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(pos, at, up));
-  const qNow = new THREE.Quaternion();
-  const qSpin = new THREE.Quaternion();
-  const upNow = new THREE.Vector3();
-  const viewDir = new THREE.Vector3();
+    out: [number, number];
+    up: [number, number];
+  };
+  let flight: (Way & { elapsed: number; ms: number; done: () => void }) | null = null;
+  /** The side of `look` the camera is on (0: south of it, looking north); straight above, the side
+   *  opposite the top of the picture. */
+  const headingOf = (p: Pose) => {
+    const x = p.pos.x - p.look.x;
+    const z = p.pos.z - p.look.z;
+    return Math.hypot(x, z) > 1e-3 * p.pos.distanceTo(p.look) ? Math.atan2(x, z) : Math.atan2(-p.up.x, -p.up.z);
+  };
+  /** -pi..pi */
+  const wrap = (a: number) => a - 2 * Math.PI * Math.round(a / (2 * Math.PI));
+  function way(from: Pose, to: Pose, turnAt: (e: number) => number, spin: number): Way {
+    const heading = headingOf(to);
+    // turning round what it looks at by `spin` on the way (a spiral), and the rest of the way round from
+    // the side it starts on, the shorter way
+    const turn = wrap(headingOf(from) - heading - spin);
+    const out = (p: Pose) => Math.hypot(p.pos.x - p.look.x, p.pos.z - p.look.z);
+    return { from, to, heading, turn, turnAt, spin, out: [out(from), out(to)], up: [from.pos.y - from.look.y, to.pos.y - to.look.y] };
+  }
+  /** Where the camera is at `e` (0..1) along `w`, and what it looks at; returns its heading. */
+  function flown(w: Way, e: number, pos: THREE.Vector3, at: THREE.Vector3): number {
+    at.lerpVectors(w.from.look, w.to.look, e);
+    const heading = w.heading + w.spin * (1 - e) + w.turn * (1 - w.turnAt(e));
+    const out = w.out[0] + (w.out[1] - w.out[0]) * e;
+    pos.set(at.x + Math.sin(heading) * out, at.y + w.up[0] + (w.up[1] - w.up[0]) * e, at.z + Math.cos(heading) * out);
+    return heading;
+  }
   const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-  function fly(to: Pose, ms: number, upAt: (e: number) => number, spin = 0): Promise<void> {
+  const smooth = (t: number) => t * t * (3 - 2 * t);
+  function fly(to: Pose, ms: number, turnAt: (e: number) => number = (e) => e, spin = 0): Promise<void> {
     controls.enabled = false;
     flight = null;
     if (ms <= 0) {
@@ -2147,10 +2171,8 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       return Promise.resolve();
     }
     const from = { pos: camera.position.clone(), look: look.clone(), up: camera.up.clone() };
-    const q0 = orientation(from.pos, from.look, from.up);
-    const q1 = orientation(to.pos, to.look, to.up);
     return new Promise((done) => {
-      flight = { from, to, t0: performance.now(), ms, upAt, spin, done, q0, q1 };
+      flight = { ...way(from, to, turnAt, spin), elapsed: 0, ms, done };
     });
   }
 
@@ -2200,27 +2222,19 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       applyShift();
     }
     if (flight) {
-      const t = Math.min(1, (now - flight.t0) / flight.ms);
-      const e = ease(t);
-      camera.position.lerpVectors(flight.from.pos, flight.to.pos, e);
-      look.lerpVectors(flight.from.look, flight.to.look, e);
-      // turning round what it looks at, less and less (a spiral, not a straight line); at the start straight
-      // above it, where turning changes nothing, so the first picture is still the map's
-      if (flight.spin) camera.position.sub(look).applyAxisAngle(SKY, flight.spin * (1 - e)).add(look);
-      // Which way is up in the picture: from the orientation turning smoothly from the start's to the end's
-      // (and round with the spiral), set square to where the camera looks. (Blending the up direction
-      // itself, from north to the sky, swung the picture round in jolts while the camera still looked
-      // almost straight down: up to 10 degrees in a frame, a tremble.)
-      // (the start exactly the map's; the end where the spiral is heading, turned with it)
-      qSpin.setFromAxisAngle(SKY, flight.spin * (1 - e)).multiply(flight.q1);
-      qNow.slerpQuaternions(flight.q0, qSpin, flight.upAt(e));
-      upNow.set(0, 1, 0).applyQuaternion(qNow);
-      viewDir.subVectors(look, camera.position).normalize();
-      upNow.addScaledVector(viewDir, -upNow.dot(viewDir));
-      if (upNow.lengthSq() > 1e-8) camera.up.copy(upNow.normalize());
-      camera.lookAt(look);
+      // on by the frame's time, at most a 20th of a second: a frame the computer was slow to draw (the
+      // place's pictures still going to the graphics card) is a short pause, never a jump ahead
+      flight.elapsed += Math.min(50, dt * 1000);
+      const t = Math.min(1, flight.elapsed / flight.ms);
+      const heading = flown(flight, ease(t), camera.position, look);
+      // facing what it looks at from its side, tipped down to it, never leaning (straight above too,
+      // where looking at it would not say which way is up)
+      const x = camera.position.x - look.x;
+      const z = camera.position.z - look.z;
+      camera.rotation.set(-Math.atan2(camera.position.y - look.y, Math.hypot(x, z)), heading, 0, "YXZ");
       if (t >= 1) {
         const done = flight.done;
+        pose(flight.to); // the sky up again (north, straight above), for the player's turning
         flight = null;
         done();
       }
@@ -2255,18 +2269,19 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
       // The way down never through ARGUS's model (Schenkenberg's tower beside its crack meter): where a
       // spiral would pass through a wall, the camera comes down without turning; where even that would,
       // the fewer walls the better.
+      const from = { pos: camera.position.clone(), look: look.clone(), up: camera.up.clone() };
+      const to = { pos: endPos, look: endLook, up: SKY };
+      // Turning from north (the map's) to the side it comes to rest on early, while the camera still looks
+      // almost straight down.
+      const turnAt = (e: number) => smooth(Math.min(1, e * 1.6));
       const passes = (turn: number) => {
         if (!model) return 0;
-        const from = camera.position.clone();
-        const lookFrom = look.clone();
+        const w = way(from, to, turnAt, turn);
         const p = new THREE.Vector3();
         const l = new THREE.Vector3();
         let hits = 0;
         for (let i = 1; i < 20; i++) {
-          const e = ease(i / 20);
-          p.lerpVectors(from, endPos, e);
-          l.lerpVectors(lookFrom, endLook, e);
-          if (turn) p.sub(l).applyAxisAngle(SKY, turn * (1 - e)).add(l);
+          flown(w, ease(i / 20), p, l);
           const d = p.clone().sub(l);
           ray.set(l, d.clone().normalize());
           ray.far = d.length();
@@ -2275,8 +2290,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
         return hits;
       };
       if (spin && ms > 0 && passes(spin) > 0) spin = passes(0) <= passes(spin) ? 0 : spin;
-      // Up turns from north to the sky early, while the camera still looks almost straight down.
-      return fly({ pos: endPos, look: endLook, up: SKY }, ms, (e) => Math.min(1, e * 1.6), spin).then(() => {
+      return fly(to, ms, turnAt, spin).then(() => {
         controls.target.copy(endLook);
         controls.enabled = true;
       });
@@ -2287,7 +2301,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
         shift = 0;
         applyShift();
       }
-      return fly({ pos: topPos, look: topLook, up: NORTH }, ms, (e) => e).then(() => {
+      return fly({ pos: topPos, look: topLook, up: NORTH }, ms).then(() => {
         above = true;
       });
     },
@@ -2336,7 +2350,7 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
           controls.target.copy(near);
           controls.update();
         } else {
-          void fly(to, 1400, () => 1).then(() => {
+          void fly(to, 1400).then(() => {
             controls.target.copy(near);
             controls.enabled = true;
           });
