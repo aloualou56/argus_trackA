@@ -65,7 +65,7 @@ function ClassPanel({ classCode, setClassCode, onTeacher }: Pick<Props, "classCo
           <div className="field-row">
             <input
               id="class-code"
-              className="field"
+              className="field field-code"
               type="text"
               inputMode="text"
               autoComplete="off"

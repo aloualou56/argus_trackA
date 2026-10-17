@@ -373,6 +373,9 @@ main {
   color: var(--ink);
   font: inherit;
   font-size: 1.15rem;
+}
+/* a class code: capitals, spaced out, as it is printed on the board */
+.field-code {
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
@@ -5756,7 +5759,9 @@ html.a11y-contrast .report-contact {
 }
 .tour-card {
   position: fixed;
-  width: min(25rem, calc(100vw - 24px));
+  width: min(25rem, calc(100vw - 24px)); /* Tour.tsx sets it, narrower beside the lit part on a phone on its side */
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
   padding: 1rem 1.1rem 0.9rem;
   background: var(--bg);
   color: var(--ink);
@@ -5764,9 +5769,6 @@ html.a11y-contrast .report-contact {
   border-radius: 10px;
   box-shadow: 0 14px 40px rgb(0 0 0 / 0.35);
   animation: tour-in 0.32s cubic-bezier(0.3, 0.7, 0.2, 1);
-}
-.tour-card[style*="right"] {
-  width: auto;
 }
 @keyframes tour-in {
   from {
@@ -5827,8 +5829,17 @@ html.a11y-contrast .report-contact {
   min-height: 44px;
   padding: 0.45rem 0.9rem;
 }
+.tour-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: -0.4rem 0 0.1rem;
+}
+.tour-head .tour-count {
+  margin: 0;
+}
 .tour-skip {
-  margin-right: auto;
   min-height: 44px;
   padding: 0 0.25rem;
   border: 0;
@@ -5842,6 +5853,28 @@ html.a11y-contrast .report-contact {
 }
 .tour-skip:hover {
   color: var(--ink);
+}
+/* a narrow card (a narrow phone, or beside the lit part on a phone on its side): the three
+   buttons still fit on one line */
+.tour-card {
+  container-type: inline-size;
+}
+@container (max-width: 23.5rem) {
+  .tour-card {
+    padding: 0.85rem 0.9rem 0.75rem;
+  }
+  .tour-card h2 {
+    font-size: 1.2rem;
+  }
+  .tour-actions {
+    gap: 0.4rem;
+  }
+  .tour-actions .btn {
+    padding: 0.4rem 0.7rem;
+  }
+  .tour-actions .btn svg {
+    display: none;
+  }
 }
 /* the finger that shows what to do: it taps, or carries a sensor onto the map */
 .tour-finger {

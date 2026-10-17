@@ -90,28 +90,102 @@ function veilClip(box: Box | null): string | undefined {
   );
 }
 
+/**
+ * Brings `el` into view smoothly. The browser's own smooth scrolling does nothing inside an inert
+ * part of the page (all of the game while the walkthrough is open), so: an instant scroll finds where
+ * each scrolling box must end, they go back, and then glide there frame by frame. Returns a stop.
+ */
+function glideIntoView(el: HTMLElement, block: ScrollLogicalPosition, still: boolean): () => void {
+  const boxes: Element[] = [];
+  for (let node = el.parentElement; node; node = node.parentElement) {
+    const style = getComputedStyle(node);
+    if (/(auto|scroll)/.test(style.overflowY + style.overflowX) && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)) {
+      boxes.push(node);
+    }
+  }
+  const page = document.scrollingElement;
+  if (page && !boxes.includes(page)) boxes.push(page);
+  const from = boxes.map((b) => [b.scrollLeft, b.scrollTop]);
+  el.scrollIntoView({ block, inline: "nearest", behavior: "auto" });
+  // A bar that sticks to the top of a scrolling box (the mission's coins and Done, beside the map on a
+  // phone on its side) must not cover the part's beginning: the box scrolls back by the bar's height.
+  for (const b of boxes) {
+    if (b === page) continue;
+    for (const bar of Array.from(b.querySelectorAll<HTMLElement>("*"))) {
+      if (bar.contains(el) || el.contains(bar) || getComputedStyle(bar).position !== "sticky") continue;
+      const covers = bar.getBoundingClientRect();
+      const part = el.getBoundingClientRect();
+      const across = covers.left < part.right && covers.right > part.left;
+      if (across && covers.top <= part.top && covers.bottom > part.top) b.scrollTop -= covers.bottom - part.top + 8;
+    }
+  }
+  const to = boxes.map((b) => [b.scrollLeft, b.scrollTop]);
+  if (still) return () => {};
+  boxes.forEach((b, k) => {
+    b.scrollLeft = from[k][0];
+    b.scrollTop = from[k][1];
+  });
+  const started = performance.now();
+  let frame = 0;
+  const place = (e: number) =>
+    boxes.forEach((b, k) => {
+      b.scrollLeft = from[k][0] + (to[k][0] - from[k][0]) * e;
+      b.scrollTop = from[k][1] + (to[k][1] - from[k][1]) * e;
+    });
+  const move = () => {
+    const t = Math.min(1, (performance.now() - started) / GLIDE_MS);
+    place(ease(t));
+    if (t < 1) frame = requestAnimationFrame(move);
+  };
+  frame = requestAnimationFrame(move);
+  // Where no frames come (a page in the background, a phone saving power), it gets there all the same.
+  const sure = window.setTimeout(() => {
+    cancelAnimationFrame(frame);
+    place(1);
+  }, GLIDE_MS + 150);
+  return () => {
+    cancelAnimationFrame(frame);
+    window.clearTimeout(sure);
+  };
+}
+
 const same = (a: Box | null | undefined, b: Box | null | undefined) =>
   a === b || (!!a && !!b && Math.abs(a.top - b.top) < 0.5 && Math.abs(a.left - b.left) < 0.5 && Math.abs(a.width - b.width) < 0.5 && Math.abs(a.height - b.height) < 0.5);
 
-/** Where the card goes: beside the lit box where there is room, else on the half of the screen it leaves free. */
-function cardPlace(box: Box | null, card: { width: number; height: number }): CSSProperties {
+/** The card's own width: 25rem, or the screen's less the margins. */
+const naturalWidth = () => Math.min(400, window.innerWidth - 2 * MARGIN);
+/** The narrowest the card gets to stand beside the lit part rather than over it. */
+const NARROWEST = 260;
+
+/**
+ * Where the card goes: under or over the lit part where it fits; else beside it, narrower if it must
+ * (a phone on its side); else at the top or the bottom of the screen, on the side with more room.
+ * Its width depends on the place alone, never on its own height, so the two can never go round in turn.
+ */
+function cardPlace(box: Box | null, card: { width: number; height: number }, keep: { y: number } | null): CSSProperties {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  if (!box) return { top: Math.max(MARGIN, (vh - card.height) / 2), left: Math.max(MARGIN, (vw - card.width) / 2) };
-  const left = Math.min(Math.max(box.left, MARGIN), Math.max(MARGIN, vw - card.width - MARGIN));
+  const width = naturalWidth();
+  const middle = Math.max(MARGIN, (vw - width) / 2);
+  if (!box) return { top: Math.max(MARGIN, (vh - card.height) / 2), left: middle, width };
+  const left = Math.min(Math.max(box.left, MARGIN), Math.max(MARGIN, vw - width - MARGIN));
   if (vw >= 640) {
-    if (box.top + box.height + MARGIN + card.height <= vh - MARGIN) return { top: box.top + box.height + MARGIN, left };
-    if (box.top - MARGIN - card.height >= MARGIN) return { top: box.top - MARGIN - card.height, left };
-    if (box.left + box.width + MARGIN + card.width <= vw - MARGIN) {
-      return { top: Math.min(Math.max(box.top, MARGIN), vh - card.height - MARGIN), left: box.left + box.width + MARGIN };
-    }
-    if (box.left - MARGIN - card.width >= MARGIN) {
-      return { top: Math.min(Math.max(box.top, MARGIN), vh - card.height - MARGIN), left: box.left - MARGIN - card.width };
+    if (box.top + box.height + MARGIN + card.height <= vh - MARGIN) return { top: box.top + box.height + MARGIN, left, width };
+    if (box.top - MARGIN - card.height >= MARGIN) return { top: box.top - MARGIN - card.height, left, width };
+    const roomRight = vw - box.left - box.width - 2 * MARGIN;
+    const roomLeft = box.left - 2 * MARGIN;
+    if (Math.max(roomRight, roomLeft) >= NARROWEST) {
+      const right = roomRight >= roomLeft;
+      const w = Math.min(width, right ? roomRight : roomLeft);
+      const top = Math.max(MARGIN, Math.min(box.top, vh - card.height - MARGIN));
+      return { top, left: right ? box.left + box.width + MARGIN : box.left - MARGIN - w, width: w };
     }
   }
-  // A phone, or no room beside it: the top or the bottom of the screen, away from the lit part.
-  const lower = box.top + box.height / 2 < vh / 2;
-  return lower ? { bottom: MARGIN, left: MARGIN, right: MARGIN } : { top: MARGIN, left: MARGIN, right: MARGIN };
+  // Never over the finger's spot: the other half of the screen. Else the side with more room.
+  const roomAbove = box.top;
+  const roomBelow = vh - box.top - box.height;
+  const below = keep ? keep.y < vh / 2 : roomBelow >= roomAbove;
+  return below ? { bottom: MARGIN, left: middle, width } : { top: MARGIN, left: middle, width };
 }
 
 export function Tour({ id, steps, enabled = true, delay = 400, last = "done", onClose }: Props) {
@@ -172,7 +246,7 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
     // Short parts to the middle of the screen; a tall one from its top, which on a phone is just
     // under the map strip (html's scroll-padding-top), so the strip never hides its beginning.
     const tall = !!el && el.getBoundingClientRect().height > window.innerHeight * 0.4;
-    el?.scrollIntoView({ block: tall ? "start" : "center", inline: "nearest", behavior: motionReduced() ? "auto" : "smooth" });
+    const stopScroll = el ? glideIntoView(el, tall ? "start" : "center", motionReduced()) : () => {};
     let frame = 0;
     // (undefined: not measured yet in this step, so the first frame always sets all three)
     let lit: Box | null | undefined;
@@ -199,13 +273,22 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
       frame = requestAnimationFrame(follow);
     };
     follow();
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      stopScroll();
+    };
   }, [open, index]);
 
+  // The card's size, for where it goes; measured a few times a step at most, so a size that kept
+  // changing with its place could never loop.
+  const measured = useRef({ index: -1, times: 0 });
   useLayoutEffect(() => {
     if (!open || !cardRef.current) return;
+    if (measured.current.index !== index) measured.current = { index, times: 0 };
     const r = cardRef.current.getBoundingClientRect();
-    if (Math.abs(r.width - cardSize.width) > 1 || Math.abs(r.height - cardSize.height) > 1) setCardSize({ width: r.width, height: r.height });
+    if (Math.abs(r.width - cardSize.width) > 1 || Math.abs(r.height - cardSize.height) > 1) {
+      if (measured.current.times++ < 4) setCardSize({ width: r.width, height: r.height });
+    }
   });
 
   // While it is open, nothing behind it can be reached; each step's title takes the focus.
@@ -245,9 +328,14 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
   };
 
   // Where the finger presses: the step's own spot, else near the middle of the lit part.
-  const from = atBox
+  const spot = atBox
     ? { x: atBox.left + atBox.width * 0.62, y: atBox.top + atBox.height * 0.5 }
     : box && { x: box.left + Math.min(box.width / 2, 60), y: box.top + Math.min(box.height / 2, 40) };
+  // The finger (3rem, and its tap comes in from below and to the right) stays on the screen.
+  const from = spot && {
+    x: Math.min(Math.max(spot.x, 24), window.innerWidth - 56),
+    y: Math.min(Math.max(spot.y, 12), window.innerHeight - 68),
+  };
   const finger =
     arrived && from && (step.demo === "tap" || (step.demo === "drag" && toBox))
       ? {
@@ -283,10 +371,15 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
         aria-modal="true"
         aria-labelledby={`${uid}-title`}
         aria-describedby={`${uid}-text`}
-        style={cardPlace(box, cardSize)}
+        style={cardPlace(box, cardSize, step.demo === "tap" || step.demo === "drag" ? from : null)}
         onKeyDown={onKeyDown}
       >
-        <p className="tour-count">{t("tour.count", { n: index + 1, total: steps.length })}</p>
+        <div className="tour-head">
+          <p className="tour-count">{t("tour.count", { n: index + 1, total: steps.length })}</p>
+          <button type="button" className="tour-skip" onClick={close}>
+            {t("tour.skip")}
+          </button>
+        </div>
         <h2 id={`${uid}-title`} ref={headingRef} tabIndex={-1}>
           {step.title}
         </h2>
@@ -316,9 +409,6 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
           ))}
         </div>
         <div className="tour-actions">
-          <button type="button" className="tour-skip" onClick={close}>
-            {t("tour.skip")}
-          </button>
           {index > 0 && (
             <button type="button" className="btn btn-secondary" onClick={() => setIndex(index - 1)}>
               {t("tour.back")}

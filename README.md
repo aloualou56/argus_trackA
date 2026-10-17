@@ -407,8 +407,13 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
 The first time each screen opens, up to the start of play, a short walkthrough shows what is on it and what
 to do (`web/src/components/Tour.tsx`). One part of the screen at a time is lit, with a glowing frame; the rest is
 shaded and a little blurred (one veil with a rounded hole, redrawn every frame, so the blur has no seams and the
-lit part stays sharp while the page scrolls), and a card beside it (on a phone, at the top or the bottom, away from the lit part)
-says what it is for, with "Step 2 of 5", Back, Next and Skip. The light glides from one step to the next (the
+lit part stays sharp while the page scrolls), and a card says what it is for: "Step 2 of 5" and Skip at its top,
+Back and Next below. The card stands under, over or beside the lit part (narrower beside it on a phone on its side);
+on an upright phone at the top or the bottom of the screen, never over the spot the finger presses. Its width
+depends on its place alone, so it never goes back and forth between two places (it once did, on a phone on its
+side, until the game gave up). The page is scrolled by the walkthrough itself, frame by frame (the browser's own
+smooth scrolling does nothing in a part of the page made inert), and a bar that sticks to the top of a scrolling
+column never covers the lit part. The light glides from one step to the next (the
 hole, the frame and the card together), and once it is there, where it helps a small moving picture shows it being
 done: a finger tapping a monument, an answer or a button; a
 finger carrying a sensor from the tray onto the map; a sensor's price coming off the coin bar ("16 → 14").
