@@ -2,12 +2,19 @@
 # the "site" branch: one commit, replaced each time. The Raspberry Pi that serves the game follows
 # that branch (tools/pi/README.md), so it never builds anything itself. Nothing is published if a
 # test fails, and the private snapshots never leave the repository: only the built site does.
+#
+# The site is also served by GitHub Pages (from the "site" branch), which has no Raspberry Pi behind it:
+# so each build copies the newest from ARGUS (the Pi's live/argus-now.json, written every 2 hours) into
+# the site, and the build runs again every night for that (and on every push to main). If the Pi cannot be reached, the copy from
+# the last build is kept; with neither, the game simply shows no live data (as offline).
 name: Build the site
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "0 23 * * *" # once a night, 23:00 UTC: 01:00 in Greece in winter, 02:00 in summer (GitHub may be a few minutes late)
 
 permissions:
   contents: write # to push the "site" branch
@@ -42,6 +49,19 @@ jobs:
       - name: Build
         working-directory: web
         run: npm run build
+
+      - name: The newest from ARGUS, from the Pi
+        env:
+          PI_LIVE_URL: ${{ vars.PI_LIVE_URL || 'http://pi-address.invalid/live/argus-now.json' }}
+        run: |
+          mkdir -p web/dist/live
+          ok() { python3 -I -c "import json,sys; d=json.load(open(sys.argv[1], encoding='utf-8')); sys.exit(0 if d.get('schema')==1 and isinstance(d.get('sites'), dict) else 1)" "$1"; }
+          if curl -fsS --max-time 30 -o web/dist/live/argus-now.json "$PI_LIVE_URL" && ok web/dist/live/argus-now.json; then
+            echo "live data taken from the Pi"
+          else
+            rm -f web/dist/live/argus-now.json
+            git fetch -q --depth=1 origin site 2>/dev/null && git show FETCH_HEAD:live/argus-now.json > web/dist/live/argus-now.json 2>/dev/null && ok web/dist/live/argus-now.json               && echo "the Pi could not be reached: the last build's live data kept"               || { rm -f web/dist/live/argus-now.json; echo "no live data (the game shows none)"; }
+          fi
 
       - name: Publish to the "site" branch
         working-directory: web/dist
