@@ -5732,13 +5732,14 @@ html.a11y-contrast .report-contact {
   inset: 0;
   z-index: 5000; /* above everything, the phone's floating bars and the 3D view included */
 }
-.tour-shade {
+/* one veil over the whole window, with a hole where the lit part is (Tour.tsx draws it with
+   clip-path, frame by frame): a single blur, so no seams where pieces would meet */
+.tour-veil {
   position: fixed;
+  inset: 0;
   background: rgb(20 33 27 / 0.58);
-  -webkit-backdrop-filter: blur(2.5px) saturate(0.7);
-  backdrop-filter: blur(2.5px) saturate(0.7);
-  transition: top 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), left 0.45s cubic-bezier(0.3, 0.7, 0.2, 1),
-    width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), height 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
+  -webkit-backdrop-filter: blur(2px) saturate(0.75);
+  backdrop-filter: blur(2px) saturate(0.75);
 }
 .tour-ring {
   position: fixed;
@@ -5746,8 +5747,6 @@ html.a11y-contrast .report-contact {
   border-radius: 12px;
   box-shadow: 0 0 0 2px var(--coin-ink), 0 0 24px 4px rgb(217 165 32 / 0.55);
   pointer-events: none;
-  transition: top 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), left 0.45s cubic-bezier(0.3, 0.7, 0.2, 1),
-    width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), height 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
   animation: tour-glow 1.8s ease-in-out infinite;
 }
 @keyframes tour-glow {
@@ -6025,7 +6024,7 @@ html.a11y-contrast .report-contact {
   }
 }
 @media (forced-colors: active) {
-  .tour-shade {
+  .tour-veil {
     background: Canvas;
     opacity: 0.7;
   }

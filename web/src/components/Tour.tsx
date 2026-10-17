@@ -1,5 +1,5 @@
 // A screen's walkthrough, the first time it opens (README, "Walkthrough"): one thing at a time is lit,
-// the rest of the screen is shaded and a little blurred, and a card says what it is and what to do
+// the rest of the screen is shaded and a little blurred (one veil with a hole, so the blur has no seams), and a card says what it is and what to do
 // with it. Where it helps, a small moving picture shows it being done: a finger tapping, a finger
 // dragging a sensor onto the map, coins being spent. The light glides from one step to the next.
 // "Skip" ends it; either way it is not shown again on this device (game/tours.ts) until "Show me again
@@ -64,6 +64,32 @@ function boxOf(el: HTMLElement | null): Box | null {
   return bottom > top && right > left ? { top, left, width: right - left, height: bottom - top } : null;
 }
 
+/** How long the light takes to glide from one step's part of the screen to the next. */
+const GLIDE_MS = 450;
+const ease = (t: number) => 1 - (1 - t) ** 3;
+const mix = (a: Box, b: Box, t: number): Box => ({
+  top: a.top + (b.top - a.top) * t,
+  left: a.left + (b.left - a.left) * t,
+  width: a.width + (b.width - a.width) * t,
+  height: a.height + (b.height - a.height) * t,
+});
+
+/** The veil over the whole window with a rounded hole where `box` is (even-odd: the hole is not filled). */
+function veilClip(box: Box | null): string | undefined {
+  if (!box) return undefined;
+  const n = (v: number) => Math.round(v * 10) / 10;
+  const { left: x, top: y, width: w, height: h } = box;
+  const r = n(Math.min(12, w / 2, h / 2));
+  const W = window.innerWidth + 50;
+  const H = window.innerHeight + 50;
+  return (
+    `path(evenodd, "M-50 -50H${W}V${H}H-50Z ` +
+    `M${n(x + r)} ${n(y)}H${n(x + w - r)}A${r} ${r} 0 0 1 ${n(x + w)} ${n(y + r)}V${n(y + h - r)}` +
+    `A${r} ${r} 0 0 1 ${n(x + w - r)} ${n(y + h)}H${n(x + r)}A${r} ${r} 0 0 1 ${n(x)} ${n(y + h - r)}V${n(y + r)}` +
+    `A${r} ${r} 0 0 1 ${n(x + r)} ${n(y)}Z")`
+  );
+}
+
 const same = (a: Box | null | undefined, b: Box | null | undefined) =>
   a === b || (!!a && !!b && Math.abs(a.top - b.top) < 0.5 && Math.abs(a.left - b.left) < 0.5 && Math.abs(a.width - b.width) < 0.5 && Math.abs(a.height - b.height) < 0.5);
 
@@ -96,6 +122,8 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
   const [box, setBox] = useState<Box | null>(null);
   const [toBox, setToBox] = useState<Box | null>(null);
   const [atBox, setAtBox] = useState<Box | null>(null);
+  // The light has arrived at the step's part: the finger shows only then, where the light is.
+  const [arrived, setArrived] = useState(false);
   const [cardSize, setCardSize] = useState({ width: 352, height: 220 });
   const cardRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -104,6 +132,8 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
   // The screens make their steps anew on every render: the light follows the step's number.
   const stepRef = useRef(step);
   stepRef.current = step;
+  // What is drawn now: the next step's light glides on from here.
+  const shownRef = useRef<Box | null>(null);
 
   // Once per device, the first time the screen opens; again after "Show me again how to play".
   useEffect(() => {
@@ -127,6 +157,7 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
 
   const close = useCallback(() => {
     markTourSeen(id);
+    shownRef.current = null;
     setOpen(false);
     onClose?.();
     const back = before.current?.isConnected ? before.current : document.querySelector<HTMLElement>(".screen h1");
@@ -147,8 +178,19 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
     let lit: Box | null | undefined;
     let to: Box | null | undefined;
     let press: Box | null | undefined;
+    // The light glides from where it was to where the part is now, and then stays on it as the
+    // page scrolls: the hole, the frame and the card move together, frame by frame.
+    const from = shownRef.current;
+    const started = performance.now();
+    const glide = from && !motionReduced() ? GLIDE_MS : 0;
+    let there = false;
+    setArrived(false);
     const follow = () => {
-      const now = boxOf(find(step.target));
+      const live = boxOf(find(step.target));
+      const t = glide ? Math.min(1, (performance.now() - started) / glide) : 1;
+      if (t >= 1 && !there) setArrived((there = true));
+      const now = live && from && t < 1 ? mix(from, live, ease(t)) : live;
+      shownRef.current = now;
       if (!same(now, lit)) setBox((lit = now));
       const spot = step.at ? boxOf(find(step.at)) : null;
       if (!same(spot, press)) setAtBox((press = spot));
@@ -202,23 +244,12 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
     }
   };
 
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  // The shade, in four pieces round the lit box (one piece when nothing is lit).
-  const shades: CSSProperties[] = box
-    ? [
-        { top: 0, left: 0, width: vw, height: box.top },
-        { top: box.top + box.height, left: 0, width: vw, height: Math.max(0, vh - box.top - box.height) },
-        { top: box.top, left: 0, width: box.left, height: box.height },
-        { top: box.top, left: box.left + box.width, width: Math.max(0, vw - box.left - box.width), height: box.height },
-      ]
-    : [{ top: 0, left: 0, width: vw, height: vh }];
   // Where the finger presses: the step's own spot, else near the middle of the lit part.
   const from = atBox
     ? { x: atBox.left + atBox.width * 0.62, y: atBox.top + atBox.height * 0.5 }
     : box && { x: box.left + Math.min(box.width / 2, 60), y: box.top + Math.min(box.height / 2, 40) };
   const finger =
-    from && (step.demo === "tap" || (step.demo === "drag" && toBox))
+    arrived && from && (step.demo === "tap" || (step.demo === "drag" && toBox))
       ? {
           left: from.x,
           top: from.y,
@@ -230,9 +261,7 @@ export function Tour({ id, steps, enabled = true, delay = 400, last = "done", on
 
   return createPortal(
     <div className="tour">
-      {shades.map((style, k) => (
-        <div key={k} className="tour-shade" style={style} aria-hidden="true" />
-      ))}
+      <div className="tour-veil" style={{ clipPath: veilClip(box) }} aria-hidden="true" />
       {box && <div className="tour-ring" style={box} aria-hidden="true" />}
       {finger && (
         // A new path (the page settled after scrolling) starts the movement again: a running
