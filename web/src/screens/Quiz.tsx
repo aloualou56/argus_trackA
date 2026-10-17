@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Icon } from "../components/Icon";
+import { Tour } from "../components/Tour";
 import { countRight, markQuiz } from "../game/logic";
 import type { QuizQuestion } from "../game/types";
 import { useI18n } from "../i18n";
@@ -118,11 +119,20 @@ export function Quiz({ questions, phase, before, onDone, onSkip, announce, after
           <Icon name="arrow" />
         </button>
         {onSkip && (
-          <button type="button" className="btn btn-secondary btn-big" onClick={onSkip}>
+          <button type="button" className="btn btn-secondary btn-big quiz-skip" onClick={onSkip}>
             {t("quiz.skip")}
           </button>
         )}
       </div>
+      {phase === "pre" && (
+        <Tour
+          id="quiz"
+          steps={[
+            { target: [".quiz .quiz-question"], at: [".quiz .quiz-question .choice + .choice"], demo: "tap", title: t("tour.quizTitle", { n: questions.length }), text: t("tour.quiz") },
+            ...(onSkip ? [{ target: [".quiz .quiz-skip"], title: t("tour.quizSkipTitle"), text: t("tour.quizSkip") }] : []),
+          ]}
+        />
+      )}
     </form>
   );
 }

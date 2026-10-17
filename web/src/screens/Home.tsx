@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { normalizeClassCode } from "../community/classCode";
 import { Icon } from "../components/Icon";
+import { Tour } from "../components/Tour";
+import { resetTours } from "../game/tours";
 import { LevelBars, levelKey } from "../components/LevelBadge";
 import { LiveArgus } from "../components/LiveArgus";
 import type { Challenge } from "../game/challenge";
@@ -181,6 +183,22 @@ export function Home({
 
       {challenge && <ChallengePanel data={data} challenge={challenge} onChallenge={onChallenge} />}
 
+      {/* How it is played comes before the choices, so a first-time player knows what they are for;
+          the walkthrough (components/Tour.tsx) lights each part the first time. */}
+      <section aria-labelledby="how-title" className="panel how-panel">
+        <h2 id="how-title">{t("home.how")}</h2>
+        <ol className="how-list">
+          <li>{t("home.how1")}</li>
+          <li>{t("home.how2")}</li>
+          <li>{t("home.how3")}</li>
+          <li>{t("home.how4")}</li>
+        </ol>
+        <button type="button" className="btn btn-quiet how-again" onClick={() => resetTours()}>
+          <Icon name="other" size={18} />
+          {t("tour.again")}
+        </button>
+      </section>
+
       {/* The two choices come first; the Start bar below stays in view while they are made. */}
       <fieldset className="choices choices-index">
         <legend>
@@ -248,16 +266,6 @@ export function Home({
         </fieldset>
       )}
 
-      <section aria-labelledby="how-title" className="panel">
-        <h2 id="how-title">{t("home.how")}</h2>
-        <ol className="how-list">
-          <li>{t("home.how1")}</li>
-          <li>{t("home.how2")}</li>
-          <li>{t("home.how3")}</li>
-          <li>{t("home.how4")}</li>
-        </ol>
-      </section>
-
       <ClassPanel classCode={classCode} setClassCode={setClassCode} onTeacher={onTeacher} />
 
       {/* Citizen science without playing: for someone standing at a monument right now. */}
@@ -292,6 +300,22 @@ export function Home({
           <Icon name="arrow" />
         </button>
       </div>
+
+      <Tour
+        id="home"
+        steps={[
+          { target: [".home .how-panel"], title: t("tour.homeWelcomeTitle"), text: t("tour.homeWelcome") },
+          { target: [".home .choices-index"], at: [".home .choices-index .choice:not(.is-disabled) + .choice"], demo: "tap", title: t("tour.homeMonumentTitle"), text: t("tour.homeMonument") },
+          {
+            target: [".home .choices-ladder"],
+            demo: "coins",
+            coins: { budget: (chosenLevel as Level | undefined)?.budget ?? 16, cost: 2 },
+            title: t("tour.homeLevelTitle"),
+            text: t("tour.homeLevel"),
+          },
+          { target: [".home .start-bar"], at: [".home .start-bar .btn-primary"], demo: "tap", title: t("tour.homeStartTitle"), text: t("tour.homeStart", { start: t("home.start") }) },
+        ]}
+      />
     </form>
   );
 }

@@ -1,6 +1,7 @@
 import type { ScreenProps } from "../App";
 import { budgetFor, formatCoords, missionScenarios } from "../game/logic";
 import { Icon } from "../components/Icon";
+import { Tour } from "../components/Tour";
 import { ReadAloud } from "../components/ReadAloud";
 import { storyNarration } from "../audio/narration";
 import { PhotoCredit } from "../components/PhotoCredit";
@@ -95,6 +96,21 @@ export function Story({ mon, session, go }: ScreenProps) {
           </button>
         </div>
       </section>
+
+      <Tour
+        id="story"
+        steps={[
+          ...(mon.guardian ? [{ target: [".story .guardian"], title: t("tour.storyGuardianTitle"), text: t("tour.storyGuardian", { listen: t("speech.read") }) }] : []),
+          {
+            target: [".story .mission-brief"],
+            demo: "coins" as const,
+            coins: { budget, cost: 2 },
+            title: t("tour.storyBriefTitle"),
+            text: t("tour.storyBrief", { coins: tn("unit.coins", budget) }),
+          },
+          { target: [".story .mission-brief .btn-primary"], demo: "tap" as const, title: t("tour.storyGoTitle"), text: t("tour.storyGo") },
+        ]}
+      />
     </article>
   );
 }

@@ -5724,3 +5724,312 @@ html.a11y-contrast .report-contact {
   opacity: var(--dark, 0);
   transition: opacity 0.4s ease;
 }
+
+/* ---- the walkthrough (components/Tour.tsx): one part of the screen lit, the rest shaded and a
+   little blurred, a card beside it; the light glides from step to step */
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 5000; /* above everything, the phone's floating bars and the 3D view included */
+}
+.tour-shade {
+  position: fixed;
+  background: rgb(20 33 27 / 0.58);
+  -webkit-backdrop-filter: blur(2.5px) saturate(0.7);
+  backdrop-filter: blur(2.5px) saturate(0.7);
+  transition: top 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), left 0.45s cubic-bezier(0.3, 0.7, 0.2, 1),
+    width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), height 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.tour-ring {
+  position: fixed;
+  border: 3px solid var(--coin);
+  border-radius: 12px;
+  box-shadow: 0 0 0 2px var(--coin-ink), 0 0 24px 4px rgb(217 165 32 / 0.55);
+  pointer-events: none;
+  transition: top 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), left 0.45s cubic-bezier(0.3, 0.7, 0.2, 1),
+    width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), height 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
+  animation: tour-glow 1.8s ease-in-out infinite;
+}
+@keyframes tour-glow {
+  50% {
+    box-shadow: 0 0 0 2px var(--coin-ink), 0 0 0 9px rgb(217 165 32 / 0.18), 0 0 32px 8px rgb(217 165 32 / 0.7);
+  }
+}
+.tour-card {
+  position: fixed;
+  width: min(25rem, calc(100vw - 24px));
+  padding: 1rem 1.1rem 0.9rem;
+  background: var(--bg);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgb(0 0 0 / 0.35);
+  animation: tour-in 0.32s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.tour-card[style*="right"] {
+  width: auto;
+}
+@keyframes tour-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+.tour-card h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+.tour-card h2:focus {
+  outline: none;
+}
+.tour-card h2:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.tour-card p {
+  margin: 0 0 0.5rem;
+}
+.tour-count {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tour-dots {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.5rem 0 0.7rem;
+}
+.tour-dots i {
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1.5px solid var(--edge);
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.3s;
+}
+.tour-dots i.is-done {
+  background: var(--edge);
+}
+.tour-dots i.is-now {
+  border-color: var(--primary);
+  background: var(--primary);
+  transform: scale(1.25);
+}
+.tour-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.tour-actions .btn {
+  min-height: 44px;
+  padding: 0.45rem 0.9rem;
+}
+.tour-skip {
+  margin-right: auto;
+  min-height: 44px;
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.tour-skip:hover {
+  color: var(--ink);
+}
+/* the finger that shows what to do: it taps, or carries a sensor onto the map */
+.tour-finger {
+  position: fixed;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin: -0.4rem 0 0 -0.9rem;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.35);
+  pointer-events: none;
+}
+.tour-finger::after {
+  content: "";
+  position: absolute;
+  top: -0.2rem;
+  left: 0.3rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 3px solid var(--coin);
+  border-radius: 50%;
+  opacity: 0;
+}
+.tour-finger.is-tap {
+  animation: tour-tap 1.5s ease-in-out infinite;
+}
+.tour-finger.is-tap::after {
+  animation: tour-ripple 1.5s ease-out infinite;
+}
+@keyframes tour-tap {
+  0%,
+  100% {
+    transform: translate(14px, 16px);
+  }
+  40%,
+  55% {
+    transform: translate(0, 0) scale(0.86);
+  }
+}
+@keyframes tour-ripple {
+  0%,
+  42% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  50% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+.tour-finger.is-drag {
+  animation: tour-drag 2.8s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+}
+.tour-finger.is-drag::after {
+  animation: tour-drop 2.8s ease-out infinite;
+}
+.tour-pin {
+  position: absolute;
+  top: -0.9rem;
+  left: -0.7rem;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--you);
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.4);
+}
+@keyframes tour-drag {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10%,
+  18% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.9);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(var(--dx), var(--dy)) scale(0.9);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(var(--dx), var(--dy)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+/* the ripple rides with the finger, so it is already where the sensor is let go */
+@keyframes tour-drop {
+  0%,
+  72% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+/* coins being spent: a sensor's price comes off the budget */
+.tour-coins {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.2rem 0 0.4rem;
+  padding: 0.5rem 0.6rem;
+  background: var(--tint);
+  border-radius: var(--radius);
+}
+.tour-coins-tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.45rem;
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  animation: tour-press 3s ease-in-out infinite;
+}
+.tour-coins-meter {
+  flex: 1;
+  height: 0.6rem;
+  border: 1.5px solid var(--coin-ink);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.tour-coins-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--coin);
+  animation: tour-spend 3s ease-in-out infinite;
+}
+.tour-coins-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--mono);
+  font-weight: 700;
+  white-space: nowrap;
+}
+@keyframes tour-press {
+  25%,
+  35% {
+    transform: scale(0.9);
+    background: var(--primary-soft);
+  }
+}
+@keyframes tour-spend {
+  0%,
+  28% {
+    width: 100%;
+  }
+  45%,
+  90% {
+    width: var(--after);
+  }
+  100% {
+    width: 100%;
+  }
+}
+@media (forced-colors: active) {
+  .tour-shade {
+    background: Canvas;
+    opacity: 0.7;
+  }
+  .tour-ring {
+    border-color: Highlight;
+  }
+}

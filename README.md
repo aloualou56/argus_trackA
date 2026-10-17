@@ -402,6 +402,29 @@ Phones and upright tablets have their own rules, all inside `max-width` queries 
   for screen readers and the page starts with what the game is, so the list of monuments comes sooner.
 - **Tiles** are a little wider and their icon a little smaller than before, so a name has room for three lines.
 
+## Walkthrough
+
+The first time each screen opens, up to the start of play, a short walkthrough shows what is on it and what
+to do (`web/src/components/Tour.tsx`). One part of the screen at a time is lit, with a glowing frame; the rest is
+shaded and a little blurred, and a card beside it (on a phone, at the top or the bottom, away from the lit part)
+says what it is for, with "Step 2 of 5", Back, Next and Skip. The light glides from one step to the next, and
+where it helps a small moving picture shows it being done: a finger tapping a monument, an answer or a button; a
+finger carrying a sensor from the tray onto the map; a sensor's price coming off the coin bar ("16 → 14").
+
+- **First screen:** "How to play" now comes before the choices; the walkthrough lights it, then the monuments,
+  the levels (graver dangers, more coins) and "Start". **Quiz:** what the questions are for, and that they can be
+  skipped. **Story:** the guardian, the mission (its dangers and coins) and the way on. **Mission:** the three
+  dangers (on a phone, the "?" that holds them), the coins and what sensors cost (the cheapest and dearest read
+  from the game's own cards), the sensors (tap, or drag onto the map), the map, and "Done", which says a real
+  alarm of 2026 comes next, or, where no alarm can be replayed (Baltanás), what does. On a phone the mission's own
+  help card does not open over it the first time; it is still under "?".
+- Each walkthrough plays once per device (`web/src/game/tours.ts`, tested in `web/tests/tours.test.ts`), whether
+  finished or skipped; "Show me again how to play" on the first screen clears them all. Not when coming back to
+  improve the network.
+- While one is open the game behind it cannot be used (`inert`); the card is a modal dialog, each step's title
+  takes the focus, Tab stays in the card, Escape skips, and the focus goes back afterwards. With less motion
+  (the accessibility menu, or the device's setting) nothing moves: the light jumps and the pictures stand still.
+
 ## Accessibility (WCAG 2.2 AA target)
 
 **The accessibility menu** (the figure button in the top band, `web/src/components/A11yMenu.tsx`,

@@ -14,6 +14,7 @@ import {
   canAdd,
   cardById,
   coinsLeft,
+  featuredAlarm,
   missionScenarios,
   newPlacementId,
   placeNear,
@@ -24,6 +25,8 @@ import type { Card, LatLng, Placement, Scenario } from "../game/types";
 import { play } from "../audio/sounds";
 import { motionReduced } from "../a11y/settings";
 import { A11ySettingsPanel } from "../components/A11yMenu";
+import { Tour } from "../components/Tour";
+import { tourSeen } from "../game/tours";
 import { useI18n } from "../i18n";
 
 interface Props extends ScreenProps {
@@ -89,12 +92,17 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
   const budget = budgetFor(mon, session.level);
   const left = coinsLeft(budget, picks, cards);
   const sensors = totalSensors(picks);
+  const costs = useMemo(() => {
+    const all = data.cards.cards.map((c) => c.cost);
+    return { min: Math.min(...all), max: Math.max(...all) };
+  }, [data]);
   const wide = useMedia(WIDE);
   const side = useMedia(SIDE);
   const phone = useMedia(PHONE);
   // Phones: how to place sensors, and the mission's dangers, open when the mission starts (not
-  // when the player comes back to improve the network) and again from the "?" button.
-  const [helpOpen, setHelpOpen] = useState(() => !improving && phone);
+  // when the player comes back to improve the network, nor the first time, when the walkthrough
+  // shows them) and again from the "?" button.
+  const [helpOpen, setHelpOpen] = useState(() => !improving && phone && tourSeen("mission"));
   const helpRef = useRef<HTMLDialogElement>(null);
   const helpButton = useRef<HTMLButtonElement>(null);
   const lastOpener = useRef<HTMLElement | null>(null);
@@ -525,7 +533,7 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
         </div>
 
         {!phone && (
-        <div className="dock-row">
+        <div className="dock-row dock-dangers">
           <span className="dock-label">{t("mission.dangersLabel")}</span>
           <ul className="chip-row">
             {threats.map((s) => {
@@ -640,6 +648,32 @@ export function Mission({ data, mon, session, announce, setPlacements, mapApi, i
           </section>
         )}
       </div>
+
+      {/* The first mission: what each part is for, one at a time (components/Tour.tsx). */}
+      <Tour
+        id="mission"
+        enabled={!improving}
+        delay={1200}
+        last="play"
+        steps={[
+          { target: [".mission .dock-dangers", ".mission .dock-help"], title: t("tour.missionDangersTitle"), text: t("tour.missionDangers") },
+          {
+            target: [".mission .dock-coins"],
+            demo: "coins",
+            coins: { budget, cost: Math.min(2, budget) },
+            title: t("tour.missionCoinsTitle"),
+            text: t("tour.missionCoins", { coins: tn("unit.coins", budget), min: costs.min, max: costs.max }),
+          },
+          { target: [".mission .tray-set", ".mission .tray"], at: [".mission .tray .tile"], demo: "drag", to: [".board-map .map"], title: t("tour.missionTrayTitle"), text: t("tour.missionTray") },
+          { target: [".board-map"], title: t("tour.missionMapTitle"), text: t("tour.missionMap") },
+          {
+            target: [".mission .dock-done"],
+            demo: "tap",
+            title: t("tour.missionDoneTitle"),
+            text: t(featuredAlarm(mon, session.level) ? "tour.missionDone" : "tour.missionDoneNoAlarm", { done: t("mission.doneShort") }),
+          },
+        ]}
+      />
     </div>
   );
 }
