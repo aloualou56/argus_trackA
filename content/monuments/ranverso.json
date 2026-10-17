@@ -13,7 +13,7 @@
     "review_note": "History facts (medieval, near Turin, monks caring for travellers and the sick, painted church walls) are general knowledge, not from the ARGUS data; check them. 'Biggest danger = groundwater' comes from the data (highest ABC magnitude, 14.0, Extreme)."
   },
   "guardian": {
-    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text. 'farewell' is the guardian's parting words at the very end, before how to behave at any monument (content/visitor_code.json): true of this place, in the guardian's voice.",
     "needs_review": true,
     "name": {
       "en": "Giulio",
@@ -30,6 +30,10 @@
     "back_caught": {
       "en": "I'm back! Your sensors noticed in time, so we could check the walls before the damp reached the paintings. Today you were a real guardian.",
       "el": "Γύρισα! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε ελέγξαμε τους τοίχους πριν φτάσει η υγρασία στις τοιχογραφίες. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    },
+    "farewell": {
+      "en": "Before you go, one thing from someone who knows every painting here. You know now that water is their worst enemy. A hand is a little water too: sweat, with salt and grease in it. A painting touched again and again gets a dark, shiny patch, very hard to clean off without harming the paint. And when the church is full, wait outside for a moment: every breath is warm, damp air too. Look up close, with your hands behind your back.",
+      "el": "Πριν φύγεις, κάτι από κάποιον που ξέρει κάθε τοιχογραφία εδώ μέσα. Τώρα ξέρεις ότι το νερό είναι ο χειρότερος εχθρός τους. Και το χέρι είναι λίγο νερό: ιδρώτας, με αλάτι και λίπος. Μια τοιχογραφία που την αγγίζουν ξανά και ξανά αποκτά έναν σκούρο, γυαλιστερό λεκέ, που καθαρίζεται πολύ δύσκολα χωρίς να πάθει κακό το χρώμα. Κι όταν η εκκλησία είναι γεμάτη, περίμενε λίγο έξω: κάθε ανάσα είναι κι αυτή ζεστός, υγρός αέρας. Κοίτα από κοντά, με τα χέρια πίσω από την πλάτη."
     }
   },
   "consequences": {

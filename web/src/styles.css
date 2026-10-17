@@ -422,6 +422,39 @@ main {
   flex: none;
   margin-top: 0.1rem;
 }
+/* The visitor code under the guardian's parting words (Score.tsx): the rule in bold, why under it. */
+.visitor-code-block {
+  margin: -0.25rem 0 1.25rem;
+}
+.visitor-code-title {
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+}
+.visitor-code {
+  list-style: none;
+  margin: 0 0 0.6rem;
+  padding: 0;
+}
+.visitor-code li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--line);
+}
+.visitor-code li svg {
+  flex: none;
+  color: var(--primary);
+}
+.visitor-rule {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+.visitor-why {
+  margin: 0.25rem 0 0;
+  line-height: 1.45;
+}
 .citizen-report {
   margin: 0.75rem 0;
 }
@@ -5663,42 +5696,6 @@ html.a11y-contrast .report-contact {
   font-size: 1.1rem;
 }
 
-/* ---- "Your own monument" (screens/Observe.tsx): what the building is, as chips; who to give the card to */
-.own-kinds {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-.own-kinds legend {
-  margin-bottom: 0.4rem;
-}
-.chip-choice {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  padding: 0.2rem 0.75rem;
-  border: 2px solid var(--edge);
-  border-radius: 999px;
-  background: var(--surface);
-  cursor: pointer;
-}
-.chip-choice:has(input:checked) {
-  border-color: var(--primary);
-  background: var(--primary-soft);
-  color: var(--primary-deep);
-  font-weight: 650;
-}
-.chip-choice input {
-  accent-color: var(--primary);
-}
-.own-to {
-  margin: 0.4rem 0 0.8rem;
-  padding-left: 1.4rem;
-}
-.own-to li {
-  margin: 0.2rem 0;
-}
 /* going down into a cellar and back out (a cellar caving in): the picture darkens for a moment */
 .view3d-fx::before {
   content: "";

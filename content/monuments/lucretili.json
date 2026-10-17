@@ -19,7 +19,7 @@
     "review_note": "Site list comes from the ARGUS heritage_asset fields (Horace's Roman villa, Montefalco Castle, Sant'Angelo al Morra, medieval mural paintings, dry-stone walls). 'Near Rome' is general knowledge. 'Biggest danger = landslide' comes from the data (highest ABC magnitude, 13.5, Catastrophic)."
   },
   "guardian": {
-    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text. 'farewell' is the guardian's parting words at the very end, before how to behave at any monument (content/visitor_code.json): true of this place, in the guardian's voice.",
     "needs_review": true,
     "name": {
       "en": "Franco",
@@ -36,6 +36,10 @@
     "back_caught": {
       "en": "I'm back from the mountains! Your sensors noticed in time, so we could go and look before things got worse. Today you were a real guardian.",
       "el": "Γύρισα από τα βουνά! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε πήγαμε να δούμε πριν γίνουν τα πράγματα χειρότερα. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    },
+    "farewell": {
+      "en": "Before you go, one thing from a ranger. The old walls on these hills are dry-stone walls: no mortar at all, each stone sits on the ones below it. Take one for a souvenir, or climb over a wall, and the stones above have nothing to stand on. At the Conventillo, keep your hands off the old wall paintings: a hand leaves sweat and grease on the paint, and a painting cannot be scrubbed like a floor. Look, take photos, and leave the hills as you found them.",
+      "el": "Πριν φύγεις, κάτι από έναν φύλακα του πάρκου. Οι παλιοί τοίχοι σε αυτούς τους λόφους είναι ξερολιθιές: δεν έχουν καθόλου λάσπη, κάθε πέτρα κάθεται πάνω στις από κάτω. Αν πάρεις μία για ενθύμιο ή σκαρφαλώσεις σε έναν τοίχο, οι πέτρες από πάνω δεν έχουν πού να στηριχτούν. Στο Conventillo, κράτα τα χέρια σου μακριά από τις παλιές τοιχογραφίες: το χέρι αφήνει ιδρώτα και λίπος πάνω στο χρώμα, και μια τοιχογραφία δεν τρίβεται σαν πάτωμα. Κοίτα, βγάλε φωτογραφίες, και άφησε τους λόφους όπως τους βρήκες."
     }
   },
   "consequences": {

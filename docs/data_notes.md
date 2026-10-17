@@ -656,6 +656,7 @@ Authored content flagged `needs_review`:
 - `schenkenberg` imaginary guardian Urs: name, role and words (Greek too)
 - `schenkenberg` mission picks per level
 - `content/citizen_checklist.json`: what visitors should look out for and how to report it
+- `content/visitor_code.json`: how to behave at a monument and why (each 'why' true of any old monument), and the guardians' parting words
 - `baltanas` photo caption "The cellar hill of Baltanás: doors and stone chimneys on the slope, an": check that it says what the photo shows (Carmen García Fdez, CC BY-SA 4.0, Wikimedia Commons)
 - `delos` photo caption "The House of the Masks on Delos, seen from above. The modern roof cove": check that it says what the photo shows (Bernard Gagnon, CC BY-SA 3.0, Wikimedia Commons)
 - `lucretili` photo caption "Dry-stone walls on the high meadow of Monte Gennaro, in the Monti Lucr": check that it says what the photo shows (V.lattanzi, CC BY 4.0, Wikimedia Commons)
@@ -666,10 +667,10 @@ Authored content flagged `needs_review`:
 
 ## Languages
 
-The game's own text is written in English and Greek (468 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
+The game's own text is written in English and Greek (485 texts in the data pack). Other languages are overlays in `content/translations/<lang>.json`, keyed by the exact English text, and are shipped as `data/i18n/<lang>.json`. When an English text changes, its translations no longer match and the game shows the English text until they are redone. All translations below are machine translations that need a native speaker.
 
 | language | translated | missing (shown in English) | no longer used | needs review |
 |---|---|---|---|---|
-| de | 468 | 0 | 0 | yes |
-| es | 468 | 0 | 0 | yes |
-| it | 468 | 0 | 0 | yes |
+| de | 485 | 0 | 0 | yes |
+| es | 485 | 0 | 0 | yes |
+| it | 485 | 0 | 0 | yes |

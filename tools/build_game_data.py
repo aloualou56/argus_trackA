@@ -164,6 +164,7 @@ def load_content(content_dir: Path) -> Dict[str, Any]:
         "threat_map": load_json(content_dir / "threat_sensor_map.json"),
         "quiz": load_json(content_dir / "quiz.json"),
         "checklist": load_json(content_dir / "citizen_checklist.json"),
+        "visitor_code": load_json(content_dir / "visitor_code.json"),
         "map": load_json(content_dir / "map.json"),
         "site_guide": load_json(content_dir / "site_guide.json"),
         "coins": load_json(content_dir / "coins.json"),
@@ -889,6 +890,19 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
     if not checklist["report"].get("en") or not checklist["report"].get("el"):
         problems.append("content/citizen_checklist.json: report text missing a language")
 
+    code = content.raw["visitor_code"]["items"]
+    if not code:
+        problems.append("content/visitor_code.json: no items")
+    if len({item["id"] for item in code}) != len(code):
+        problems.append("content/visitor_code.json: two items share an id")
+    for item in code:
+        for field in ("rule", "why"):
+            if not all((item.get(field) or {}).get(lang) for lang in ("en", "el")):
+                problems.append(f"content/visitor_code.json {item['id']}: {field} needs both en and el")
+        for cat in item["categories"]:
+            if cat not in content.threat_categories:
+                problems.append(f"content/visitor_code.json {item['id']}: unknown risk category '{cat}'")
+
     for tip in content.raw["site_guide"].get("where", []):
         for card in tip.get("cards", []):
             if card not in card_ids:
@@ -1011,7 +1025,7 @@ def validate(content: Content, snap: Snapshot, monuments: List[Dict[str, Any]]) 
         if not guardian:
             problems.append(f"{mon['pilot_key']}: no guardian")
         else:
-            for field in ("name", "role", "handover") + (("back_caught",) if mon["alarms"] else ()):
+            for field in ("name", "role", "handover", "farewell") + (("back_caught",) if mon["alarms"] else ()):
                 if not all((guardian.get(field) or {}).get(lang) for lang in ("en", "el")):
                     problems.append(f"{mon['pilot_key']}: guardian {field} needs both en and el")
         for prompt in mon["discussion_prompts"]:
@@ -1085,6 +1099,8 @@ def build(snapshot_dir: Path = SNAPSHOT_DIR, content_dir: Path = CONTENT_DIR):
                  "needs_review": bool(content.raw["quiz"].get("needs_review"))},
         "checklist": {"items": content.raw["checklist"]["items"], "report": content.raw["checklist"]["report"],
                       "authored": True, "needs_review": bool(content.raw["checklist"].get("needs_review"))},
+        "visitor_code": {"items": content.raw["visitor_code"]["items"], "authored": True,
+                         "needs_review": bool(content.raw["visitor_code"].get("needs_review"))},
         "basemaps": {"default": content.basemaps["default"],
                      "layers": [{k: v for k, v in layer.items() if k not in ("review_note", "probe_zoom")}
                                 for layer in content.basemaps["layers"]],
@@ -1459,6 +1475,9 @@ def collect_review_items(content: Content) -> List[str]:
         items.append(f"`{pilot}` mission picks per level")
     if content.raw["checklist"].get("needs_review"):
         items.append("`content/citizen_checklist.json`: what visitors should look out for and how to report it")
+    if content.raw["visitor_code"].get("needs_review"):
+        items.append("`content/visitor_code.json`: how to behave at a monument and why (each 'why' true of any old "
+                     "monument), and the guardians' parting words")
     for pilot, photo in sorted(content.raw["photos"].get("photos", {}).items()):
         if photo.get("needs_review", True):
             items.append(f"`{pilot}` photo caption \"{photo['caption']['en'][:70]}\": check that it says what the photo "

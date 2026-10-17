@@ -18,6 +18,7 @@ import type {
   QuizQuestion,
   RuleEntry,
   Scenario,
+  VisitorRule,
 } from "./types";
 
 // Points per part of the score. The total is scaled to 100 over the parts that apply.
@@ -342,6 +343,13 @@ export function checklistFor(items: ChecklistItem[], threats: Scenario[]): { ite
   const categories = new Set(threats.map((s) => s.risk_category));
   const rows = items.map((item) => ({ item, forMission: item.categories.some((c) => categories.has(c)) }));
   return [...rows.filter((r) => r.forMission), ...rows.filter((r) => !r.forMission)];
+}
+
+/** The visitor code in its own order (the first rule is the one that matters most, the last is about
+ *  the sensors the player has just placed); `forMission` marks the rules about this mission's dangers. */
+export function visitorCodeFor(items: VisitorRule[], threats: Scenario[]): { item: VisitorRule; forMission: boolean }[] {
+  const categories = new Set(threats.map((s) => s.risk_category));
+  return items.map((item) => ({ item, forMission: item.categories.some((c) => categories.has(c)) }));
 }
 
 // ---------------------------------------------------------------- quiz

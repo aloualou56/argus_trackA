@@ -1273,6 +1273,104 @@
   "authored": true,
   "needs_review": true
  },
+ "visitor_code": {
+  "items": [
+   {
+    "id": "touch",
+    "icon": "hand",
+    "categories": [
+     "salts",
+     "dissociation"
+    ],
+    "rule": {
+     "en": "Where it says “do not touch”, you don't touch.",
+     "el": "Όπου λέει «μην αγγίζετε», δεν αγγίζεις."
+    },
+    "why": {
+     "en": "Salt and water wear old stone away, slowly. The sweat on your hand has salt and grease in it too. One hand leaves nothing you can see, but thousands of hands, year after year, darken the stone, polish it and wear it down. Some old statues have a foot worn smooth by visitors' hands.",
+     "el": "Το αλάτι και το νερό τρώνε σιγά σιγά την παλιά πέτρα. Ο ιδρώτας του χεριού σου έχει κι αυτός αλάτι και λίπος. Ένα χέρι δεν αφήνει τίποτα που να φαίνεται, χιλιάδες χέρια όμως, χρόνο με τον χρόνο, μαυρίζουν την πέτρα, τη γυαλίζουν και τη φθείρουν. Κάποια παλιά αγάλματα έχουν ένα πόδι λειωμένο από τα χέρια των επισκεπτών."
+    }
+   },
+   {
+    "id": "paths",
+    "icon": "steps",
+    "categories": [
+     "physical_forces",
+     "dissociation"
+    ],
+    "rule": {
+     "en": "Stay on the paths and behind the ropes. Don't climb on the walls.",
+     "el": "Μένε στα μονοπάτια και πίσω από τα σκοινιά. Μην ανεβαίνεις στους τοίχους."
+    },
+    "why": {
+     "en": "The ropes are not there to keep you away: they show where a floor, a mosaic or a wall cannot take feet. Old walls often stand with no roof and loose stones on top. A stone that comes away under your foot never goes back by itself, and it can fall on someone.",
+     "el": "Τα σκοινιά δεν είναι για να σε διώξουν: δείχνουν πού ένα πάτωμα, ένα ψηφιδωτό ή ένας τοίχος δεν αντέχει πόδια. Οι παλιοί τοίχοι συχνά στέκουν χωρίς στέγη, με χαλαρές πέτρες στην κορυφή. Μια πέτρα που φεύγει κάτω από το πόδι σου δεν ξαναμπαίνει ποτέ μόνη της, και μπορεί να πέσει πάνω σε κάποιον."
+    }
+   },
+   {
+    "id": "souvenir",
+    "icon": "pebble",
+    "categories": [
+     "dissociation",
+     "criminals"
+    ],
+    "rule": {
+     "en": "Take nothing home: not a pebble, not a little stone from a mosaic.",
+     "el": "Μην παίρνεις τίποτα για ενθύμιο: ούτε πετραδάκι, ούτε ψηφίδα από ψηφιδωτό."
+    },
+    "why": {
+     "en": "One little stone looks like nothing. But if every visitor took one, the monument would be gone, stone by stone, just as damp loosens a mosaic one piece at a time. At most monuments it is also against the law. Take a photo instead.",
+     "el": "Ένα πετραδάκι μοιάζει τίποτα. Αν όμως έπαιρνε ένα ο κάθε επισκέπτης, το μνημείο θα χανόταν πέτρα πέτρα, όπως η υγρασία ξεκολλάει ένα ψηφιδωτό ψηφίδα ψηφίδα. Στα περισσότερα μνημεία απαγορεύεται κιόλας από τον νόμο. Βγάλε καλύτερα μια φωτογραφία."
+    }
+   },
+   {
+    "id": "write",
+    "icon": "pen",
+    "categories": [
+     "vandalism"
+    ],
+    "rule": {
+     "en": "Never write or scratch your name on it.",
+     "el": "Μη γράφεις και μη χαράζεις ποτέ το όνομά σου πάνω του."
+    },
+    "why": {
+     "en": "A scratch never goes away. Paint is hard to get off old stone, and every cleaning takes a little of the stone with it.",
+     "el": "Μια χαρακιά δεν φεύγει ποτέ. Η μπογιά βγαίνει δύσκολα από την παλιά πέτρα, και κάθε καθάρισμα παίρνει μαζί του και λίγη πέτρα."
+    }
+   },
+   {
+    "id": "rubbish",
+    "icon": "bin",
+    "categories": [
+     "pests",
+     "pollutants"
+    ],
+    "rule": {
+     "en": "Eat outside, and take your rubbish with you.",
+     "el": "Φάε έξω από το μνημείο και πάρε τα σκουπίδια σου μαζί."
+    },
+    "why": {
+     "en": "Crumbs and rubbish bring mice and pigeons. Mice gnaw wood; pigeon droppings are acid, and they stain the stone and eat into it.",
+     "el": "Τα ψίχουλα και τα σκουπίδια φέρνουν ποντίκια και περιστέρια. Τα ποντίκια ροκανίζουν το ξύλο· οι κουτσουλιές των περιστεριών είναι όξινες, λερώνουν την πέτρα και τη διαβρώνουν."
+    }
+   },
+   {
+    "id": "sensors",
+    "icon": "sensor_box",
+    "categories": [],
+    "rule": {
+     "en": "Leave the instruments alone: a small box or gauge fixed to a wall may be a sensor.",
+     "el": "Άφησε ήσυχα τα όργανα: ένα κουτάκι ή ένας μετρητής στερεωμένος σε τοίχο μπορεί να είναι αισθητήρας."
+    },
+    "why": {
+     "en": "It is one of the monument's eyes, like the ones you placed today. A sensor that is knocked or moved measures the wrong thing, and then a real alarm may never go off.",
+     "el": "Είναι ένα από τα μάτια του μνημείου, σαν αυτά που έβαλες σήμερα. Ένας αισθητήρας που τον χτύπησαν ή τον μετακίνησαν μετράει λάθος, κι έτσι ένας αληθινός συναγερμός μπορεί να μη χτυπήσει ποτέ."
+    }
+   }
+  ],
+  "authored": true,
+  "needs_review": true
+ },
  "basemaps": {
   "default": "satellite",
   "layers": [
@@ -3973,6 +4071,10 @@
      "en": "I'm back! I heard your sensors noticed in time. Thanks to you, we could check the houses before the damage spread. Today you were a real guardian.",
      "el": "Γύρισα! Έμαθα ότι οι αισθητήρες σου το πρόσεξαν εγκαίρως. Χάρη σε σένα ελέγξαμε τα σπίτια πριν απλωθεί η ζημιά. Σήμερα ήσουν φύλακας στ' αλήθεια."
     },
+    "farewell": {
+     "en": "Before you go, one thing from an old guard. Here the wind brings salt from the sea onto the stones, and salt is what slowly eats them. Now think of your hand: it is salty with sweat. When a sign says “do not touch”, it is not because we don't trust you. It is because so many people come, and each one thinks “only me, only once”. Look with your eyes, and the mosaics will still be here for your grandchildren.",
+     "el": "Πριν φύγεις, κάτι από έναν παλιό φύλακα. Εδώ ο αέρας φέρνει αλάτι από τη θάλασσα πάνω στις πέτρες, και το αλάτι είναι αυτό που τις τρώει σιγά σιγά. Τώρα σκέψου το χέρι σου: είναι αλμυρό από τον ιδρώτα. Όταν μια ταμπέλα λέει «μην αγγίζετε», δεν είναι γιατί δεν σε εμπιστευόμαστε. Είναι γιατί έρχεται τόσος κόσμος, κι ο καθένας σκέφτεται «μόνο εγώ, μόνο μία φορά». Κοίτα με τα μάτια, και τα ψηφιδωτά θα είναι εδώ και για τα εγγόνια σου."
+    },
     "authored": true
    },
    "consequences": {
@@ -5499,6 +5601,10 @@
     "handover": {
      "en": "Hello, I'm Tomás. My family has kept a wine cellar in this hill for four generations. Today I have to be away, so the cellars are in your hands. Watch the ground for me: if it moves, the cellars can cave in.",
      "el": "Γεια σου, είμαι ο Τομάς. Η οικογένειά μου έχει ένα κελάρι σε αυτόν τον λόφο εδώ και τέσσερις γενιές. Σήμερα πρέπει να λείψω, οπότε τα κελάρια είναι στα χέρια σου. Πρόσεχε το έδαφος για μένα: αν κουνηθεί, τα κελάρια μπορεί να καταρρεύσουν."
+    },
+    "farewell": {
+     "en": "Before you go, one thing from a cellar keeper. The cellars are dug into the hill, so the roof of every cellar is the hill itself. Water that soaks into the earth makes it heavy and weak. When you visit, keep to the paths, never go into a cellar that is closed, and never step where the ground has sunk in: under it there may be a roof giving way. And as everywhere: what you are told not to touch, you don't touch.",
+     "el": "Πριν φύγεις, κάτι από κάποιον που φυλάει ένα κελάρι. Τα κελάρια είναι σκαμμένα μέσα στον λόφο, οπότε η στέγη κάθε κελαριού είναι ο ίδιος ο λόφος. Το νερό που ποτίζει το χώμα το κάνει βαρύ και αδύναμο. Όταν έρθεις, μένε στα μονοπάτια, μη μπαίνεις ποτέ σε κελάρι που είναι κλειστό, και μην πατάς εκεί που το έδαφος έχει βουλιάξει: από κάτω μπορεί να είναι μια στέγη που υποχωρεί. Και όπως παντού: ό,τι σου λένε να μην αγγίξεις, δεν το αγγίζεις."
     },
     "authored": true
    },
@@ -7742,6 +7848,10 @@
     "back_caught": {
      "en": "I'm back from the mountains! Your sensors noticed in time, so we could go and look before things got worse. Today you were a real guardian.",
      "el": "Γύρισα από τα βουνά! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε πήγαμε να δούμε πριν γίνουν τα πράγματα χειρότερα. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    },
+    "farewell": {
+     "en": "Before you go, one thing from a ranger. The old walls on these hills are dry-stone walls: no mortar at all, each stone sits on the ones below it. Take one for a souvenir, or climb over a wall, and the stones above have nothing to stand on. At the Conventillo, keep your hands off the old wall paintings: a hand leaves sweat and grease on the paint, and a painting cannot be scrubbed like a floor. Look, take photos, and leave the hills as you found them.",
+     "el": "Πριν φύγεις, κάτι από έναν φύλακα του πάρκου. Οι παλιοί τοίχοι σε αυτούς τους λόφους είναι ξερολιθιές: δεν έχουν καθόλου λάσπη, κάθε πέτρα κάθεται πάνω στις από κάτω. Αν πάρεις μία για ενθύμιο ή σκαρφαλώσεις σε έναν τοίχο, οι πέτρες από πάνω δεν έχουν πού να στηριχτούν. Στο Conventillo, κράτα τα χέρια σου μακριά από τις παλιές τοιχογραφίες: το χέρι αφήνει ιδρώτα και λίπος πάνω στο χρώμα, και μια τοιχογραφία δεν τρίβεται σαν πάτωμα. Κοίτα, βγάλε φωτογραφίες, και άφησε τους λόφους όπως τους βρήκες."
     },
     "authored": true
    },
@@ -10270,6 +10380,10 @@
      "en": "I'm back! Your sensors noticed in time, so we could check the walls before the damp reached the paintings. Today you were a real guardian.",
      "el": "Γύρισα! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε ελέγξαμε τους τοίχους πριν φτάσει η υγρασία στις τοιχογραφίες. Σήμερα ήσουν φύλακας στ' αλήθεια."
     },
+    "farewell": {
+     "en": "Before you go, one thing from someone who knows every painting here. You know now that water is their worst enemy. A hand is a little water too: sweat, with salt and grease in it. A painting touched again and again gets a dark, shiny patch, very hard to clean off without harming the paint. And when the church is full, wait outside for a moment: every breath is warm, damp air too. Look up close, with your hands behind your back.",
+     "el": "Πριν φύγεις, κάτι από κάποιον που ξέρει κάθε τοιχογραφία εδώ μέσα. Τώρα ξέρεις ότι το νερό είναι ο χειρότερος εχθρός τους. Και το χέρι είναι λίγο νερό: ιδρώτας, με αλάτι και λίπος. Μια τοιχογραφία που την αγγίζουν ξανά και ξανά αποκτά έναν σκούρο, γυαλιστερό λεκέ, που καθαρίζεται πολύ δύσκολα χωρίς να πάθει κακό το χρώμα. Κι όταν η εκκλησία είναι γεμάτη, περίμενε λίγο έξω: κάθε ανάσα είναι κι αυτή ζεστός, υγρός αέρας. Κοίτα από κοντά, με τα χέρια πίσω από την πλάτη."
+    },
     "authored": true
    },
    "consequences": {
@@ -11890,6 +12004,10 @@
     "back_caught": {
      "en": "I'm back! Your sensors noticed in time, so we could check the walls before a stone came loose. Today you were a real guardian.",
      "el": "Γύρισα! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε ελέγξαμε τους τοίχους πριν ξεκολλήσει κάποια πέτρα. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    },
+    "farewell": {
+     "en": "Before you go, one thing from a volunteer. These walls have stood in the rain and frost for hundreds of years with no roof over them, and every winter the ice opens their cracks a little more. They need no help from us to fall apart. So don't climb on them, don't pull out a loose stone to see what is behind it, and never write your name on them: paint is hard to get off old stone, and every cleaning takes a little stone with it. Come up, look, and tell us if you see a new crack.",
+     "el": "Πριν φύγεις, κάτι από έναν εθελοντή. Αυτοί οι τοίχοι στέκουν εκατοντάδες χρόνια στη βροχή και στον παγετό χωρίς στέγη από πάνω, και κάθε χειμώνα ο πάγος ανοίγει λίγο ακόμα τις ρωγμές τους. Δεν χρειάζονται τη δική μας βοήθεια για να χαλάσουν. Γι' αυτό μην ανεβαίνεις πάνω τους, μη βγάζεις μια χαλαρή πέτρα για να δεις τι έχει πίσω, και μη γράφεις ποτέ το όνομά σου: η μπογιά βγαίνει δύσκολα από την παλιά πέτρα, και κάθε καθάρισμα παίρνει μαζί του και λίγη πέτρα. Ανέβα, κοίτα, και πες μας αν δεις καινούργια ρωγμή."
     },
     "authored": true
    },

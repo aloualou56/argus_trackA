@@ -21,6 +21,7 @@ import {
   missionScenarios,
   ruleFor,
   score,
+  visitorCodeFor,
   type CoverLevel,
   type DayResult,
 } from "../game/logic";
@@ -39,8 +40,6 @@ interface Props extends ScreenProps {
   onRecorded: () => void;
   /** Opens the observation report for this monument. */
   onReport: () => void;
-  /** "Your own monument": a card for an old building of the player's own neighbourhood. */
-  onOwn: () => void;
   /** "Display in 3D" under the drawings, once the view is loaded: the game opens it over the map. */
   onView3d: (scene: string, loaded: Loaded, focus: Focus3d, from: string) => void;
   /** The real alarms of the week on duty, one per day; today's is week[session.day]. Empty if none can be replayed. */
@@ -71,7 +70,6 @@ export function Score({
   onQuiz,
   onRecorded,
   onReport,
-  onOwn,
   onView3d,
   week,
   onImprove,
@@ -381,6 +379,56 @@ export function Score({
         </ul>
       </section>
 
+      {/* What the player takes with them: the guardian's parting words, true of this place, and how to
+          behave at any old monument and why (content/visitor_code.json), so what the game taught is
+          what they remember at the next monument they visit. */}
+      {(() => {
+        const code = visitorCodeFor(data.visitor_code.items, threats);
+        const farewell = mon.guardian ? pick(mon.guardian.farewell) : null;
+        const aloud = [farewell, t("farewell.rules"), ...code.map(({ item }) => `${pick(item.rule)} ${pick(item.why)}`)]
+          .filter(Boolean)
+          .join("\n");
+        // Its own block under the guardian, as wide as the screen: on a phone the guardian's portrait
+        // column would leave the rules a narrow strip.
+        const rules = (
+          <section className="visitor-code-block" aria-labelledby="visitor-code-title">
+            <h2 id="visitor-code-title" className="visitor-code-title">
+              {t("farewell.rules")}
+            </h2>
+            {!farewell && <ReadAloud text={aloud} />}
+            <ol className="visitor-code" data-needs-review={data.visitor_code.needs_review}>
+              {code.map(({ item, forMission }) => (
+                <li key={item.id}>
+                  <Icon name={item.icon} size={28} />
+                  <div>
+                    <p className="visitor-rule">
+                      <strong>{pick(item.rule)}</strong>
+                      {forMission && <span className="tag">{t("citizen.mission")}</span>}
+                    </p>
+                    <p className="visitor-why">{pick(item.why)}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        );
+        return (
+          <>
+            {farewell && mon.guardian && (
+              <GuardianSays
+                mon={mon}
+                headingId="farewell-title"
+                title={t("farewell.title", { name: pick(mon.guardian.name) })}
+                text={farewell}
+              >
+                <ReadAloud text={aloud} />
+              </GuardianSays>
+            )}
+            {rules}
+          </>
+        );
+      })()}
+
       {/* Outside the game: watch for yourself, challenge someone, see what others chose. The long
           lists fold away, so the screen is not eight blocks in a row. */}
       <section className="panel citizen printable" aria-labelledby="citizen-title">
@@ -426,29 +474,6 @@ export function Score({
           </button>
         </div>
       </section>
-
-      {/* "Your own monument": the guardian sends the player out, to an old building of their own
-          neighbourhood, with the same observation card. The game becomes a way of seeing the world. */}
-      {mon.guardian ? (
-        <GuardianSays mon={mon} headingId="own-title" title={t("own.title")} text={t("own.says")}>
-          <p>{t("own.text")}</p>
-          <button type="button" className="btn btn-primary" onClick={onOwn}>
-            {t("own.open")}
-            <Icon name="arrow" />
-          </button>
-        </GuardianSays>
-      ) : (
-        <section className="panel" aria-labelledby="own-title">
-          <h2 id="own-title">{t("own.title")}</h2>
-          <blockquote>
-            <p>{t("own.says")}</p>
-          </blockquote>
-          <p>{t("own.text")}</p>
-          <button type="button" className="btn btn-primary" onClick={onOwn}>
-            {t("own.open")}
-          </button>
-        </section>
-      )}
 
       {/* Challenge a friend: the link is shown, so it can be seen and copied by hand too. */}
       <section className="panel challenge-send" aria-labelledby="challenge-send-title">

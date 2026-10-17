@@ -74,6 +74,20 @@ const PATHS: Record<string, string> = {
   layers: '<path d="M12 3 2 8l10 5 10-5z"/><path d="M2 13l10 5 10-5"/>',
   // a block seen from a corner: the 3D view
   cube: '<path d="M12 2.8l8 4.4v9.6l-8 4.4-8-4.4V7.2z"/><path d="M4 7.2l8 4.4 8-4.4M12 11.6v9.6"/>',
+  // -- the visitor code (content/visitor_code.json): how to behave at a monument
+  // an open hand
+  hand: '<path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11M11 10.5V4a1.5 1.5 0 0 1 3 0v7M14 10.5v-5a1.5 1.5 0 0 1 3 0V14c0 4-2.7 7-6.5 7-2.6 0-4.3-1.3-5.6-3.4L3 14.3a1.5 1.5 0 0 1 2.5-1.6L8 15.5"/>',
+  // two footprints, one ahead of the other
+  steps:
+    '<path d="M7.5 3c1.9 0 2.8 2.2 2.8 4.8 0 2.3-.9 3.7-2.8 3.7s-2.8-1.4-2.8-3.7C4.7 5.2 5.6 3 7.5 3z"/><path d="M5.6 14h3.8l-.3 2a1.6 1.6 0 0 1-3.2 0z"/><path d="M16.5 7.5c1.9 0 2.8 2.2 2.8 4.8 0 2.3-.9 3.7-2.8 3.7s-2.8-1.4-2.8-3.7c0-2.6.9-4.8 2.8-4.8z"/><path d="M14.6 18.5h3.8l-.3 2a1.6 1.6 0 0 1-3.2 0z"/>',
+  // a stone, and the small stones of a mosaic over it
+  pebble: `<path d="M5 15.5c0-3.4 3-6 7-6s7 2.6 7 6c0 2.5-2.6 4-7 4s-7-1.5-7-4z"/><path d="M7.5 4.5h2.6v2.6H7.5zM11.7 3h2.6v2.6h-2.6zM15.6 5.4h2.2v2.2h-2.2z" ${TICK}/>`,
+  // a pencil
+  pen: `<path d="M4 20l1.2-4.4L15.8 5a2 2 0 0 1 2.9 0l.3.3a2 2 0 0 1 0 2.9L8.4 18.8z"/><path d="M13.8 7l3.2 3.2" ${TICK}/>`,
+  // a rubbish bin
+  bin: `<path d="M4.5 7h15"/><path d="M9.5 7V4.5h5V7"/><path d="M6.5 7l1 13h9l1-13"/><path d="M10.2 10.5v6M13.8 10.5v6" ${TICK}/>`,
+  // a sensor's box fixed to a wall, sending what it measures
+  sensor_box: `<path d="M3.5 3v18"/><path d="M3.5 7.5h2.5M3.5 12h2.5M3.5 16.5h2.5" ${TICK}/><rect x="9" y="8" width="8.5" height="8" rx="1.5"/><path d="M6 12h3"/><circle cx="13.2" cy="12" r="1.3" ${DOT}/><path d="M20 9.3a3.8 3.8 0 0 1 0 5.4" ${TICK}/>`,
 };
 
 const ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';

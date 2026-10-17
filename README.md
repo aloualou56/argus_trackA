@@ -474,6 +474,22 @@ then, with the device's voice). Needs review: the guardians' words and the scien
 `docs/data_notes.md`). Where a consequence has `view_3d`, a **"Display in 3D"** button under the drawings opens
 the game's 3D view of that damage, at the place of the alarm's sensor (below).
 
+**What the guardian leaves you.** Further down the score screen (every day), the guardian has the last word:
+"Manolis leaves you something to keep". First their parting words (`farewell` in the same file), in their own
+voice and true of their own place: on Delos the wind brings salt from the sea onto the stones, "now think of your
+hand: it is salty with sweat"; the dry-stone walls of the Lucretili hills, with no mortar to hold a stone that is
+taken away; at Ranverso a hand is a little water too, and so is every breath in a full church. Then, "At every
+monument you visit", the **visitor code** (`content/visitor_code.json`), six rules, each with why in a child's
+words, true of any old monument: where it says "do not touch", you don't touch (the salt and grease of thousands of
+hands darken, polish and wear the stone); stay on the paths and behind the ropes, and don't climb on the walls;
+take nothing home, not a pebble, not a little stone from a mosaic; never write or scratch your name; eat outside
+and take your rubbish with you (mice, and pigeon droppings, which are acid); leave the instruments alone: a small
+box on a wall may be a sensor, like the ones the player placed, and one that is moved measures the wrong thing. A
+rule about one of the mission's dangers says so ("linked to your mission", from the ARGUS risk categories each
+rule names). Read aloud with the device's voice. `tools/build_game_data.py` refuses to build without a farewell
+for every guardian or a rule without both languages; needs review by a conservator (listed in
+`docs/data_notes.md`).
+
 ## 3D view (prototype): every monument, on ARGUS's own models
 
 On the score screen, under the "If nobody had noticed" drawings, **"Display in 3D"** shows the day's danger in
@@ -774,19 +790,6 @@ this device.
   list (`tools/class_server.py`, tested against the game's list); an older copy of the server drops the name,
   so a teacher updates it to have the class's leaderboard. Games played before had no name and are not on the
   board. The board is read from the newest 2000 games of the shared store.
-
-## Your own monument
-
-At the end of a mission the guardian says: "Every neighbourhood has an old building nobody looks after: a church,
-a bridge, the old school. Go and see it with a guardian's eyes." "Make a card for your own monument" opens the
-same observation card for a building that is not one of the game's (also "A building in my neighbourhood" on
-the first screen, and in the card's monument list). The player writes what it is called, picks what it is
-(church, bridge, school, house, castle or wall, statue or memorial, something else), what they saw (the same
-checklist), where (the town and the street in words, or "Add my location", asked of the browser only when
-pressed), when, and may add a photo. The card prints and opens an email the player sends themselves; who to give
-it to: a grown-up first (parents, teacher), then the town hall, and for an old or listed building the heritage
-office of the area. Like every card it stays on the device; there is no ARGUS data file for it, as it is not one
-of ARGUS's monuments (`OWN` in `web/src/game/report.ts`, tested in `web/tests/report.test.ts`).
 
 ## Community stats and class codes
 

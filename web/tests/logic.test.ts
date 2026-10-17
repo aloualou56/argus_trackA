@@ -30,8 +30,10 @@ import {
   missionScenarios,
   ruleFor,
   score,
+  visitorCodeFor,
   withChange,
 } from "../src/game/logic";
+import { ICON_NAMES } from "../src/components/Icon";
 import type { GameData, Monument, RuleEntry } from "../src/game/types";
 
 const data = JSON.parse(readFileSync(new URL("../public/data/game_data.json", import.meta.url), "utf8")) as GameData;
@@ -353,6 +355,25 @@ describe("citizen checklist", () => {
     const marked = rows.filter((r) => r.forMission).map((r) => r.item.id);
     expect(marked).toEqual(expect.arrayContaining(["damp", "insects"]));
     expect(rows.slice(0, marked.length).every((r) => r.forMission)).toBe(true);
+  });
+});
+
+describe("what the guardian leaves the player with", () => {
+  it("keeps the visitor code in its own order and marks the rules about this mission's dangers", () => {
+    const threats = missionScenarios(ranverso, "extreme"); // water, pests, relative humidity
+    const rows = visitorCodeFor(data.visitor_code.items, threats);
+    expect(rows.map((r) => r.item.id)).toEqual(data.visitor_code.items.map((i) => i.id));
+    expect(rows[0].item.id).toBe("touch");
+    expect(rows.find((r) => r.item.id === "rubbish")?.forMission).toBe(true); // crumbs bring pests
+    expect(rows.find((r) => r.item.id === "sensors")?.forMission).toBe(false);
+  });
+
+  it("draws every rule's icon, and every guardian says goodbye in both languages", () => {
+    for (const item of data.visitor_code.items) expect(ICON_NAMES, item.id).toContain(item.icon);
+    for (const mon of data.monuments.filter(isPlayable)) {
+      expect(mon.guardian?.farewell.en, mon.pilot_key).toBeTruthy();
+      expect(mon.guardian?.farewell.el, mon.pilot_key).toBeTruthy();
+    }
   });
 });
 

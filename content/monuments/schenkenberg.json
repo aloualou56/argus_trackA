@@ -19,7 +19,7 @@
     "review_note": "'Medieval castle ruin on a hill' is general knowledge, not from the ARGUS data; 'free-standing walls and towers' comes from the ARGUS heritage_asset fields. Untreated plant growth is one of the two highest ABC magnitudes (13.0, Extreme), tied with freeze-thaw."
   },
   "guardian": {
-    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text. 'farewell' is the guardian's parting words at the very end, before how to behave at any monument (content/visitor_code.json): true of this place, in the guardian's voice.",
     "needs_review": true,
     "name": {
       "en": "Urs",
@@ -36,6 +36,10 @@
     "back_caught": {
       "en": "I'm back! Your sensors noticed in time, so we could check the walls before a stone came loose. Today you were a real guardian.",
       "el": "Γύρισα! Οι αισθητήρες σου το πρόσεξαν εγκαίρως, οπότε ελέγξαμε τους τοίχους πριν ξεκολλήσει κάποια πέτρα. Σήμερα ήσουν φύλακας στ' αλήθεια."
+    },
+    "farewell": {
+      "en": "Before you go, one thing from a volunteer. These walls have stood in the rain and frost for hundreds of years with no roof over them, and every winter the ice opens their cracks a little more. They need no help from us to fall apart. So don't climb on them, don't pull out a loose stone to see what is behind it, and never write your name on them: paint is hard to get off old stone, and every cleaning takes a little stone with it. Come up, look, and tell us if you see a new crack.",
+      "el": "Πριν φύγεις, κάτι από έναν εθελοντή. Αυτοί οι τοίχοι στέκουν εκατοντάδες χρόνια στη βροχή και στον παγετό χωρίς στέγη από πάνω, και κάθε χειμώνα ο πάγος ανοίγει λίγο ακόμα τις ρωγμές τους. Δεν χρειάζονται τη δική μας βοήθεια για να χαλάσουν. Γι' αυτό μην ανεβαίνεις πάνω τους, μη βγάζεις μια χαλαρή πέτρα για να δεις τι έχει πίσω, και μη γράφεις ποτέ το όνομά σου: η μπογιά βγαίνει δύσκολα από την παλιά πέτρα, και κάθε καθάρισμα παίρνει μαζί του και λίγη πέτρα. Ανέβα, κοίτα, και πες μας αν δεις καινούργια ρωγμή."
     }
   },
   "consequences": {

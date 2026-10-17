@@ -19,7 +19,7 @@
     "review_note": "'374 underground cellars', wine presses and barrels come from the ARGUS heritage_asset fields. 'Biggest danger = subsidence' comes from the data (highest ABC magnitude, 11.5, Extreme)."
   },
   "guardian": {
-    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text.",
+    "_about": "AUTHORED. An imaginary guardian who hands the watch over to the player (story screen) and comes back at the end (score screen). The game says the character is imaginary. 'back_caught' is said when the player's sensors caught the day's alarm; other endings are interface text. 'farewell' is the guardian's parting words at the very end, before how to behave at any monument (content/visitor_code.json): true of this place, in the guardian's voice.",
     "needs_review": true,
     "name": {
       "en": "Tomás",
@@ -32,6 +32,10 @@
     "handover": {
       "en": "Hello, I'm Tomás. My family has kept a wine cellar in this hill for four generations. Today I have to be away, so the cellars are in your hands. Watch the ground for me: if it moves, the cellars can cave in.",
       "el": "Γεια σου, είμαι ο Τομάς. Η οικογένειά μου έχει ένα κελάρι σε αυτόν τον λόφο εδώ και τέσσερις γενιές. Σήμερα πρέπει να λείψω, οπότε τα κελάρια είναι στα χέρια σου. Πρόσεχε το έδαφος για μένα: αν κουνηθεί, τα κελάρια μπορεί να καταρρεύσουν."
+    },
+    "farewell": {
+      "en": "Before you go, one thing from a cellar keeper. The cellars are dug into the hill, so the roof of every cellar is the hill itself. Water that soaks into the earth makes it heavy and weak. When you visit, keep to the paths, never go into a cellar that is closed, and never step where the ground has sunk in: under it there may be a roof giving way. And as everywhere: what you are told not to touch, you don't touch.",
+      "el": "Πριν φύγεις, κάτι από κάποιον που φυλάει ένα κελάρι. Τα κελάρια είναι σκαμμένα μέσα στον λόφο, οπότε η στέγη κάθε κελαριού είναι ο ίδιος ο λόφος. Το νερό που ποτίζει το χώμα το κάνει βαρύ και αδύναμο. Όταν έρθεις, μένε στα μονοπάτια, μη μπαίνεις ποτέ σε κελάρι που είναι κλειστό, και μην πατάς εκεί που το έδαφος έχει βουλιάξει: από κάτω μπορεί να είναι μια στέγη που υποχωρεί. Και όπως παντού: ό,τι σου λένε να μην αγγίξεις, δεν το αγγίζεις."
     }
   },
   "report_to": {

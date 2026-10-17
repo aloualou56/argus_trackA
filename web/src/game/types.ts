@@ -174,6 +174,8 @@ export interface Guardian {
   handover: Text;
   /** Said when the player's sensors caught the day's alarm; absent where no alarm can be replayed. */
   back_caught?: Text;
+  /** The parting words at the very end, before the visitor code: true of this place, in the guardian's voice. */
+  farewell: Text;
   authored: true;
   needs_review: boolean;
 }
@@ -377,6 +379,17 @@ export interface ChecklistItem {
   text: Text;
 }
 
+/** How to behave at any old monument, and why (content/visitor_code.json): what the guardian leaves the
+ *  player with at the end. */
+export interface VisitorRule {
+  id: string;
+  icon: string;
+  /** ARGUS risk categories it relates to (none: it is about the game's sensors). */
+  categories: string[];
+  rule: Text;
+  why: Text;
+}
+
 /** What kind of step a decision option is: look first, wait, or intervene at once. */
 export type DecisionStance = "review" | "wait" | "act";
 
@@ -413,6 +426,7 @@ export interface GameData {
   alarm_filter: AlarmFilter;
   quiz: { questions: QuizQuestion[]; authored: true; needs_review: boolean };
   checklist: { items: ChecklistItem[]; report: Text; authored: true; needs_review: boolean };
+  visitor_code: { items: VisitorRule[]; authored: true; needs_review: boolean };
   basemaps: { default: string; layers: Basemap[]; world: string | null };
   monuments: (Monument | MonumentStub)[];
 }

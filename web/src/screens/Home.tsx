@@ -21,8 +21,6 @@ interface Props {
   onTeacher: () => void;
   /** Opens the observation report for the selected monument. */
   onReport: () => void;
-  /** "Your own monument": a card for an old building of the player's own neighbourhood. */
-  onOwn: () => void;
   /** The game was opened from a challenge link ("beat my score on the same dangers"). */
   challenge: Challenge | null;
   onChallenge: () => void;
@@ -151,7 +149,6 @@ export function Home({
   setClassCode,
   onTeacher,
   onReport,
-  onOwn,
   challenge,
   onChallenge,
 }: Props) {
@@ -273,14 +270,9 @@ export function Home({
           {t("report.homeTitle")}
         </h2>
         <p>{t("report.homeText")}</p>
-        <div className="actions">
-          <button type="button" className="btn btn-secondary" disabled={!mon?.playable} onClick={onReport}>
-            {t("report.open")}
-          </button>
-          <button type="button" className="btn btn-secondary" onClick={onOwn}>
-            {t("own.option")}
-          </button>
-        </div>
+        <button type="button" className="btn btn-secondary" disabled={!mon?.playable} onClick={onReport}>
+          {t("report.open")}
+        </button>
       </section>
 
       {/* Last in the page, so a keyboard reaches it after the class code; pinned to the bottom of

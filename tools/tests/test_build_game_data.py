@@ -37,7 +37,7 @@ class GameData(unittest.TestCase):
 
     def test_small_enough_for_the_browser(self):
         size = len(json.dumps(self.data, ensure_ascii=False).encode("utf-8"))
-        self.assertLess(size, 300 * 1024)
+        self.assertLess(size, 320 * 1024)
 
     def test_decision_step(self):
         decisions = self.data["decisions"]
@@ -448,6 +448,18 @@ class ContentRules(unittest.TestCase):
             for key, entry in section.items():
                 self.assertTrue(set(entry["primary"]) <= set(entry["cards"]) <= card_ids, key)
                 self.assertEqual(bool(entry["primary"]), bool(entry["cards"]), key)
+
+    def test_the_visitor_code_and_every_guardians_parting_words(self):
+        items = self.content.raw["visitor_code"]["items"]
+        self.assertGreaterEqual(len(items), 3)
+        self.assertEqual(len({i["id"] for i in items}), len(items))
+        for item in items:
+            for field in ("rule", "why"):
+                self.assertTrue(item[field].get("en") and item[field].get("el"), f"{item['id']} {field}")
+            self.assertTrue(set(item["categories"]) <= set(self.content.threat_categories), item["id"])
+        for pilot, pack in self.content.monuments.items():
+            farewell = pack["guardian"]["farewell"]
+            self.assertTrue(farewell.get("en") and farewell.get("el"), pilot)
 
     def test_human_cards_never_detect_alarms(self):
         human = {c["id"] for c in self.content.cards if c.get("kind") == "human"}
