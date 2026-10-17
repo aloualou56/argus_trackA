@@ -810,7 +810,11 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
         }
       });
     };
-    model.position.y = -(H0 ?? 0);
+    // The group is shared between views (preload.ts keeps it): each view measures the model at
+    // ARGUS's own placement, never at the matrix the last view levelled it with (a second view
+    // would take that for ARGUS's placement, level "again", and sink the model under the terrain).
+    model.matrixAutoUpdate = false;
+    model.matrix.makeTranslation(0, -(H0 ?? 0), 0);
     measure();
     // ARGUS places its models with a slight tilt that its own viewer corrects ("pitch 1°" for the House of
     // the Masks), and some at a height of their own: here the model's ground is levelled onto ARGUS's
@@ -827,7 +831,6 @@ export function createHouse(host: HTMLElement, assets: Assets, options: HouseOpt
       .makeTranslation(0, -c, 0)
       .multiply(new THREE.Matrix4().makeRotationZ(-Math.atan(a))) // x east: tilts east-west
       .multiply(new THREE.Matrix4().makeRotationX(-Math.atan(b))); // -z north: tilts north-south
-    model.matrixAutoUpdate = false;
     model.matrix.copy(levelled).multiply(new THREE.Matrix4().makeTranslation(0, -(H0 ?? 0), 0));
     measure();
     floorAt = (x, y) => {
