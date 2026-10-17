@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { isPlayable } from "../src/game/logic";
 import type { GameData } from "../src/game/types";
-import { cameraHeightFor, damageAfter, effectOf, EFFECTS, RATES, MAP_ZOOM, metresPerPixel, terrarium, tileLonLat, tileXY } from "../src/view3d/math";
+import { cameraHeightFor, damageAfter, effectOf, EFFECTS, RATES, MAP_ZOOM, metresPerPixel, placeCardIn, seeded, terrarium, tileLonLat, tileXY } from "../src/view3d/math";
 
 const data = JSON.parse(readFileSync(new URL("../public/data/game_data.json", import.meta.url), "utf8")) as GameData;
 
@@ -122,5 +122,48 @@ describe("see it happen: ARGUS's dangers played out in 3D", () => {
       // no landslide at Delos: ARGUS rates its slopes low there
       if (s.id.startsWith("delos")) expect(shown.has("slide"), s.id).toBe(false);
     }
+  });
+
+  it("keeps an open pin's card all inside the free part of the picture, wherever the pin stands", () => {
+    const rnd = seeded(7);
+    for (let i = 0; i < 5000; i++) {
+      // pictures from a phone on its side to a big screen, a title and a panel covering some of them
+      const width = 280 + rnd() * 1700;
+      const height = 240 + rnd() * 1000;
+      const free = { left: 0, top: rnd() * height * 0.4, right: width, bottom: height - rnd() * height * 0.4 };
+      if (free.bottom - free.top < 40) continue;
+      // (a pin may stand under the title or the panel, or just outside the picture)
+      const at = { x: -40 + rnd() * (width + 80), y: -40 + rnd() * (height + 80) };
+      const card = { width: 80 + rnd() * 300, height: 30 + rnd() * 900 };
+      const box = placeCardIn(at, 26, card, free);
+      const w = Math.min(card.width, box.maxWidth);
+      const h = Math.min(card.height, box.maxHeight);
+      const where = JSON.stringify({ at, card, free, box });
+      // (8 pixels of margin all round)
+      expect(box.left, where).toBeGreaterThanOrEqual(free.left + 8 - 1e-9);
+      expect(box.left + w, where).toBeLessThanOrEqual(free.right - 8 + 1e-9);
+      expect(box.top, where).toBeGreaterThanOrEqual(free.top + 8 - 1e-9);
+      expect(box.top + h, where).toBeLessThanOrEqual(free.bottom - 8 + 1e-9);
+    }
+  });
+
+  it("puts the card beside its pin when it fits, never over it", () => {
+    const free = { left: 0, top: 120, right: 400, bottom: 700 };
+    const card = { width: 200, height: 150 };
+    // room above: above it
+    expect(placeCardIn({ x: 200, y: 500 }, 26, card, free).top).toBe(500 - 26 - 150);
+    // just under the title, as the sensor at Conventillo was: below it
+    expect(placeCardIn({ x: 200, y: 140 }, 26, card, free).top).toBe(140 + 26);
+    // too tall for either side: on the bigger one, cut to it, ending at the pin
+    const tall = placeCardIn({ x: 200, y: 300 }, 26, { width: 200, height: 900 }, free);
+    expect(tall.top + tall.maxHeight).toBeLessThanOrEqual(700 - 8);
+    expect(tall.top).toBe(300 + 26);
+    // at the edge of the picture: nudged sideways into it
+    expect(placeCardIn({ x: 5, y: 500 }, 26, card, free).left).toBe(8);
+    expect(placeCardIn({ x: 395, y: 500 }, 26, card, free).left).toBe(400 - 8 - 200);
+    // a phone on its side, a low strip of picture left: beside the pin, on the side with room
+    const low = { left: 0, top: 70, right: 844, bottom: 200 };
+    expect(placeCardIn({ x: 400, y: 130 }, 26, card, low).left).toBe(400 + 26);
+    expect(placeCardIn({ x: 700, y: 130 }, 26, card, low).left).toBe(700 - 26 - 200);
   });
 });

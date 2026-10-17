@@ -43,6 +43,54 @@ export function seeded(seed: number): () => number {
   };
 }
 
+/** A rectangle on the screen, in pixels from the picture's top left corner. */
+export interface ScreenBox {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+/** Where a card opened from a point of the picture goes, so that all of it stays in the free part of
+ *  the picture (`free`: the picture less what covers it, the title above and the panel below): above
+ *  its point when it fits there, else below it; when it fits on neither side, on the side with more
+ *  room, scrolling inside itself; when even that side is too small to read, beside its point; and
+ *  only when there is no room beside it either, over it (`reach`: from the point to the card's edge). `maxHeight` and `maxWidth` are the most it may take:
+ *  the card's own size within them is up to the page, so they are the bounds to keep. */
+export function placeCardIn(
+  at: { x: number; y: number },
+  reach: number,
+  card: { width: number; height: number },
+  free: ScreenBox,
+  margin = 8,
+): { left: number; top: number; maxWidth: number; maxHeight: number } {
+  const lo = free.top + margin;
+  const hi = Math.max(lo, free.bottom - margin);
+  const maxWidth = Math.max(0, free.right - free.left - 2 * margin);
+  const width = Math.min(card.width, maxWidth);
+  const left = Math.min(Math.max(at.x - width / 2, free.left + margin), Math.max(free.left + margin, free.right - margin - width));
+  // (a point under what covers the picture still has its card in the free part: from its edge)
+  const aboveEnd = Math.min(at.y - reach, hi);
+  const belowStart = Math.max(at.y + reach, lo);
+  const roomAbove = aboveEnd - lo;
+  const roomBelow = hi - belowStart;
+  if (card.height <= roomAbove) return { left, top: aboveEnd - card.height, maxWidth, maxHeight: roomAbove };
+  if (card.height <= roomBelow) return { left, top: belowStart, maxWidth, maxHeight: roomBelow };
+  // (a card cut to fewer than about five lines is hard to read)
+  const readable = Math.min(card.height, 96);
+  if (roomAbove >= readable && roomAbove >= roomBelow) return { left, top: lo, maxWidth, maxHeight: roomAbove };
+  if (roomBelow >= readable) return { left, top: belowStart, maxWidth, maxHeight: roomBelow };
+  // a low picture (a phone on its side): beside its point, on the side with room, else over it
+  const maxHeight = hi - lo;
+  const height = Math.min(card.height, maxHeight);
+  const top = Math.min(Math.max(at.y - height / 2, lo), hi - height);
+  const rightStart = Math.max(at.x + reach, free.left + margin);
+  const leftEnd = Math.min(at.x - reach, free.right - margin);
+  if (rightStart + width <= free.right - margin) return { left: rightStart, top, maxWidth, maxHeight };
+  if (leftEnd - width >= free.left + margin) return { left: leftEnd - width, top, maxWidth, maxHeight };
+  return { left, top, maxWidth, maxHeight };
+}
+
 /** What the illustration shows, each from 0 (nothing) upwards: how high damp has risen in the walls
  *  (metres), the radius of the stain in the floors (metres), the share of tesserae lost in it, how
  *  much salt has come out, and the share of the wall tops where plants have rooted. Then, for the

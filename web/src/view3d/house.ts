@@ -23,7 +23,7 @@ import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRe
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { cameraHeightFor, seeded, terrarium, tileLonLat, tileXY, type Damage, type DamageKind, type Effect } from "./math";
+import { cameraHeightFor, placeCardIn, seeded, terrarium, tileLonLat, tileXY, type Damage, type DamageKind, type Effect } from "./math";
 import { createWeather, makeEnv, type Weather } from "./weather";
 
 type XY = [number, number];
@@ -1648,21 +1648,24 @@ ${anyCellar ? CAVE_FRAGMENT : ""}`)
     openPin = null;
   };
   const cardSpot = new THREE.Vector3();
-  /** Keeps the open card inside the picture: nudged sideways, and below its pin when there is no room above. */
+  /** Keeps all of the open card in the free part of the picture, between the title and the panel
+   *  (placeCardIn): beside its pin where it fits, scrolling inside itself where nothing is big enough. */
   function placeCard() {
     if (!openPin) return;
-    const { card, at: pos } = openPin;
+    const { el, card, at: pos } = openPin;
     cardSpot.copy(pos).project(camera);
     const x = (cardSpot.x * 0.5 + 0.5) * size.width;
     const y = (-cardSpot.y * 0.5 + 0.5) * size.height;
-    const w = card.offsetWidth;
-    const margin = 8;
-    const left = Math.min(Math.max(x - w / 2, margin), Math.max(margin, size.width - w - margin));
-    card.style.setProperty("--shift", `${left - (x - w / 2)}px`);
-    // above its pin, unless there is more room below it (between the title and the panel)
-    const room = card.offsetHeight + 24;
-    const over = y - insetTop;
-    card.classList.toggle("is-below", room > over && size.height - insetBottom - y > over);
+    // (the card's whole height, also when it is cut and scrolls: its content and its border)
+    const height = card.scrollHeight + card.offsetHeight - card.clientHeight;
+    const box = placeCardIn({ x, y }, el.offsetHeight / 2 + 10, { width: card.offsetWidth, height }, { left: 0, top: insetTop, right: size.width, bottom: size.height - insetBottom });
+    // (from the pin's corner: CSS2DRenderer centres the pin on its point)
+    card.style.left = `${box.left - (x - el.offsetWidth / 2)}px`;
+    card.style.top = `${box.top - (y - el.offsetHeight / 2)}px`;
+    card.style.maxWidth = `min(17rem, ${box.maxWidth}px)`;
+    card.style.maxHeight = `${box.maxHeight}px`;
+    // a cut card takes the pointer, to be scrolled; a whole one lets the pins under it be pressed
+    card.classList.toggle("is-cut", card.scrollHeight > card.clientHeight + 1);
   }
   const PIN_PX = 32;
   const spots: { x: number; y: number; ok: boolean }[] = [];

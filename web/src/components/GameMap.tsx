@@ -92,6 +92,10 @@ const MAP_MAX_ZOOM = 21;
 // zoom out further than the world filling the map (see fitWorld).
 const WORLD = L.latLngBounds([-85.0511, -180], [85.0511, 180]);
 
+/** What is drawn over the map, in its corners: no pin is left under it, and no popup opens under it. */
+const MAP_FURNITURE =
+  ".leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-scale, .map-coords, .map-legend, .map-switch, .places-toggle";
+
 function savedBasemap(data: GameData): string {
   try {
     const saved = window.localStorage.getItem(BASEMAP_KEY);
@@ -633,9 +637,7 @@ export function GameMap(props: Props) {
     // The map's own controls (zoom, legend, scale, credits, the map picker, "Places") never cover a
     // pin either: a pin under one is moved out from under it.
     const box = map.getContainer().getBoundingClientRect();
-    const blocks = [...(map.getContainer().parentElement?.querySelectorAll<HTMLElement>(
-      ".leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-scale, .map-coords, .map-legend, .map-switch, .places-toggle",
-    ) ?? [])]
+    const blocks = [...(map.getContainer().parentElement?.querySelectorAll<HTMLElement>(MAP_FURNITURE) ?? [])]
       .map((el) => el.getBoundingClientRect())
       .filter((r) => r.width > 0 && r.height > 0)
       // (12 px clear: a small target, such as the credits' link, needs no other target within 12 px)
@@ -698,20 +700,30 @@ export function GameMap(props: Props) {
     });
   }
 
-  /** A pin's popup opens clear of the phone's floating bars while placing sensors (their heights
-      are measured by Mission.tsx); elsewhere there are none and nothing changes. */
+  /** Every pin's popup (ARGUS's and yours) opens clear of what is drawn over the map, which would
+      cover it: the map's own controls (zoom, the map picker, "Places", the scale, the credits) and,
+      while placing sensors on a phone, the floating bars (their heights measured by Mission.tsx). The
+      map pans until the popup is between them. */
   function keepClearOfBars(marker: L.Marker) {
     marker.on("popupopen", (e) => {
-      const host = containerRef.current?.parentElement;
-      if (!host) return;
+      const node = containerRef.current;
+      const host = node?.parentElement;
+      if (!node || !host) return;
+      const box = node.getBoundingClientRect();
       const css = getComputedStyle(host);
-      const top = parseFloat(css.getPropertyValue("--top-bar-h")) || 0;
-      const bottom = parseFloat(css.getPropertyValue("--strip-h")) || 0;
-      if (!top && !bottom) return;
+      let top = parseFloat(css.getPropertyValue("--top-bar-h")) || 0;
+      let bottom = parseFloat(css.getPropertyValue("--strip-h")) || 0;
+      // (a control in the map's upper half pushes the popup down from it, one in the lower half up)
+      for (const control of host.querySelectorAll<HTMLElement>(MAP_FURNITURE)) {
+        const r = control.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) continue;
+        if (r.top + r.height / 2 < box.top + box.height / 2) top = Math.max(top, r.bottom - box.top);
+        else bottom = Math.max(bottom, box.bottom - r.top);
+      }
       const popup = (e as L.PopupEvent).popup;
-      popup.options.autoPanPaddingTopLeft = L.point(12, top + 12);
-      popup.options.autoPanPaddingBottomRight = L.point(12, bottom + 12);
-      popup.update(); // pans again, with the bars in mind
+      popup.options.autoPanPaddingTopLeft = L.point(12, top + 8);
+      popup.options.autoPanPaddingBottomRight = L.point(12, bottom + 8);
+      popup.update(); // pans again, with them in mind
     });
   }
 
@@ -748,6 +760,7 @@ export function GameMap(props: Props) {
       })
         .bindPopup(popup)
         .addTo(group);
+      keepClearOfBars(marker);
       label(marker, `${t("map.argus", { names })}${temporary ? `. ${t("map.tempPosition")}` : ""}`);
       spreadRef.current.push({ marker, at: L.latLng(point.lat, point.lon), size: PIN, fixed: isAlarm });
     }
@@ -844,7 +857,7 @@ export function GameMap(props: Props) {
         })
         .addTo(group);
       label(marker, t("map.you", { name }));
-      if (editable) keepClearOfBars(marker);
+      keepClearOfBars(marker);
       spreadRef.current.push({ marker, at: L.latLng(p.lat, p.lng), size: PIN, fixed: false });
     }
   }

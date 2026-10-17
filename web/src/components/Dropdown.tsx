@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Icon } from "./Icon";
 
 export interface DropdownOption {
@@ -20,6 +20,31 @@ interface Props {
   className?: string;
 }
 
+/** Where an open list fits: below its button, or above it when there is more room there, and never
+ *  taller than that room (it scrolls inside itself), so none of it is cut by the edge of the screen
+ *  or of the panel it is in. */
+function fitList(button: HTMLElement, list: HTMLElement) {
+  let top = 0;
+  let bottom = window.innerHeight;
+  // (the nearest box that cuts what overflows it: the panel the list is in, if any)
+  let p = button.parentElement;
+  while (p && p !== document.body && !/(auto|scroll|hidden|clip)/.test(getComputedStyle(p).overflowY)) p = p.parentElement;
+  if (p && p !== document.body) {
+    const r = p.getBoundingClientRect();
+    top = Math.max(top, r.top);
+    bottom = Math.min(bottom, r.bottom);
+  }
+  const b = button.getBoundingClientRect();
+  const gap = 8;
+  const below = bottom - b.bottom - 2 * gap;
+  const above = b.top - top - 2 * gap;
+  list.style.maxHeight = "";
+  const whole = list.scrollHeight + list.offsetHeight - list.clientHeight;
+  const up = whole > below && above > below;
+  list.classList.toggle("is-up", up);
+  list.style.maxHeight = `min(60vh, ${Math.max(0, up ? above : below)}px)`;
+}
+
 /**
  * The game's own drop-down: a button that opens a short list of buttons. Plain buttons, so it
  * works with every keyboard and screen reader: Enter or Space opens and chooses, the arrow keys
@@ -32,10 +57,19 @@ export function Dropdown({ id, label, options, value, onChange, icon, className 
   const toggle = useRef<HTMLButtonElement>(null);
   const current = options.find((o) => o.id === value) ?? options[0];
 
+  // The open list stays all where it can be seen (fitList); opening puts focus on the option in use,
+  // so the arrow keys start from it, without scrolling the page (the list scrolls to it, inside).
+  useLayoutEffect(() => {
+    const list = root.current?.querySelector<HTMLElement>(".menu-list");
+    if (!open || !toggle.current || !list) return;
+    fitList(toggle.current, list);
+    const on = list.querySelector<HTMLElement>('[aria-current="true"]');
+    on?.focus({ preventScroll: true });
+    if (on) list.scrollTop = Math.max(0, Math.min(list.scrollTop, on.offsetTop), on.offsetTop + on.offsetHeight - list.clientHeight);
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
-    // Opening puts focus on the option in use, so the arrow keys start from it.
-    root.current?.querySelector<HTMLElement>('[aria-current="true"]')?.focus();
     const onPointerDown = (e: PointerEvent) => {
       if (!root.current?.contains(e.target as Node)) setOpen(false);
     };

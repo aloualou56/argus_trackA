@@ -202,17 +202,20 @@ export function View3D({ mon, scene, focus, cards, loaded, mapApi, arrived, onRe
     return () => window.clearTimeout(step);
   }, [playing, years]);
 
-  // Once open, the rooms are framed between the title and the panel (which grows with the dangers).
+  // Once open, the rooms are framed between the title and the panel (which grows with the dangers),
+  // and a sensor's card stays between them: the panel's top is where its fold button stands above it.
   useEffect(() => {
     const [house, stage, top, dock] = [houseRef.current, stageRef.current, topRef.current, dockRef.current];
     if (phase !== "open" || !house || !stage || !top || !dock) return;
+    const fold = () => dock.querySelector<HTMLElement>(".view3d-fold");
     const measure = () => {
       const box = stage.getBoundingClientRect();
-      house.setInsets(top.getBoundingClientRect().bottom - box.top, box.bottom - dock.getBoundingClientRect().top);
+      const fromTop = Math.min(dock.getBoundingClientRect().top, fold()?.getBoundingClientRect().top ?? Infinity);
+      house.setInsets(top.getBoundingClientRect().bottom - box.top, box.bottom - fromTop);
     };
     measure();
     const resize = new ResizeObserver(measure);
-    for (const el of [stage, top, dock]) resize.observe(el);
+    for (const el of [stage, top, dock, fold()]) if (el) resize.observe(el);
     return () => resize.disconnect();
   }, [phase]);
 

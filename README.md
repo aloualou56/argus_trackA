@@ -359,7 +359,8 @@ The game is played on a map of real monuments, so it looks like one: a survey sh
 - **Names of places on the map** step aside for the map's own furniture: a name that would lie under the scale,
   the coordinates, the legend or a button is hidden (its number stays, and the site guide lists every name).
 - **No browser-default controls left in view:** the language menu and the monument of a report use the game's own
-  drop-down (`web/src/components/Dropdown.tsx`), the report's photo is chosen with a normal button (the browser's
+  drop-down (`web/src/components/Dropdown.tsx`; its list opens below its button, or above where there is more
+  room, never taller than the room, so none of it is cut on a low screen), the report's photo is chosen with a normal button (the browser's
   file control does the work behind it), and the map shows the credits for its data without the library's badge.
   The date of a report is still the browser's date field, styled: its calendar is the most reliable one on phones.
 - **The mark:** a guardian's shield over a classical temple on the survey grid. The original is
@@ -468,7 +469,8 @@ switches.
 - Sound and vibration are never the only signal (what they say is on screen too), start only after a tap, and each
   can be turned off: in the accessibility menu, and in the "?" card while placing sensors on a phone.
 - **WCAG 2.2 additions:** a focused control is never hidden (2.4.11): the menu closes when focus leaves it, the skip
-  link shows above the phone's floating bars, pin popups open clear of them, and the harness checks every control of
+  link shows above the phone's floating bars, pin popups open clear of them and of the map's own controls (the
+  map pans until the popup is between them), and the harness checks every control of
   every screen. A sensor on the map can be moved without dragging (2.5.7): "Move it to the cross" in its popup, with
   the cross moved by a tap on the map. Targets are at least 24 px and never covered (2.5.8): map pins that would
   overlap when zoomed out are drawn a few pixels apart (their true place comes back as you zoom in).
@@ -561,7 +563,11 @@ monument in 3D" offers its places instead. Not on a device without WebGL.
   pin's width of one another in the picture (a device with several instruments, or sensors far off) are one pin
   with their number, and their card tells of them all; they part as the camera comes nearer. One card at a time:
   a second press, Escape (which closes the card first, the view on the next press) or a press in the picture
-  closes it. Only in this view: the alarm's own picture has nothing to press (README, "The alarm in 3D").
+  closes it. The open card is always all in sight, between the title and the panel (and its fold button):
+  above its pin where it fits, else below it, else on the side with more room, scrolling inside itself, and on a
+  low picture (a phone on its side) beside its pin (`placeCardIn` in `math.ts`, tested on 5000 random screens in
+  `web/tests/view3d.test.ts`). Only in this view: the alarm's own picture has nothing to press (README, "The
+  alarm in 3D").
 - **Light:** ARGUS's models are photographs, with the day's own light in them, so they are shown as they are,
   not lit a second time (lit by the scene's sun, every side away from it went dark: Ranverso's church was
   almost black). The satellite ground is shown the same way, left out where it would stand over the model's

@@ -3242,6 +3242,11 @@ b {
 .topbar .menu-list :focus-visible {
   outline-color: var(--focus);
 }
+/* Opened upwards, where there is more room above its button (Dropdown.tsx, fitList). */
+.menu .menu-list.is-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
 
 /* ---- the photo button of a report: the browser's file control does the work, out of sight */
 .file-input {
@@ -4817,13 +4822,14 @@ html.a11y-spacing main p {
   background: var(--ink);
   transform: scale(1.12);
 }
+/* (house.ts places it, and bounds it to the free part of the picture: placeCardIn) */
 .view3d-pin-card {
   position: absolute;
-  bottom: calc(100% + 0.6rem);
-  left: 50%;
-  transform: translateX(calc(-50% + var(--shift, 0px)));
+  box-sizing: border-box;
   width: max-content;
   max-width: min(17rem, 80vw);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0.55rem 0.75rem;
   border: 2px solid var(--ink);
   border-radius: var(--radius);
@@ -4834,15 +4840,14 @@ html.a11y-spacing main p {
   text-align: left;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.35);
   /* a card never covers the pins under it: they can still be pressed (and pressing the card itself, as
-     anywhere in the picture, closes it) */
+     anywhere in the picture, closes it); only a cut card takes the pointer, to be scrolled (.is-cut) */
   pointer-events: none;
 }
 .view3d-pin-card[hidden] {
   display: none;
 }
-.view3d-pin-card.is-below {
-  top: calc(100% + 0.6rem);
-  bottom: auto;
+.view3d-pin-card.is-cut {
+  pointer-events: auto;
 }
 .view3d-pin-card .map-popup-title {
   font-size: 0.7rem;
