@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import type { Monument } from "../game/types";
 import { useI18n } from "../i18n";
 
@@ -18,10 +18,18 @@ const HATS: Record<string, Hat> = {
 };
 
 function Portrait({ hat }: { hat: Hat }) {
+  // The bust is cut to the round frame, as in a medallion: the shoulders run on to its edge, never past it.
+  const clip = `gp-${useId().replace(/[^a-zA-Z0-9-]/g, "")}`;
   return (
     <svg className="guardian-portrait" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id={clip}>
+          <circle cx="32" cy="32" r="31" />
+        </clipPath>
+      </defs>
       <circle className="gp-bg" cx="32" cy="32" r="31" />
-      <path className="gp-body" d="M10 60c2-12 11-18 22-18s20 6 22 18" />
+      <g clipPath={`url(#${clip})`}>
+      <path className="gp-body" d="M6 66c1-14 11-24 26-24s25 10 26 24z" />
       <circle className="gp-face" cx="32" cy="28" r="11" />
       <circle className="gp-eye" cx="28" cy="28" r="1.3" />
       <circle className="gp-eye" cx="36" cy="28" r="1.3" />
@@ -32,6 +40,8 @@ function Portrait({ hat }: { hat: Hat }) {
       {hat === "beanie" && <path className="gp-hat" d="M20 23c0-8 5-13 12-13s12 5 12 13zM20 23h24v3H20zM32 10a2.5 2.5 0 1 1 0-.1" />}
       {hat === "none" && <path className="gp-hair" d="M21 26c0-8 5-12 11-12s11 4 11 12c-2-4-6-6-11-6s-9 2-11 6z" />}
       <path className="gp-badge" d="M40 50l3 2-1 3.5h-4L37 52z" />
+      </g>
+      <circle className="gp-frame" cx="32" cy="32" r="31" />
     </svg>
   );
 }

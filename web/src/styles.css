@@ -4563,6 +4563,10 @@ html.a11y-spacing main p {
 }
 .gp-bg {
   fill: var(--primary-soft);
+}
+/* the round frame, drawn over the bust so its edge stays clean */
+.gp-frame {
+  fill: none;
   stroke: var(--primary);
   stroke-width: 1.5;
 }
