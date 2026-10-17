@@ -12,6 +12,7 @@ import {
   ruleFor,
   type Detection,
 } from "../game/logic";
+import { cyrb53 } from "../game/hash";
 import type { Alarm, GameData, HistoryChapter, Monument, RuleEntry, Scenario } from "../game/types";
 import type { I18n } from "../i18n";
 
@@ -27,20 +28,6 @@ export function narrationParts(text: string): string[] {
     .split(/\n+/)
     .map((line) => line.replace(/\s+/g, " ").trim())
     .filter(Boolean);
-}
-
-/** cyrb53: a small, fast 53-bit string hash (public domain, by bryc). Same result in the browser and in Node. */
-function cyrb53(str: string, seed = 0): number {
-  let h1 = 0xdeadbeef ^ seed;
-  let h2 = 0x41c6ce57 ^ seed;
-  for (let i = 0; i < str.length; i++) {
-    const ch = str.charCodeAt(i);
-    h1 = Math.imul(h1 ^ ch, 2654435761);
-    h2 = Math.imul(h2 ^ ch, 1597334677);
-  }
-  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 }
 
 /** File name (without extension) of the clip for one line. */

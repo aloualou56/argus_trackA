@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createCommunityStore } from "./community";
 import { classCodeFromUrl, loadClassCode, saveClassCode } from "./community/classCode";
-import { quizSummaryOf } from "./community/store";
+import { quizSummaryOf, type PlayRecord } from "./community/store";
 import { GameMap, type MapApi, type MapMode } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
@@ -49,8 +49,10 @@ export interface Session {
   picks: Picks;
   /** The player's answer to "what would you do next?" after the alarm, if they gave one. */
   decision: string | null;
-  /** This game is already in the community store (the score screen can be left and come back to). */
+  /** Today's game is in the community store (the score screen can be left and come back to). */
   recorded: boolean;
+  /** The account today's game was saved under ("Save your score"), or null: not saved, or kept without a name. */
+  savedAs: string | null;
   /** A week on duty: the day being played (0 = the first) and how the days before it went. */
   day: number;
   past: DayResult[];
@@ -63,10 +65,11 @@ export interface Session {
 }
 
 /** A game at its very start: nothing placed, day 1, nothing decided or stored yet. */
-const fresh = (): Pick<Session, "placements" | "decision" | "recorded" | "day" | "past" | "scoreBefore" | "improving"> => ({
+const fresh = (): Pick<Session, "placements" | "decision" | "recorded" | "savedAs" | "day" | "past" | "scoreBefore" | "improving"> => ({
   placements: [],
   decision: null,
   recorded: false,
+  savedAs: null,
   day: 0,
   past: [],
   scoreBefore: null,
@@ -352,7 +355,28 @@ export default function App() {
     window.setTimeout(() => replayRun.current === run && setAlarm3d((a) => (a ? { ...a, stage: "flying" } : a)), wait);
   };
 
+  // Today's score until the player saves it under their account (Score.tsx). If they do not, it is
+  // stored without a name once the day or the game is over, or the page is left, so the class's
+  // statistics still count it.
+  const pendingPlay = useRef<PlayRecord | null>(null);
+  const keepPending = useCallback((record: PlayRecord) => {
+    pendingPlay.current = record;
+  }, []);
+  const settlePending = useCallback(() => {
+    const record = pendingPlay.current;
+    pendingPlay.current = null;
+    if (record) void community.submit(record);
+  }, [community]);
+  useEffect(() => {
+    if (screen === "home") settlePending();
+  }, [screen, settlePending]);
+  useEffect(() => {
+    window.addEventListener("pagehide", settlePending);
+    return () => window.removeEventListener("pagehide", settlePending);
+  }, [settlePending]);
+
   const start = (pilot: string, level: LevelId, mission?: string[], beat: number | null = null) => {
+    settlePending();
     // Phones: the whole screen for the game (from this tap: browsers allow it only from one).
     if (getSettings().fullScreen) enterFullscreen();
     const started = data?.monuments.find((m) => m.pilot_key === pilot);
@@ -430,6 +454,7 @@ export default function App() {
     // "Play again" draws new dangers from the level's pool; a class keeps the level's own mission
     // so classmates compare the same mission.
     const replay = () => {
+      settlePending();
       const drawn = classCode ? null : drawMission(data, playable, session.level, session.mission);
       // New dangers are a new game: the challenge was about the old ones.
       setGame((g) => (g ? { ...g, ...fresh(), mission: drawn ?? g.mission, beat: drawn ? null : g.beat } : g));
@@ -536,7 +561,11 @@ export default function App() {
             onReplay={replay}
             replayLabel={replayLabel}
             onQuiz={() => setScreen("quizPost")}
-            onRecorded={() => setGame((g) => (g ? { ...g, recorded: true } : g))}
+            onPending={keepPending}
+            onRecorded={(nick) => {
+              pendingPlay.current = null;
+              setGame((g) => (g ? { ...g, recorded: true, savedAs: nick } : g));
+            }}
             onReport={() => openReport(playable.pilot_key, "score")}
             onView3d={(scene, loaded, focus, from) => {
               opener.current = from; // the button that opened it has the focus again afterwards
@@ -550,7 +579,10 @@ export default function App() {
             }}
             onNextDay={(result) => {
               // Today is settled as it stands; tomorrow starts with the same network and a fresh question.
-              setGame((g) => (g ? { ...g, past: [...g.past, result], day: g.day + 1, scoreBefore: null, decision: null } : g));
+              settlePending();
+              setGame((g) =>
+                g ? { ...g, past: [...g.past, result], day: g.day + 1, scoreBefore: null, decision: null, recorded: false, savedAs: null } : g,
+              );
               // Tomorrow's alarm plays on the map first, as the first day's did.
               beginReplay(week[session.day + 1] ?? null, session.picks);
             }}

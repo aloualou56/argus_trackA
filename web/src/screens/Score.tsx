@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ScreenProps } from "../App";
-import { summaryOf, topCard, type CommunityStore, type Summary } from "../community/store";
+import { summaryOf, topCard, type CommunityStore, type PlayRecord, type Summary } from "../community/store";
 import { DayStrip } from "../components/DayStrip";
 import { Leaderboard } from "../components/Leaderboard";
-import { loadNick } from "../community/nickname";
+import { loadAccount } from "../community/nickname";
+import { SaveScore } from "../components/SaveScore";
 import { ConsequenceDrawings } from "../components/Consequence";
 import { GuardianSays } from "../components/Guardian";
 import { Open3dButton } from "../components/View3D";
@@ -36,8 +37,10 @@ interface Props extends ScreenProps {
   /** "Play again with new dangers" when the level can draw a new mission. */
   replayLabel: string;
   onQuiz: () => void;
-  /** Called once this game is in the community store, so coming back here does not add it twice. */
-  onRecorded: () => void;
+  /** This game's record, not stored yet: App stores it without a name if the player never saves it. */
+  onPending: (record: PlayRecord) => void;
+  /** The player saved this game under their account (`nick`): it is in the community store. */
+  onRecorded: (nick: string) => void;
   /** Opens the observation report for this monument. */
   onReport: () => void;
   /** "Display in 3D" under the drawings, once the view is loaded: the game opens it over the map. */
@@ -68,6 +71,7 @@ export function Score({
   onReplay,
   replayLabel,
   onQuiz,
+  onPending,
   onRecorded,
   onReport,
   onView3d,
@@ -112,39 +116,37 @@ export function Score({
       if ((e as Error).name !== "AbortError") setShareStatus(t("share.failed"));
     }
   };
-  const submitted = useRef(false);
-  // The player's guardian name on the leaderboard (chosen on the first screen), and whether this
-  // game is stored yet, so the board shows it.
-  const [nick] = useState(loadNick);
-  const [boardReady, setBoardReady] = useState(false);
   useEffect(() => play("complete"), []);
 
+  // This game's record. It is stored when the player saves it under their account ("Save your score"),
+  // or else without a name once the day or the game is over (App.tsx), so it counts in the statistics.
+  const [day] = useState(() => new Date().toISOString().slice(0, 10));
+  const record = useMemo<PlayRecord>(
+    () => ({
+      v: 1,
+      monument: mon.pilot_key,
+      level: session.level,
+      picks: session.picks,
+      score: result.total,
+      detected,
+      day,
+      ...(classCode ? { classCode } : {}),
+      ...(session.decision ? { decision: session.decision } : {}),
+    }),
+    [mon.pilot_key, session.level, session.picks, result.total, detected, day, classCode, session.decision],
+  );
   useEffect(() => {
-    if (submitted.current) return;
-    submitted.current = true;
-    // Coming back from the observation report: the game is already stored, only read the summary.
-    const stored = session.recorded
-      ? Promise.resolve()
-      : community
-          .submit({
-            v: 1,
-            monument: mon.pilot_key,
-            level: session.level,
-            picks: session.picks,
-            score: result.total,
-            detected,
-            day: new Date().toISOString().slice(0, 10),
-            ...(classCode ? { classCode } : {}),
-            ...(session.decision ? { decision: session.decision } : {}),
-            nick,
-          })
-          .then(onRecorded);
-    stored.finally(() => setBoardReady(true));
-    stored
-      .then(() => summaryOf(community, { monument: mon.pilot_key, level: session.level, classCode: classCode ?? undefined }))
+    if (!session.recorded) onPending(record);
+  }, [record, session.recorded, onPending]);
+
+  useEffect(() => {
+    summaryOf(community, { monument: mon.pilot_key, level: session.level, classCode: classCode ?? undefined })
       .then(setSummary)
       .catch(() => setSummary(null));
-  }, [community, mon.pilot_key, session, result.total, detected, classCode, nick]);
+  }, [community, mon.pilot_key, session.level, classCode]);
+  // On the board: the account this game was saved under, else the one last signed in to on this device.
+  const [remembered] = useState(loadAccount);
+  const nick = session.savedAs ?? remembered ?? "";
 
   const names = (ids: string[]) => list(ids.map((id) => pick(cards.get(id)?.name)));
   const top = summary && topCard(summary, humanCards(data));
@@ -190,15 +192,18 @@ export function Score({
         {!result.alarm && <p className="small">{t("score.scaled")}</p>}
       </div>
 
-      {/* Who did best: the class, everyone, or this device; and how far the next one is. */}
+      {/* Save the score under an account (new, or signed in to), then who did best: the class, everyone,
+          or this device; and how far the next one is. Read again once the score is saved. */}
+      <SaveScore community={community} record={record} savedAs={session.savedAs} onSaved={onRecorded} />
       <Leaderboard
+        key={session.savedAs ?? ""}
         community={community}
         monument={mon.pilot_key}
         level={session.level}
         classCode={classCode}
         nick={nick}
         score={result.total}
-        ready={boardReady}
+        ready
       />
 
       {/* The guardian comes back (first day), and what the day's alarm would have led to if nobody noticed. */}

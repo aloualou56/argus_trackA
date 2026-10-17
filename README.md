@@ -777,19 +777,32 @@ guardians") and how many points pass the next one ("6 more points and you pass F
 best!". The class's when there is a class code, everyone's in the shared store, otherwise everyone who played on
 this device.
 
-- **No names, for children:** on the board a player is a guardian name: an animal of a fixed list of 24 and a
-  number ("Owl 27"), shown in the player's language. It is never typed, so nobody can put a real name, their
-  own or anyone else's, where others see it. It is made on the first visit and kept on the device; "New player /
-  other name" on the first screen gives another (for the next child on a shared device, or a name they do not
-  like). Records stay anonymous otherwise: the name goes with the same score records as before
-  (`web/src/community/nickname.ts`, `leaderboard.ts`, tested in `web/tests/leaderboard.test.ts`).
-- **Shared stores:** Supabase takes it in a new `nick` column (`supabase/schema.sql`: run the `alter table` line
-  once on an existing project), which accepts only that shape. Until it is run the game still stores and reads
-  everything there, without the names (it tries once with the name, then leaves it out), so the shared
-  leaderboard stays empty but nothing else breaks. The class server accepts only an animal of the game's own
-  list (`tools/class_server.py`, tested against the game's list); an older copy of the server drops the name,
-  so a teacher updates it to have the class's leaderboard. Games played before had no name and are not on the
-  board. The board is read from the newest 2000 games of the shared store.
+- **Save your score:** on the score screen, above the board, the player saves the game under an account: a
+  player name and a password, which may be anything, even empty (`web/src/components/SaveScore.tsx`). A name
+  nobody has saved under yet makes a new account ("New account: Maria. Your score is saved."); a known name with
+  its password signs in ("Welcome back, Maria!"); a known name with another password is refused ("The name
+  "Maria" is taken, with another password"). Capitals and accents do not matter ("ΜΑΡΙΑ" is "Μαρία"). The device
+  remembers who signed in: the next game is one press, "Save as Maria", or "Another player". A game that is not
+  saved goes on no board, but is still kept without a name once the day or the game is over (or the page is
+  left), for the statistics; a page closed at once may not reach the shared store.
+- **No account server:** an account is its name and six characters made from the name and the password by a
+  deliberately slow hash (`web/src/community/nickname.ts`, `web/src/game/hash.ts`; the same on every device,
+  with no Web Crypto, which a page served over plain http on the school network does not have). Only those six
+  characters are ever kept or sent, never the password, and the same name and password are the same player on
+  any device. An account exists once a score is saved under it: the game reads the records it can (the class
+  server's, Supabase's newest 2000, or this device's when offline) to tell a new name from a known one
+  (`web/src/community/account.ts`, tested in `web/tests/leaderboard.test.ts`). So it is a game's sign-in, not a
+  safe one: an empty or short password is easy to guess, and on an offline device a name may be taken twice.
+- **Real names:** the form asks players not to write their full real name, or a password they use anywhere else,
+  as others see the board. The names are typed, so nothing stops a rude one: a class watches its own board.
+  Games of older versions keep their guardian names (an animal and a number, "Owl 27") on the board.
+- **Shared stores:** Supabase keeps the name in the `nick` column; on an existing project run the three `nick`
+  lines of `supabase/schema.sql` once (they replace the older rule, which took animals only). Until then the game
+  still stores and reads everything there, without the names (it tries once with the name, then leaves it out),
+  so the shared board stays empty but nothing else breaks. The class server takes the same names
+  (`tools/class_server.py`, tested in `tools/tests/test_class_server.py`); an older copy of it refuses a game
+  with an account name and the device sends it again later, so a teacher updates it. The board is read from the
+  newest 2000 games of the shared store.
 
 ## Community stats and class codes
 
@@ -806,7 +819,7 @@ them across devices:
 3. When the shared store cannot be reached, the game keeps working on the device and sends what it saved later.
 
 Anyone with the public key can add rows, so a public launch should watch for spam (Supabase rate limits, or a small
-edge function). Records hold no names, times or device ids.
+edge function). Records hold no times or device ids, and no names but the account name a player saved a game under.
 
 The teacher page shows, for a class code: what the class chose next to what ARGUS installed, the quiz **question by
 question** (share of right answers before and after, over the games that have both quizzes), and what the class
@@ -831,7 +844,7 @@ python3 -I tools/class_server.py --lan --online-maps   # allow satellite and str
   satellite and street-map pictures, and no cloud store is used. A Content-Security-Policy header makes the browser
   enforce it. `--online-maps` adds the two picture hosts back, nothing else. The same mode works on any host with
   `?local` in the link or a build with `VITE_LOCAL_ONLY=1`.
-- **Records** are the same anonymous ones (no names, times or device ids), validated by the same rules as
+- **Records** are the same as everywhere (no times or device ids; a name only for a game saved under an account), validated by the same rules as
   `supabase/schema.sql`, one JSON object per line in `class_data/plays.jsonl` and `quizzes.jsonl` (ignored by git).
   Requests are not logged, so no addresses are written anywhere. Delete the folder to start afresh.
 - **If the teacher's computer is out of reach**, devices keep their records and send them with the next game.

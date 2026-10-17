@@ -1,8 +1,10 @@
-// The leaderboard at the end of a mission: each guardian name once, with its best score, on this
-// mission or on all of them. The class's when there is a class code, everyone's in the shared store,
-// else everyone who played on this device. Only anonymous records: an animal, a number, a score.
+// The leaderboard at the end of a mission: each player once, with their best score, on this mission
+// or on all of them. The class's when there is a class code, everyone's in the shared store, else
+// everyone who played on this device. A player is a guardian name (an animal and a number) or a name
+// they chose (community/nickname.ts); nothing else of them is kept.
 import { useEffect, useState } from "react";
 import { leaderboard, standing, type BoardRow } from "../community/leaderboard";
+import { playerKey } from "../community/nickname";
 import type { CommunityStore, PlayRecord } from "../community/store";
 import { useI18n } from "../i18n";
 import { useNickLabel } from "./GuardianName";
@@ -40,17 +42,18 @@ export function Leaderboard({ community, monument, level, classCode, nick, score
 
   const rows = records ? leaderboard(records, scope === "mission" ? { monument, level } : {}) : [];
   const me = standing(rows, nick);
-  const mine = rows.find((r) => r.nick === nick);
+  const isMe = (other: string | undefined) => !!other && playerKey(other) === playerKey(nick);
+  const mine = rows.find((r) => isMe(r.nick));
   // A new best: this game's score is the best, reached in this game only (and it is not the first game).
-  const myMission = records?.filter((r) => r.nick === nick && r.monument === monument && r.level === level) ?? [];
+  const myMission = records?.filter((r) => isMe(r.nick) && r.monument === monument && r.level === level) ?? [];
   const newBest = scope === "mission" && myMission.length > 1 && myMission.filter((r) => r.score >= score).length === 1;
   const where = classCode ? t("board.scopeClass", { code: classCode }) : community.kind === "shared" ? t("board.scopeAll") : t("board.scopeDevice");
   const row = (r: BoardRow, rank: number) => (
-    <li key={r.nick} className={r.nick === nick ? "is-me" : undefined}>
+    <li key={playerKey(r.nick)} className={isMe(r.nick) ? "is-me" : undefined}>
       <span className="board-rank">{MEDALS[rank - 1] ?? rank}</span>
       <span className="board-name">
         {label(r.nick)}
-        {r.nick === nick && <strong> ({t("board.you")})</strong>}
+        {isMe(r.nick) && <strong> ({t("board.you")})</strong>}
       </span>
       <span className="board-score">{number(r.score, 0)}</span>
     </li>

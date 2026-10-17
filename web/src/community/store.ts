@@ -4,8 +4,9 @@
 //   SupabaseCommunityStore  shared by everyone, through Supabase's REST API (no SDK)
 //   LanCommunityStore       shared by one class, kept by tools/class_server.py on the teacher's computer
 //   SharedWithFallback      shared when online; keeps a local copy and queues what could not be sent
-// Records hold no names, no times and no device ids, only the date and an optional class code, and
-// for the leaderboard a guardian name chosen from a fixed list ("owl-27", community/nickname.ts).
+// Records hold no times and no device ids, only the date and an optional class code, and for the
+// leaderboard, when the player saved the game under an account, its name and six characters made from
+// it and the password ("u:Maria#k3j9a2", community/nickname.ts; older games: "owl-27"). Never a password.
 import type { Picks } from "../game/types";
 
 export interface PlayRecord {
@@ -15,12 +16,13 @@ export interface PlayRecord {
   picks: Picks;
   score: number;
   detected: boolean;
-  /** Date only (YYYY-MM-DD): no time, no names, no device id. */
+  /** Date only (YYYY-MM-DD): no time, no device id. */
   day: string;
   classCode?: string;
   /** What the player would do first after the alarm (an option id of content/decisions.json), if they chose. */
   decision?: string;
-  /** The player's guardian name on the leaderboard ("owl-27"): an animal of a fixed list and a number. */
+  /** The player's name on the leaderboard, when they saved the game under an account ("u:Maria#k3j9a2");
+   *  in older games a guardian name ("owl-27"). */
   nick?: string;
 }
 

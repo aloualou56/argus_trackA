@@ -205,6 +205,16 @@ class Records(unittest.TestCase):
         for level in cs.LEVELS:
             self.assertIn(f"'{level}'", schema)
 
+    def test_an_account_name_is_kept_as_the_game_makes_it(self):
+        for nick in ("u:Μαρία#k3j9a2", "u:Anna M.#000000", "u:jo_99#zzzzzz"):
+            self.assertEqual(cs.clean_play(dict(PLAY, nick=nick))["nick"], nick)
+        for nick in ("u:M#k3j9a2", "u:Maria#K3J9A2", "u:Maria", "u:-maria#k3j9a2", "u:a<b>c#k3j9a2",
+                     "u:" + "x" * 21 + "#k3j9a2", "u:María#k3j9a2"):  # the last: not composed (NFC)
+            with self.assertRaises(cs.Invalid, msg=nick):
+                cs.clean_play(dict(PLAY, nick=nick))
+        game = (cs.ROOT / "web" / "src" / "community" / "nickname.ts").read_text(encoding="utf-8")
+        self.assertIn(r"const USERNAME = /^[\p{L}\p{N}][\p{L}\p{M}\p{N} ._-]{1,19}$/u;", game)
+
     def test_a_guardian_name_is_kept_and_is_one_of_the_games_own(self):
         self.assertEqual(cs.clean_play(dict(PLAY, nick="owl-27"))["nick"], "owl-27")
         game = (cs.ROOT / "web" / "src" / "community" / "nickname.ts").read_text(encoding="utf-8")

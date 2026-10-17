@@ -24,9 +24,15 @@ create table if not exists public.plays (
 );
 -- For a project created before the decision step existed.
 alter table public.plays add column if not exists decision text check (decision ~ '^[a-z_]{2,30}$');
--- The player's guardian name on the leaderboard: an animal of the game's fixed list and a number
--- ("owl-27", web/src/community/nickname.ts). Never typed by the player, so never a real name.
-alter table public.plays add column if not exists nick text check (nick ~ '^[a-z]{2,12}-[1-9][0-9]$');
+-- The player's name on the leaderboard: an account, a name the player chose and six characters made
+-- from it and their password ("u:Maria#k3j9a2", web/src/community/nickname.ts; the password itself is
+-- never sent); from older games, an animal of the game's fixed list and a number ("owl-27").
+-- On an existing project, run these three lines once (the second and third replace the older rule,
+-- which took animals only).
+alter table public.plays add column if not exists nick text;
+alter table public.plays drop constraint if exists plays_nick_check;
+alter table public.plays add constraint plays_nick_check
+  check (nick ~ '^[a-z]{2,12}-[1-9][0-9]$' or nick ~ '^u:[^<>#[:cntrl:]]{2,20}#[0-9a-z]{6}$');
 create index if not exists plays_monument_level on public.plays (monument, level);
 create index if not exists plays_class_code on public.plays (class_code);
 

@@ -5691,9 +5691,28 @@ html.a11y-contrast .report-contact {
 .board-standing {
   margin: 0.6rem 0 0;
 }
-.guardian-name h2 {
-  margin-bottom: 0.2rem;
-  font-size: 1.1rem;
+/* ---- "Save your score" (components/SaveScore.tsx): an account's name and password, above the board */
+.save-score h2 {
+  margin-bottom: 0.3rem;
+}
+.save-score-form .field {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+}
+.save-score-form .btn {
+  margin-top: 0.4rem;
+}
+.save-done {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.2rem 0 0;
+  font-weight: 650;
+  color: var(--primary-deep);
+}
+.save-done svg {
+  flex: none;
 }
 
 /* going down into a cellar and back out (a cellar caving in): the picture darkens for a moment */

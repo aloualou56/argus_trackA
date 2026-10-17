@@ -125,4 +125,4 @@ On the first screen and on the score screen, "Report something you saw" lets a s
 
 ## Privacy
 
-The game never asks for or stores names, emails, times or device ids. It stores only sensor choices, the score, right/wrong quiz marks, the date and, if used, the class code.
+The game never asks for emails, times or device ids. It stores only sensor choices, the score, right/wrong quiz marks, the date and, if used, the class code. To be on the leaderboard a student saves a game under a player name and a password of their choice (it may be empty): the name is shown on the board, and only six characters made from the password are kept, never the password itself. Ask students to choose a nickname, not their full real name, and not a password they use anywhere else; the class sees its own board, so a rude name can be spotted.

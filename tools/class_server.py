@@ -27,6 +27,7 @@ import re
 import socket
 import sys
 import threading
+import unicodedata
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -51,6 +52,9 @@ CLASS_CODE = re.compile(r"^[A-HJ-NP-Z2-9]{6}$")
 NICK = re.compile(r"^[a-z]{2,12}-[1-9][0-9]$")
 ANIMALS = frozenset("""owl dolphin falcon fox turtle deer hedgehog otter seal wolf bee swan squirrel lizard bear lion
 whale octopus parrot butterfly rabbit horse goat penguin""".split())
+# Or a name the player chose, with six characters made from it and their password ("u:Maria#k3j9a2"):
+# 2 to 20 letters (any alphabet) or digits, with space . _ - inside, as in nickname.ts.
+USER = re.compile(r"^u:([^\W_][\w .-]{1,19})#[0-9a-z]{6}$")
 DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 FIRST_DAY = dt.date(2026, 1, 1)
 
@@ -130,8 +134,9 @@ def clean_play(raw: Any) -> Dict[str, Any]:
         record["decision"] = decision
     nick = raw.get("nick")
     if nick is not None:
-        if not isinstance(nick, str) or not NICK.match(nick) or nick.split("-")[0] not in ANIMALS:
-            raise Invalid("nick: not a guardian name")
+        animal = isinstance(nick, str) and NICK.match(nick) and nick.split("-")[0] in ANIMALS
+        if not animal and not (isinstance(nick, str) and USER.fullmatch(nick) and unicodedata.is_normalized("NFC", nick)):
+            raise Invalid("nick: not a player name")
         record["nick"] = nick
     return record
 

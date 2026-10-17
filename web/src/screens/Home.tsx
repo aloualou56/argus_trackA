@@ -1,6 +1,5 @@
 import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { normalizeClassCode } from "../community/classCode";
-import { GuardianName } from "../components/GuardianName";
 import { Icon } from "../components/Icon";
 import { LevelBars, levelKey } from "../components/LevelBadge";
 import { LiveArgus } from "../components/LiveArgus";
@@ -258,8 +257,6 @@ export function Home({
           <li>{t("home.how4")}</li>
         </ol>
       </section>
-
-      <GuardianName />
 
       <ClassPanel classCode={classCode} setClassCode={setClassCode} onTeacher={onTeacher} />
 

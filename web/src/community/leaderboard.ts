@@ -1,5 +1,6 @@
-// The leaderboard: each guardian name once, with its best score (of the mission, or of all missions).
-// Pure: built from the same anonymous play records as the rest of the community data.
+// The leaderboard: each player once, with their best score (of the mission, or of all missions).
+// Pure: built from the same play records as the rest of the community data.
+import { playerKey } from "./nickname";
 import type { PlayRecord } from "./store";
 
 export interface BoardRow {
@@ -26,8 +27,9 @@ export function leaderboard(records: PlayRecord[], filter: { monument?: string; 
     if (!r.nick) continue;
     if (filter.monument !== undefined && r.monument !== filter.monument) continue;
     if (filter.level !== undefined && r.level !== filter.level) continue;
-    const row = best.get(r.nick);
-    if (!row) best.set(r.nick, { nick: r.nick, score: r.score, day: r.day, games: 1 });
+    const key = playerKey(r.nick);
+    const row = best.get(key);
+    if (!row) best.set(key, { nick: r.nick, score: r.score, day: r.day, games: 1 });
     else {
       row.games += 1;
       if (r.score > row.score || (r.score === row.score && r.day < row.day)) Object.assign(row, { score: r.score, day: r.day });
@@ -38,7 +40,7 @@ export function leaderboard(records: PlayRecord[], filter: { monument?: string; 
 
 /** Where `nick` stands. Players with the same score share a rank. */
 export function standing(rows: BoardRow[], nick: string): Standing {
-  const i = rows.findIndex((r) => r.nick === nick);
+  const i = rows.findIndex((r) => playerKey(r.nick) === playerKey(nick));
   if (i < 0) return { rank: null, players: rows.length, next: null };
   const me = rows[i];
   const rank = rows.findIndex((r) => r.score === me.score) + 1;
