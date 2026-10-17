@@ -10,7 +10,7 @@ import { Open3dButton } from "../components/View3D";
 import { canShow3d, type Focus3d, type Loaded } from "../view3d/preload";
 import { serialOf } from "../view3d/math";
 import { ReadAloud } from "../components/ReadAloud";
-import { endingNarration, guardianBack } from "../audio/narration";
+import { endingNarration, farewellNarration, guardianBack } from "../audio/narration";
 import { Icon } from "../components/Icon";
 import { challengeOutcome, challengeQuery } from "../game/challenge";
 import {
@@ -385,9 +385,7 @@ export function Score({
       {(() => {
         const code = visitorCodeFor(data.visitor_code.items, threats);
         const farewell = mon.guardian ? pick(mon.guardian.farewell) : null;
-        const aloud = [farewell, t("farewell.rules"), ...code.map(({ item }) => `${pick(item.rule)} ${pick(item.why)}`)]
-          .filter(Boolean)
-          .join("\n");
+        const aloud = farewellNarration(i18n, data, mon);
         // Its own block under the guardian, as wide as the screen: on a phone the guardian's portrait
         // column would leave the rules a narrow strip.
         const rules = (

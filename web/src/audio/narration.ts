@@ -85,6 +85,17 @@ export function endingNarration(w: Words, mon: Monument, alarm: Alarm | null, de
     .join("\n");
 }
 
+/** Score screen, further down: the guardian's parting words, then the visitor code, a rule and its why per line. */
+export function farewellNarration(w: Words, data: GameData, mon: Monument): string {
+  return [
+    mon.guardian && w.pick(mon.guardian.farewell),
+    w.t("farewell.rules"),
+    ...data.visitor_code.items.map((item) => `${w.pick(item.rule)} ${w.pick(item.why)}`),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 /** One chapter of a monument's history. */
 export function chapterNarration(w: Words, chapter: HistoryChapter): string {
   return `${w.pick(chapter.title)}.\n${w.pick(chapter.text)}`;
@@ -151,6 +162,7 @@ export function allNarrations(w: Words, data: GameData): string[] {
     for (const chapter of mon.history?.chapters ?? []) texts.push(chapterNarration(w, chapter));
     texts.push(noAlarmNarration(w, mon));
     texts.push(endingNarration(w, mon, null, false, true));
+    texts.push(farewellNarration(w, data, mon));
     for (const alarm of mon.alarms) {
       for (const detected of [true, false]) {
         for (const firstDay of [true, false]) texts.push(endingNarration(w, mon, alarm, detected, firstDay));

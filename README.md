@@ -486,7 +486,7 @@ take nothing home, not a pebble, not a little stone from a mosaic; never write o
 and take your rubbish with you (mice, and pigeon droppings, which are acid); leave the instruments alone: a small
 box on a wall may be a sensor, like the ones the player placed, and one that is moved measures the wrong thing. A
 rule about one of the mission's dangers says so ("linked to your mission", from the ARGUS risk categories each
-rule names). Read aloud with the device's voice. `tools/build_game_data.py` refuses to build without a farewell
+rule names). Read aloud (`farewellNarration` in `web/src/audio/narration.ts`, so the recording script records it too). `tools/build_game_data.py` refuses to build without a farewell
 for every guardian or a rule without both languages; needs review by a conservator (listed in
 `docs/data_notes.md`).
 
@@ -846,7 +846,7 @@ with `eleven_multilingual_v2` (best quality, 1 credit per character), Italian, S
 `eleven_flash_v2_5` (half a credit), about **90,000 credits** for all five. **Microsoft Azure Speech** is the free
 alternative (`"provider": "azure"`). The words come from `web/src/audio/narration.ts`, the same code the screens use,
 so a recording always matches the screen. Each line is one clip named by a hash of its words: when a text changes,
-only that line is recorded again, and until then it is read by the device's voice. 231 lines per language.
+only that line is recorded again, and until then it is read by the device's voice. 269 lines per language.
 
 ```sh
 cd web
