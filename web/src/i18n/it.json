@@ -1,5 +1,5 @@
 {
-  "app.title": "Prototype 3",
+  "app.title": "Aegis",
   "app.tagline": "Progetta la rete di sensori di un monumento vero, poi scopri che cosa hanno fatto gli esperti di ARGUS.",
   "app.skip": "Vai al contenuto",
   "app.loading": "Caricamento del gioco…",
@@ -358,7 +358,7 @@
   "report.toChecked": "Contatti presi dai siti ufficiali, controllati il {date}.",
   "report.mailSubject": "Osservazione di un visitatore: {name} ({id})",
   "report.mailHello": "Buongiorno, durante una visita a {name} ho notato qualcosa che forse va controllato:",
-  "report.mailOutro": "È l'osservazione di un visitatore, non la diagnosi di un esperto. È stata scritta con il gioco Prototype 3 (ARGUS Open Innovation Challenge 2026).",
+  "report.mailOutro": "È l'osservazione di un visitatore, non la diagnosi di un esperto. È stata scritta con il gioco Aegis (ARGUS Open Innovation Challenge 2026).",
   "citizen.fold": "Che cosa osservare ({n} punti)",
   "photo.by": "Foto: {author}",
   "photo.via": "da Wikimedia Commons",

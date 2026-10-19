@@ -127,7 +127,7 @@ describe("ARGUS format", () => {
     expect(doc.metadata.condition.summary).toBe(
       "Damp patches, or white powder on walls (salt coming out). Visitor's note: White powder low on the wall, left of the door.",
     );
-    expect(doc.metadata.source_references).toEqual(["Prototype 3 citizen observation OBS-ABC234, 12/10/2026"]);
+    expect(doc.metadata.source_references).toEqual(["Aegis citizen observation OBS-ABC234, 12/10/2026"]);
     expect(doc.metadata.citizen_observation.position).toEqual({ reference: "wgs84", latitude: report.lat, longitude: report.lng });
     expect(doc.metadata.citizen_observation.near_place).toBe(masks.name.en);
     expect(doc.metadata.citizen_observation.reviewed_by_staff).toBe(false);

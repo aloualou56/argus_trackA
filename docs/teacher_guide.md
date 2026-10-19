@@ -1,4 +1,4 @@
-# Οδηγός για εκπαιδευτικούς · Prototype 3
+# Οδηγός για εκπαιδευτικούς · Aegis
 
 *English version below.*
 
@@ -72,7 +72,7 @@
 
 ---
 
-# Teacher guide · Prototype 3
+# Teacher guide · Aegis
 
 ## At a glance
 

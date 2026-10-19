@@ -1,5 +1,5 @@
 {
-  "app.title": "Prototype 3",
+  "app.title": "Aegis",
   "app.tagline": "Σχεδίασε το δίκτυο αισθητήρων ενός πραγματικού μνημείου και δες τι έκαναν οι ειδικοί του ARGUS.",
   "app.skip": "Μετάβαση στο περιεχόμενο",
   "app.loading": "Το παιχνίδι φορτώνει…",
@@ -358,7 +358,7 @@
   "report.toChecked": "Στοιχεία επικοινωνίας από τις επίσημες ιστοσελίδες, ελεγμένα στις {date}.",
   "report.mailSubject": "Παρατήρηση επισκέπτη: {name} ({id})",
   "report.mailHello": "Καλησπέρα σας, σε μια επίσκεψη στο μνημείο «{name}» πρόσεξα κάτι που ίσως χρειάζεται έλεγχο:",
-  "report.mailOutro": "Είναι η παρατήρηση ενός επισκέπτη, όχι διάγνωση ειδικού. Γράφτηκε με το παιχνίδι «Prototype 3» (ARGUS Open Innovation Challenge 2026).",
+  "report.mailOutro": "Είναι η παρατήρηση ενός επισκέπτη, όχι διάγνωση ειδικού. Γράφτηκε με το παιχνίδι «Aegis» (ARGUS Open Innovation Challenge 2026).",
   "citizen.fold": "Τι να προσέχεις ({n} σημεία)",
   "photo.by": "Φωτογραφία: {author}",
   "photo.via": "από το Wikimedia Commons",

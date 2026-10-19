@@ -1,4 +1,4 @@
-# Prototype 3
+# Aegis
 
 Formerly *Guardian for a Day · Φύλακας για μια μέρα*: the Pi's services and the code still use that name
 (`guardian-*`).
