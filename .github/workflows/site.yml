@@ -52,11 +52,13 @@ jobs:
 
       - name: The newest from ARGUS, from the Pi
         env:
-          PI_LIVE_URL: ${{ vars.PI_LIVE_URL || 'http://pi-address.invalid/live/argus-now.json' }}
+          # the Pi's address is a repository secret: never in the code, masked in the logs
+          PI_LIVE_URL: ${{ secrets.PI_LIVE_URL }}
         run: |
           mkdir -p web/dist/live
           ok() { python3 -I -c "import json,sys; d=json.load(open(sys.argv[1], encoding='utf-8')); sys.exit(0 if d.get('schema')==1 and isinstance(d.get('sites'), dict) else 1)" "$1"; }
-          if curl -fsS --max-time 30 -o web/dist/live/argus-now.json "$PI_LIVE_URL" && ok web/dist/live/argus-now.json; then
+          # (curl -fs: an error does not print the address)
+          if [ -n "$PI_LIVE_URL" ] && curl -fs --max-time 30 -o web/dist/live/argus-now.json "$PI_LIVE_URL" && ok web/dist/live/argus-now.json; then
             echo "live data taken from the Pi"
           else
             rm -f web/dist/live/argus-now.json
