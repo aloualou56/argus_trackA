@@ -1,0 +1,71 @@
+flowchart-elk TB
+  classDef person fill:#0b5d4b,stroke:#08463a,stroke-width:1.5px,color:#ffffff
+  classDef cont fill:#3b6db3,stroke:#2a4d8f,stroke-width:1.5px,color:#ffffff
+  classDef store fill:#dce7f5,stroke:#2a4d8f,stroke-width:1.5px,color:#1b2430
+  classDef argus fill:#a84300,stroke:#7a3100,stroke-width:2px,color:#ffffff
+  classDef ext fill:#8a94a3,stroke:#6b7280,stroke-width:1.5px,color:#ffffff
+  classDef off fill:#ffffff,stroke:#9aa3ad,stroke-width:1.5px,stroke-dasharray:5 4,color:#4b5563
+
+  PLAYER["<b>Player</b><br/>[Person]"]:::person
+  TEACHER["<b>Teacher</b><br/>[Person]"]:::person
+
+  ARGUSAPI["<b>ARGUS API</b><br/>[External system]<br/>api.argusservices.athenarc.gr/api<br/>paged JSON: data[], meta.last_page, meta.total<br/>15 records per page, oldest first"]:::argus
+  ARGUS3D["<b>ARGUS 3D data</b><br/>[External system]<br/>argus.athenarc.gr: Cesium terrain<br/>(layer.json), 3D Tiles (tileset.json)"]:::argus
+  OSMAPI["<b>OpenStreetMap API</b><br/>[External system]"]:::ext
+  VOICE["<b>ElevenLabs</b><br/>[External system]"]:::ext
+  MAPS["<b>Esri, OpenStreetMap,<br/>AWS Terrain Tiles</b><br/>[External systems]"]:::ext
+  WIKI["<b>Wikimedia Commons</b><br/>[External system]"]:::ext
+  SUPA["<b>Supabase</b><br/>[External system, optional]<br/>not configured today"]:::off
+
+  subgraph SYS["Aegis (software system boundary)"]
+    direction TB
+    subgraph TEAM["Team computer: data preparation, run by hand per snapshot"]
+      direction TB
+      FS["<b>Snapshot fetcher</b><br/>[Python 3.9+ script, standard library]<br/>tools/fetch_snapshot.py<br/>12 resources, every page"]:::cont
+      F3["<b>3D fetcher</b><br/>[Python script]<br/>tools/fetch_argus_3d.py<br/>≤ 8 MB per place"]:::cont
+      FB["<b>Plan fetcher</b><br/>[Python script]<br/>tools/fetch_backdrops.py"]:::cont
+      NR["<b>Narration recorder</b><br/>[Node script]<br/>npm run narration"]:::cont
+      BG["<b>Data build</b><br/>[Python scripts]<br/>build_game_data.py,<br/>build_scenes_3d.py"]:::cont
+    end
+    REPO[("<b>Repository</b><br/>[Git, private on GitHub]<br/>code, snapshot_2026-10-12,<br/>content, game data, 3D scenes, audio")]:::store
+    CI["<b>Build and publish pipeline</b><br/>[GitHub Actions: site.yml]<br/>tests → build → live copy → publish<br/>on push to main, nightly 23:00 UTC, by hand"]:::cont
+    SITE[("<b>Website</b><br/>[Static files on GitHub Pages, HTTPS]<br/>site branch: the built app,<br/>data packs, live/argus-now.json")]:::store
+    subgraph PI["Raspberry Pi (Debian 11)"]
+      direction TB
+      GL["<b>Live reader</b><br/>[Python service, systemd timer, own sandboxed user]<br/>guardian_live.py, every 2 hours<br/>threat-contexts and events, new pages only"]:::cont
+      LF[("<b>Live file</b><br/>[JSON, about 22 KB]<br/>argus-now.json, state.json")]:::store
+      CAD["<b>Live file server</b><br/>[Caddy + playit.gg tunnel]<br/>serves /live/argus-now.json only"]:::cont
+    end
+    APP["<b>Web game</b><br/>[Single-page app in the browser: React 18,<br/>TypeScript, Leaflet, three.js; service worker]<br/>map, missions, alarms, scores, 3D view"]:::cont
+    LS[("<b>Device storage</b><br/>[localStorage]<br/>settings, choices, quiz answers,<br/>leaderboard, observation reports")]:::store
+    CLS["<b>Class server</b> (optional)<br/>[Python, tools/class_server.py]<br/>teacher's computer, same network,<br/>anonymous records in class_data/"]:::off
+  end
+
+  FS -- "GET /api/{resource}?page=N<br/>[HTTP, JSON, 0.25 s apart,<br/>4 tries with back-off]" --> ARGUSAPI
+  F3 -- "GET tiles, HEAD for sizes<br/>[HTTPS, robots.txt respected]" --> ARGUS3D
+  FB -- "GET map call<br/>[HTTPS]" --> OSMAPI
+  NR -- "text-to-speech, once<br/>[HTTPS API]" --> VOICE
+  FS -- "writes one JSON file per resource" --> REPO
+  F3 -- "writes glTF models, terrain grids" --> REPO
+  FB -- "writes plans" --> REPO
+  NR -- "writes MP3 clips + manifest" --> REPO
+  REPO -- "snapshot + content" --> BG
+  BG -- "writes game_data.json, scenes" --> REPO
+  REPO -- "triggers on push to main<br/>[GitHub webhook]" --> CI
+
+  GL -- "GET /api/threat-contexts?page=N<br/>GET /api/events?page=N<br/>[HTTP, JSON, 0.5 s apart, ≤ 400 pages,<br/>3 tries, 30 s timeout]" --> ARGUSAPI
+  GL -- "reads and writes" --> LF
+  CAD -- "serves" --> LF
+  CI -- "GET /live/argus-now.json<br/>[HTTP via playit, checked: schema 1]" --> CAD
+  CI -- "force-pushes one commit<br/>to the site branch [git, HTTPS]" --> SITE
+
+  PLAYER -- "uses [browser]" --> APP
+  TEACHER -- "starts sessions" --> CLS
+  SITE -- "delivers the app and data<br/>[HTTPS]" --> APP
+  APP -- "reads live/argus-now.json<br/>[HTTPS, ≤ every 10 min, 8 s timeout]" --> SITE
+  APP -- "loads tiles while playing<br/>[HTTPS GET]" --> MAPS
+  APP -- "loads photos in 3D<br/>[HTTPS GET]" --> WIKI
+  APP -- "saves and reads<br/>[Web Storage API]" --> LS
+  APP -. "sends anonymous records<br/>[HTTP, JSON, LAN]" .-> CLS
+  APP -. "would share scores<br/>[HTTPS, REST]" .-> SUPA
+
