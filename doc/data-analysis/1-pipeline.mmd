@@ -1,0 +1,119 @@
+flowchart-elk TB
+  classDef argus fill:#fff1e8,stroke:#a84300,stroke-width:2px,color:#1b2430
+  classDef ours fill:#ffffff,stroke:#5b6b7a,stroke-width:1.5px,color:#1b2430
+  classDef step fill:#eef4f1,stroke:#0b5d4b,stroke-width:1.5px,color:#1b2430
+  classDef drop fill:#fdf0f0,stroke:#b42318,stroke-width:1.2px,color:#1b2430
+  classDef out fill:#e8eef8,stroke:#2a4d8f,stroke-width:1.5px,color:#1b2430
+  classDef game fill:#f6f0fb,stroke:#6a3d9a,stroke-width:1.5px,color:#1b2430
+
+  %% ------------------------------------------------------------------ inputs
+  subgraph IN["Inputs · CRISP-DM: data understanding"]
+    direction LR
+    SNAP["<b>ARGUS snapshot of 12 Oct 2026</b> (raw API records, read-only)<br/>156 threats · 1,350 threat-contexts · 1,543 events ·<br/>181 policies · 123 installed instruments · 117 devices ·<br/>117 instruments · 40 instrument types · 5 assets ·<br/>+ decisions, decision-contexts (first snapshot)"]:::argus
+    CONT["<b>Our curated tables</b> (content/*.json)<br/>sensor cards (prices, ARGUS instrument types) ·<br/>danger → sensor map · alarm rule → sensor map ·<br/>AI-signal patterns · coins per level · monument texts"]:::ours
+  end
+
+  %% ------------------------------------------------------------------ build_game_data.py
+  subgraph BUILD["build_game_data.py, once per snapshot · CRISP-DM: data preparation and modelling"]
+    direction TB
+    L1["<b>1. Load and clean</b><br/>parse each record's metadata (JSON in a string)<br/>drop the test record 'Katastrofh'<br/>match each monument (pilot) to its asset"]:::step
+
+    subgraph DANG["2. Dangers"]
+      direction TB
+      D1["<b>Risk scenarios</b><br/>threats of kind abc_risk_scenario<br/><b>99</b> scenarios from 156 records"]:::step
+      D2["<b>ABC risk score</b><br/>a, b, c and magnitude (mr)<br/>→ priority = game level: low <b>30</b> ·<br/>medium <b>20</b> · high <b>16</b> · extreme <b>23</b> ·<br/>catastrophic <b>10</b>"]:::step
+      D3["<b>Which sensors can warn</b><br/>danger → sensor map, by scenario,<br/>else by risk category<br/>primary (watches it) / supporting"]:::step
+      D4["<b>Risk history</b><br/>threat-contexts (ira_threat_evaluation):<br/>periods raised above 'inactive'<br/>(watch, active, escalated), peak<br/>probability, latest state, thresholds<br/><b>1,133</b> checks of 51 scenarios,<br/><b>1</b> raised (watch)"]:::step
+    end
+
+    subgraph NET["3. ARGUS's own sensor network"]
+      direction TB
+      N1["<b>Instrument → sensor card</b><br/>installed instrument → instrument →<br/>instrument type → the game's card<br/><b>123</b> records = <b>117</b> distinct instruments"]:::step
+      N2["<b>Positions</b><br/>lat/lon from installed devices,<br/>grouped into map points;<br/>unplaced: virtual or no coordinates"]:::step
+      N3["<b>Count per card</b><br/>ARGUS's network, for the<br/>'you vs ARGUS' comparison"]:::step
+    end
+
+    subgraph ALARM["4. Alarm funnel (events, per monument)"]
+      direction TB
+      A1["<b>a. All alarm records</b><br/><b>337</b> AD-RT alarms:<br/>EK (expert rule) <b>217</b>, DL (AI model) <b>120</b>"]:::step
+      A2["<b>b. De-duplicate</b><br/>same type, rule, timestamp and variables<br/>(differing values flagged) → <b>257</b> unique"]:::step
+      A3["<b>c. AI alarms → a rule</b><br/>main signal = top feature contribution,<br/>kept only if its share ≥ 30% and the<br/>signal maps to a sensor"]:::step
+      X0["<b>Excluded: AI alarms − 66</b><br/>no clear main signal (&lt; 30 %): 35<br/>main signal not mapped to a sensor<br/>(e.g. wind direction): 31"]:::drop
+      X1["<b>Excluded: incomplete − 24</b><br/>not exactly one variable: 23<br/>rule not in the sensor map: 1<br/>(no rule name, missing value: 0)"]:::drop
+      X2["<b>Excluded: implausible − 77</b><br/>humidity outside 0–100 %: 31<br/>temperature outside −50 to 60 °C: 19<br/>daily range (R9a) outside 0–30: 18<br/>1-hour change (R9b) outside 0–10: 6<br/>soil moisture exactly 0 (dropout): 3"]:::drop
+      A4["<b>d. Measure each alarm</b><br/><b>90</b> usable alarms<br/>direction above/below the threshold<br/>severity = value ÷ threshold (×)<br/>flag: threshold ≠ current AD-RT policy"]:::step
+      A5["<b>e. Episodes</b><br/>same rule, a new episode after a 48 h gap<br/>flat signal: spread &lt; 2 % of the mean<br/>over ≥ 3 alarms (probably stuck)"]:::step
+      A6["<b>f. Featured alarms</b><br/>first, peak and last of each episode,<br/>topped up to ≥ 5 by severity,<br/>at most 10 (peaks kept first)<br/>→ <b>33</b> featured"]:::step
+      A7["<b>g. Link to sensors and decisions</b><br/>which ARGUS instruments raised it (and where)<br/>what ARGUS decided after it (decision-contexts)"]:::step
+    end
+
+    subgraph LEV["5. Levels and missions"]
+      direction TB
+      M1["<b>Levels</b><br/>one per priority that has dangers:<br/><b>19</b> levels over 5 monuments<br/>coins per level (more serious, more coins)"]:::step
+      M2["<b>Mission: 3 dangers</b><br/>curated, or the top 3 by magnitude<br/>(no duplicates, only dangers a sensor<br/>can watch; else from nearby levels)"]:::step
+      M3["<b>Alarm to replay</b><br/>curated, or the strongest peak<br/>never a flat (stuck) signal"]:::step
+    end
+
+    V["<b>6. Validate</b> (--check) · CRISP-DM: evaluation<br/>every risk category, card, rule and text<br/>known; any problem stops the build"]:::step
+  end
+
+  OUT1["<b>game_data.json</b><br/>monuments, dangers + risk history, ARGUS network,<br/>featured alarms, levels, missions, alarm filter rules"]:::out
+  OUT2["<b>docs/data_notes.md</b><br/>funnel counts per monument, why alarms<br/>were excluded, data quirks, assumptions<br/>that need a human"]:::out
+
+  %% ------------------------------------------------------------------ live
+  subgraph LIVE["Live data on the Raspberry Pi, every 2 hours · CRISP-DM: deployment"]
+    direction TB
+    PAPI["<b>ARGUS API</b> (live)<br/>GET, read-only"]:::argus
+    P1["<b>New records only</b><br/>threat-contexts and events<br/>since the last run"]:::step
+    P2["<b>Reduce</b><br/>latest check of each danger,<br/>10 newest AD-RT alarms<br/>per monument"]:::step
+    P3["<b>argus-now.json</b><br/>about 22 KB, data as ARGUS gave it<br/>(no interpretation on the Pi)"]:::out
+  end
+
+  %% ------------------------------------------------------------------ in the game
+  subgraph PLAY["In the game, in the browser · CRISP-DM: deployment"]
+    direction TB
+    G1["<b>A week on duty</b><br/>day 1: the level's alarm;<br/>next days: other real alarms,<br/>a different kind each day, oldest first<br/>(up to 7 days)"]:::game
+    G2["<b>Detection</b><br/>an alarm rule needs groups of sensors:<br/>caught if the network has at least<br/>one sensor from every group"]:::game
+    G3["<b>Coverage of the 3 dangers</b><br/>a primary sensor = full<br/>only supporting = partial"]:::game
+    G4["<b>Score out of 100</b><br/>dangers: 20 full / 8 partial each ·<br/>alarm caught: 25 · coins on useful<br/>sensors: up to 15 → ≥ 85 excellent,<br/>≥ 60 good, ≥ 30 learning"]:::game
+    G5["<b>You vs ARGUS</b><br/>sensors per card, side by side,<br/>and discussion prompts<br/>(never a penalty)"]:::game
+    G6["<b>Live from ARGUS</b><br/>same alarm filter as the build;<br/>dangers raised (escalated, active, watch)<br/>or the one nearest its watch level;<br/>checks ≤ 14 days, alarms ≤ 2 months"]:::game
+    G7["<b>Damage in 3D</b><br/>years × authored rates per danger<br/>an illustration, never a forecast"]:::game
+  end
+
+  %% ------------------------------------------------------------------ flows
+  SNAP --> L1
+  CONT --> L1
+  L1 --> D1 --> D2 --> D3
+  D1 --> D4
+  L1 --> N1 --> N2 --> N3
+  L1 --> A1 --> A2 --> A3
+  A3 --> X0
+  A3 --> X1
+  A3 --> X2
+  A3 --> A4 --> A5 --> A6 --> A7
+  N2 -. "positions" .-> A7
+  D2 --> M1
+  D3 --> M2
+  M1 --> M2
+  A6 --> M3
+  M2 --> V
+  M3 --> V
+  D4 --> V
+  N3 --> V
+  A7 --> V
+  V --> OUT1
+  V --> OUT2
+
+  PAPI --> P1 --> P2 --> P3
+
+  OUT1 --> G1
+  G1 --> G2
+  OUT1 --> G3
+  G2 --> G4
+  G3 --> G4
+  G4 --> G5
+  OUT1 --> G5
+  P3 --> G6
+  OUT1 -. "alarm filter rules" .-> G6
+  OUT1 --> G7
