@@ -1,0 +1,301 @@
+% =====================================================================
+%  AEGIS — one-page summary (ARGUS Open Innovation Challenge 2026)
+%  Compile with XeLaTeX:   xelatex AEGIS_2.tex
+%  All fonts are bundled in ./fonts (Fira Sans family + Font Awesome 7
+%  Free Solid), so nothing needs to be installed system-wide.
+%
+%  Layout note: every box and text block is placed at absolute page
+%  coordinates (unit = 1bp, origin = top-left corner of the A4 page),
+%  taken from the original PDF, so the output lines up 1:1 with it.
+%  Paragraphs are still normal TeX paragraphs (justification, Greek
+%  hyphenation and microtype protrusion are done by TeX), so you can edit
+%  the text; just keep in mind that boxes do not grow by themselves.
+% =====================================================================
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=0pt]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{greek}
+\setotherlanguage{english}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{microtype}
+\usepackage{eso-pic}
+\usepackage{etoolbox}
+
+% ---------------------------------------------------------------- fonts
+\defaultfontfeatures{Path=fonts/, Ligatures=TeX}
+\setmainfont{FiraSans-Regular.ttf}[BoldFont=FiraSans-SemiBold.ttf]
+\newfontfamily\lightfont{FiraSans-Light.ttf}
+\newfontfamily\condsemi{FiraSansExtraCondensed-SemiBold.ttf}
+\newfontfamily\condbold{FiraSansExtraCondensed-Bold.ttf}
+\newfontfamily\condxbold{FiraSansExtraCondensed-ExtraBold.ttf}
+\newfontfamily\monofont{FiraMono-Regular.ttf}
+\newfontfamily\FA{FontAwesome7Free-Solid-900.otf}
+% Font Awesome icons by code point
+\newcommand\fa[1]{{\FA\symbol{"#1}}}
+
+% --------------------------------------------------------------- colors
+\definecolor{aegis}{HTML}{0B5D4B}     % main green
+\definecolor{aegisdark}{HTML}{084839} % header bottom strip
+\definecolor{aegisline}{HTML}{14705C} % header decoration lines
+\definecolor{ink}{HTML}{14211B}       % dark text / badge rings
+\definecolor{muted}{HTML}{5F6E66}     % small caps labels
+\definecolor{soft}{HTML}{EDF2EB}      % light green panels
+\definecolor{frame}{HTML}{CFD9D1}     % card border
+\definecolor{paper}{HTML}{FBFCFA}     % page background
+
+\pagestyle{empty}
+\setlength\parindent{0pt}
+\setlength\parskip{0pt}
+
+% --------------------------------------------------------------- helpers
+% \T(x,y){text}      : text whose baseline origin sits at (x,y)
+% \Par(x,y){w}{text} : justified paragraph, first baseline at (x,y)
+% \Rag(x,y){w}{text} : ragged-right paragraph, first baseline at (x,y)
+% Text is collected while the drawing is built and placed on top of it at
+% shipout with \put, at exact positions (bp -> sp with exact arithmetic).
+\def\pagetext{}
+\def\spx#1{\fpeval{round((#1)*65781.76)}}
+\def\spy#1{\fpeval{round(-(#1)*65781.76)}}
+\def\T(#1,#2)#3{\gappto\pagetext{\put(\spx{#1},\spy{#2}){#3}}}
+\def\Par(#1,#2)#3#4{\gappto\pagetext{\put(\spx{#1},\spy{#2})%
+  {\parbox[t]{#3bp}{\leavevmode#4}}}}
+\def\Rag(#1,#2)#3#4{\gappto\pagetext{\put(\spx{#1},\spy{#2})%
+  {\parbox[t]{#3bp}{\raggedright\leavevmode#4}}}}
+% rounded box: \RBox{color}{radius}(x0,y0)(x1,y1)
+\def\RBox#1#2(#3,#4)(#5,#6){\fill[#1,rounded corners=#2bp] (#3,#4) rectangle (#5,#6);}
+% section badge (dark ring / white ring / green disc) with a white icon
+\def\Badge(#1,#2)#3{%
+  \fill[ink]   (#1,#2) circle (8.787bp);
+  \fill[white] (#1,#2) circle (7.937bp);
+  \fill[aegis] (#1,#2) circle (6.662bp);}
+% big stat badge
+\def\BigBadge(#1,#2){%
+  \fill[ink]   (#1,#2) circle (11.055bp);
+  \fill[white] (#1,#2) circle (10.205bp);
+  \fill[aegis] (#1,#2) circle (8.929bp);}
+% font-size shortcuts
+\def\bodyA{\fontsize{9.7}{12.6}\selectfont}    % problem box
+\def\bodyB{\fontsize{9.2}{11.9}\selectfont}    % cards
+\def\bodyC{\fontsize{8.4}{10.6}\selectfont}    % step cards
+\def\headfont{\condbold\fontsize{13.5}{16}\selectfont\color{ink}}
+
+% shortcuts used in the stat tiles, step cards and the features line
+\def\statnum{\condbold\fontsize{15}{18}\selectfont\color{ink}}
+\def\statlbl{\monofont\fontsize{6.1}{7}\selectfont\color{muted}}
+\def\staticon{\fontsize{9}{10}\selectfont\color{white}}
+\def\stepnum{\condbold\fontsize{10}{12}\selectfont\color{white}}
+\def\steptitle{\condbold\fontsize{11}{13}\selectfont\color{ink}}
+\def\stepicon{\fontsize{9.5}{11}\selectfont\color{aegis}}
+\def\chev(#1){\T(#1,541.520){\fontsize{8}{9}\selectfont\color{aegis}\fa{232A}}}
+\def\ico#1{{\color{aegis}\fa{#1}}\,}
+
+\begin{document}
+\null
+\begin{tikzpicture}[remember picture,overlay,x=1bp,y=-1bp,
+                    shift={(current page.north west)}]
+
+% ================================================================ page
+\fill[paper] (0,0) rectangle (595.28,841.89);
+
+% ============================================================== header
+\fill[aegis] (0,-0.01) rectangle (595.28,93.54);
+\begin{scope}
+  \clip (0,0) rectangle (595.28,93.54);
+  \foreach \r in {40,52,64,76,88,100}
+    \draw[aegisline,line width=0.35pt] (657.64,172.91) circle (\r mm);
+  \foreach \a in {95,110,125,140,155,170}
+    \draw[aegisline,line width=0.35pt] (657.64,172.91) -- ++(\a:110mm);
+\end{scope}
+\fill[aegisdark] (0,90.703) rectangle (595.28,93.538);
+
+% shield + temple logo
+\draw[white,line width=4.2169bp,line join=round]
+  (41.993,21.072) .. controls (52.907,21.072) and (61.835,18.096) .. (66.796,14.127)
+  .. controls (71.757,18.096) and (80.686,21.072) .. (91.600,21.072)
+  -- (91.600,43.891)
+  .. controls (91.600,58.773) and (80.686,68.694) .. (66.796,73.655)
+  .. controls (52.907,68.694) and (41.993,58.773) .. (41.993,43.891)
+  -- cycle;
+\fill[white] (51.914,33.969) -- (66.796,26.529) -- (81.679,33.969) -- cycle;
+\fill[white] (51.914,34.962) rectangle (81.679,36.946);
+\foreach \x in {53.899,59.603,65.308,71.013,76.718}
+  \fill[white] (\x,38.435) rectangle ++(2.976,14.386);
+\fill[white] (50.922,54.308) rectangle (82.671,56.292);
+
+\T(102.247,44.782){\condxbold\fontsize{36}{40}\selectfont\color{white}AEGIS}
+\T(103.381,69.727){\lightfont\fontsize{13.2}{16}\selectfont\color{white}Ο επισκέπτης γίνεται φύλακας του μνημείου}
+
+% pills
+\RBox{white}{3.118}(353.909,22.381)(393.655,38.269)
+\T(360.712,33.864){\condsemi\fontsize{9.6}{11}\selectfont\color{aegis}Track A}
+\draw[white,line width=0.6pt,rounded corners=3.118bp] (398.121,21.200) rectangle (555.096,39.450);
+\T(404.925,33.103){\condsemi\fontsize{9.6}{11}\selectfont\color{white}ARGUS Open Innovation Challenge 2026}
+
+% footer bar
+\fill[aegis] (0,829.984) rectangle (595.28,841.89);
+
+% ========================================================== stat tiles
+
+\RBox{soft}{4.535}(39.685,106.299)(162.285,145.060)
+\BigBadge(60.378,123.874)
+\T(55.895,127.254){\staticon\fa{1F3DB}}
+\T(77.953,123.670){\statnum 5}
+\T(77.9529695964,136.943){\statlbl ΜΝΗΜΕΙΑ ΤΗΣ ΕΥΡΩΠΗΣ}
+
+\RBox{soft}{4.535}(170.787,106.299)(293.387,145.060)
+\BigBadge(191.480,123.874)
+\T(186.997,127.236){\staticon\fa{F51E}}
+\T(208.756,123.741){\statnum 12–16}
+\T(209.055,137.014){\statlbl ΝΟΜΙΣΜΑΤΑ}
+
+\RBox{soft}{4.535}(301.890,106.299)(424.490,145.060)
+\BigBadge(322.583,124.298)
+\T(318.660,127.941){\staticon\fa{F073}}
+\T(340.1579543947,125.267){\statnum έως 7}
+\T(340.1579695964,138.540){\statlbl ΜΕΡΕΣ ΩΣ ΦΥΛΑΚΑΣ}
+
+\RBox{soft}{4.535}(432.992,106.299)(555.592,145.060)
+\BigBadge(453.685,123.874)
+\T(448.641,127.201){\staticon\fa{F1AB}}
+\T(471.260,123.670){\statnum 5}
+\T(471.260,136.943){\statlbl ΓΛΩΣΣΕΣ}
+
+% ========================================================= the problem
+\Badge(48.472,165.753){}
+\T(44.885,168.667){\fontsize{7.2}{8}\selectfont\color{white}\fa{26A0}}
+\T(62.6459543947,169.375){\headfont Το πρόβλημα}
+
+\RBox{white}{4.535}(39.685,177.657)(555.597,257.598)
+\draw[aegis,line width=3.6851bp] (41.528,177.657) -- (41.528,257.598);
+\Par(56.693,195.095){485.87}{\bodyA\color{ink}%
+Κανείς δεν αμφισβητεί ότι το ARGUS έχει κάνει μια σπουδαία δουλειά.
+Μετρά, υπολογίζει και ειδοποιεί για τους κινδύνους που απειλούν πέντε
+ευρωπαϊκά μνημεία. Η προστασία όμως, δεν εξαρτάται μόνο από τους
+αισθητήρες. \textbf{Η προστασία των μνημείων εξαρτάται και από όσους τα
+επισκέπτονται.} Το ARGUS δεν έχει κάποιο μέσο ευαισθητοποίησης των
+πολιτών, οπότε οι επισκέπτες των μνημείων δεν γνωρίζουν τι πρέπει να
+προσέξουν, ή γιατί υπάρχουν κανόνες για τους επισκέπτες. Χωρίς την
+ευαισθητοποίηση του κοινού, η διάσωσή τους μένει ημιτελής.}
+
+% ===================================================== why it matters
+\RBox{frame}{6.367}(39.685,266.846)(291.972,390.832)
+\RBox{white}{5.669}(40.382,267.543)(291.274,390.135)
+\Badge(62.209,286.536){}
+\T(59.519,289.226){\fontsize{7.2}{8}\selectfont\color{white}\fa{F252}}
+\T(76.3829239911,290.159){\headfont Γιατί υπάρχει}
+\Par(53.422,306.835){224.815}{\bodyB\color{black}%
+Η φθορά ενός μνημείου είναι αργή και αθόρυβη. Η υγρασία ανεβαίνει στους
+τοίχους για χρόνια, το αλάτι βγαίνει στην πέτρα, το ψηφιδωτό χάνει
+ψηφίδες. Όταν φανεί με γυμνό μάτι, η ζημιά έχει ήδη γίνει. Η γνώση που
+την προλαβαίνει μένει στους ειδικούς. Έτσι το κοινό βλέπει μόνο το
+αποτέλεσμα, ποτέ τη φροντίδα, και δεν καταλαβαίνει ότι μετράει και το
+δικό του χέρι.}
+
+% ============================================================ our idea
+\RBox{aegis}{5.669}(303.307,266.846)(555.594,390.832)
+\fill[white] (325.135,285.839) circle (8.788bp);
+\T(322.445,288.417){\fontsize{7.2}{8}\selectfont\color{aegis}\fa{1F4A1}}
+\T(339.3079239911,289.461){\condbold\fontsize{13.5}{16}\selectfont\color{white}Η ιδέα μας}
+\Par(316.347,306.137){226.207}{\bodyB\color{white}%
+Σκεπτόμενοι πώς μπορούμε να εξηγήσουμε τη δουλειά του ARGUS,
+συνειδητοποιήσαμε πως τα λόγια δεν ωφελούν. Γι’ αυτό, μέσω του
+\textbf{AEGIS}, δώσαμε σε οποιονδήποτε την ευκαιρία να \textbf{γίνει
+φύλακας} στα μνημεία του ARGUS για έως και 7 μέρες, δίνοντας ρεπό σε
+έναν επινοημένο φύλακα του μνημείου.}
+
+% ======================================================== our approach
+\RBox{soft}{5.669}(39.685,400.078)(555.597,657.692)
+\Badge(61.512,418.506){}
+\T(57.925,421.196){\fontsize{7.2}{8}\selectfont\color{white}\fa{F4D7}}
+\T(75.6859391929,422.129){\headfont Πώς το προσεγγίσαμε}
+\Par(52.725,438.804){489.83}{\bodyB\color{black}%
+Η προσέγγισή μας βασίστηκε στα δεδομένα που μας δόθηκαν. Οι κίνδυνοι, οι
+θέσεις των αισθητήρων και οι συναγερμοί προέρχονται από το ARGUS.}
+
+% step cards: \Step{card x0}{number}{nx}{title}{icon}{icon x}{text}
+
+\RBox{white}{4.535}(52.725,458.279)(165.404,618.783)
+\fill[aegis] (69.166,474.155) circle (7.370bp);
+\T(67.218,477.517){\stepnum 1}
+\T(81.0719543947,477.777){\steptitle Τοποθέτηση}
+\T(146.867,477.777){\stepicon\fa{F51E}}
+\Rag(61.796,491.739){94.537}{\bodyC\color{black}%
+Ο παίκτης, με 12 έως 16 νομίσματα, ανάλογα με το επίπεδο κινδύνου,
+καλείται να επιλέξει ανάμεσα σε μια γκάμα αισθητήρων και να τους
+τοποθετήσει πάνω στο εκάστοτε μνημείο.}
+\chev(169.716)
+
+\RBox{white}{4.535}(178.442,458.279)(291.121,618.783)
+\fill[aegis] (194.883,474.155) circle (7.370bp);
+\T(192.786,477.592){\stepnum 2}
+\T(206.788,477.778){\steptitle Συναγερμός}
+\T(273.767,477.778){\stepicon\fa{1F514}}
+\Rag(187.5127719733,491.740){94.537}{\bodyC\color{black}%
+Μόλις ολοκληρώσει την τοποθέτηση, έρχεται αντιμέτωπος με έναν πραγματικό
+συναγερμό του ARGUS και εξετάζει αν το δίκτυό του θα είχε ανιχνεύσει τον
+κίνδυνο. Αμέσως μετά, του εμφανίζονται οι αισθητήρες που τοποθέτησε το
+ARGUS, πού και γιατί.}
+\chev(295.433)
+
+\RBox{white}{4.535}(304.158,458.279)(416.837,618.783)
+\fill[aegis] (320.599,474.154) circle (7.370bp);
+\T(318.432,477.506){\stepnum 3}
+\T(332.5048175786,477.777){\steptitle Η ζημιά σε 3D}
+\T(398.300,477.777){\stepicon\fa{F1B2}}
+\Rag(313.229,491.739){94.537}{\bodyC\color{black}%
+Τέλος, του εμφανίζεται ως εικονογράφηση η ζημιά που θα γινόταν, πάνω σε
+πραγματικό 3D μοντέλο του ARGUS, αν κανείς δεν το πρόσεχε.}
+\chev(421.1494831394)
+
+\RBox{white}{4.535}(429.875,458.279)(542.554,618.783)
+\fill[aegis] (446.316,474.155) circle (7.370bp);
+\T(443.955,477.607){\stepnum 4}
+\T(458.221,477.778){\steptitle Ο φύλακας}
+\T(522.834,477.778){\stepicon\fa{F505}}
+\Rag(438.9458327804,491.740){94.537}{\bodyC\color{black}%
+Ο φύλακας, που χάρη στον παίκτη πήρε ρεπό, επιστρέφει με εκπαιδευτικό
+ύφος και του εξηγεί γιατί είναι σημαντικό, όταν επισκεπτόμαστε ένα
+μνημείο, να ακολουθούμε τους κανόνες που έχουν οριστεί.}
+
+% features line
+\Rag(52.7252584303,633.039){489.83}{\bodyB\color{black}%
+Όλα τα παραπάνω είναι διαθέσιμα σε \ico{1F310}\textbf{5 γλώσσες}, τα
+κείμενα \ico{1F50A}\textbf{διαβάζονται φωναχτά}, το παιχνίδι παίζεται σε
+\ico{1F4BB}\textbf{υπολογιστή} και \ico{F3CF}\textbf{κινητό} και είναι
+κατάλληλο για τη \ico{1F3EB}\textbf{σχολική τάξη}.}
+
+% =================================================== what the user gains
+\RBox{ink}{6.367}(39.685,666.939)(291.972,802.973)
+\RBox{white}{5.669}(40.382,667.636)(291.274,802.276)
+\Badge(62.209,686.630){}
+\T(59.071,689.264){\fontsize{7.2}{8}\selectfont\color{white}\fa{1F464}}
+\T(76.3828479822,690.252){\headfont Τι κερδίζει ο χρήστης}
+\Par(53.422,706.928){224.815}{\bodyB\color{black}%
+Καταλαβαίνει εις βάθος τις ανάγκες και τους κινδύνους ενός μνημείου.
+Επιπλέον, φεύγει με έναν \textbf{κώδικα επισκέπτη} και μια \textbf{λίστα}
+με όσα να προσέχει στην επόμενη επίσκεψη. Αν δει κάτι, το γράφει σε μια
+\textbf{κάρτα παρατήρησης} και τη στέλνει, αν θέλει, στον φορέα του
+μνημείου. Ο εκπαιδευτικός βλέπει τις επιλογές της τάξης δίπλα σε όσα
+εγκατέστησε το ARGUS.}
+
+% ================================================== what ARGUS gains
+\RBox{ink}{6.367}(303.307,666.939)(555.594,802.973)
+\RBox{white}{5.669}(304.004,667.636)(554.896,802.276)
+\fill[ink]   (325.832,686.630) circle (8.788bp);
+\fill[white] (325.832,686.630) circle (7.937bp);
+\fill[aegis] (325.832,686.630) circle (6.661bp);
+\T(322.245,689.320){\fontsize{7.2}{8}\selectfont\color{white}\fa{1F4E1}}
+\T(340.0048935875,690.253){\headfont Τι κερδίζει το ARGUS}
+\Par(317.044,707.131){224.813}{\bodyB\color{black}%
+Αποκτά ένα \textbf{δημόσιο πρόσωπο} για τα δεδομένα του και πολίτες
+εκπαιδευμένους σε αυτά. Οι παρατηρήσεις των πολιτών αποθηκεύονται ήδη
+στη δική του μορφή εγγραφής πολιτιστικής τεκμηρίωσης, έτοιμες αν το
+ARGUS αποφασίσει να τις δεχτεί. Το παιχνίδι φέρνει κάθε μέρα τους
+νεότερους ελέγχους κινδύνου του ARGUS, οπότε ο παίκτης βλέπει την πιο
+πρόσφατη κατάσταση του μνημείου.}
+
+\end{tikzpicture}%
+\AddToShipoutPictureFG*{\AtPageUpperLeft{\setlength\unitlength{1sp}\selectlanguage{greek}\pagetext}}
+\end{document}
