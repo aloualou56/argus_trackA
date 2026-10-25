@@ -6,6 +6,7 @@ import { GameMap, type MapApi, type MapMode } from "./components/GameMap";
 import { BrandMark } from "./components/BrandMark";
 import { LangMenu } from "./components/LangMenu";
 import { A11yMenu } from "./components/A11yMenu";
+import { About } from "./components/About";
 import { enterFullscreen } from "./a11y/fullscreen";
 import { getSettings, motionReduced } from "./a11y/settings";
 import { play, playReplay } from "./audio/sounds";
@@ -608,6 +609,7 @@ export default function App() {
             <span>{t("app.title")}</span>
           </button>
           <div className="topbar-tools">
+            <About />
             <A11yMenu />
             <LangMenu />
           </div>

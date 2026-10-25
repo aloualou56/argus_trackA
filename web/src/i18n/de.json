@@ -623,5 +623,6 @@
   "map.moveHere": "Zum Kreuz verschieben",
   "map.pinMoved": "Sensor verschoben.",
   "a11y.fullscreen": "Vollbild",
-  "a11y.fullscreenHint": "Das Spiel füllt den Bildschirm, wenn du auf „{start}“ tippst. Mit der Zurück-Taste des Handys verlässt du es."
+  "a11y.fullscreenHint": "Das Spiel füllt den Bildschirm, wenn du auf „{start}“ tippst. Mit der Zurück-Taste des Handys verlässt du es.",
+  "about.open": "Über AEGIS"
 }

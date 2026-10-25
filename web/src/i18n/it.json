@@ -623,5 +623,6 @@
   "map.moveHere": "Spostalo sulla croce",
   "map.pinMoved": "Sensore spostato.",
   "a11y.fullscreen": "Schermo intero",
-  "a11y.fullscreenHint": "Il gioco riempie lo schermo quando premi «{start}». Esci con il tasto indietro del telefono."
+  "a11y.fullscreenHint": "Il gioco riempie lo schermo quando premi «{start}». Esci con il tasto indietro del telefono.",
+  "about.open": "Informazioni su AEGIS"
 }

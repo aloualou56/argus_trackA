@@ -623,5 +623,6 @@
   "map.moveHere": "Move it to the cross",
   "map.pinMoved": "Sensor moved.",
   "a11y.fullscreen": "Full screen",
-  "a11y.fullscreenHint": "The game fills the screen when you press “{start}”. Your phone's back button leaves it."
+  "a11y.fullscreenHint": "The game fills the screen when you press “{start}”. Your phone's back button leaves it.",
+  "about.open": "About AEGIS"
 }

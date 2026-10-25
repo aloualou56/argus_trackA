@@ -623,5 +623,6 @@
   "map.moveHere": "Llevarlo a la cruz",
   "map.pinMoved": "Sensor movido.",
   "a11y.fullscreen": "Pantalla completa",
-  "a11y.fullscreenHint": "El juego llena la pantalla cuando pulsas «{start}». Sales con el botón de volver del móvil."
+  "a11y.fullscreenHint": "El juego llena la pantalla cuando pulsas «{start}». Sales con el botón de volver del móvil.",
+  "about.open": "Acerca de AEGIS"
 }
