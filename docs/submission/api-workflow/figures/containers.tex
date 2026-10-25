@@ -1,0 +1,22 @@
+\begin{tikzpicture}[x=1cm,y=1cm]
+\node[box,text width=3.9cm] (api) at (0,0) {\textbf{ARGUS API}\\\footnotesize Paginated monitoring records};
+\node[box,text width=3.9cm] (snapshot) at (-3.8,-2.0) {Snapshot fetcher\\\footnotesize Preparation host, per data update};
+\node[box,text width=3.9cm] (reader) at (3.8,-2.0) {Incremental reader\\\footnotesize Raspberry Pi, two-hour timer};
+\node[box,text width=3.9cm] (repo) at (-3.8,-4.2) {Repository and data builder\\\footnotesize Snapshots, educational content, gameplay pack and spatial assets};
+\node[box,text width=3.9cm] (public) at (3.8,-4.2) {Published recent-data file\\\footnotesize Caddy and tunnel serve JSON; reader state stays on the Pi};
+\node[box,text width=3.9cm] (actions) at (0,-6.5) {GitHub Actions\\\footnotesize Tests, static build and recent-data copy};
+\node[box,text width=3.9cm] (pages) at (0,-8.6) {GitHub Pages\\\footnotesize Static application, gameplay data, recent-data copy and revision};
+\node[box,text width=3.9cm] (browser) at (0,-10.8) {Player's browser\\\footnotesize Game, local storage, service worker and deferred 3D viewer};
+\node[box,text width=2.5cm,dashed] (class) at (-5.1,-10.8) {Class server\\\footnotesize Optional\\local records};
+\node[box,text width=2.5cm] (tiles) at (5.1,-10.8) {Asset providers\\\footnotesize Maps, elevation and photos};
+\draw[flow] (api.south west) -- (snapshot.north east);
+\draw[flow] (api.south east) -- (reader.north west);
+\draw[flow] (snapshot) -- (repo);
+\draw[flow] (reader) -- (public);
+\draw[flow] (repo.south east) -- (actions.north west);
+\draw[flow] (public.south west) -- (actions.north east);
+\draw[flow] (actions) -- (pages);
+\draw[flow] (pages) -- (browser);
+\draw[optional] (browser) -- (class);
+\draw[flow] (tiles) -- (browser);
+\end{tikzpicture}

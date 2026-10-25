@@ -1,0 +1,448 @@
+{
+  "snapshot": "snapshot_2026-10-12",
+  "resources": {
+    "assets": {
+      "count": 5,
+      "actual_count": 5,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:00:44+03:00"
+    },
+    "asset-states": {
+      "count": 47,
+      "actual_count": 47,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:00:48+03:00"
+    },
+    "threats": {
+      "count": 156,
+      "actual_count": 156,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:00:53+03:00"
+    },
+    "events": {
+      "count": 1543,
+      "actual_count": 1543,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:01:38+03:00"
+    },
+    "threat-contexts": {
+      "count": 1350,
+      "actual_count": 1350,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:02:22+03:00"
+    },
+    "policies": {
+      "count": 181,
+      "actual_count": 181,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:02:30+03:00"
+    },
+    "installed-instruments": {
+      "count": 123,
+      "actual_count": 123,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:02:35+03:00"
+    },
+    "installed-devices": {
+      "count": 117,
+      "actual_count": 117,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:02:39+03:00"
+    },
+    "instruments": {
+      "count": 117,
+      "actual_count": 117,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:02:44+03:00"
+    },
+    "instrument-types": {
+      "count": 40,
+      "actual_count": 40,
+      "complete": true,
+      "fetched_at": "2026-10-12T15:02:45+03:00"
+    },
+    "decisions": {
+      "count": 219,
+      "actual_count": 219,
+      "complete": true,
+      "fetched_at": "2026-10-11T21:32:59+03:00"
+    },
+    "decision-contexts": {
+      "count": 217,
+      "actual_count": 217,
+      "complete": true,
+      "fetched_at": "2026-10-11T21:32:59+03:00"
+    }
+  },
+  "sites": [
+    {
+      "pilot": "baltanas",
+      "scenarios": 7,
+      "levels": 3,
+      "records": 39,
+      "instruments": 39,
+      "positioned_instruments": 31,
+      "positions": 23,
+      "unplaced": 8,
+      "alarms": {
+        "records": 41,
+        "by_type": {
+          "DL": 41
+        },
+        "by_rule": {
+          "(DL, no rule)": 41
+        },
+        "unique": 32,
+        "excluded": {
+          "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 6,
+          "AI alarm with no clear main signal (top contribution below 30%)": 26
+        },
+        "usable": 0,
+        "episodes": [],
+        "featured": 0
+      }
+    },
+    {
+      "pilot": "delos",
+      "scenarios": 36,
+      "levels": 5,
+      "records": 30,
+      "instruments": 30,
+      "positioned_instruments": 30,
+      "positions": 15,
+      "unplaced": 0,
+      "alarms": {
+        "records": 46,
+        "by_type": {
+          "DL": 45,
+          "EK": 1
+        },
+        "by_rule": {
+          "(DL, no rule)": 45,
+          "R2_wind": 1
+        },
+        "unique": 37,
+        "excluded": {
+          "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 4,
+          "AI alarm with no clear main signal (top contribution below 30%)": 2
+        },
+        "usable": 31,
+        "episodes": [
+          {
+            "rule": "DL_humidity",
+            "start": "2026-09-12T20:30:00",
+            "end": "2026-09-12T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "DL_humidity",
+            "start": "2026-09-28T20:30:00",
+            "end": "2026-09-28T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "DL_soil_moisture",
+            "start": "2026-08-31T20:30:00",
+            "end": "2026-09-24T20:30:00",
+            "alarm_count": 26,
+            "flat_signal": false
+          },
+          {
+            "rule": "DL_soil_moisture",
+            "start": "2026-09-27T20:30:00",
+            "end": "2026-09-29T20:30:00",
+            "alarm_count": 2,
+            "flat_signal": false
+          },
+          {
+            "rule": "R2_wind",
+            "start": "2026-10-02T20:30:00",
+            "end": "2026-10-02T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          }
+        ],
+        "featured": 8
+      }
+    },
+    {
+      "pilot": "lucretili",
+      "scenarios": 19,
+      "levels": 3,
+      "records": 19,
+      "instruments": 19,
+      "positioned_instruments": 19,
+      "positions": 17,
+      "unplaced": 0,
+      "alarms": {
+        "records": 135,
+        "by_type": {
+          "DL": 18,
+          "EK": 117
+        },
+        "by_rule": {
+          "(DL, no rule)": 18,
+          "R1a_crack_step": 7,
+          "R1b_crack_offset": 7,
+          "R2a_tilt_step": 11,
+          "R2b_tilt_offset": 7,
+          "R4a_hum_spike_6h": 7,
+          "R4c_hum_rapid_1h": 7,
+          "R5_visitors": 1,
+          "R7_wind": 1,
+          "R8_baro": 4,
+          "R9a_temp_lt": 47,
+          "R9b_temp_st": 18
+        },
+        "unique": 97,
+        "excluded": {
+          "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 8,
+          "AI alarm with no clear main signal (top contribution below 30%)": 7,
+          "implausible temperature value (outside -50 to 60)": 19,
+          "implausible value for R9a_temp_lt (outside 0 to 30)": 18,
+          "implausible value for R9b_temp_st (outside 0 to 10)": 6,
+          "not exactly one variable": 23
+        },
+        "usable": 16,
+        "episodes": [
+          {
+            "rule": "R2a_tilt_step",
+            "start": "2026-08-31T20:30:00",
+            "end": "2026-08-31T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R4c_hum_rapid_1h",
+            "start": "2026-08-30T20:30:00",
+            "end": "2026-08-31T20:30:00",
+            "alarm_count": 3,
+            "flat_signal": false
+          },
+          {
+            "rule": "R5_visitors",
+            "start": "2026-10-02T20:30:00",
+            "end": "2026-10-02T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R7_wind",
+            "start": "2026-09-07T08:30:00",
+            "end": "2026-09-07T08:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R8_baro",
+            "start": "2026-09-11T20:30:00",
+            "end": "2026-09-11T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R8_baro",
+            "start": "2026-09-22T20:30:00",
+            "end": "2026-09-22T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R8_baro",
+            "start": "2026-09-25T20:30:00",
+            "end": "2026-09-26T20:30:00",
+            "alarm_count": 2,
+            "flat_signal": false
+          },
+          {
+            "rule": "R9b_temp_st",
+            "start": "2026-08-31T20:30:00",
+            "end": "2026-09-02T08:30:00",
+            "alarm_count": 2,
+            "flat_signal": false
+          },
+          {
+            "rule": "R9b_temp_st",
+            "start": "2026-09-08T15:00:00",
+            "end": "2026-09-10T20:30:00",
+            "alarm_count": 3,
+            "flat_signal": false
+          },
+          {
+            "rule": "R9b_temp_st",
+            "start": "2026-09-24T20:30:00",
+            "end": "2026-09-24T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          }
+        ],
+        "featured": 10
+      }
+    },
+    {
+      "pilot": "ranverso",
+      "scenarios": 26,
+      "levels": 4,
+      "records": 26,
+      "instruments": 20,
+      "positioned_instruments": 19,
+      "positions": 11,
+      "unplaced": 1,
+      "alarms": {
+        "records": 101,
+        "by_type": {
+          "DL": 15,
+          "EK": 86
+        },
+        "by_rule": {
+          "(DL, no rule)": 15,
+          "R1_hum_inside": 42,
+          "R2_rain_7d": 7,
+          "R4b_soil_low": 37
+        },
+        "unique": 81,
+        "excluded": {
+          "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 12,
+          "implausible humidity value (outside 0 to 100)": 31,
+          "rule not in content/rule_sensor_map.json": 1,
+          "soil_moisture value exactly 0 (probable sensor dropout)": 3
+        },
+        "usable": 34,
+        "episodes": [
+          {
+            "rule": "R2_rain_7d",
+            "start": "2026-09-10T20:30:00",
+            "end": "2026-09-16T15:30:00",
+            "alarm_count": 7,
+            "flat_signal": false
+          },
+          {
+            "rule": "R4b_soil_low",
+            "start": "2026-08-31T20:30:00",
+            "end": "2026-09-21T20:30:00",
+            "alarm_count": 25,
+            "flat_signal": true
+          },
+          {
+            "rule": "R4b_soil_low",
+            "start": "2026-09-24T20:00:00",
+            "end": "2026-09-25T20:30:00",
+            "alarm_count": 2,
+            "flat_signal": false
+          }
+        ],
+        "featured": 7
+      }
+    },
+    {
+      "pilot": "schenkenberg",
+      "scenarios": 11,
+      "levels": 4,
+      "records": 9,
+      "instruments": 9,
+      "positioned_instruments": 9,
+      "positions": 8,
+      "unplaced": 0,
+      "alarms": {
+        "records": 14,
+        "by_type": {
+          "DL": 1,
+          "EK": 13
+        },
+        "by_rule": {
+          "(DL, no rule)": 1,
+          "R2_crack_step": 12,
+          "R3_vib_zscore": 1
+        },
+        "unique": 10,
+        "excluded": {
+          "AI alarm whose main signal is not mapped to a card (e.g. wind direction)": 1
+        },
+        "usable": 9,
+        "episodes": [
+          {
+            "rule": "R2_crack_step",
+            "start": "2026-08-28T09:00:00",
+            "end": "2026-08-28T09:00:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R2_crack_step",
+            "start": "2026-08-30T20:30:00",
+            "end": "2026-08-31T20:30:00",
+            "alarm_count": 3,
+            "flat_signal": false
+          },
+          {
+            "rule": "R2_crack_step",
+            "start": "2026-09-20T20:30:00",
+            "end": "2026-09-20T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R2_crack_step",
+            "start": "2026-09-25T20:30:00",
+            "end": "2026-09-25T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R2_crack_step",
+            "start": "2026-09-28T20:30:00",
+            "end": "2026-09-28T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R2_crack_step",
+            "start": "2026-10-08T20:30:00",
+            "end": "2026-10-08T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          },
+          {
+            "rule": "R3_vib_zscore",
+            "start": "2026-09-16T20:30:00",
+            "end": "2026-09-16T20:30:00",
+            "alarm_count": 1,
+            "flat_signal": false
+          }
+        ],
+        "featured": 8
+      }
+    }
+  ],
+  "risk_evaluations": 1133,
+  "risk_scenarios": 51,
+  "raised": 1,
+  "retained_json_bytes": 384489,
+  "schema_version": 3,
+  "policy_count": 37,
+  "json_matches": true,
+  "notes_match": true,
+  "source_sha256": "62984f40f74b0bde1cf4d5aa32fe731172b9944e0e68232c257aeec4562d40df",
+  "verification_date": "2026-10-25",
+  "checks": {
+    "python_data_builder": {
+      "passed": 41
+    },
+    "python_classroom_server": {
+      "passed": 16
+    },
+    "browser_community": {
+      "passed": 13
+    },
+    "browser_week": {
+      "passed": 14
+    },
+    "browser_logic": {
+      "passed": 41
+    },
+    "data_pack_validator": "passed",
+    "sql_assessment": "static only; no PostgreSQL execution"
+  }
+}

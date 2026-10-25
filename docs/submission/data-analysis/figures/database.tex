@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+\node[box,text width=12.8cm] (client) at (0,0) {Browser community-store interface\\\footnotesize Optional Supabase REST access; descriptive aggregation in the browser};
+\node[box,text width=5.7cm,align=left,anchor=north] (plays) at (-3.5,-1.6) {\textbf{public.plays}\\[3pt]
+\texttt{id}: bigint, identity, PK\\
+\texttt{monument}, \texttt{level}: text\\
+\texttt{picks}: jsonb object\\
+\texttt{score}: smallint\\
+\texttt{detected}: boolean\\
+\texttt{day}: date\\
+\texttt{class\_code}: text, nullable\\
+\texttt{decision}: text, nullable\\
+\texttt{nick}: text, nullable};
+\node[box,text width=5.7cm,align=left,anchor=north] (quizzes) at (3.5,-1.6) {\textbf{public.quizzes}\\[3pt]
+\texttt{id}: bigint, identity, PK\\
+\texttt{monument}: text\\
+\texttt{pre}: jsonb array, nullable\\
+\texttt{post}: jsonb array\\
+\texttt{day}: date\\
+\texttt{class\_code}: text, nullable};
+\draw[flow] (client.south -| plays.north)--node[tag,left]{insert / select}(plays.north);
+\draw[flow] (client.south -| quizzes.north)--node[tag,right]{insert / select}(quizzes.north);
+\node[box,text width=12.8cm,anchor=north] at (0,-6.6) {Independent collections with shared grouping dimensions\\\footnotesize Shared dimensions: monument, class code and day.\\Session-level linkage requires an additional shared identifier.};
+\end{tikzpicture}

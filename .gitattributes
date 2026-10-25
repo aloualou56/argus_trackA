@@ -2,3 +2,6 @@
 *.sh text eol=lf
 tools/pi/* text eol=lf
 .github/workflows/* text eol=lf
+
+# Preserve document bytes and show PDFs as binary in Git.
+*.pdf binary
