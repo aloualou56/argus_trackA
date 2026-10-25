@@ -1,0 +1,44 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\headheight}{28pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\begin{tabular}{@{}r@{}}ARGUS Open Innovation Challenge 2026. Track A: Heritage and Citizen Science\end{tabular}}
+\renewcommand{\headrulewidth}{0pt}
+\begin{document}
+\begin{center}
+{\Large\bfseries AEGIS: Translating Heritage Monitoring Data\\
+into Participatory Learning and Citizen Engagement\par}
+\vspace{0.3em}
+{\normalsize Ilias Akritidis\textsuperscript{*},
+Georgios Mallousis\textsuperscript{*},
+Vasileios Sevetlidis\par}
+\vspace{0.1em}
+{\small International Hellenic University, Polytechnic School\\
+Department of Computer, Informatics and Telecommunications Engineering\par}
+\vspace{0.0em}
+{\small\href{mailto:iliakrit@ihu.gr}{\texttt{iliakrit@ihu.gr}}\quad
+\href{mailto:geomallo@ihu.gr}{\texttt{geomallo@ihu.gr}}\quad
+\href{mailto:vasiseve@ihu.gr}{\texttt{vasiseve@ihu.gr}}\par}
+\end{center}
+{\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+\footnotetext[1]{Ilias Akritidis and Georgios Mallousis contributed equally to this work.}}
+\subsection*{Abstract}
+Preventive conservation depends on the timely interpretation of environmental monitoring data and on the everyday behaviour of people who visit cultural heritage sites. However, technical risk assessments and sensor alarms can be difficult for non-specialists to interpret or relate to their own actions. We present AEGIS, a browser-based serious game that translates ARGUS heritage monitoring data into an interactive experience designed to support public understanding, heritage education, and citizen participation.
+
+AEGIS invites players to become temporary guardians of one of five European heritage sites monitored by ARGUS. Working within a limited virtual budget, they select and position sensors to address site-specific threats. Where an interpretable recorded alarm is available, players assess whether their proposed network would have detected it and compare their choices with the instruments actually installed at the site. This sequence situates resource allocation and monitoring decisions within real preservation challenges. Narrative guidance and illustrative deterioration effects on available ARGUS three-dimensional models make the potential consequences of neglect visible, helping players connect preventive action with the protection of vulnerable heritage. These effects are presented as educational illustrations rather than scientific predictions.
+
+A reproducible data-processing pipeline supports the game by integrating ARGUS risk scenarios, instrument locations, monitoring policies, and recorded events with educational content. The pipeline removes duplicate records, excludes incomplete or implausible alarms, and links interpretable events to the sensor types relevant to their detection. The workflow retrieves recent monitoring information through the ARGUS API, while locally cached dataset allows the core game to operate independently of live API access. The resulting application supports desktop and mobile browsers, five languages with additional audio narration, and classroom use.
+
+AEGIS uses decision-making and reflection to make preventive conservation understandable. Budget constraints expose the trade-offs involved in monitoring, while feedback on missed alarms helps players relate sensor capabilities to specific threats. Visualising gradual deterioration connects otherwise abstract measurements with the vulnerability of the monument. The guardian narrative then relates these risks to visitor conduct, explaining why respecting site rules matters even when damage is not yet visible. Together, these mechanisms are designed to help visitors understand the purpose of monitoring and recognise their own role in preservation. An initial user-experience questionnaire comprising 44 responses, yielded mean ratings of 4.43/5 for ease of understanding, 4.52/5 for perceived accessibility, 4.50/5 for map and 3D usability, and 4.82/5 for device performance, suggesting favourable perceived usability. Whether this understanding produces lasting changes in knowledge and behaviour remains to be established through systematic evaluation.
+
+\medskip
+{\small\textbf{Keywords:} cultural heritage; preventive conservation; serious games; citizen science; environmental monitoring.}
+\end{document}

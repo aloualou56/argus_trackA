@@ -4,6 +4,7 @@
 |---|---|
 | `AEGIS_2.tex` | `AEGIS_2.pdf` (A4 one-pager) |
 | `AEGIS_presentation_v2.tex` | `AEGIS_presentation_v2.pdf` (10 slides, 960×540 bp) |
+| `AEGIS_presentation_en.tex` | `../AEGIS_presentation_en.pdf` (English translation, 10 slides, 960×540 bp) |
 
 ## Compile
 
@@ -11,6 +12,15 @@ Both files need **XeLaTeX** (they use xdvipdfmx features):
 
     xelatex AEGIS_2.tex
     xelatex AEGIS_presentation_v2.tex
+
+For the English presentation:
+
+    xelatex AEGIS_presentation_en.tex
+
+The English source keeps the original slide structure and uses fresh captures of
+the game's English interface in `images/en/`. The submission PDF is stored one
+directory above this source folder. Its additional `xfp` package supports the
+coordinate calculations on older TeX Live installations.
 
 Run each once. To be safe, run it twice; the second run changes nothing.
 Keep the `fonts/` and `images/` folders next to the `.tex` files. All

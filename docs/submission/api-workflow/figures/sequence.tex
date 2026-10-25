@@ -1,0 +1,29 @@
+\begin{tikzpicture}[x=1cm,y=0.8cm]
+\foreach \x/\name in {0/Preparation host,3.5/ARGUS API,7/Raspberry Pi,10.5/Caddy and tunnel,14/GitHub Actions,17.5/GitHub Pages,21/Player browser}{
+ \node[box,text width=2.65cm,font=\small,minimum height=.65cm] at (\x,0) {\name};
+ \draw[densely dashed,black!40] (\x,-.4) -- (\x,-12.7);
+}
+\fill[black!5] (-1.4,-.75) rectangle (22.4,-1.25);
+\node[anchor=west,font=\small\bfseries] at (-1.2,-1) {A. Snapshot preparation, once per data update};
+\draw[flow] (0,-1.65) -- node[tag,above]{1. GET resource page} (3.5,-1.65);
+\draw[flow,dashed] (3.5,-2.25) -- node[tag,above]{2. Records and page metadata} (0,-2.25);
+\node[tag,anchor=west] at (-1.2,-2.85) {Deduplicate, retain provenance and build the gameplay pack in the preparation environment.};
+\fill[black!5] (-1.4,-3.2) rectangle (22.4,-3.7);
+\node[anchor=west,font=\small\bfseries] at (-1.2,-3.45) {B. Incremental collection, independently scheduled every two hours};
+\draw[flow] (7,-4.1) -- node[tag,above]{3. GET new checks and events} (3.5,-4.1);
+\draw[flow,dashed] (3.5,-4.7) -- node[tag,above]{4. New records} (7,-4.7);
+\draw[flow] (7,-5.3) -- node[tag,above]{5. Public JSON output} (10.5,-5.3);
+\fill[black!5] (-1.4,-5.7) rectangle (22.4,-6.2);
+\node[anchor=west,font=\small\bfseries] at (-1.2,-5.95) {C. Website publication, on a main-branch push, nightly schedule or manual dispatch};
+\node[tag,anchor=west] at (12.7,-6.6) {6. Actions runs tests and builds the application.};
+\draw[flow] (14,-7.15) -- node[tag,above]{7. GET recent-data file} (10.5,-7.15);
+\draw[flow,dashed] (10.5,-7.75) -- node[tag,above]{8. JSON or fallback} (14,-7.75);
+\draw[flow] (14,-8.35) -- node[tag,above]{9. Static site and VERSION} (17.5,-8.35);
+\fill[black!5] (-1.4,-8.8) rectangle (22.4,-9.3);
+\node[anchor=west,font=\small\bfseries] at (-1.2,-9.05) {D. Browser consumption, when the application is opened};
+\draw[flow] (21,-9.75) -- node[tag,above]{10. GET app and data} (17.5,-9.75);
+\draw[flow,dashed] (17.5,-10.35) -- node[tag,above]{11. Static files} (21,-10.35);
+\draw[flow] (21,-10.95) -- node[tag,above]{12. GET recent data} (17.5,-10.95);
+\draw[flow] (21,-11.55) -- node[tag,above]{13. GET 3D assets} (17.5,-11.55);
+\node[tag,anchor=west] at (11.6,-12.2) {Without recent data, the browser continues with the core game.};
+\end{tikzpicture}

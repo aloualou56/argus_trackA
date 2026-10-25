@@ -1,0 +1,28 @@
+flowchart-elk TB
+  classDef main fill:#eef4f1,stroke:#0b5d4b,stroke-width:2px,color:#1b2430
+  classDef drop fill:#fdf0f0,stroke:#b42318,stroke-width:1.5px,color:#1b2430
+  classDef final fill:#e8eef8,stroke:#2a4d8f,stroke-width:2px,color:#1b2430
+  classDef table fill:#ffffff,stroke:#9aa3ad,stroke-width:1px,color:#1b2430
+
+  S0["<b>337 alarm records</b><br/>AD-RT events in the ARGUS snapshot of 12 Oct 2026<br/>5 monuments · 28 Aug to 8 Oct 2026<br/>expert-rule (EK) 217 · AI model (DL) 120"]:::main
+  S1["<b>257 unique alarms</b>"]:::main
+  S2["<b>191 alarms with a clear rule</b>"]:::main
+  S3["<b>167 complete alarms</b>"]:::main
+  S4["<b>90 usable alarms</b><br/>real, plausible, each linked to the sensor that raised it"]:::main
+  S5["<b>33 featured alarms</b><br/>first, peak and last of each episode<br/>(an episode ends after a 48 h gap),<br/>5 to 10 per monument where there are enough"]:::final
+  S6["<b>Replayed in the game</b><br/>one per level (never a flat, stuck signal),<br/>then a week on duty: a different kind of alarm each day"]:::final
+
+  E1["<b>Duplicates removed: 80</b><br/>same type, rule, timestamp and variables<br/>(re-runs; some with slightly different values)"]:::drop
+  E2["<b>Excluded, AI alarms: 66</b><br/>no single signal with ≥ 30 % of the model's<br/>top feature contributions: 35<br/>main signal not mapped to a sensor<br/>(e.g. wind direction): 31"]:::drop
+  E3["<b>Excluded, incomplete: 24</b><br/>not exactly one variable (normalised<br/>multi-sensor alarms): 23<br/>rule not in the alarm-rule → sensor map: 1"]:::drop
+  E4["<b>Excluded, implausible values: 77</b><br/>humidity outside 0–100 %: 31<br/>temperature outside −50 to 60 °C: 19<br/>daily temperature range (R9a) outside 0–30: 18<br/>one-hour change (R9b) outside 0–10: 6<br/>soil moisture exactly 0 (sensor dropout): 3"]:::drop
+  E5["<b>Not featured: 57</b><br/>usable, but neither first, peak nor last<br/>of their episode (kept in the analysis)"]:::drop
+
+  S0 --> S1 --> S2 --> S3 --> S4 --> S5 --> S6
+  S0 -.-> E1
+  S1 -.-> E2
+  S2 -.-> E3
+  S3 -.-> E4
+  S4 -.-> E5
+
+  T["<b>Per monument</b><br/><table style='border-collapse:collapse;font-size:14px;margin-top:6px'><tr><th style='text-align:left;padding:2px 10px'>monument</th><th style='padding:2px 10px'>records</th><th style='padding:2px 10px'>unique</th><th style='padding:2px 10px'>excluded</th><th style='padding:2px 10px'>usable</th><th style='padding:2px 10px'>featured</th></tr><tr><td style='text-align:left;padding:2px 10px'>Delos</td><td>46</td><td>37</td><td>6</td><td>31</td><td>8</td></tr><tr><td style='text-align:left;padding:2px 10px'>Baltanás</td><td>41</td><td>32</td><td>32</td><td>0</td><td>0</td></tr><tr><td style='text-align:left;padding:2px 10px'>Monti Lucretili</td><td>135</td><td>97</td><td>81</td><td>16</td><td>10</td></tr><tr><td style='text-align:left;padding:2px 10px'>Sant'Antonio di Ranverso</td><td>101</td><td>81</td><td>47</td><td>34</td><td>7</td></tr><tr><td style='text-align:left;padding:2px 10px'>Schenkenberg</td><td>14</td><td>10</td><td>1</td><td>9</td><td>8</td></tr><tr><td style='text-align:left;padding:2px 10px'><b>Total</b></td><td><b>337</b></td><td><b>257</b></td><td><b>167</b></td><td><b>90</b></td><td><b>33</b></td></tr></table><br/>Source: docs/data_notes.md, written by build_game_data.py"]:::table

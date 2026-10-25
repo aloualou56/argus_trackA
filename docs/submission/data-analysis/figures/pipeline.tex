@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+\node[box,text width=5.6cm] (argus) at (-3.4,0) {ARGUS snapshots\\\footnotesize Scenarios, evaluations, instruments,\\policies, alarms and decisions};
+\node[box,text width=5.6cm] (content) at (3.4,0) {Educational configuration\\\footnotesize Sensor cards, mappings, missions,\\budgets and explanatory content};
+\node[box,text width=12.4cm] (prepare) at (0,-1.75) {Parse metadata and reconstruct logical relationships\\\footnotesize Identify sites and scenarios; associate instruments, types and positions};
+\node[box,text width=3.5cm] (risk) at (-4.5,-3.5) {Risk representation\\\footnotesize Priority levels and\\evaluation histories};
+\node[box,text width=3.5cm] (network) at (0,-3.5) {Network representation\\\footnotesize Distinct instruments,\\sensor cards and positions};
+\node[box,text width=3.5cm] (alarm) at (4.5,-3.5) {Alarm preparation\\\footnotesize Deduplication, eligibility,\\episodes and examples};
+\node[box,text width=12.4cm] (output) at (0,-5.25) {Validated gameplay dataset and analysis notes\\\footnotesize 99 scenarios; 19 available levels; 90 usable and 33 featured alarms};
+\node[box,text width=5.6cm] (browser) at (-3.4,-7) {Browser application\\\footnotesize Missions, detection, coverage\\and explanatory comparison};
+\node[box,text width=5.6cm] (player) at (3.4,-7) {Participation record store\\\footnotesize Submitted plays and quiz marks;\\separate descriptive aggregations};
+\draw[flow] (argus)--(prepare);
+\draw[flow] (content)--(prepare);
+\foreach \n in {risk,network,alarm} {
+  \draw[flow] (prepare)--(\n);
+  \draw[flow] (\n)--(output);
+}
+\draw[flow] (output)--(browser);
+\draw[flow] (browser)--node[tag,above]{submit / read}(player);
+\end{tikzpicture}

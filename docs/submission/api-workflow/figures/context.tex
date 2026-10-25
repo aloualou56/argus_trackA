@@ -1,0 +1,13 @@
+\begin{tikzpicture}[x=1cm,y=1cm]
+\node[box,text width=3.0cm] (users) at (-5,2.0) {Players and teachers\\\footnotesize Web browser or classroom session};
+\node[box,text width=3.4cm,line width=.8pt] (aegis) at (0,2.0) {\textbf{AEGIS}\\\footnotesize Heritage education application and data preparation};
+\node[box,text width=3.0cm] (argus) at (5,2.0) {ARGUS services\\\footnotesize Monitoring API, 3D models and terrain};
+\node[box,text width=3.0cm] (github) at (-5,-0.7) {GitHub\\\footnotesize Repository,\\Actions and Pages};
+\node[box,text width=3.4cm] (assets) at (0,-0.7) {Supporting providers\\\footnotesize Esri, OpenStreetMap, AWS Terrain Tiles, Wikimedia, ElevenLabs};
+\node[box,text width=3.0cm,dashed] (optional) at (5,-0.7) {Optional record stores\\\footnotesize Classroom server or Supabase};
+\draw[flow] (users) -- (aegis);
+\draw[flow] (aegis) -- (argus);
+\draw[flow] (aegis.south west) -- (github.north east);
+\draw[flow] (aegis) -- (assets);
+\draw[optional] (aegis.south east) -- (optional.north west);
+\end{tikzpicture}

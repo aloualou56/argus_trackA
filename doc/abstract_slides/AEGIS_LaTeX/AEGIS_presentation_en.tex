@@ -1,0 +1,432 @@
+% =====================================================================
+%  AEGIS — English presentation (ARGUS Open Innovation Challenge 2026)
+%  Compile with XeLaTeX:   xelatex AEGIS_presentation_en.tex
+%
+%  Fonts (Carlito, Liberation Mono) are bundled in ./fonts and all
+%  pictures / screenshot shadows are in ./images.
+%
+%  Coordinate system: every slide is the original 1280 x 720 px canvas
+%  (1px = 0.75bp, so a page is 960 x 540 bp), origin at the top-left
+%  corner, y growing downwards.  Every box, picture and line of text is
+%  given in those pixels, exactly where the original slide has it.
+%
+%  Text:    \T(x,y){...}  puts a line of text, baseline origin at (x,y)
+%           \R{size px}{RRGGBB}{text}   Carlito Regular
+%           \B{size px}{RRGGBB}{text}   Carlito Bold
+%           \M{size px}{RRGGBB}{text}   Liberation Mono
+%           \LS{percent}{text}          CSS letter-spacing (in % of em)
+%  Shapes:  \Fill{RRGGBB}(x0,y0)(x1,y1)             filled rectangle
+%           \RoundFill{RRGGBB}{r}{nw,ne}(x0,y0)(x1,y1) top corners rounded
+%           \Frame{RRGGBB}{w}(x0,y0)(x1,y1)          stroked rectangle
+%           \Img{file}(x0,y0)(x1,y1)                 picture in a box
+%           \Shadow{file}{opacity}(x0,y0)(x1,y1)[box] CSS box-shadow
+% =====================================================================
+\documentclass{article}
+\usepackage[paperwidth=960bp,paperheight=540bp,margin=0pt]{geometry}
+\usepackage{fontspec}
+\usepackage{xfp}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+% keep 5 decimals in the PDF so nothing is rounded to the pixel grid
+\special{dvipdfmx:config d 5}
+
+\defaultfontfeatures{Path=fonts/}
+\newfontfamily\carlito{Carlito-Regular.ttf}
+\newfontfamily\carlitobold{Carlito-Bold.ttf}
+\newfontfamily\libmono{LiberationMono-Regular.ttf}
+\def\fs#1{\fontsize{\fpeval{#1*0.75}bp}{\fpeval{#1*0.75}bp}\selectfont}
+\newcommand\R[3]{{\carlito\fs{#1}\color[HTML]{#2}\words{#3}}}
+\newcommand\B[3]{{\carlitobold\fs{#1}\color[HTML]{#2}\words{#3}}}
+% Chrome lays text out at the font size rounded to 1/64 px (12.6px ->
+% 12.59375px); for the monospaced listing that shifts every letter a
+% little, so \M adds the same tiny correction after each character.
+\newcommand\M[3]{{\libmono\fs{#1}\color[HTML]{#2}%
+  \edef\monofix{\fpeval{(round(#1*64)/64-(#1))*1229/2048*0.75}bp}\chars{#3}}}
+% CSS letter-spacing, in percent of the font size
+\newcommand\LS[2]{{\addfontfeature{LetterSpace=#1}%
+  \spaceskip=\dimexpr\fontdimen2\font+#1\dimexpr0.01em\relax\relax\words{#2}}}
+% \W{word}: a word shaped with a ligature, typeset in one piece
+\newcommand\W[1]{#1}
+% \words typesets its argument word by word, and each word glyph by
+% glyph: every glyph is put at the exact pen position TeX computed for it
+% (kerning included), and every other glyph sits 0.0002bp higher.  That is
+% invisible, but it makes the PDF driver re-anchor each glyph instead of
+% letting the rounding of its 1/1000-em glyph widths add up along a line,
+% so the letters land on the same sub-pixel positions as in the original.
+\ExplSyntaxOn
+\int_new:N \g__aegis_word_int
+\box_new:N \l__aegis_w_box
+\box_new:N \l__aegis_p_box
+\box_new:N \l__aegis_g_box
+\dim_new:N \l__aegis_x_dim
+\tl_new:N \l__aegis_prefix_tl
+\cs_new_protected:Npn \__aegis_word:n #1
+  {
+    \int_gincr:N \g__aegis_word_int
+    \raise \int_if_odd:nTF { \g__aegis_word_int } { 0.0002bp } { 0bp } \hbox {#1}
+  }
+\cs_new_protected:Npn \__aegis_glyphs:n #1
+  {
+    \tl_if_in:nnTF {#1} { \LS } {#1}
+      {
+      \tl_if_in:nnTF {#1} { \W } { \__aegis_word:n {#1} }
+      {
+        \tl_clear:N \l__aegis_prefix_tl
+        \hbox_set:Nn \l__aegis_w_box {#1}
+        \hbox_to_wd:nn { \box_wd:N \l__aegis_w_box }
+          {
+            \tl_map_inline:nn {#1}
+              {
+                \tl_put_right:Nn \l__aegis_prefix_tl {##1}
+                \hbox_set:Nn \l__aegis_p_box { \l__aegis_prefix_tl }
+                \hbox_set:Nn \l__aegis_g_box {##1}
+                \dim_set:Nn \l__aegis_x_dim
+                  { \box_wd:N \l__aegis_p_box - \box_wd:N \l__aegis_g_box }
+                \hbox_overlap_right:n
+                  { \skip_horizontal:N \l__aegis_x_dim \__aegis_word:n {##1} }
+              }
+            \hfil
+          }
+      }
+      }
+  }
+\cs_new_protected:Npn \words #1
+  {
+    \seq_set_split:Nnn \l_tmpa_seq { ~ } {#1}
+    \seq_set_map:NNn \l_tmpb_seq \l_tmpa_seq { \__aegis_glyphs:n {##1} }
+    \seq_use:Nn \l_tmpb_seq { ~ }
+  }
+% same, letter by letter (used for the monospaced code listing)
+\cs_new_protected:Npn \chars #1
+  {
+    \tl_set:Nn \l_tmpa_tl {#1}
+    \tl_replace_all:Nnn \l_tmpa_tl { ~ } { \  }
+    \tl_map_inline:Nn \l_tmpa_tl { \__aegis_word:n {##1} \kern \monofix }
+  }
+\ExplSyntaxOff
+
+% ------------------------------------------------------------- machinery
+% px -> sp for \put (1px = 49336.32sp) and px -> bp for PDF code; done
+% with exact decimal arithmetic so positions are not rounded.
+\def\spx#1{\fpeval{round((#1)*49336.32)}}
+\def\spy#1{\fpeval{round(-(#1)*49336.32)}}
+\def\bp#1{\fpeval{round((#1)*0.75,5)}}
+\def\nbp#1{\fpeval{round(-(#1)*0.75,5)}}
+\def\pdf#1{\put(0,0){\special{pdf:literal #1}}}
+% RRGGBB -> "r g b"
+\def\rgb#1{\convertcolorspec{HTML}{#1}{rgb}\tmpc\expandafter\rgbsplit\tmpc\relax}
+\def\rgbsplit#1,#2,#3\relax{\def\tmpc{#1 #2 #3}}
+
+\def\T(#1,#2)#3{\put(\spx{#1},\spy{#2}){#3}}
+\def\Fill#1(#2,#3)(#4,#5){\rgb{#1}%
+  \pdf{\tmpc\space rg \bp{#2} \nbp{#5} \bp{#4-#2} \bp{#5-#3} re f}}
+\def\RoundFill#1#2#3(#4,#5)(#6,#7){\rgb{#1}%
+  \pdf{\tmpc\space rg \bp{#4} \nbp{#7} m \bp{#4} \nbp{#5+#2} l
+       \bp{#4} \nbp{#5+0.4477*#2} \bp{#4+0.4477*#2} \nbp{#5} \bp{#4+#2} \nbp{#5} c
+       \bp{#6-#2} \nbp{#5} l
+       \bp{#6-0.4477*#2} \nbp{#5} \bp{#6} \nbp{#5+0.4477*#2} \bp{#6} \nbp{#5+#2} c
+       \bp{#6} \nbp{#7} l h f}}
+\def\Frame#1#2(#3,#4)(#5,#6){\rgb{#1}%
+  \pdf{\tmpc\space RG \bp{#2} w \bp{#3} \nbp{#6} \bp{#5-#3} \bp{#6-#4} re S}}
+\def\Img#1(#2,#3)(#4,#5){\put(\spx{#2},\spy{#5}){%
+  \special{pdf:image width \bp{#4-#2}bp height \bp{#5-#3}bp (#1)}}}
+\def\Shadow#1#2(#3,#4)(#5,#6)[#7,#8,#9]{%
+  \def\shfile{#1}\def\shop{#2}\def\shxa{#3}\def\shya{#4}\def\shxb{#5}\def\shyb{#6}%
+  \ShadowHole{#7}{#8}#9\relax}
+\def\ShadowHole#1#2#3,#4\relax{%
+  \special{pdf:put @resources << /ExtGState << /AegisShadow << /ca \shop\space >> >> >>}%
+  \pdf{q 0 -540 960 540 re \bp{#1} \nbp{#4} \bp{#3-#1} \bp{#4-#2} re W* n /AegisShadow gs}%
+  \Img{\shfile}(\shxa,\shya)(\shxb,\shyb)%
+  \pdf{Q}}
+
+% one slide = one page; drawing origin = top-left corner of the page
+\NewDocumentEnvironment{slide}{+b}
+  {\AddToShipoutPictureFG*{\AtPageUpperLeft{\setlength\unitlength{1sp}#1}}\null\newpage}{}
+
+\pagestyle{empty}
+\frenchspacing % browsers do not add extra space after punctuation
+\begin{document}
+\begin{slide}
+\Fill{195A49}(0,0)(1280,720)
+\Img{images/slide01_1.jpg}(40,30)(144,143)
+\Img{images/slide01_2.png}(40,510)(168,638)
+\Shadow{images/slide01_shadow1.png}{0.1608}(605.12,161.28)(1246.72,531.84)[616,170,1236,519]
+\Img{images/en/slide01_3.png}(616,170)(1236,519)
+% English text
+\T(40,222){\B{76}{FFFFFF}{AEGIS}}
+\T(40,276){\R{29}{FFFFFF}{The visitor becomes a heritage guardian}}
+\T(40,366){\R{21}{FFFFFF}{ARGUS Open Innovation Challenge 2026}}
+\T(40,394){\R{21}{FFFFFF}{Track A: Heritage and Citizen Science}}
+\T(196,541){\R{20}{FFFFFF}{Play on your computer}}
+\T(196,569){\R{20}{FFFFFF}{or mobile:}}
+\T(196,597){\M{18}{FFFFFF}{https://aloualou56.github.io/}}
+\T(196,626){\M{18}{FFFFFF}{argus\_trackA/}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\RoundFill{EDF2EB}{6}{nw,ne}(58,217)(662,461)
+\RoundFill{0B5D4B}{6}{nw,ne}(58,217)(662,260)
+\RoundFill{EDF2EB}{6}{nw,ne}(688,217)(1222,461)
+\RoundFill{0B5D4B}{6}{nw,ne}(688,217)(1222,260)
+% English text
+\T(58,77){\B{40}{0B5D4B}{The problem: making ARGUS data understandable}}
+\T(58,160){\R{22}{14211B}{ARGUS monitors five European heritage sites, assesses their risks each day, and raises alarms when readings are unusual.}}
+\T(58,191){\R{22}{14211B}{When we examined its data, we found a gap between the technical records and what a visitor can understand.}}
+\T(70,247){\R{24}{FFFFFF}{An alarm as recorded by ARGUS}}
+\T(70,279){\M{12.6}{14211B}{\{"type": "DL",}}
+\T(70,296){\M{12.6}{14211B}{\ "score": 0.026571929454803467,}}
+\T(70,312){\M{12.6}{14211B}{\ "threshold": 0.020811407233135213,}}
+\T(70,329){\M{12.6}{14211B}{\ "is\_alarm": true,}}
+\T(70,346){\M{12.6}{14211B}{\ "confidence\_score": 0.5004581977196843,}}
+\T(70,362){\M{12.6}{14211B}{\ "top\_feature\_contributions": \{}}
+\T(70,379){\M{12.6}{14211B}{\ \ "149368\_h\_masks\_in\_room215\_2\_soil\_moisture": 0.4397,}}
+\T(70,396){\M{12.6}{14211B}{\ \ "151836\_h\_masks\_in\_room214\_hum": 0.2579,}}
+\T(70,412){\M{12.6}{14211B}{\ \ "168439\_h\_masks\_in\_room215\_lux": 0.0625, ...\},}}
+\T(70,429){\M{12.6}{14211B}{\ "site": "delos",}}
+\T(70,445){\M{12.6}{14211B}{\ "timestamp": "2026-08-31T20:30:00"\}}}
+\T(699.719,247){\R{24}{FFFFFF}{The same alarm in AEGIS}}
+\T(699.719,288){\R{20}{14211B}{“On 31 August 2026, the ARGUS AI system}}
+\T(699.719,316){\R{20}{14211B}{noticed unusual soil moisture beneath}}
+\T(699.719,344){\R{20}{14211B}{a mosaic.”}}
+\T(699.719,381){\R{20}{14211B}{“This sensor accounts for 44\% of the alarm,}}
+\T(699.719,409){\R{20}{14211B}{more than any other signal.”}}
+\T(58,500){\R{20}{14211B}{Our approach uses experiential learning through a serious role-playing game to explain the work of ARGUS.}}
+\T(58,528){\R{20}{14211B}{The game uses authentic monitoring data, follows Kolb’s learning cycle, and extends into citizen science.}}
+\T(58,588){\R{14}{5F6863}{Left: ARGUS event record 123, with selected fields. Right: the same alarm explained in the game.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{2 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Shadow{images/slide03_shadow1.png}{0.1608}(691.2,132.16)(1232.96,401.84)[702,141,1222,389]
+\Frame{D9DED9}{1}(702.5,141.5)(1221.5,388.5)
+\Img{images/en/slide03_1.png}(703,142)(1221,388)
+\Fill{A84300}(58,150)(69,161)
+\Fill{A84300}(58,255)(69,266)
+\Fill{A84300}(58,299)(69,310)
+\Fill{A84300}(58,344)(69,355)
+% English text
+\T(58,77){\B{40}{0B5D4B}{Why public understanding matters}}
+\T(84,163){\R{22}{14211B}{Damage to a monument is slow and often unnoticed.}}
+\T(84,193){\R{22}{14211B}{Moisture weakens walls, sea salt erodes stone,}}
+\T(84,223){\R{22}{14211B}{and mosaics gradually lose their tesserae.}}
+\T(84,268){\R{22}{14211B}{By the time damage is visible, harm has already occurred.}}
+\T(84,312){\R{22}{14211B}{The knowledge behind prevention stays with specialists.}}
+\T(84,357){\R{22}{14211B}{Visitors see the outcome of preservation, but little of}}
+\T(84,387){\R{22}{14211B}{the work behind it. They may struggle to see how}}
+\T(84,417){\R{22}{14211B}{their own actions can help.}}
+\T(702,420){\R{17}{14211B}{The game compares “Today” with “Years later, if nobody notices”.}}
+\T(702,445){\R{17}{14211B}{Drawings illustrate deterioration and its possible consequences.}}
+\T(702,470){\R{17}{14211B}{The game labels these images as illustrations of heritage risks,}}
+\T(702,495){\R{17}{14211B}{rather than photographs of actual damage.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{3 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Shadow{images/slide04_shadow1.png}{0.1608}(651.2,132.16)(1232.96,469.76)[662,141,1222,457]
+\Frame{D9DED9}{1}(662.5,141.5)(1221.5,456.5)
+\Img{images/en/slide04_1.png}(663,142)(1221,456)
+\Fill{A84300}(58,150)(69,161)
+\Fill{A84300}(58,225)(69,236)
+\Fill{A84300}(58,299)(69,310)
+\Fill{A84300}(58,374)(69,385)
+% English text
+\T(58,77){\B{40}{0B5D4B}{Our idea: guardian for a day}}
+\T(84,163){\R{22}{14211B}{An interactive experience makes the work of ARGUS}}
+\T(84,193){\R{22}{14211B}{easier to relate to than technical descriptions alone.}}
+\T(84,238){\R{22}{14211B}{In AEGIS, anyone can become a guardian at one of}}
+\T(84,268){\R{22}{14211B}{the five ARGUS sites, for up to seven days.}}
+\T(84,312){\R{22}{14211B}{A fictional guardian, such as Manolis on Delos,}}
+\T(84,343){\R{22}{14211B}{takes a day off and hands the watch to the player.}}
+\T(84,387){\R{22}{14211B}{The game makes the distinction explicit: the guardian}}
+\T(84,417){\R{22}{14211B}{is fictional, while the risks and recorded alarms}}
+\T(84,447){\R{22}{14211B}{come from real ARGUS monitoring data.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{4 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Shadow{images/slide05_shadow1.png}{0.1608}(47.04,304)(628.8,641.92)[58,313,618,629]
+\Frame{D9DED9}{1}(58.5,313.5)(617.5,628.5)
+\Img{images/en/slide05_1.png}(59,314)(617,628)
+\Shadow{images/slide05_shadow2.png}{0.1608}(651.2,304)(1232.96,641.92)[662,313,1222,629]
+\Frame{D9DED9}{1}(662.5,313.5)(1221.5,628.5)
+\Img{images/en/slide05_2.png}(663,314)(1221,628)
+% English text
+\T(58,77){\B{40}{0B5D4B}{Gameplay: a sensor network and a real alarm}}
+\T(58,162){\B{20.5}{A84300}{1. Building a sensor network}}
+\T(58,190){\R{20.5}{14211B}{Players have 12–16 coins, depending on the risk level.}}
+\T(58,219){\R{20.5}{14211B}{They choose suitable sensors and position them on}}
+\T(58,248){\R{20.5}{14211B}{the monument to address three real threats.}}
+\T(662,162){\B{20.5}{A84300}{2. Replaying a real alarm}}
+\T(662,190){\R{20.5}{14211B}{Players encounter a recorded ARGUS alarm, such as}}
+\T(662,219){\R{20.5}{14211B}{the one raised on 31 August 2026. It appears at the}}
+\T(662,248){\R{20.5}{14211B}{location of the sensor that triggered it, on an ARGUS}}
+\T(662,277){\R{20.5}{14211B}{3D model where one is available.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{5 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Shadow{images/slide06_shadow1.png}{0.1608}(47.04,304)(628.8,641.92)[58,313,618,629]
+\Frame{D9DED9}{1}(58.5,313.5)(617.5,628.5)
+\Img{images/en/slide06_1.png}(59,314)(617,628)
+\Shadow{images/slide06_shadow2.png}{0.1608}(651.2,304)(1232.96,641.92)[662,313,1222,629]
+\Frame{D9DED9}{1}(662.5,313.5)(1221.5,628.5)
+\Img{images/en/slide06_2.png}(663,314)(1221,628)
+% English text
+\T(58,77){\B{40}{0B5D4B}{Gameplay: detection and comparison with ARGUS}}
+\T(58,162){\B{20.5}{A84300}{3. Would your network have detected it?}}
+\T(58,190){\R{20.5}{14211B}{The game identifies the sensor that raised the alarm}}
+\T(58,219){\R{20.5}{14211B}{and shows how often it triggered. Players see whether}}
+\T(58,248){\R{20.5}{14211B}{their own network would have detected the event.}}
+\T(662,162){\B{20.5}{A84300}{4. What ARGUS installed, and where}}
+\T(662,190){\R{20.5}{14211B}{Players compare their network with the 30 instruments}}
+\T(662,219){\R{20.5}{14211B}{at Delos, shown in their actual positions. In game terms,}}
+\T(662,248){\R{20.5}{14211B}{the ARGUS network would cost 52 coins, prompting}}
+\T(662,277){\R{20.5}{14211B}{discussion of what to monitor and where.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{6 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Shadow{images/slide07_shadow1.png}{0.1608}(47.04,128)(708.8,510.72)[58,137,698,498]
+\Frame{D9DED9}{1}(58.5,137.5)(697.5,497.5)
+\Img{images/en/slide07_1.png}(59,138)(697,497)
+\Shadow{images/slide07_shadow2.png}{0.1608}(721.28,233.28)(1102.72,574.92)[732,242,1092,562]
+\Frame{D9DED9}{1}(732.5,242.5)(1091.5,561.5)
+\Img{images/en/slide07_2.png}(733,243)(1091,561)
+% English text
+\T(58,77){\B{40}{0B5D4B}{If nobody noticed}}
+\T(58,529){\R{18.5}{14211B}{Up to 50 illustrative years without care, on the ARGUS 3D model of}}
+\T(58,555){\R{18.5}{14211B}{the House of the Masks. Water rises from the ground, salts crystallise,}}
+\T(58,581){\R{18.5}{14211B}{and mosaic tesserae loosen and disappear. The interface clearly labels}}
+\T(58,607){\R{18.5}{14211B}{these effects as educational illustrations rather than predictions.}}
+\T(732,158){\R{21}{14211B}{The guardian returns and explains why visitors}}
+\T(732,187){\R{21}{14211B}{should follow the rules at a heritage site,}}
+\T(732,216){\R{21}{14211B}{even when damage is not yet visible.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{7 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Fill{14211B}(58,247)(663,249)
+\Fill{14211B}(663,247)(1222,249)
+\Fill{DFE3DF}(58,290)(663,291)
+\Fill{DFE3DF}(663,290)(1222,291)
+\Fill{DFE3DF}(58,333)(663,334)
+\Fill{DFE3DF}(663,333)(1222,334)
+\Fill{DFE3DF}(58,400)(663,401)
+\Fill{DFE3DF}(663,400)(1222,401)
+\Fill{DFE3DF}(58,443)(663,444)
+\Fill{DFE3DF}(663,443)(1222,444)
+\Fill{DFE3DF}(58,485)(663,486)
+\Fill{DFE3DF}(663,485)(1222,486)
+\Fill{14211B}(58,527)(663,529)
+\Fill{14211B}(663,527)(1222,529)
+% English text
+\T(58,77){\B{40}{0B5D4B}{How AEGIS uses ARGUS resources}}
+\T(58,154){\R{20}{14211B}{The game draws its risks, installed sensor positions, and recorded alarms from ARGUS data across all five heritage sites.}}
+\T(58,182){\R{20}{14211B}{The table connects those resources to what the player experiences.}}
+\T(64,231){\B{19.5}{0B5D4B}{ARGUS resource}}
+\T(669.266,231){\B{19.5}{0B5D4B}{Use in AEGIS}}
+\T(64,276){\R{19.5}{14211B}{Coordinates of installed instruments}}
+\T(669.266,276){\R{19.5}{14211B}{ARGUS’s real network revealed on the map}}
+\T(64,318){\R{19.5}{14211B}{Risk scenarios and daily risk assessments}}
+\T(669.266,318){\R{19.5}{14211B}{The three threats in each mission}}
+\T(64,361){\R{19.5}{14211B}{Alarms from August and September 2026, based on}}
+\T(64,386){\R{19.5}{14211B}{expert thresholds and AI models}}
+\T(669.266,361){\R{19.5}{14211B}{Recorded alarms replayed for the player}}
+\T(64,428){\R{19.5}{14211B}{Photogrammetric 3D models and terrain}}
+\T(669.266,428){\R{19.5}{14211B}{Alarm locations and illustrated deterioration in 3D}}
+\T(64,471){\R{19.5}{14211B}{Read-only API access, every two hours}}
+\T(669.266,471){\R{19.5}{14211B}{“Live from ARGUS” on the opening screen}}
+\T(64,513){\R{19.5}{14211B}{Heritage documentation structure (CIDOC CRM E14)}}
+\T(669.266,513){\R{19.5}{14211B}{The visitor’s structured observation report}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{8 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Shadow{images/slide09_shadow1.png}{0.1608}(791.04,130.24)(1232.96,388.8)[802,139,1222,376]
+\Frame{D9DED9}{1}(802.5,139.5)(1221.5,375.5)
+\Img{images/en/slide09_1.png}(803,140)(1221,375)
+\Fill{A84300}(58,186)(69,197)
+\Fill{A84300}(58,252)(69,263)
+\Fill{A84300}(58,344)(69,355)
+\Fill{A84300}(58,464)(69,475)
+\Fill{A84300}(472,186)(483,197)
+\Fill{A84300}(472,252)(483,263)
+\Fill{A84300}(472,317)(483,328)
+% English text
+\T(58,77){\B{40}{0B5D4B}{Benefits for visitors and ARGUS}}
+\T(58,159){\B{21}{0B5D4B}{For the visitor}}
+\T(472.266,159){\B{21}{0B5D4B}{For ARGUS}}
+\T(84,197){\R{19.5}{14211B}{An explanation of each site’s risks}}
+\T(84,224){\R{19.5}{14211B}{and preservation needs.}}
+\T(84,263){\R{19.5}{14211B}{A visitor code and a checklist of}}
+\T(84,290){\R{19.5}{14211B}{things to watch for on the next visit.}}
+\T(84,355){\R{19.5}{14211B}{A way to record an observation}}
+\T(84,382){\R{19.5}{14211B}{and, if desired, share it with the}}
+\T(84,409){\R{19.5}{14211B}{people responsible for the site.}}
+\T(84,475){\R{19.5}{14211B}{Teachers can compare class choices}}
+\T(84,502){\R{19.5}{14211B}{with the actual ARGUS network.}}
+\T(498.266,197){\R{19.5}{14211B}{A public interface for its}}
+\T(498.266,224){\R{19.5}{14211B}{monitoring data.}}
+\T(498.266,263){\R{19.5}{14211B}{A learning resource built}}
+\T(498.266,290){\R{19.5}{14211B}{around those data.}}
+\T(498.266,328){\R{19.5}{14211B}{Citizen observations in its}}
+\T(498.266,355){\R{19.5}{14211B}{documentation structure,}}
+\T(498.266,382){\R{19.5}{14211B}{ready for possible future}}
+\T(498.266,409){\R{19.5}{14211B}{acceptance by ARGUS.}}
+\T(802,399){\R{15}{14211B}{A report records what the visitor saw, where, and when.}}
+\T(802,421){\R{15}{14211B}{The user decides whether to share it with a custodian.}}
+\T(802,443){\R{15}{14211B}{The game sends nothing automatically.}}
+\T(1157.297,701){\R{13}{88928C}{AEGIS}}
+\T(1201.766,701){\R{13}{88928C}{9 / 10}}
+\end{slide}
+
+\begin{slide}
+\Fill{FBFCFA}(0,0)(1280,720)
+\Fill{0B5D4B}(58,109)(1222,111)
+\Img{images/slide01_2.png}(58,371)(182,495)
+\Shadow{images/slide10_shadow1.png}{0.1608}(951.04,132.16)(1218.88,683.84)[962,141,1208,671]
+\Frame{D9DED9}{1}(962.5,141.5)(1207.5,670.5)
+\Img{images/en/slide10_1.png}(963,142)(1207,670)
+\Fill{A84300}(58,150)(69,161)
+\Fill{A84300}(58,194)(69,205)
+\Fill{A84300}(58,239)(69,250)
+\Fill{A84300}(58,283)(69,294)
+\Fill{A84300}(58,327)(69,338)
+% English text
+\T(58,77){\B{40}{0B5D4B}{Access and availability}}
+\T(84,163){\R{22}{14211B}{Five languages: Greek, English, Italian, Spanish, and German.}}
+\T(84,207){\R{22}{14211B}{Audio narration of on-screen text.}}
+\T(84,252){\R{22}{14211B}{Desktop and mobile browsers, with support for classroom use.}}
+\T(84,296){\R{22}{14211B}{A guided introduction on the first visit.}}
+\T(84,340){\R{22}{14211B}{Designed with WCAG 2.2 Level AA accessibility as a target.}}
+\T(204,410){\B{21}{14211B}{Play the game:}}
+\T(204,439){\M{18}{14211B}{https://aloualou56.github.io/}}
+\T(204,468){\M{18}{14211B}{argus\_trackA/}}
+\T(1150.453,701){\R{13}{88928C}{AEGIS}}
+\T(1194.922,701){\R{13}{88928C}{10 / 10}}
+\end{slide}
+\end{document}
