@@ -1,0 +1,1309 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/tileset.json",
+ "fetched_at": "2026-10-15T19:41:48+00:00",
+ "scene": "delos-masks",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 47.6,
+ "placement": {
+  "lat": 37.39626,
+  "lon": 25.26949,
+  "height": 36.79,
+  "hpr": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "scale": 1.0
+ },
+ "tiles": [
+  {
+   "file": "delos-masks-model/00.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65535,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/01.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65532,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/02.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 40335,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/03.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 51174,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/04.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_002.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 45967,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/05.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_003.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 50800,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/06.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65534,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/07.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65532,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/08.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0100.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 18667,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/09.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0101.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 16221,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/10.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0102.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 34124,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/11.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0103.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 18330,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/12.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65533,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/13.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0110.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 2888,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/14.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0111.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 3116,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/15.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0112.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 5341,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/16.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0113.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 3777,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/17.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_012.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65534,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/18.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0120.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 8066,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/19.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0121.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 30703,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/20.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0122.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 14774,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/21.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0123.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 28931,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/22.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_013.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65534,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/23.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0130.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 8543,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/24.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0131.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 9286,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/25.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0132.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 10019,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/26.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0133.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 14454,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/27.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_02.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65532,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/28.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_020.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 57798,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/29.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_021.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 58925,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/30.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_022.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 46902,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/31.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_023.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 54707,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/32.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_03.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65534,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/33.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_030.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65532,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/34.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0300.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 5274,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/35.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_0301.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 10632,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/36.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_031.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 58343,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/37.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_032.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 45243,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "delos-masks-model/38.glb",
+   "transform": [
+    -0.4393463331009046,
+    0.8982552289018444,
+    -0.010599214181994842,
+    0,
+    -0.7108768622843035,
+    -0.3548627140548261,
+    -0.6072285738026978,
+    0,
+    -0.5492075074683566,
+    -0.25924891113393267,
+    0.7944564908264383,
+    0,
+    4587953.891210987,
+    2165706.102802442,
+    3852406.0293558966,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/house-of-masks/0material0_033.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 19607,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  }
+ ]
+}

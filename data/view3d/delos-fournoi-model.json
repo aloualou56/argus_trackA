@@ -1,0 +1,118 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/delos/fournoi/tileset.json",
+ "fetched_at": "2026-10-15T19:41:32+00:00",
+ "scene": "delos-fournoi",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 89.5,
+ "placement": {
+  "lat": 37.391398,
+  "lon": 25.269319,
+  "height": 36.8,
+  "hpr": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": 1.0
+ },
+ "tiles": [
+  {
+   "file": "delos-fournoi-model/00.glb",
+   "transform": [
+    -0.4268782728846232,
+    0.9043090954640733,
+    -1.6653345369377422e-16,
+    0,
+    -0.5491469081877846,
+    -0.25922429056940205,
+    0.7945064130682596,
+    0,
+    0.7184793757421619,
+    0.33915752540633504,
+    0.6072557612681949,
+    0,
+    4588227.90034412,
+    2165868.7405934115,
+    3851990.540197449,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/fournoi/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 376555,
+   "images": [],
+   "y_up": true
+  },
+  {
+   "file": "delos-fournoi-model/01.glb",
+   "transform": [
+    -0.4268782728846232,
+    0.9043090954640733,
+    -1.6653345369377422e-16,
+    0,
+    -0.5491469081877846,
+    -0.25922429056940205,
+    0.7945064130682596,
+    0,
+    0.7184793757421619,
+    0.33915752540633504,
+    0.6072557612681949,
+    0,
+    4588227.90034412,
+    2165868.7405934115,
+    3851990.540197449,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/fournoi/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 460,
+   "images": [],
+   "y_up": true
+  },
+  {
+   "file": "delos-fournoi-model/02.glb",
+   "transform": [
+    -0.4268782728846232,
+    0.9043090954640733,
+    -1.6653345369377422e-16,
+    0,
+    -0.5491469081877846,
+    -0.25922429056940205,
+    0.7945064130682596,
+    0,
+    0.7184793757421619,
+    0.33915752540633504,
+    0.6072557612681949,
+    0,
+    4588227.90034412,
+    2165868.7405934115,
+    3851990.540197449,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/delos/fournoi/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 558,
+   "images": [],
+   "y_up": true
+  }
+ ]
+}

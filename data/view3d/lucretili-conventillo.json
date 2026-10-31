@@ -1,0 +1,231 @@
+{
+ "about": "Data for the game's 3D view (web/src/view3d) of one place, written by tools/build_scenes_3d.py. See README, '3D view'.",
+ "scene": "lucretili-conventillo",
+ "origin": {
+  "lat": 42.02363,
+  "lon": 12.82738
+ },
+ "base_height": 730.3,
+ "metres_per_degree": [
+  82696.1546565814,
+  110540.0
+ ],
+ "shapes": [],
+ "sensors3d": [
+  {
+   "xy": [
+    0.83,
+    0.0
+   ],
+   "h": 0.5,
+   "alt": 730.8,
+   "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Conventillo - Staircase access façade",
+   "room": null,
+   "serial": "177266"
+  },
+  {
+   "xy": [
+    3.8,
+    -0.22
+   ],
+   "h": 0.4,
+   "alt": 730.7,
+   "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Conventillo - First-storey crack",
+   "room": null,
+   "serial": "177253"
+  },
+  {
+   "xy": [
+    -0.25,
+    1.99
+   ],
+   "h": 2.87,
+   "alt": 733.17,
+   "kind": "crackmeter",
+   "type": "Crackmeter Sensor",
+   "where": "Conventillo - Sensor and logger on the same wall",
+   "room": null,
+   "serial": "177320"
+  },
+  {
+   "xy": [
+    0.83,
+    1.11
+   ],
+   "h": 1.7,
+   "alt": 732.0,
+   "kind": "humidity",
+   "type": "Humidity Sensor",
+   "where": "Conventillo - Main room, second floor",
+   "room": null,
+   "serial": "177239"
+  },
+  {
+   "xy": [
+    0.83,
+    0.55
+   ],
+   "h": 0.65,
+   "alt": 730.95,
+   "kind": "people_counter",
+   "type": "People Counter Sensor",
+   "where": "Conventillo - Main entrance",
+   "room": null,
+   "serial": "2CF7F1C062800056"
+  },
+  {
+   "xy": [
+    1.08,
+    0.55
+   ],
+   "h": 1.7,
+   "alt": 732.0,
+   "kind": "temperature",
+   "type": "Temperature Sensor",
+   "where": "Conventillo - Main room, second floor",
+   "room": null,
+   "serial": "177239"
+  },
+  {
+   "xy": [
+    0.83,
+    0.0
+   ],
+   "h": 0.6,
+   "alt": 730.9,
+   "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "Conventillo - Staircase access façade",
+   "room": null,
+   "serial": "152931"
+  },
+  {
+   "xy": [
+    3.31,
+    -1.11
+   ],
+   "h": 0.5,
+   "alt": 730.8,
+   "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "Conventillo - First floor, close to a window",
+   "room": null,
+   "serial": "153061"
+  },
+  {
+   "xy": [
+    0.33,
+    1.55
+   ],
+   "h": 2.8,
+   "alt": 733.1,
+   "kind": "tiltmeter",
+   "type": "Tiltmeter Sensor",
+   "where": "Conventillo - Third floor, close to a window",
+   "room": null,
+   "serial": "152816"
+  },
+  {
+   "xy": [
+    2.81,
+    1.55
+   ],
+   "h": 2.6,
+   "alt": 732.9,
+   "kind": "vibration",
+   "type": "Vibration Sensor",
+   "where": "Montefalco Castle - External wall",
+   "room": null,
+   "serial": "152608"
+  }
+ ],
+ "rooms": [],
+ "dangers": [
+  {
+   "key": "lucretili-conventillo.landslide.site",
+   "title": {
+    "en": "Landslide at Sant'Angelo al Morra",
+    "el": "Κατολίσθηση στο Sant'Angelo al Morra"
+   },
+   "level": "catastrophic",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "lucretili-conventillo.dissociation.site",
+   "title": {
+    "en": "Abandonment of Sant'Angelo al Morra",
+    "el": "Εγκατάλειψη του Sant'Angelo al Morra"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "lucretili-conventillo.earthquake.site",
+   "title": {
+    "en": "Earthquake at Sant'Angelo al Morra",
+    "el": "Σεισμός στο Sant'Angelo al Morra"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "lucretili-conventillo.forest-management.site",
+   "title": {
+    "en": "Trees and bushes with no care",
+    "el": "Δέντρα και θάμνοι χωρίς φροντίδα"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "lucretili-conventillo.relative-humidity.mural-paintings",
+   "title": {
+    "en": "Mould on the wall paintings",
+    "el": "Μούχλα στις τοιχογραφίες"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "lucretili-conventillo.subsidence.site",
+   "title": {
+    "en": "The ground sinks under the rock complex",
+    "el": "Το έδαφος βουλιάζει κάτω από το συγκρότημα"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "lucretili-conventillo.uv.mural-paintings",
+   "title": {
+    "en": "Sunlight fades the paintings",
+    "el": "Ο ήλιος ξεθωριάζει τις τοιχογραφίες"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  }
+ ],
+ "risk_checked_at": null,
+ "view_m": 28.0,
+ "credits": {
+  "model_terrain_sensors_dangers": "ARGUS"
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/baltanas/monument/tileset.json",
+ "fetched_at": "2026-10-15T19:41:24+00:00",
+ "scene": "baltanas",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 81.4,
+ "placement": {
+  "lat": 41.938365,
+  "lon": -4.243854,
+  "height": 802.5,
+  "hpr": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": 1.0
+ },
+ "tiles": [
+  {
+   "file": "baltanas-model/00.glb",
+   "transform": [
+    7.396460043132746,
+    99.42526026533872,
+    5.534461777756405e-15,
+    0,
+    -73.96597158871995,
+    5.502488522005736,
+    -66.62467761274246,
+    0,
+    -66.44108236450558,
+    4.942695745729689,
+    74.17036020539561,
+    0,
+    4738932.998910062,
+    -352539.470150534,
+    4240007.407888531,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/baltanas/monument/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 471087,
+   "images": [],
+   "y_up": true
+  },
+  {
+   "file": "baltanas-model/01.glb",
+   "transform": [
+    7.396460043132746,
+    99.42526026533872,
+    5.534461777756405e-15,
+    0,
+    -73.96597158871995,
+    5.502488522005736,
+    -66.62467761274246,
+    0,
+    -66.44108236450558,
+    4.942695745729689,
+    74.17036020539561,
+    0,
+    4738932.998910062,
+    -352539.470150534,
+    4240007.407888531,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/baltanas/monument/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 3914,
+   "images": [],
+   "y_up": true
+  },
+  {
+   "file": "baltanas-model/02.glb",
+   "transform": [
+    7.396460043132746,
+    99.42526026533872,
+    5.534461777756405e-15,
+    0,
+    -73.96597158871995,
+    5.502488522005736,
+    -66.62467761274246,
+    0,
+    -66.44108236450558,
+    4.942695745729689,
+    74.17036020539561,
+    0,
+    4738932.998910062,
+    -352539.470150534,
+    4240007.407888531,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/baltanas/monument/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 3988,
+   "images": [],
+   "y_up": true
+  }
+ ]
+}

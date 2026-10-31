@@ -1,0 +1,550 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/lucretili/italy/tileset.json",
+ "fetched_at": "2026-10-15T19:41:59+00:00",
+ "scene": "lucretili-conventillo",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 30.0,
+ "placement": {
+  "lat": 42.02363,
+  "lon": 12.82738,
+  "height": 730.3,
+  "hpr": [
+   10.0,
+   0.0,
+   -20.0
+  ],
+  "scale": 1.0
+ },
+ "tiles": [
+  {
+   "file": "lucretili-conventillo-model/00.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 61118,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/01.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 35341,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/02.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 9960,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/03.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_03.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 49953,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/04.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_04.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 66303,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/05.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_040.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 50,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/06.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_041.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 2252,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/07.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_042.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 1902,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/08.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_043.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 3747,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/09.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_044.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 1010,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/10.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_045.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 4447,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/11.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_046.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 293,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/12.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_047.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 1532,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/13.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_05.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 565,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/14.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_06.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 57443,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "lucretili-conventillo-model/15.glb",
+   "transform": [
+    -0.25931730149950205,
+    0.38505012043806824,
+    0.18571737100671837,
+    0,
+    0.36216501186772476,
+    0.08246376024315696,
+    0.33471813877561934,
+    0,
+    0.22713661378534114,
+    0.3081170767698398,
+    -0.3216719224317577,
+    0,
+    4627095.585768789,
+    1053574.1678612772,
+    4247800.583165405,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/lucretili/italy/0material0_07.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 35276,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  }
+ ]
+}
