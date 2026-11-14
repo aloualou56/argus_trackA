@@ -1,0 +1,1590 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/tileset.json",
+ "fetched_at": "2026-10-15T19:44:08+00:00",
+ "scene": "schenkenberg",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 40.8,
+ "placement": {
+  "lat": 47.442056,
+  "lon": 8.10074,
+  "height": 630.3,
+  "hpr": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": 1.0
+ },
+ "tiles": [
+  {
+   "file": "schenkenberg-model/00.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 53451,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/01.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 52870,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/02.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 34026,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/03.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 33009,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/04.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_002.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65645,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/05.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0020.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 379,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/06.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0021.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 657,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/07.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0023.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 400,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/08.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0024.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 5534,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/09.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0025.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 107,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/10.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0026.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 239,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/11.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0027.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 786,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/12.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_003.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 57525,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/13.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 39165,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/14.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_02.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 54506,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/15.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_020.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 26917,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/16.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_022.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 5575,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/17.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_023.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65556,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/18.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0230.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 2429,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/19.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0231.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 142,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/20.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0232.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 2740,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/21.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0233.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 103,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/22.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0234.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 1039,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/23.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0235.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/24.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0236.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 3318,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/25.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_024.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65248,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/26.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0240.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 1651,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/27.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0242.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 40,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/28.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0243.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 671,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/29.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0244.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 5833,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/30.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0245.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 35710,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/31.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0246.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 401,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/32.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0247.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 3327,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/33.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_026.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 18114,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/34.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_027.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 22282,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/35.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_03.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 52147,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/36.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_030.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 65579,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/37.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0300.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 17,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/38.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0301.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 679,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/39.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0302.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 95,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/40.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0303.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 92,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/41.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0305.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 365,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/42.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0306.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 42,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/43.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_0307.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 241,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/44.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_031.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 19833,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/45.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_032.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 3764,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/46.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_034.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 38890,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/47.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_035.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 34247,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "schenkenberg-model/48.glb",
+   "transform": [
+    -0.14503375930287826,
+    0.9589656545285745,
+    0.015813984224865303,
+    0,
+    -0.6485543605150924,
+    -0.08627786127759553,
+    -0.7161238524935722,
+    0,
+    -0.706570909477135,
+    -0.11764779678325307,
+    0.6540768653550679,
+    0,
+    4278537.838829306,
+    608951.2494306073,
+    4675134.385949878,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/schenkenberg/monument/0material0_036.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression"
+   ],
+   "meshes": 1,
+   "vertices": 21619,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  }
+ ]
+}
