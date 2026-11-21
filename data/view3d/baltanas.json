@@ -1,0 +1,205 @@
+{
+ "about": "Data for the game's 3D view (web/src/view3d) of one place, written by tools/build_scenes_3d.py. See README, '3D view'.",
+ "scene": "baltanas",
+ "origin": {
+  "lat": 41.938365,
+  "lon": -4.243854
+ },
+ "base_height": 802.5,
+ "metres_per_degree": [
+  82806.96293173905,
+  110540.0
+ ],
+ "shapes": [],
+ "sensors3d": [
+  {
+   "xy": [
+    46.95,
+    -46.98
+   ],
+   "h": -5.65,
+   "alt": 796.85,
+   "kind": "vibration",
+   "type": "Accelerometer Sensor",
+   "where": "Cellar 364 - Outside - car path",
+   "room": null,
+   "serial": "159313"
+  },
+  {
+   "xy": [
+    -5.05,
+    37.47
+   ],
+   "h": -1.12,
+   "alt": 801.38,
+   "kind": "airflow",
+   "type": "Air Flow Sensor",
+   "where": "Cellar 88 - Chimney 4 Pasillo sisa3-sisa4",
+   "room": null,
+   "serial": "AF4-149421"
+  },
+  {
+   "xy": [
+    45.71,
+    -47.64
+   ],
+   "h": -5.66,
+   "alt": 796.84,
+   "kind": "other",
+   "type": "Barrier Sensor",
+   "where": "Cellar 364 - Outside - car path",
+   "room": null,
+   "serial": "A8610A34324D7F09"
+  },
+  {
+   "xy": [
+    42.56,
+    18.24
+   ],
+   "h": -5.5,
+   "alt": 797.0,
+   "kind": "other",
+   "type": "Gas Sensor",
+   "where": "Cellar 193 - Lagar",
+   "room": null,
+   "serial": "151810"
+  },
+  {
+   "xy": [
+    42.23,
+    17.91
+   ],
+   "h": -5.5,
+   "alt": 797.0,
+   "kind": "other",
+   "type": "Gas Sensor",
+   "where": "Cellar 193 - Lagar",
+   "room": null,
+   "serial": "151810"
+  },
+  {
+   "xy": [
+    42.73,
+    18.24
+   ],
+   "h": -5.5,
+   "alt": 797.0,
+   "kind": "other",
+   "type": "Gas Sensor",
+   "where": "Cellar 193 - Lagar",
+   "room": null,
+   "serial": "151810"
+  },
+  {
+   "xy": [
+    46.54,
+    18.57
+   ],
+   "h": -5.41,
+   "alt": 797.09,
+   "kind": "other",
+   "type": "Pir-Airflow Sensor",
+   "where": "Cellar 193 - Entry",
+   "room": null,
+   "serial": "A8610A3230467704"
+  },
+  {
+   "xy": [
+    42.15,
+    18.24
+   ],
+   "h": -5.5,
+   "alt": 797.0,
+   "kind": "soil_moisture",
+   "type": "Soil Moisture Sensor",
+   "where": "Cellar 193 - Lagar",
+   "room": null,
+   "serial": "151810"
+  }
+ ],
+ "rooms": [],
+ "dangers": [
+  {
+   "key": "baltanas.subsidence.cellar-ensemble",
+   "title": {
+    "en": "Cellars that cave in",
+    "el": "Κελάρια που καταρρέουν"
+   },
+   "level": "extreme",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "baltanas.flooding.wine-elements",
+   "title": {
+    "en": "A flooded cellar",
+    "el": "Πλημμύρα στο κελάρι"
+   },
+   "level": "high",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "baltanas.relative-humidity.wine-elements",
+   "title": {
+    "en": "Damp wine presses and barrels",
+    "el": "Υγρασία στα πατητήρια και στα βαρέλια"
+   },
+   "level": "high",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "baltanas.flooding.structural-wood",
+   "title": {
+    "en": "Flooding and ceiling beams",
+    "el": "Πλημμύρα και δοκάρια"
+   },
+   "level": "medium",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "baltanas.flooding.structural-wood",
+   "title": {
+    "en": "Flooding and ceiling beams",
+    "el": "Πλημμύρα και δοκάρια"
+   },
+   "level": "medium",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "baltanas.flooding.structural-wood",
+   "title": {
+    "en": "Flooding and ceiling beams",
+    "el": "Πλημμύρα και δοκάρια"
+   },
+   "level": "medium",
+   "state": null,
+   "probability": null,
+   "watch": null
+  },
+  {
+   "key": "baltanas.relative-humidity.structural-wood",
+   "title": {
+    "en": "Damp ceiling beams",
+    "el": "Υγρασία στα δοκάρια της οροφής"
+   },
+   "level": "medium",
+   "state": null,
+   "probability": null,
+   "watch": null
+  }
+ ],
+ "risk_checked_at": null,
+ "view_m": 61.1,
+ "credits": {
+  "model_terrain_sensors_dangers": "ARGUS"
+ }
+}
