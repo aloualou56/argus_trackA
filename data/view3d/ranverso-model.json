@@ -1,0 +1,1110 @@
+{
+ "_about": "ARGUS's own 3D model, the tiles around the place only (tools/fetch_argus_3d.py). Each glTF is y-up, as 3D Tiles stores it; transform (column-major, may be null) and rtc_center (ECEF metres) place it on the Earth.",
+ "source": "https://argus.athenarc.gr/tiles/ranverso/monument/tileset.json",
+ "fetched_at": "2026-10-15T19:42:49+00:00",
+ "scene": "ranverso",
+ "placed": "georeferenced",
+ "geometric_error": 0.0,
+ "radius_m": 65.7,
+ "placement": {
+  "lat": 45.080871,
+  "lon": 7.449444,
+  "height": 354.55,
+  "hpr": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": 1.0
+ },
+ "tiles": [
+  {
+   "file": "ranverso-model/00.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 66140,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/01.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_00.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65542,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/02.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_000.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 19969,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/03.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_001.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 14903,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/04.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_002.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 27168,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/05.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_003.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 32145,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/06.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_01.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65536,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/07.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_010.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 9514,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/08.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_011.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65533,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/09.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0110.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 21142,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/10.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0111.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 47654,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/11.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_02.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 27302,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/12.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_03.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65544,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/13.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_030.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65533,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/14.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0300.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 9860,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/15.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0301.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 6275,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/16.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_031.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 93,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/17.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_032.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65537,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/18.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0320.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 4184,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/19.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0321.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 3667,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/20.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0322.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 4722,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/21.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0323.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 1253,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/22.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0324.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 4761,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/23.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0325.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 1899,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/24.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0326.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 2264,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/25.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0327.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 4716,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/26.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_033.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 12580,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/27.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_034.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 22819,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/28.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_036.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 65533,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/29.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0360.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 6510,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/30.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_0361.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 2184,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  },
+  {
+   "file": "ranverso-model/31.glb",
+   "transform": [
+    -0.12931710395257007,
+    0.9613047303238302,
+    -0.008384633711604757,
+    0,
+    -0.6780449624743525,
+    -0.09720273933205692,
+    -0.6868090392020408,
+    0,
+    -0.6814925645145419,
+    -0.0857020590388692,
+    0.6849255737582182,
+    0,
+    4473452.157298152,
+    584980.4420601815,
+    4493939.579595798,
+    1
+   ],
+   "rtc_center": null,
+   "source": "https://argus.athenarc.gr/tiles/ranverso/monument/0material0_037.b3dm",
+   "extensions": [
+    "KHR_draco_mesh_compression",
+    "KHR_materials_ior",
+    "KHR_materials_specular"
+   ],
+   "meshes": 1,
+   "vertices": 20,
+   "images": [
+    "image/jpeg"
+   ],
+   "y_up": true
+  }
+ ]
+}
